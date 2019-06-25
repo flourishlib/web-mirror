@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>I just learning something about using fResult &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">I just learning something about using fResult</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dwaineh			</span>
+	<span class="date_posted" title="8/23/09 11:22am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Maybe not ground breaking for some, but it was a big help for me, so I thought I would share.... This doesn't seem to be documented but, I was using a functions to display a results list like for news or blog defined like:
+</p>
+<pre class="block php"><code>//function to build the list for Articles
+ function listArticle( $list,$cat )
+{
+$result = mysql_query( &quot;SELECT id,article_ttl,article_txt_1,article_date,article_author FROM my_articles WHERE article_cat='$cat' ORDER BY id DESC&quot; );
+
+if( !$result )
+{
+  echo &quot;Sorry the query didn't find any data&quot;;
+}
+else
+{
+  while ( $my_row = mysql_fetch_array( $result, MYSQL_ASSOC ) )
+  {
+//turn rows into variables for output    
+$id = $my_row['id'];
+$news_ttl = $my_row['article_ttl'];
+$_txt_1 = $my_row['article_txt_1'];
+$_date = $my_row['article_date'];
+$_author = $my_row['article_author'];
+
+    echo &lt;&lt;&lt;_HTML
+      &lt;div class=&quot;title&quot;&gt;Title: $news_ttl&lt;/div&gt;
+      &lt;div class=&quot;short&quot;&gt;Story: $_txt_1 ...&lt;em&gt; &lt;a href=&quot;news.php?pid=$id&quot;&gt;Full Story&lt;/a&gt;&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;foot&quot;&gt;Posted on: $_date, By: $_author&lt;/div&gt;
+_HTML;
+}end while loop
+mysql_free_result($result);
+return $list;
+}end listArticles</code></pre>
+
+<p>
+ So I didn't want to completely scrp my function but use it instead with flourish power, problem was how to do this without totally rewriting it? Several atempts ended in errors being returned....
+</p>
+
+<p>
+Solution found this way....
+</p>
+<pre class="block php"><code>
+function listArticle( $list,$cat )
+{
+global $db;
+
+
+$rows = $db-&gt;query( &quot;SELECT id,article_ttl,article_txt_1,article_date,article_author FROM my_articles WHERE article_cat='$cat' ORDER BY id DESC&quot; )-&gt;asObjects();
+
+ foreach( $rows as $row )
+{
+
+
+
+//output the html
+    echo &lt;&lt;&lt;_HTML
+      &lt;div class=&quot;title&quot;&gt;Title: $row-&gt;article_ttl&lt;/div&gt;
+      &lt;div class=&quot;short&quot;&gt;Story: $row-&gt;article_txt_1 ...&lt;em&gt; &lt;a href=&quot;index.php?pid=$id&quot;&gt;Full Story&lt;/a&gt;&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;foot&quot;&gt;Posted on: $row-&gt;article_date, By: $row-&gt;article_author&lt;/div&gt;
+      &lt;hr /&gt;
+_HTML;
+}
+return $list;
+  }</code></pre>
+
+<p>
+ Now asObjects is nothing difficult to figure out, but I think it should be noted that to include $db object in a function you must declare global $db; is worth noting in the docs maybe in the getting started or how do I? docs.
+</p>
+
+<p>
+/** Wishlist item for Flourish Discussion: add tips and tricks or How do I? forum **/
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-365">
+				<div class="body" id="body-365">
+					
+<p>
+@dwaineh
+</p>
+
+<p>
+It's best NOT to use &quot;global $db&quot;.
+</p>
+
+<p>
+The best way is to do this : 
+</p>
+<pre class="block php"><code>
+
+// I'm assuming that $cat is a string, otherwise, replace %s with %i to represent an integer
+$sql = &quot;SELECT id,article_ttl,article_txt_1,article_date,article_author FROM my_articles WHERE article_cat=%s ORDER BY id DESC&quot;;
+
+try
+{
+	// Retrieve the database object.
+	$db = fORMDatabase::retrieve();
+
+	// Make sure the $cat user input gets properly escaped to prevent SQL injection attacks
+	$sql = $db-&gt;escape($sql,$cat);
+
+	$result = $db-&gt;query($sql);
+	$result-&gt;tossIfNoRows();
+
+	// Setup so the result is returned as an object.
+	$result-&gt;asObject();
+} catch( fNoRowsException $e)
+        {
+			// If there were no records found, return false
+            return false;
+        }  catch ( fSQLException $e ) { handle_this_exception_function($e) } catch ( fException $e ) { handle_this_exception_function($e); }
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="8/24/09 12:15am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-367">
+				<div class="body" id="body-367">
+					
+<p>
+Thanks for the input, I know I still don't have a handle on using Flourish yet, and I'm just testing on my own dev server, looking at things I had and trying to make them better...
+</p>
+
+<p>
+My var $cat is a interger(tinyint) so I corrected that and asObject =&gt; asObjects, and created my own errors which threw <a href="../flourishlib.com/docs/fSQLException.html">fSQLException</a>, I put %1 instead of %i DOH!
+</p>
+
+<p>
+Currently none of this is passed threw user input, I set the $cat = x; in the block I call the function from so it's not passed from a superglobal, but I don't think adding the extra check hurts any...
+</p>
+
+<p>
+Thanks again for the input, I'll probably post a lot more good/bad/or otherwise as I work things out... :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dwaineh											</span>
+					<span class="date_posted" title="8/24/09 11:14am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-387">
+				<div class="body" id="body-387">
+					
+<p>
+Thanks for pointing out that I haven't documented <a href="../flourishlib.com/api/fResult.html#asObjects">fResult::asObjects()</a> yet. If you do find stuff like this, please feel free to open a ticket. The tickets serve as a todo list to I make sure stuff gets done.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/3/09 9:16am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

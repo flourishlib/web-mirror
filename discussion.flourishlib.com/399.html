@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Dupilcate records for an AUTO_INCREMENT...DB too slow? PHP too fast? How is this possible? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Dupilcate records for an AUTO_INCREMENT...DB too slow? PHP too fast? How is this possible?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="4/7/11 6:41am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+On every form generation, I store some information about the form. The form then receives a build ID so I can retrieve any state data (such as if an error occurs) again and again.
+</p>
+
+<p>
+The table is like this:
+</p>
+<pre class="block sql"><code>DROP TABLE IF EXISTS form_states;
+CREATE TABLE form_states (
+  bid INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  form_id VARCHAR(255) NOT NULL DEFAULT '',
+  data MEDIUMTEXT NOT NULL,
+  created INT NOT NULL DEFAULT 0,
+  expired INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX bid_form_id ON form_states (bid, form_id);</code></pre>
+<pre class="block php"><code>      try {
+        $formState = new Base_FormState;
+        $formState-&gt;setFormId($this-&gt;getFormId());
+        $formState-&gt;setCreated(time());
+        $formState-&gt;setData(!is_null($oldState) ? serialize($oldState) : serialize($this));
+        $formState-&gt;store();
+        
+        // Add Build ID
+        $this-&gt;createValues(array('build_id' =&gt; $formState-&gt;getBid()));
+      }
+      catch (fValidationException $e) {
+      }</code></pre>
+
+<p>
+ What's weird is that if I use:
+</p>
+<pre class="block sql"><code>CREATE UNIQUE INDEX bid_form_id ON form_states (bid, form_id);</code></pre>
+<pre><code>#!text/html
+The following problems were found: Bid, Form ID: The values specified must be a unique combination, however the specified combination already exists</code></pre>
+
+<p>
+ On a page where 6 forms with the same form_id (same form but different parameters), every other form has no build_id (2,4,6) and for each I get an <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception. I don't understand how this can happen when there's no real threading in PHP, I thought the <a href="../flourishlib.com/docs/fORM.html">fORM</a> was performing transactions and/or locking the table anyway, and I don't specify the build ID in creating the form state anywhere.
+</p>
+
+<p>
+Only 2 functions call the above code: one when the form is about to be rendered, and one after the form has been processed in order to update the state (but store a new record and get a new build ID).
+</p>
+
+<p>
+For now I've decided on not having the UNIQUE INDEX. But this was working before, so I'm not sure what changed.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1220">
+				<div class="body" id="body-1220">
+					
+<p>
+On another note, let's write <a href="../flourishlib.com/docs/fMollom.html">fMollom</a> or something to stop this spam!
+</p>
+
+<p>
+<a href="http://mollom.com/">http://mollom.com/</a>
+</p>
+
+<p>
+I am already working on such a thing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/7/11 12:41pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1221">
+				<div class="body" id="body-1221">
+					
+<p>
+I apologize that some spam gets through on the forum. The site uses both Akismet and a heuristic engine built into Trac to reduce the spam by an extremely large percentage. Unfortunately sometimes real users get their posts marked as spam because the content contains code and words that can often be associated with spam. Because of this, having signed up a for a real user account adds a bit of weight to any given post.
+</p>
+
+<p>
+The best solution for now is probably to add recaptcha to the signup process.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/7/11 1:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1222">
+				<div class="body" id="body-1222">
+					
+<p>
+Can you post the code for the method <code>-&gt;createValues()</code>?
+</p>
+
+<p>
+Also, can you provide the backtrace for the exception that is being thrown?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/7/11 1:11pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1223">
+				<div class="body" id="body-1223">
+					
+<p>
+Part of a much larger class based on DOM that basically creates a big data structure that eventually gets translated to HTML or XML (because I hate writing HTML).
+</p>
+<pre class="block php"><code>  /**
+   * Create hidden form value fields.
+   * @param array $values Key-&gt;Value pairs.
+   * @return Base_HtmlTag The element that this element was added to.
+   */
+  public function createValues($values = array()) {
+    foreach ($values as $name =&gt; $value) {
+      $this-&gt;createElement('input', array('name' =&gt; $name, 'value' =&gt; $value, 'type' =&gt; 'hidden'));
+    }
+    
+    return $this;
+  }</code></pre>
+
+<p>
+ This basically outputs the following within the form element:
+</p>
+<pre><code>#!text/html
+&lt;input type=&quot;hidden&quot; name=&quot;name_given&quot; value=&quot;value_given&quot;&gt;</code></pre>
+
+<p>
+ This backtrace is from me requesting /politics on my site. A list of polls that are forms will be listed. In #1, the object referenced is an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object. #0 stores the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> I mentioned before and has the code above. In this run, -&gt;storeState() is the ONLY place where the Base_FormState <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object will be stored with the code above.
+</p>
+<pre><code>#!text/html
+#0  Base_HtmlTag-&gt;storeState() called at [/var/www/s/Module/Poll/PollForm.php:58]
+#1  Module_Poll_PollForm::create(Module_Poll_Poll Object ([] =&gt; Array (),[] =&gt; Array (),[] =&gt; Array (),[] =&gt; Array ([pid] =&gt; 6,[uid] =&gt; 1,[question] =&gt; Will the uprising in Egypt spread across the Middle East?,[answer_1] =&gt; YES - and there's a storm coming for the West!,[answer_2] =&gt; YES - but it'll be good for everyone,[answer_3] =&gt; NO - it won't spread beyond Egypt,[answer_4] =&gt; NO - nothing will happen even in Egypt,[category_id] =&gt; 6,[created] =&gt; 1300937380,[status] =&gt; 1,[tags] =&gt; a:5:{i:0;i:8;i:1;i:9;i:2;i:10;i:3;i:11;i:4;i:12;})), ) called at [/var/www/s/Module/Poll/PollCategoryPage.php:76]
+#2  Module_Poll_PollCategoryPage-&gt;renderForm() called at [/var/www/s/Module/Poll/PollCategoryPage.php:103]
+#3  Module_Poll_PollCategoryPage-&gt;render() called at [/var/www/s/Base/Page/FormPage.php:24]
+#4  Base_Page_FormPage-&gt;_render() called at [/var/www/s/Base/Router.php:325]
+#5  Base_Router::getRequest(politics, , ) called at [/var/www/s/Base/Router.php:390]
+#6  Base_Router::route() called at [/var/www/s/Base/Sutra.php:87]
+#7  S::render() called at [/var/www/s/index.php:4]</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/7/11 2:33pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1227">
+				<div class="body" id="body-1227">
+					
+<p>
+The backtrace doesn't seem to be from <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+</p>
+
+<p>
+You mention you are storing 6 records in a loop and every other one doesn't have an ID. It seems there is something going on with the database. If you execute the following before you start storing the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects you will get a kinda-noisy debug of all SQL statements being executed.
+</p>
+<pre class="block php"><code>fORMDatabase::retrieve()-&gt;enableDebugging(TRUE);</code></pre>
+
+<p>
+ You can turn it off after the loop by calling:
+</p>
+<pre class="block php"><code>fORMDatabase::retrieve()-&gt;enableDebugging(FALSE);</code></pre>
+
+<p>
+ I bet if you look through the SQL statements they can help you determine what is causing these issues.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/12/11 10:10pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

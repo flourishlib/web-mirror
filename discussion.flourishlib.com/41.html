@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>count &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">count</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="3/20/09 7:24pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i still try to get how some class or function must be used. i want to print number of records return. It is correct?
+</p>
+<pre class="block php"><code>foreach (Customer::findActive() as $customer) {
+    $customer_id = fRequest::get('id');
+    $i = $customer-&gt;prepareId ();
+    try {
+        $records = $customer-&gt;count(TRUE);
+        echo $records;
+        ...</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-125">
+				<div class="body" id="body-125">
+					
+<p>
+Dragos,
+</p>
+
+<p>
+I'm not sure I understand your exact scenario, but flourish offers several ways to determine the number of records returned.
+</p>
+
+<p>
+Example with a recordset:
+</p>
+<pre class="block php"><code>// Build a recordset
+$active_users = fRecordSet::build(
+    'User',
+    array('status=' =&gt; 'Active')
+);
+
+// Get the number of records in the recordset
+$num = $active_users-&gt;count();</code></pre>
+
+<p>
+ Example from a normal SQL query:
+</p>
+<pre class="block php"><code>// Connect to the database
+$mysql_db = new fDatabase('mysql', 'my_database', 'username', 'password', 'example.com');
+
+// Do a simple query:
+$result = $mysql_db-&gt;query('SELECT * FROM users LIMIT 5');
+
+// Get the number of records in the result:
+$num = $result-&gt;countReturnedRows();</code></pre>
+
+<p>
+ Hopefully that will help you get started.
+</p>
+
+<p>
+Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/21/09 2:55pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-130">
+				<div class="body" id="body-130">
+					
+<p>
+I have something like this :
+</p>
+<pre class="block php"><code>class Customer extends fActiveRecord {
+
+	// Return an iterable set of User objects
+	public static function findActive() {
+		
+		$sort_by = fRequest::get('sort');
+		$dir = fRequest::get('dir');
+				
+		return fRecordSet::buildFromSQL(
+			__CLASS__,
+			&quot;SELECT * FROM customers ORDER BY $sort_by $dir LIMIT 20&quot;,
+			&quot;SELECT count(*) FROM customers&quot;
+		);			
+	}
+}</code></pre>
+
+<p>
+ and have try to find number of records to build pagination, but i will use normal sql query. tanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="3/21/09 4:56pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-131">
+				<div class="body" id="body-131">
+					
+<p>
+but in this way i cannot use anymore iterate of array and use function like prepare, etc
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="3/21/09 4:59pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-158">
+				<div class="body" id="body-158">
+					
+<p>
+I finally have a couple of minutes to respond, so I'll give you some feedback.
+</p>
+
+<p>
+If you look at the section <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>#Size you'll see a simple example of pagination. That should get you started. Calling <code>-&gt;count()</code> on an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> returns the number of records in that set. If you are using a <code>LIMIT</code> in the SQL, this will obviously not be the total number of records in the database. To get the total number of records in the database that matches your conditions, pass <code>TRUE</code> into <code>count()</code> such as <code>$my_set-&gt;count(TRUE)</code>.
+</p>
+
+<p>
+These methods are all automatically supported if you use <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>. If you are using <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, you will need to hand craft the SQL for the record set and the SQL for the count of the total number of records in the database. From my experience it seems that <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> is only needed on rare occasion.
+</p>
+
+<p>
+As a second point, your code is VERY vulnerable to <a href="docs:Security#SQLInjection">SQL injection</a> because you are just passing values directly into the SQL. It would be safer to use <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> because it will escape the values for you (using <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>). Here is an example of your code using <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>:
+</p>
+<pre class="block php"><code>class Customer extends fActiveRecord {
+ 
+    // Return an iterable set of User objects
+    public static function findActive() {
+        
+        $sort_by = fRequest::get('sort');
+        $dir = fRequest::get('dir');
+                
+        return fRecordSet::build(
+            __CLASS__,
+            array(),
+            array($sort_by =&gt; $dir),
+            20
+        );            
+    }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 10:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-170">
+				<div class="body" id="body-170">
+					
+<p>
+ok, i understand xss <sub> i will try to be more specific about my issue: i don't understand very well oop, try to learn more to go.</sub>
+</p>
+
+<p>
+<sub>  i will give an example of what i used before for pagiantion:</sub>
+</p>
+
+<p>
+<sub> <code>
+<ol>
+<li>NECESAR PAGINARE</li>
+</ol>
+ $page = 		get('page');</code></sub>
+</p>
+
+<p>
+<sub><code> if( !isset($page) || (is_numeric($page) == false) ) {       $page = 1; //default } $xtpl-&gt;assign('PAG', $page); $query_count =	$db-&gt;select(&quot;SELECT * FROM  &quot;.$tabela.&quot;&quot;);    $total_items = 	mysql_num_rows($query_count);    if ($page == 0) $page = 1;                     $prev = $page - 1;                             $next = $page + 1;                             $lastpage = ceil($total_items/$limit);         $lpm1 = $lastpage - 1;                         if($page)          $set_limit = ($page - 1) * $limit;              else         $set_limit = 0;  		
+<ol>
+<li>END NECESAR PAGINARE</li>
+</ol>
+ $r = $db-&gt;select(&quot;SELECT * FROM  &quot;.$tabela.&quot; order by  PARENT_ID , ID_CATEGORIE  LIMIT $set_limit, $limit&quot;); //$db-&gt;print_last_error();</code></sub>
+</p>
+
+<p>
+<sub><code> while ($row=$db-&gt;get_row($r, 'MYSQL_ASSOC')) {</code></sub>
+</p>
+
+<p>
+<sub><code> 	$xtpl-&gt;assign('ID', $row<a href="http://discussion.flourishlib.com/&quot;ID_CATEGORIE&quot;">&amp;quot;ID_CATEGORIE&amp;quot;</a>);</code></sub>
+</p>
+
+<p>
+<sub><code> 	//CITESTE NUMELE CATEGORIEI PARINTE 	$r_parent = $db-&gt;select(&quot;SELECT CATEGORIE FROM  &quot;.$tabela.&quot; WHERE ID_CATEGORIE = &quot;.$row<a href="http://discussion.flourishlib.com/&quot;PARENT_ID&quot;">&amp;quot;PARENT_ID&amp;quot;</a>);	 	if ($row_parent=$db-&gt;get_row($r_parent, 'MYSQL_ASSOC')) { 		$xtpl-&gt;assign('PARENT_CAT', $row_parent<a href="http://discussion.flourishlib.com/&quot;CATEGORIE&quot;">&amp;quot;CATEGORIE&amp;quot;</a>); 	} else { 		$xtpl-&gt;assign('PARENT_CAT', &quot;Top&quot;); 	} 	 	$xtpl-&gt;assign('PARENT_ID', $row<a href="http://discussion.flourishlib.com/&quot;PARENT_ID&quot;">&amp;quot;PARENT_ID&amp;quot;</a>);</code></sub>
+</p>
+
+<p>
+<sub><code> 		 	 	$xtpl-&gt;assign('CATEGORIA', $row<a href="http://discussion.flourishlib.com/&quot;CATEGORIE&quot;">&amp;quot;CATEGORIE&amp;quot;</a>); 	$xtpl-&gt;assign('TEXT_CAT', eregi_replace(&quot;<br />
+n&quot;,&quot;&lt;br /&gt;&quot;,$row<a href="http://discussion.flourishlib.com/&quot;TEXT&quot;">&amp;quot;TEXT&amp;quot;</a>) . &quot;&amp;nbsp;&quot;); 	$xtpl-&gt;assign('VALUE', (($row<a href="http://discussion.flourishlib.com/'ACTIV'">'ACTIV'</a>==1)?1:0)); 	$xtpl-&gt;assign('ACTIV', (($row<a href="http://discussion.flourishlib.com/'ACTIV'">'ACTIV'</a>==1)?0:1)); 	$xtpl-&gt;assign('CHECKED', (($row<a href="http://discussion.flourishlib.com/'ACTIV'">'ACTIV'</a>==1)?'checked':<em>)); 	$xtpl-&gt;assign('CESTERG', &quot;&quot;); 	$xtpl-&gt;assign('CLASS', (($i%2==1)?</em>:'class=&quot;odd&quot;'));</code></sub>
+</p>
+
+<p>
+<sub><code> 	$count = $db-&gt;select(&quot;SELECT COUNT(*) as count FROM &quot;.$tabela.&quot; WHERE PARENT_ID = &quot;.$row<a href="http://discussion.flourishlib.com/&quot;ID_CATEGORIE&quot;">&amp;quot;ID_CATEGORIE&amp;quot;</a>.&quot; GROUP BY  PARENT_ID&quot;);	 	$row_count=$db-&gt;get_row($count, 'MYSQL_ASSOC');</code></sub>
+</p>
+
+<p>
+<sub><code> 	if ($row_count<a href="http://discussion.flourishlib.com/&quot;count&quot;">&amp;quot;count&amp;quot;</a> == 0 ) 		$xtpl-&gt;parse('main.row.del');</code></sub>
+</p>
+
+<p>
+<sub><code> 	$i++; 	$xtpl-&gt;parse('main.row'); } </code></sub>
+</p>
+
+<p>
+<sub> afisare paginare $pagina = &quot;&quot;; $alamat_pag = &quot;index.php?x=1&quot;; $adjacents = 1;  include  &quot;../paginare2.php&quot;; $xtpl-&gt;assign('PAGINARE', $pagination);</sub>
+</p>
+
+<p>
+<sub> $xtpl-&gt;parse('main'); $xtpl-&gt;out('main'); // END tot</sub>
+</p>
+
+<p>
+<sub> Now i want to use this pagination with your classes. It' s possible?</sub>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="4/1/09 6:08pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

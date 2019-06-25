@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Vars into php injection template method &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Vars into php injection template method</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					irob			</span>
+	<span class="date_posted" title="8/12/11 5:27am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi
+</p>
+
+<p>
+After a pair of days trying to organize my template codes I get that isn't possible to use php var from the parent file into injecting files, and I don't know why, here's what I'm doing:
+</p>
+
+<p>
+index.php (parent file)
+</p>
+
+<ul>
+<li>- index_template.php (template of the previous php file)</li>
+</ul>
+
+<ul>
+<li>- index_sidebar.php (sidebar included in index_template.php using -place-)</li>
+</ul>
+
+<ul>
+<li>- -- list_items.php (file included in index_sidebar.php using -inject-)</li>
+</ul>
+
+<p>
+Then... if I got a php var in index.php this isn't possible to use into list_intems.php :| :<br />
+ :( why???
+</p>
+
+<p>
+Is any option to include files and enabling the option for use php vars????
+</p>
+
+<p>
+Thank U
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1524">
+				<div class="body" id="body-1524">
+					
+<p>
+Are you using <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a>? If so, you need to set values via <a href="../flourishlib.com/api/fTemplating.html#set">fTemplating::set()</a> when in your parent file, and then from the child files you can call <code>$this-&gt;get()</code>.
+</p>
+
+<p>
+If this doesn't help, please try posting some example code.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/16/11 8:49pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1532">
+				<div class="body" id="body-1532">
+					
+<p>
+May this example help you ?
+</p>
+
+<p>
+www/views/header.php
+</p>
+<pre><code>&lt;?php fHTML::sendHeader() ?&gt;&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt; 
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;fr&quot; lang=&quot;fr&quot;&gt; 
+&lt;head&gt; 
+	&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt; 
+	&lt;title&gt;&lt;?php echo $this-&gt;prepare('title') ?&gt;&lt;/title&gt; </code></pre>
+
+<p>
+ www/mysite/index.php
+</p>
+<pre><code>&lt;?php include_once($_SERVER['DOCUMENT_ROOT'] . '/inc/init.php');
+
+	if (fRequest::isPost()) {
+		$validator = new fValidation();
+		try {
+
+		$myName = &quot;James BOND&quot;;
+		
+		} catch (fExpectedException $e) {
+			fMessaging::create('error', fURL::get(), $e-&gt;getMessage());	
+		}	
+	}
+
+include '/../views/index.php';</code></pre>
+
+<p>
+ www/views/index.php
+</p>
+<pre><code>&lt;?php 
+$tmpl-&gt;set('title', 'Welcome !'); // &quot;Welcome !&quot; will be printed in the template &quot;header&quot;
+$tmpl-&gt;place('header');?&gt;
+&lt;h1&gt;&lt;?php echo $tmpl-&gt;prepare('title') ?&gt;&lt;/h1&gt; //... and here, too (in the template index.php).
+&lt;form action=&quot;index.php&quot;&gt;
+	&lt;input id=&quot;url&quot; value=&quot;&lt;?php echo Meetup::makeURL('delete', $meetup) ?&gt;&quot; .....&gt; // it's OK : the object prints something
+	&lt;input id=&quot;email&quot; value=&quot;&lt;?php echo fRequest::encode('email') ?&gt;&quot; .....&gt; // it's OK : the POST prints something
+	&lt;input id=&quot;name&quot; value=&quot;&lt;?php echo $myName ?&gt;&quot; .....&gt; // It' OK too : the var passes the include
+		......
+&lt;/form&gt;
+&lt;div class=&quot;alert&quot;&gt;
+	 &lt;?php 	fMessaging::show('error', fURL::get()); ?&gt; // it's OK : the error message is printed
+&lt;/div&gt;
+&lt;p&gt;
+	Name: &lt;?php echo $myName ?&gt; // OK too ! 
+&lt;/p&gt;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gill											</span>
+					<span class="date_posted" title="8/18/11 2:31pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1536">
+				<div class="body" id="body-1536">
+					
+<p>
+@Gill
+</p>
+
+<p>
+The only issue I see there is that you are only setting <code>$myName</code> when the request is a <code>POST</code> and not when it is a <code>GET</code>. Other than that, it looks like it should work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/23/11 10:53pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1538">
+				<div class="body" id="body-1538">
+					
+<p>
+Right ! It was for iRob. I hope it will help him...
+</p>
+
+<p>
+There are many short examples, in the documentation (and I appreciate it a lot), but not really complete examples like this (or the demo). Though it's very usefull for beginners (like me). Of course, it's more PHP than Flourish...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gill											</span>
+					<span class="date_posted" title="8/24/11 1:15am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1543">
+				<div class="body" id="body-1543">
+					
+<p>
+Oops, it appears I misunderstood your post. Thanks for taking the time to write some examples and share them!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/25/11 10:29am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

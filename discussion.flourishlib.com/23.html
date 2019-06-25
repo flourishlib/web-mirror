@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>auto_incement with ActiveRecord &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">auto_incement with ActiveRecord</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/6/09 3:03pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I must be pretty dense.  I'm trying to insert a record into a table.  I've setup the db connection and performed fORM::attach.  I can query the table just fine.  When I try to create a new record and set the column values, and try to store, it causes a validation error.  Apparently, flourish insists that I provide a value for the &quot;id&quot; column which is an auto_increment field.  How do I provide it a value, if I don't know what it will be?
+</p>
+
+<p>
+I've tried : $gtt_prob-&gt;setId(<em>); $gtt_prob-&gt;setId(NULL);</em>
+</p>
+
+<p>
+<em> etc.</em>
+</p>
+
+<p>
+<em> How should this be done?</em>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-61">
+				<div class="body" id="body-61">
+					
+<p>
+Don't provide any value and it will be automatically added.
+</p>
+<pre class="block sql"><code>CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL
+)engine=InnoDB;</code></pre>
+<pre class="block php"><code>$db = new fDatabase('mysql', 'my_db', 'login', 'password');
+fORMDatabase::attach($db);
+
+class User extends fActiveRecord {}
+
+$user = new User();
+$user-&gt;setFirstName('Will');
+$user-&gt;setLastName('Bond');
+$user-&gt;store();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/6/09 3:11pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-62">
+				<div class="body" id="body-62">
+					
+<p>
+Will, thanks for the quick response.  However, that will not work for me.  Unfortunately, the table is defined as follows:
+</p>
+<pre class="block sql"><code>CREATE TABLE `tcell_itue_issues` (                                                                                                                                                                                                                                                                                                                                                                                      
+ `id` int(10) unsigned NOT NULL auto_increment,                                                                                                                                                                                                                                                                                                                                                                        
+ `start_gta` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                          
+ `end_gta` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                            
+ `pc` varchar(11) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                                 
+ `stp_start` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                          
+ `stp_end` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                            
+ PRIMARY KEY  (`id`),                                                                                                                                                                                                                                                                                                                                                                                                  
+ UNIQUE KEY `start_gta` (`start_gta`)                                                                                                                                                                                                                                                                                                                                                                                  
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 </code></pre>
+
+<p>
+ The NOT NULL on the primary key is causing the validation to trigger.  Because this is legacy stuff, I can't change it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/6/09 3:21pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-63">
+				<div class="body" id="body-63">
+					
+<p>
+I dropped your schema in and the following code worked without a hitch:
+</p>
+<pre class="block php"><code>class TcellItueIssue extends fActiveRecord {}
+
+$issue = new TcellItueIssue();
+$issue-&gt;setStartGta('Test');
+$issue-&gt;store();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/6/09 3:29pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-64">
+				<div class="body" id="body-64">
+					
+<p>
+Argh.  Sorry to be wasting your time, but it's just not working for me:
+</p>
+<pre class="block php"><code>$gsmnetdb = new fDatabase('mysql', DB, DB_USER, DB_PASS, DB_HOST, DB_PORT);
+fORMDatabase::attach($gsmnetdb); 
+
+
+$gtt_prob = new Tcell_itue_issue();
+$gtt_prob-&gt;setStart_gta('Testing8');
+$gtt_prob-&gt;setEnd_gta('Testing9');
+$gtt_prob-&gt;setPc('Testing10');
+$gtt_prob-&gt;setStp_start('Testing11');
+$gtt_prob-&gt;setStp_end('Testing21');
+$gtt_prob-&gt;store();
+</code></pre>
+
+<p>
+ Here is part of the error I get back:
+</p>
+<pre><code>)&lt;/pre&gt;&lt;pre class=&quot;exposed&quot;&gt;Uncaught Exception
+------------------
+{doc_root}/telcel_clean.php(20): fActiveRecord-&amp;gt;store()
+/home/ss7admin/jn_testing/gops_telcel/flourish/fActiveRecord.php(1787): fActiveRecord-&amp;gt;validate()
+&amp;lt;p&amp;gt;The following problems were found:&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;ID: Please enter a value&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;&lt;/pre&gt;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/6/09 3:43pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-65">
+				<div class="body" id="body-65">
+					
+<p>
+Will,
+</p>
+
+<p>
+I also copied your code over exactly:
+</p>
+<pre class="block php"><code>#!/usr/local/php-5.2.5/bin/php
+&lt;?php
+
+
+/**
+ * Get the base constants
+ */
+require_once( realpath(dirname(__FILE__) . '/../includes/constants.php') );
+
+class TcellItueIssue extends fActiveRecord {}
+ 
+$issue = new TcellItueIssue();
+$issue-&gt;setStartGta('Test');
+$issue-&gt;store();
+?&gt;</code></pre>
+
+<p>
+ Yet, I still get this error:
+</p>
+<pre><code>{doc_root}/new_file.php(14): fActiveRecord-&amp;gt;store()
+/home/ss7admin/jn_testing/gops_telcel/flourish/fActiveRecord.php(1787): fActiveRecord-&amp;gt;validate()
+&amp;lt;p&amp;gt;The following problems were found:&amp;lt;/p&amp;gt;
+&amp;lt;ul&amp;gt;
+&amp;lt;li&amp;gt;ID: Please enter a value&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;&lt;/pre&gt;n</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/6/09 3:48pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-66">
+				<div class="body" id="body-66">
+					
+<p>
+What version of MySQL are you running?
+</p>
+
+<p>
+Also, can you post the output of the following?
+</p>
+<pre class="block php"><code>fCore::expose(fORMSchema::retrieve()-&gt;getColumnInfo('tcell_itue_issues'));
+fCore::expose(fORMSchema::retrieve()-&gt;getKeys('tcell_itue_issues'));</code></pre>
+
+<p>
+ I'm getting this:
+</p>
+<pre><code>Array
+(
+    [id] =&gt; Array
+        (
+            [type] =&gt; integer
+            [not_null] =&gt; {true}
+            [auto_increment] =&gt; {true}
+            [default] =&gt; {null}
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [decimal_places] =&gt; {null}
+        )
+  
+    [start_gta] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 20
+            [not_null] =&gt; {true}
+            [default] =&gt; {empty_string}
+            [valid_values] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [end_gta] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 20
+            [not_null] =&gt; {true}
+            [default] =&gt; {empty_string}
+            [valid_values] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [pc] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 11
+            [not_null] =&gt; {true}
+            [default] =&gt; {empty_string}
+            [valid_values] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [stp_start] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 20
+            [not_null] =&gt; {true}
+            [default] =&gt; {empty_string}
+            [valid_values] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [stp_end] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 20
+            [not_null] =&gt; {true}
+            [default] =&gt; {empty_string}
+            [valid_values] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+)
+
+Array
+(
+    [primary] =&gt; Array
+        (
+            [0] =&gt; id
+        )
+  
+    [foreign] =&gt; Array
+        (
+        )
+  
+    [unique] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [0] =&gt; start_gta
+                )
+        
+        )
+  
+)</code></pre>
+
+<p>
+ Hopefully we should be able to get to the bottom of this.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/6/09 3:52pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-67">
+				<div class="body" id="body-67">
+					
+<p>
+Will,
+</p>
+
+<p>
+Thanks for all the help.  
+</p>
+
+<p>
+Unfortunately, I'm using MySQL 4.1.8 in this particular instance.
+</p>
+
+<p>
+I think I see the problem here.  Even though my table is defined as :
+</p>
+<pre class="block sql"><code>CREATE TABLE `tcell_itue_issues` (                                                                                                                                                                                                                                                                                                                                                                                      
+ `id` int(10) unsigned NOT NULL auto_increment,                                                                                                                                                                                                                                                                                                                                                                        
+ `start_gta` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                          
+ `end_gta` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                            
+ `pc` varchar(11) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                                 
+ `stp_start` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                          
+ `stp_end` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                            
+ PRIMARY KEY  (`id`),                                                                                                                                                                                                                                                                                                                                                                                                  
+ UNIQUE KEY `start_gta` (`start_gta`)                                                                                                                                                                                                                                                                                                                                                                                  
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 </code></pre>
+
+<p>
+ The schema dump shows that auto_increment on the &quot;id&quot; field is set to false, whereas yours is set to true.  How is that possible?  I can confirm that the auto_increment does work when inserting records.
+</p>
+<pre><code>Array
+(
+    [id] = Array
+        (
+            [type] = integer
+            [not_null] = {true}
+            [default] = {null}
+            [valid_values] = {null}
+            [max_length] = {null}
+            [decimal_places] = {null}
+            [auto_increment] = {false}
+        )
+
+    [start_gta] = Array
+        (
+            [type] = varchar
+            [max_length] = 20
+            [not_null] = {true}
+            [default] = {empty_string}
+            [valid_values] = {null}
+            [decimal_places] = {null}
+            [auto_increment] = {false}
+        )
+
+    [end_gta] = Array
+        (
+            [type] = varchar
+            [max_length] = 20
+            [not_null] = {true}
+            [default] = {empty_string}
+            [valid_values] = {null}
+            [decimal_places] = {null}
+            [auto_increment] = {false}
+        )
+
+    [pc] = Array
+        (
+            [type] = varchar
+            [max_length] = 11
+            [not_null] = {true}
+            [default] = {empty_string}
+            [valid_values] = {null}
+            [decimal_places] = {null}
+            [auto_increment] = {false}
+        )
+
+    [stp_start] = Array
+        (
+            [type] = varchar
+            [max_length] = 20
+            [not_null] = {true}
+            [default] = {empty_string}
+            [valid_values] = {null}
+            [decimal_places] = {null}
+            [auto_increment] = {false}
+        )
+
+    [stp_end] = Array
+        (
+            [type] = varchar
+            [max_length] = 20
+            [not_null] = {true}
+            [default] = {empty_string}
+            [valid_values] = {null}
+            [decimal_places] = {null}
+            [auto_increment] = {false}
+        )
+
+)
+
+
+Array
+(
+    [primary] = Array
+        (
+            [0] = id
+        )
+
+    [foreign] = Array
+        (
+        )
+
+    [unique] = Array
+        (
+            [0] = Array
+                (
+                    [0] = start_gta
+                )
+
+        )
+
+)
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/6/09 4:05pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-68">
+				<div class="body" id="body-68">
+					
+<p>
+What version of <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> do you have?
+</p>
+
+<p>
+Also, is the CREATE TABLE statement you provided above the output of <code>SHOW CREATE TABLE</code>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/6/09 5:21pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-69">
+				<div class="body" id="body-69">
+					
+<p>
+<a href="../flourishlib.com/docs/fSchema.html">fSchema</a> Info:
+</p>
+<pre class="block php"><code>/**
+ * Gets schema information for the selected database
+ * 
+ * @copyright  Copyright (c) 2007-2009 Will Bond
+ * @author     Will Bond [wb] &lt;will@flourishlib.com&gt;
+ * @license    http://flourishlib.com/license
+ * 
+ * @package    Flourish
+ * @link       http://flourishlib.com/fSchema
+ * 
+ * @version    1.0.0b13
+ * @changes    1.0.0b13  Fixed a bug with detecting PostgreSQL columns having both a CHECK constraint and a UNIQUE constraint [wb, 2009-02-27]
+ * @changes    1.0.0b12  Fixed detection of multi-column primary keys in MySQL [wb, 2009-02-27]
+ * @changes    1.0.0b11  Fixed an issue parsing MySQL tables with comments [wb, 2009-02-25]
+ * @changes    1.0.0b10  Added the ::getDatabases() method [wb, 2009-02-24]
+ * @changes    1.0.0b9   Now detects unsigned and zerofill MySQL data types that do not have a parenthetical part [wb, 2009-02-16]
+ * @changes    1.0.0b8   Mapped the MySQL data type `'set'` to `'varchar'`, however valid values are not implemented yet [wb, 2009-02-01]
+ * @changes    1.0.0b7   Fixed a bug with detecting MySQL timestamp columns [wb, 2009-01-28]
+ * @changes    1.0.0b6   Fixed a bug with detecting MySQL columns that accept `NULL` [wb, 2009-01-19]
+ * @changes    1.0.0b5   ::setColumnInfo(): fixed a bug with not grabbing the real database schema first, made general improvements [wb, 2009-01-19]
+ * @changes    1.0.0b4   Added support for MySQL binary data types, numeric data type options unsigned and zerofill, and per-column character set definitions [wb, 2009-01-17]
+ * @changes    1.0.0b3   Fixed detection of the data type of MySQL timestamp columns, added support for dynamic default date/time values [wb, 2009-01-11]
+ * @changes    1.0.0b2   Fixed a bug with detecting multi-column unique keys in MySQL [wb, 2009-01-03]
+ * @changes    1.0.0b    The initial implementation [wb, 2007-09-25]
+ */</code></pre>
+
+<p>
+ The table definition I sent you is from a SHOW CREATE TABLE:
+</p>
+<pre><code>Table              Create Table                                                                                                                                                                                                                                                                                                                                                                                                            
+-----------------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+tcell_itue_issues  CREATE TABLE `tcell_itue_issues` (                                                                                                                                                                                                                                                                                                                                                                                      
+                     `id` int(10) unsigned NOT NULL auto_increment,                                                                                                                                                                                                                                                                                                                                                                        
+                     `start_gta` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                          
+                     `end_gta` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                            
+                     `pc` varchar(11) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                                 
+                     `stp_start` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                          
+                     `stp_end` varchar(20) NOT NULL default '',                                                                                                                                                                                                                                                                                                                                                                            
+                     PRIMARY KEY  (`id`),                                                                                                                                                                                                                                                                                                                                                                                                  
+                     UNIQUE KEY `start_gta` (`start_gta`)                                                                                                                                                                                                                                                                                                                                                                                  
+                   ) ENGINE=MyISAM DEFAULT CHARSET=latin1                                                                                                                                                                                                                                                                                                                                                                                  </code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/6/09 5:29pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-70">
+				<div class="body" id="body-70">
+					
+<p>
+Ok, this should hopefully get all the info I need. Can you paste the follow code on line 575 of <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and send me the output?
+</p>
+<pre class="block php"><code>fCore::expose($create_sql);
+fCore::expose($matches);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/6/09 5:51pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-71">
+				<div class="body" id="body-71">
+					
+<p>
+Will,
+</p>
+
+<p>
+Here is the output of the script after adding your expose methods.  There is some additional junk messaging in there from some testing I was doing.
+</p>
+<pre><code>$ ./telcel_clean.php
+
+Notice: Undefined index:  dirname in /home/ss7admin/jn_testing/gops_telcel/flourish/fCore.php on line 269
+
+Notice: Undefined index:  dirname in /home/ss7admin/jn_testing/gops_telcel/flourish/fCore.php on line 269
+fResult Object
+(
+    [affected_rows:private] =&gt; 0
+    [auto_incremented_value:private] =&gt;
+    [character_set:private] =&gt;
+    [current_row:private] =&gt;
+    [extension:private] =&gt; array
+    [pointer:private] =&gt;
+    [result:private] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [id] =&gt; 1
+                    [start_gta] =&gt; Testing
+                    [end_gta] =&gt;
+                    [pc] =&gt;
+                    [stp_start] =&gt;
+                    [stp_end] =&gt;
+                )
+
+        )
+
+    [returned_rows:private] =&gt; 1
+    [sql:private] =&gt; SELECT * FROM adhoc.tcell_itue_issues LIMIT 5
+    [type:private] =&gt; mysql
+    [untranslated_sql:private] =&gt;
+)
+
+
+
+
+String = TcellItueIssue
+
+
+
+
+
+
+
+
+
+
+TABLE CLASS NAME Class name = Array
+(
+    [TcellItueIssue] =&gt; tcell_itue_issues
+)
+
+
+
+
+
+
+
+
+&lt;pre class=&quot;exposed&quot;&gt;CREATE TABLE &amp;quot;tcell_itue_issues&amp;quot; (
+  &amp;quot;id&amp;quot; int(10) unsigned NOT NULL,
+  &amp;quot;start_gta&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+  &amp;quot;end_gta&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+  &amp;quot;pc&amp;quot; varchar(11) NOT NULL default &amp;#039;&amp;#039;,
+  &amp;quot;stp_start&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+  &amp;quot;stp_end&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+  PRIMARY KEY  (&amp;quot;id&amp;quot;),
+  UNIQUE KEY &amp;quot;start_gta&amp;quot; (&amp;quot;start_gta&amp;quot;)
+)&lt;/pre&gt;&lt;pre class=&quot;exposed&quot;&gt;Array
+(
+    [0] =&amp;gt; Array
+        (
+            [0] =&amp;gt;
+        &amp;quot;id&amp;quot; 10 unsigned NOT NULL,
+            [1] =&amp;gt; id
+            [2] =&amp;gt; int
+            [3] =&amp;gt; 10
+            [4] =&amp;gt;  NOT NULL
+        )
+
+    [1] =&amp;gt; Array
+        (
+            [0] =&amp;gt;
+        &amp;quot;start_gta&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+            [1] =&amp;gt; start_gta
+            [2] =&amp;gt; varchar
+            [3] =&amp;gt; 20
+            [4] =&amp;gt;  NOT NULL
+            [5] =&amp;gt; &amp;#039;&amp;#039;
+        )
+
+    [2] =&amp;gt; Array
+        (
+            [0] =&amp;gt;
+        &amp;quot;end_gta&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+            [1] =&amp;gt; end_gta
+            [2] =&amp;gt; varchar
+            [3] =&amp;gt; 20
+            [4] =&amp;gt;  NOT NULL
+            [5] =&amp;gt; &amp;#039;&amp;#039;
+        )
+
+    [3] =&amp;gt; Array
+        (
+            [0] =&amp;gt;
+        &amp;quot;pc&amp;quot; varchar(11) NOT NULL default &amp;#039;&amp;#039;,
+            [1] =&amp;gt; pc
+            [2] =&amp;gt; varchar
+            [3] =&amp;gt; 11
+            [4] =&amp;gt;  NOT NULL
+            [5] =&amp;gt; &amp;#039;&amp;#039;
+        )
+
+    [4] =&amp;gt; Array
+        (
+            [0] =&amp;gt;
+        &amp;quot;stp_start&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+            [1] =&amp;gt; stp_start
+            [2] =&amp;gt; varchar
+            [3] =&amp;gt; 20
+            [4] =&amp;gt;  NOT NULL
+            [5] =&amp;gt; &amp;#039;&amp;#039;
+        )
+
+    [5] =&amp;gt; Array
+        (
+            [0] =&amp;gt;
+        &amp;quot;stp_end&amp;quot; varchar(20) NOT NULL default &amp;#039;&amp;#039;,
+            [1] =&amp;gt; stp_end
+            [2] =&amp;gt; varchar
+            [3] =&amp;gt; 20
+            [4] =&amp;gt;  NOT NULL
+            [5] =&amp;gt; &amp;#039;&amp;#039;
+        )
+
+)&lt;/pre&gt;
+Fatal error: Uncaught exception 'fValidationException' with message '&lt;p&gt;The following problems were found:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ID: Please enter a value&lt;/li&gt;
+&lt;/ul&gt;' in /home/ss7admin/jn_testing/gops_telcel/flourish/fActiveRecord.php:1958
+Stack trace:
+#0 /home/ss7admin/jn_testing/gops_telcel/flourish/fActiveRecord.php(1787): fActiveRecord-&gt;validate()
+#1 /home/ss7admin/jn_testing/gops_telcel/scripts/telcel_clean.php(20): fActiveRecord-&gt;store()
+#2 {main}
+  thrown in /home/ss7admin/jn_testing/gops_telcel/flourish/fActiveRecord.php on line 1958
+$
+</code></pre>
+
+<p>
+ The interesting thing is the output of fCore::expose($create_sql).  It shows that the id column does NOT have auto_increment.  
+</p>
+
+<p>
+Here is the  exact output of the &quot;show create table&quot; command from the same database the script is accessing.
+</p>
+<pre><code>mysql&gt; show databases;
++-------------+
+| Database    |
++-------------+
+| adhoc       |
+| gsmnet_dev  |
+| gsmnet_test |
+| mysql       |
++-------------+
+4 rows in set (0.00 sec)
+
+mysql&gt; use adhoc
+Database changed
+mysql&gt; show tables;
++-------------------+
+| Tables_in_adhoc   |
++-------------------+
+| tcell_itue_issues |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql&gt; show create table tcell_itue_issues;
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table             | Create Table                                                                                                                                                                                                                                                                                                                                                                                                             |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| tcell_itue_issues | CREATE TABLE `tcell_itue_issues` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `start_gta` varchar(20) NOT NULL default '',
+  `end_gta` varchar(20) NOT NULL default '',
+  `pc` varchar(11) NOT NULL default '',
+  `stp_start` varchar(20) NOT NULL default '',
+  `stp_end` varchar(20) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `start_gta` (`start_gta`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 |
++-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+</code></pre>
+
+<p>
+ I don't understand how the client could be returning invalid information.  To clarify, I wanted to note that on this machine, I have both a MySQL 4 client and a MySQL 5 client.  The PHP script is using the MySQL 5 client to access the 4.1.8 database.  However, I've done this exact processing logging into MySQL via command line using both the 4 and 5 clients.  They both provide information identical to the second file.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/7/09 12:12am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-73">
+				<div class="body" id="body-73">
+					
+<p>
+From a little bit of searching, it seems as though some how the NO_FIELD_OPTIONS flag is being enabled when running Flourish, which causes the AUTO_INCREMENT option to be hidden. <a href="http://dev.mysql.com/doc/refman/4.1/en/server-sql-mode.html">http://dev.mysql.com/doc/refman/4.1/en/server-sql-mode.html</a>.
+</p>
+
+<p>
+Can you execute the following SQL from your command line client and then from <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>?
+</p>
+<pre class="block sql"><code>SELECT VERSION(), USER(), DATABASE();
+SELECT @@GLOBAL.sql_mode;
+SELECT @@SESSION.sql_mode;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/7/09 10:13pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-77">
+				<div class="body" id="body-77">
+					
+<p>
+Will,
+</p>
+
+<p>
+Here's the results of these queries.
+</p>
+<pre><code>mysql&gt; SELECT VERSION(), USER(), DATABASE();
++-----------+---------------+------------+
+| VERSION() | USER()        | DATABASE() |
++-----------+---------------+------------+
+| 4.1.8a    | replaced@replaced | adhoc      |
++-----------+---------------+------------+
+1 row in set (0.00 sec)
+
+mysql&gt; SELECT @@GLOBAL.sql_mode;
++-------------------+
+| @@global.sql_mode |
++-------------------+
+|                   |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql&gt; SELECT @@SESSION.sql_mode;
++--------------------+
+| @@session.sql_mode |
++--------------------+
+|                    |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql&gt;
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/7/09 11:29pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-80">
+				<div class="body" id="body-80">
+					
+<p>
+Those look like they are just from your mysql command line client. Can you execute this PHP too?
+</p>
+<pre><code>#php
+$results = $db-&gt;query('SELECT VERSION(), DATABASE(); SELECT @@GLOBAL.sql_mode; SELECT @@SESSION.sql_mode;');
+foreach ($results as $result) {
+	fCore::expose($result-&gt;fetchRow());
+}</code></pre>
+
+<p>
+ Primarily I'm interested in the sql modes. The default session one from <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> should be <code>REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ANSI</code>, however I have a feeling somehow yours is getting <code>NO_FIELD_OPTIONS</code> too.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/8/09 10:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-81">
+				<div class="body" id="body-81">
+					
+<p>
+Will,
+</p>
+
+<p>
+Sorry about that.  I didn't realize you might want it from within php.
+</p>
+
+<p>
+Here is the output:
+</p>
+<pre><code>&lt;pre class=&quot;exposed&quot;&gt;Array
+(
+    [VERSION()] =&amp;gt; 4.1.8a
+    [DATABASE()] =&amp;gt; adhoc
+)&lt;/pre&gt;&lt;pre class=&quot;exposed&quot;&gt;Array
+(
+    [@@global.sql_mode] =&amp;gt; {empty_string}
+)&lt;/pre&gt;&lt;pre class=&quot;exposed&quot;&gt;Array
+(
+    [@@session.sql_mode] =&amp;gt; REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI
+)&lt;/pre&gt;
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/8/09 10:53pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-82">
+				<div class="body" id="body-82">
+					
+<p>
+Unfortunately it looks like it is a bug in your version of MySQL. I am setting ANSI mode and it is incorrectly removing AUTO_INCREMENT from SHOW CREATE TABLE. This was fixed in v 4.1.15. You can check it out at <a href="http://bugs.mysql.com/bug.php?id=7977">http://bugs.mysql.com/bug.php?id=7977</a>.
+</p>
+
+<p>
+You can see if we can work around the bug by changing line 443 of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to:
+</p>
+<pre class="block php"><code>			$this-&gt;query(&quot;SET SQL_MODE = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE'&quot;);</code></pre>
+
+<p>
+ Let me know if that works. If so, I'll roll it into the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> changes I've been working on.
+</p>
+
+<p>
+Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/8/09 11:05pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-191">
+				<div class="body" id="body-191">
+					
+<p>
+Did this end up working for you? If so, I'd like to include this in the upcoming <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> enhancements.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/26/09 4:57pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-192">
+				<div class="body" id="body-192">
+					
+<p>
+Yes, it did work.  I apologize for not responding.
+</p>
+
+<p>
+Thanks, Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="4/26/09 6:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-193">
+				<div class="body" id="body-193">
+					
+<p>
+Yes, it did work.  I apologize for not responding.
+</p>
+
+<p>
+Thanks, Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="4/26/09 6:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

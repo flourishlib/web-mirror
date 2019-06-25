@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Dead project? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Dead project?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="6/24/12 5:03am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+With Will gone from iMarc now it seems Flourish may lose any real support from its primary developer. I don't know if this is so but there are quite a few signs here:
+</p>
+
+<p>
+1) Moved to GitHub, no responses yet on my pull request
+</p>
+
+<p>
+2) Flourish never came out of beta so far
+</p>
+
+<p>
+3) Some bugs still remain
+</p>
+
+<p>
+4) Some features still missing
+</p>
+
+<p>
+I am maintaining a fork of Flourish here <a href="https://github.com/Tatsh/flourish-classes">https://github.com/Tatsh/flourish-classes</a> and an ebuild for Gentoo here <a href="https://github.com/Tatsh/tatsh-overlay">https://github.com/Tatsh/tatsh-overlay</a> if anyone is interested. I will be directly putting bug fixes on my fork from now on and will no longer be providing patches in my Sutra project <a href="https://github.com/Tatsh/sutra">https://github.com/Tatsh/sutra</a>
+</p>
+
+<p>
+I will continue porting Flourish to JavaScript: <a href="https://github.com/Tatsh/flourish-js">https://github.com/Tatsh/flourish-js</a>
+</p>
+
+<p>
+Please send me a message on GitHub if you would like more information (will likely not be checking this forum post). I have worked with the Flourish library for over 1.5 years and at this point cannot imagine PHP without it, but I think since inkWell goes too far astray I am going to be splitting the last version of Flourish away (will likely change name too to avoid issues) unless the project turns around really quickly.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1764">
+				<div class="body" id="body-1764">
+					
+<p>
+Audvare, my initial impression is that Will is probably very busy with his new work as he's learning the ropes.  iMarc afforded Will time to work on Flourish because iMarc uses the library internally and is predominately a PHP shop.
+</p>
+
+<p>
+I cannot say that I'm not concerned at all.  Will has been at this a long time, and I assume as with most developers, new things capture interest quite a bit more.  That said.  I'm also not concerned because working for iMarc, I can assure you there is a vested interest in the other developers there maintaining and pushing it into the future.
+</p>
+
+<p>
+Flourish represents years worth of development, testing, and polishing.  Throwing it away would be a bad decision for all interested parties.  My understanding of the &quot;difficult&quot; part for iMarc is replicating Will's extensive test environments.  For this reason they've been focusing on small bugfixes rather than larger ones which could have more extensive consequences and/or new features:  <a href="https://github.com/imarc/flourish-classes">https://github.com/imarc/flourish-classes</a>
+</p>
+
+<p>
+My general suggestion would be to push bug-fixes towards iMarc's fork which can undergo more thorough review and stable inclusion... unless of course you have gone through the trouble of replicating Will's test environment.  Similarly, I also maintain and for that matter extend the .inK fork, so I'd be happy to take any bugfixes or new features there.  One area in which I differ from iMarc is that I'm not overly concerned with backwards compatibility since Flourish is primarily used as a core for my framework which is not proposed to be API stable yet.
+</p>
+
+<p>
+Overall I think someone just needs to take the time to talk to Will about his long-term intentions with Flourish to determine if the project should be forked in a more absolute sense.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/24/12 4:48pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1765">
+				<div class="body" id="body-1765">
+					
+<p>
+I should also add, inKWell is separate from the .inK Flourish fork.  That is to say, there is nothing included in that fork that requires inKWell.  inKWell requires .inK Flourish (to operate as documented), but not the other way around.  Also, although I'm not concerning myself with backwards compatibility, the API remains to this day 100% compatible.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/24/12 5:37pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

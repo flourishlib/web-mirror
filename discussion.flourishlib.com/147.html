@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Flourish + Firebug + FirePHP &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Flourish + Firebug + FirePHP</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					rick			</span>
+	<span class="date_posted" title="10/8/09 11:47am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Currently, I have a quick and (very) dirty implementation of Firebug/FirePHP for exposing all of my Flourish debug information in Firebug's console instead of in the browser window. 
+</p>
+
+<p>
+The run down:
+</p>
+
+<p>
+Added to: <strong>config.php</strong>
+</p>
+<pre class="block php"><code>include(DOC_ROOT . '/inc/flourish/FirePHP.class.php');</code></pre>
+
+<p>
+ Patched in: <strong><a href="../flourishlib.com/docs/fCore.html">fCore</a>.php</strong>
+</p>
+<pre class="block php"><code>static public function expose($data)
+{
+  if ( function_exists('fb') ) {
+    fb( htmlspecialchars((string) self::dump($data), ENT_QUOTES, 'UTF-8') );
+  } 
+  else {
+    echo '&lt;pre class=&quot;exposed&quot;&gt;' . htmlspecialchars((string) self::dump($data), ENT_QUOTES, 'UTF-8') . '&lt;/pre&gt;';
+  }
+}</code></pre>
+
+<p>
+ Obviously this is complete garbage, but for now, in the development environment, it does what i need. Perhaps this is a candidate for inclusion to Flourish?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-458">
+				<div class="body" id="body-458">
+					
+<p>
+Welcome Rick! There has been some previous discussion about FirePHP, and from that came some <a href="../flourishlib.com/docs/fCore.html">fCore</a> functionality that should make it fairly easy to integrate. You can find details at <a href="13.html">http://flourishlib.com/discussion/2/13</a>.
+</p>
+
+<p>
+For escaping output, if you have <a href="../flourishlib.com/docs/fHTML.html">fHTML</a> you can use <a href="../flourishlib.com/api/fHTML.html#encode">fHTML::encode()</a>:
+</p>
+<pre class="block php"><code>fb(fHTML::encode(fCore::dump($var)));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													unknown											</span>
+					<span class="date_posted" title="10/9/09 12:17am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

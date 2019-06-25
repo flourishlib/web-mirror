@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Cant succeed in usnig fCache with fDatabase in CLI usage  &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Cant succeed in usnig fCache with fDatabase in CLI usage </h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="1/8/10 8:35am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I am successfully using flourish in CLI php on windows. However, i can't seem to make the Schema Caching work, I don't know why.
+</p>
+
+<p>
+The database activity is going well, but no cache is beeing writen. I checked the write permissions, path, etc, no way...
+</p>
+
+<p>
+Any idea about my setup that could make it fail?
+</p>
+
+<p>
+The code is pretty much the same as in the example documentation
+</p>
+
+<p>
+Thank you
+</p>
+
+<p>
+Aurelien
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-578">
+				<div class="body" id="body-578">
+					
+<p>
+I don't know of any examples where it fails, but I'm not surprised if there may be some issues. I don't think that many people use Windows and probably even less CLI on Windows  that is not to say I don't support it, just that it has probably been tested way less.
+</p>
+
+<p>
+What backend are you using for <a href="../flourishlib.com/docs/fCache.html">fCache</a>? 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/8/10 9:07am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-579">
+				<div class="body" id="body-579">
+					
+<p>
+The file backend
+</p>
+
+<p>
+I will make some tests using only <a href="../flourishlib.com/docs/fCache.html">fCache</a> to see if its <a href="../flourishlib.com/docs/fCache.html">fCache</a> related or <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, and let you know
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="1/8/10 9:20am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-580">
+				<div class="body" id="body-580">
+					
+<p>
+Ok, the <a href="../flourishlib.com/docs/fCache.html">fCache</a> elements works with no issue
+</p>
+
+<p>
+Just to be sure because i do not understand fully the right order of commands : i am doing this :
+</p>
+<pre class="block php"><code>$db = new fDatabase(...oracle settings...);
+fORMDatabase::attach($db);
+fORM::enableSchemaCaching(new fCache('file', 'C:\\\\path\\\\to\\\\cache.db'));</code></pre>
+
+<p>
+ Do you see any mistake?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="1/8/10 9:55am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-581">
+				<div class="body" id="body-581">
+					
+<p>
+That should work fine.
+</p>
+
+<p>
+One thing to note is that the ORM schema cache is cleared whenever an <a href="../flourishlib.com/docs/fUnexpectedException.html">fUnexpectedException</a> (or child class) is thrown. This prevents you from having to manually clear the schema cache when you make changes to your schema. Perhaps you have one of those being thrown in your code?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/8/10 10:00am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-583">
+				<div class="body" id="body-583">
+					
+<p>
+I dont think that there are exception, the script is in very early stage of development, 1 page long... nothing very complicated. I will make some debuging to find out what is happening.
+</p>
+
+<p>
+If the cache is cleared, the file is still created right? (and then emptied but stays on disk?)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="1/8/10 10:03am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-584">
+				<div class="body" id="body-584">
+					
+<p>
+I have a new element : I exposed the $db variable after i make some queries.
+</p>
+
+<p>
+The <a href="../flourishlib.com/docs/fCache.html">fCache</a> object is present with correct schema data inside, but the state property is set to 'dirty'.
+</p>
+
+<p>
+Before any query the <a href="../flourishlib.com/docs/fCache.html">fCache</a> object is empty but with state 'clean'
+</p>
+
+<p>
+Anything special?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="1/8/10 10:59am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-585">
+				<div class="body" id="body-585">
+					
+<p>
+I think I understand what is going on. My script is a daemon, so I exit by sending ^C in the console. That must be triggering the Exception you are suggesting, hence not storing the cache. Am I right? In this case i should manually save the cache from time to time? Is this a public property? Can I write something like $db-&gt;cache-&gt;save() ? Or can I catch SIGTERM and exit 0 ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="1/8/10 11:02am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-589">
+				<div class="body" id="body-589">
+					
+<p>
+Sorry, I was quite sick last week and wasn't able to do much of anything with Flourish.
+</p>
+
+<p>
+You definitely can call <a href="../flourishlib.com/api/fCache.html#save">fCache::save()</a> after detecting a signal - this will cause all of the correct data to be saved.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/19/10 1:58pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-582">
+				<div class="body" id="body-582">
+					
+<p>
+I ment <a href="../flourishlib.com/docs/fCache.html">fCache</a> works independently, but no success with schema caching.
+</p>
+
+<p>
+The previous example is the code before making the actual db requests. These requests work and when activating debug, i can see the schema retrieval, but it is not stored in the cache (the file is not even created).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="1/8/10 10:00am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

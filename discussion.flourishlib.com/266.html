@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Leave it up to the programmer to select required fields in an fRecordSet::buildFromSQL() call &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Leave it up to the programmer to select required fields in an fRecordSet::buildFromSQL() call</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="7/14/10 6:20pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I get the reasoning behind asking that SQL statements passed to buildFromSQL look like a SELECT * FROM statement, but this is irritatingly limiting.  Why not throw an exception after the statement is run if the required fields are not returned rather than enforcing a rigid SQL scheme?
+</p>
+
+<p>
+For instance, what if I needed to use a control flow statement to decide between selecting a column or using a sub-query to get that value elsewhere if the column is null (a simple IF() in MySQL)?  As far as I can see, that would mean I'd have to give up all the benefits of <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>/<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> because it'd mean straying from SELECT * FROM (I tried it, Flourish throws an exception complaining about SELECT * FROM).
+</p>
+
+<p>
+Once again, maybe I'm just not seeing the bigger picture :)  Seems like a small increase in trust for a huge increase in potential, though.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-827">
+				<div class="body" id="body-827">
+					
+<p>
+Well, all of the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> functionality is designed around the active record pattern, that is, an object that represents a row/record in a database table. In such situations there isn't a need for anything other than <code>SELECT * FROM</code>.
+</p>
+
+<p>
+It sounds to me like you are using it very much like an active record, but you are pulling data from a different table. In your situation, I would probably recommend simply extending fRecordSet:
+</p>
+<pre class="block php"><code>class CustomRecordSet extends fRecordSet
+{
+	static public function buildFromSQL($class, $sql, $non_limited_count_sql=NULL)
+	{
+		fActiveRecord::validateClass($class);
+		fActiveRecord::forceConfigure($class);
+		return new fRecordSet(
+			$class,
+			fORMDatabase::retrieve($class, 'read')-&gt;translatedQuery($sql),
+			$non_limited_count_sql
+		);
+	}
+}</code></pre>
+
+<p>
+ Then you can call:
+</p>
+<pre class="block php"><code>$rs = CustomRecordSet::buildFromSQL($sql);</code></pre>
+
+<p>
+ I think leaving the check will help more people than remove the check will.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/14/10 8:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-828">
+				<div class="body" id="body-828">
+					
+<p>
+Ah interesting, that should do the trick.  Thanks once again!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="7/14/10 11:45pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-829">
+				<div class="body" id="body-829">
+					
+<p>
+yeah you know, this is just pure laziness on my part.  this all came from my wanting to pass data to views with that convenient get/prepare/encode method prefix structure <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> provides.  i really should get off my butt and just write a simple data container class that provides that, huh?  save the overhead and the possibility someone else does something silly like manipulate the database from the view or something.
+</p>
+
+<p>
+that way i can tune my SELECTs to my little heart's content. :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="7/15/10 12:15am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

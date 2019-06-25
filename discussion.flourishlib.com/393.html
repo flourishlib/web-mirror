@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Memory Used in Single Page App &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Memory Used in Single Page App</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					blogwalker			</span>
+	<span class="date_posted" title="4/4/11 9:58pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+After working with flourishlib for a few weeks, I started doing some benchmarking to see how things were performing. When doing that, I was surprised to find that my application was using 7MB+ of memory. While not approaching the megalithic levels of CakePHP, I was surprised. I am used to apps taking less than 2MB of memory. I suspected the ORM, and I was correct. So I created a simple single page application that uses autoload to load the libraries, creates a database connection, attaches it to an orm. Creates an Active Record on over one table in the database. Uses a couple of ORM features, in this case DateCreatedColumn. Get all the rows in the table/record with a RecrodSet. The table has 4 rows in it. Loops over the recrod set and displays an ul.
+</p>
+
+<p>
+The result of this is a whopping 5.8MB of memory use. Is this to be expected? I can do the same thing with idiorm and paris for 1MB. I know paris does not have all the features of the flourishlib orm, but I can add a lot of behaviors to an AR by adding methods.
+</p>
+
+<p>
+Is there a plan to reduce the memory usage? Best practice? (unsetting the record set has no impact, using memory_get_usage() at the end of the script.)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1208">
+				<div class="body" id="body-1208">
+					
+<p>
+Hmm, I can't argue with you on this one. Numerous <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> extension classes here and I get about 9.63 MB memory usage from (memory_get_usage() / 1024 / 1024) after generation of my relatively simple homepage. I'm not complaining (yet) since the server I'm on has 1048864k memory and generally speaking, I'm the only user on besides a few testers.
+</p>
+<pre><code>Mem:   1048864k total,   616544k used,   432320k free,     3696k buffers
+Swap:   530140k total,   297752k used,   232388k free,    33240k cached</code></pre>
+
+<p>
+ Have a copy of JIRA running too, and a PHP-written daemon doing Twitter requests (takes up about 5 MB, and yes it uses <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> therefore <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>).
+</p>
+
+<p>
+This server I'm using is for development only. The server we will end up on for production will probably be far better.
+</p>
+
+<p>
+The documentation has some really good information about caching and performance in general. Wikipedia and Twitter both use memcache, I'd suggest looking into it. Servers I've used in the past have used APC or Memcache (they were all running Drupal installs). <a href="../flourishlib.com/docs/PerformanceTips.html">http://flourishlib.com/docs/PerformanceTips</a> I pretty much can't argue against any of these things mentioned here.
+</p>
+
+<p>
+Another neat trick which I've looked into implementing in my own new Flourish-based site. The Drupal module named Boost (which I use on anfplaylists.com) does the following:
+</p>
+<pre><code>Page requested: Does the already-generated HTML exist in /caches?
+  YES - Can the user accept gzip/DEFLATE? Serve the gzip'd version
+    NO - The user cannot accept gzip, serve the non-gzip'd version
+  NO - Run the PHP code to generate the HTML, serve it to the user, save the HTML version and the gzip'd HTML version
+
+Cron job: Flush all HTML caches if their expiration time is up</code></pre>
+
+<p>
+ This would be relatively easy to implement especially with the help of the Flourish library.
+</p>
+
+<p>
+Finally, if you REALLY want to reduce memory usage, start writing PHP extensions. Just note that call_user_func_array() I don't think works well from a PHP extension standpoint. And just look at how foreach works in C:
+</p>
+<pre><code>for (
+  zend_hash_internal_pointer_reset_ex(arr_hash, &amp;pointer); 
+  zend_hash_get_current_data_ex(arr_hash, (void**) &amp;data, &amp;pointer) == SUCCESS;
+  zend_hash_move_forward_ex(arr_hash, &amp;pointer)
+) { }</code></pre>
+
+<p>
+ GAH! But hey, more speed! Extension Writing: <a href="http://devzone.zend.com/article/1022">http://devzone.zend.com/article/1022</a> I am actually looking into this to convert my translation class to C for more speed since string manipulation is often one of the largest bottlenecks in PHP applications.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/5/11 12:45pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1209">
+				<div class="body" id="body-1209">
+					
+<p>
+I have not done any memory optimization for Flourish and I don't have any specific plans to, but that is not to say I wouldn't be open to it.
+</p>
+
+<p>
+Just for reference, PHP uses quite a bit of memory just to load the Flourish classes. On my 32-bit VM loading every class is Flourish uses 14.25MB. The source code itself it over 1MB, but about 1/3 of those lines are comments.
+</p>
+
+<p>
+If you have some examples of Flourish using a lot of memory (after loading classes into memory) please feel free to open a ticket. I'd be happy to try and fix gratuitous memory usage.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/5/11 1:10pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>mysql error on count of related records &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">mysql error on count of related records</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="10/12/09 6:04pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello - I'm getting the following error when trying to get a precount of related records using the flourish ORM:
+</p>
+<pre><code>MySQL error (You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' entrants.survey_id) AS __flourish_count, surveys.id AS __flourish_column  FROM ' at line 1) in SELECT count(entrants.id, entrants.survey_id) AS __flourish_count, surveys.id AS __flourish_column  FROM entrants LEFT JOIN surveys ON entrants.survey_id = surveys.id  WHERE surveys.id IN (1) GROUP BY surveys.id ORDER BY surveys.id ASC</code></pre>
+
+<p>
+ It looks like mysql doesn't like that comma in count().  Any ideas?
+</p>
+
+<p>
+mysql version: 5.0.75-0ubuntu10.2 php version: PHP/5.2.6-3ubuntu4.2 with Suhosin-Patch
+</p>
+
+<p>
+Thanks for any help you can give here!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-480">
+				<div class="body" id="body-480">
+					
+<p>
+Vena,
+</p>
+
+<p>
+You shouldn't ever need count(A,B).  I don't think it is allowable SQL anyway.  Your query should work just fine as :
+</p>
+<pre class="block sql"><code>SELECT count(*) AS flourish_count, surveys.id AS flourish_column FROM entrants
+LEFT JOIN surveys ON entrants.survey_id = surveys.id 
+WHERE surveys.id IN (1) 
+GROUP BY surveys.id 
+ORDER BY surveys.id ASC</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="10/13/09 2:08pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-481">
+				<div class="body" id="body-481">
+					
+<p>
+The issue is that the ORM is generating that SQL. In Postgres (which I use daily) it is valid syntax, so that's why it is there.
+</p>
+
+<p>
+I also believe that changing it to <code>count(*)</code> should fix it, but I would like to write a unit test or two to make sure.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/13/09 2:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-482">
+				<div class="body" id="body-482">
+					
+<p>
+Yup, the ORM is generating it.  Would it hurt performance to count(*) rather than an index?
+</p>
+
+<ul>
+<li>edit: to answer my own question, apparently not. explain query shows it uses the two indexed keys for the count.  i've changed line 1329 in <a href="../flourishlib.com/api/fRecordSet.html#precount">fRecordSet::precount()</a> to use count(*) in the meantime.  if i run into any issues, i'll be sure to post them :)</li>
+</ul>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="10/13/09 2:36pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-497">
+				<div class="body" id="body-497">
+					
+<p>
+This issue was fixed in r720
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/22/09 4:23pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

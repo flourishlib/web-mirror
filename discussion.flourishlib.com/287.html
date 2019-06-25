@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Gmail username/pass word wrong when absolutely right. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Gmail username/pass word wrong when absolutely right.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					hsl			</span>
+	<span class="date_posted" title="8/24/10 6:22pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I'm using FMailbox in my project, and in my local development environment (macosx) it works great, the project can open the mailbox and do something with the mail. On my production server it keeps giving me: &quot;The username and password provided were not accepted for the IMAP server imap.gmail.com on port 993&quot;.
+</p>
+
+<p>
+The username &amp; password are absolutely correct (due svn they are 100% the same)
+</p>
+
+<p>
+Does anyone have a clue what could be wrong? My server has an ubuntu install with php 5.2.4 ( <a href="http://thomasschippers.nl/home/info">http://thomasschippers.nl/home/info</a> )
+</p>
+
+<p>
+Thanks!
+</p>
+
+<p>
+Harold
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-885">
+				<div class="body" id="body-885">
+					
+<p>
+I will check on my Ubuntu machine in the morning to see if I have any issues. What version of <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> are you running?
+</p>
+
+<p>
+Have you turned on debugging to see what commands are being sent and what responses are received? Can you post some of the exchange, minus your username and password?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/25/10 12:41am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-888">
+				<div class="body" id="body-888">
+					
+<p>
+I was able to successfully connect to gmail on my Ubuntu 8.04 box with PHP 5.2.4. It does require openssl and a secure connection, however it appears the PHP openssl extension is installed by default.
+</p>
+
+<p>
+To diagnose this further, I'll need that debugging output from your connection attempt.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/26/10 11:50pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-896">
+				<div class="body" id="body-896">
+					
+<p>
+I would love to give you the data, but if I do a var_dump it's completely empty,..
+</p>
+
+<p>
+Do you have a small test setup that I can test?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hsl											</span>
+					<span class="date_posted" title="8/27/10 10:44am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-897">
+				<div class="body" id="body-897">
+					
+<p>
+I'm not sure what you are trying to do a <code>var_dump()</code> of. If you call <code>$mailbox-&gt;enableDebugging(TRUE)</code> all of the IMAP commands and responses will be echoed.
+</p>
+
+<p>
+What is your <code>error_reporting()</code> level set at on the Ubuntu machine?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/27/10 10:47am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-898">
+				<div class="body" id="body-898">
+					
+<p>
+It's on ALL,..
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hsl											</span>
+					<span class="date_posted" title="8/27/10 10:54am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-899">
+				<div class="body" id="body-899">
+					
+<p>
+So you still aren't getting any output with <code>-&gt;enableDebugging(TRUE)</code>?
+</p>
+
+<p>
+Are you using the stock <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>, or the one that steelaz ported to CI?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/27/10 10:58am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

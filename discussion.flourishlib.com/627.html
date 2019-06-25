@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fEmail $headers bug? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fEmail $headers bug?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					lutsen			</span>
+	<span class="date_posted" title="6/14/12 3:55pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When using the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> class to send e-mails, certain from and to e-mail address combinations produce an error. It seems to have something to do with the $headers variable in the mail() function. When I remove this variable in line 1467, the error is gone.
+</p>
+
+<p>
+From the few different addresses I have tested, the error occurs with a combination of a to- and from e-mail address that both share our own domain (hoverkraft.nl), and a combination of hoverkraft.nl and gmail.com.
+</p>
+
+<p>
+Any ideas on what causes this?
+</p>
+
+<p>
+Oh, and by the way: I think Flourish is great!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1761">
+				<div class="body" id="body-1761">
+					
+<p>
+@lutsen
+</p>
+
+<p>
+What is the error it produces?  Do you have an example of the code which you are using leading up to this?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/17/12 11:35pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1768">
+				<div class="body" id="body-1768">
+					
+<p>
+Sorry for my slow repy.
+</p>
+
+<p>
+This is the error: Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>' with message 'An error occured while trying to send the email entitled TEST' in /test_bless/flourish/<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php:1478 Stack trace:
+</p>
+
+<ol>
+<li>0 /www/test_bless/test.php(16): <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>-&gt;send()</li>
+<li>1 {main} thrown in /test_bless/flourish/<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php on line 1478</li>
+</ol>
+
+<p>
+This is the code:
+</p>
+<pre class="block php"><code>$email = new fEmail();
+$email-&gt;addRecipient('xxx@hoverkraft.nl');
+$email-&gt;setFromEmail('xxx@hoverkraft.nl');
+$email-&gt;setSubject('TEST');
+$email-&gt;setBody('TEST');
+$email-&gt;send();</code></pre>
+
+<p>
+ As I said: the error occurs with a combination of a to- and from e-mail address that both share our own domain (hoverkraft.nl), and a combination of hoverkraft.nl and gmail.com. Other addresses do work. It seems to have something to do with the $headers variable in the mail() function. When I remove this variable in line 1467 in <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php, the error is gone.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													lutsen											</span>
+					<span class="date_posted" title="6/27/12 10:02am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1769">
+				<div class="body" id="body-1769">
+					
+<p>
+@lutsen are there any strange characters in the from e-mails?  I understand you don't want to show the e-mails here, but this is the only thing you're indicating is differing.  Given that it's using the system's mail command my guess is it's not properly escaping one of the e-mails when it passes the arguments.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/27/12 8:35pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1771">
+				<div class="body" id="body-1771">
+					
+<p>
+No, no strange characters, just replace the xxx with lutsen. But as I said, if I remove the $headers variable in the mail() in line 1467 of the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> class, it does work. So I guess it has something to do with the headers...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													lutsen											</span>
+					<span class="date_posted" title="6/29/12 11:33am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1772">
+				<div class="body" id="body-1772">
+					
+<p>
+var_dump the $headers variable at that point and paste it here?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/29/12 2:33pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1773">
+				<div class="body" id="body-1773">
+					
+<p>
+It seems sometimes the Message-ID is not set. At first I thought this caused the error, but it happens with working- and non-working e-mail addresses. And the non-working are never sent, and the working are allways sent, eventhough they also sometimes seem to have no Message-ID.
+</p>
+<pre class="block php"><code>string(169) &quot;From: xxx@hoverkraft.nl Message-ID: MIME-Version: 1.0 Content-Type: text/plain; charset=utf-8 Content-Transfer-Encoding: quoted-printable&quot;
+
+string(169) &quot;From: xxx@hoverkraft.nl Message-ID: &lt;1e7f078b44.1341347820@&gt; MIME-Version: 1.0 Content-Type: text/plain; charset=utf-8 Content-Transfer-Encoding: quoted-printable&quot; 
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													lutsen											</span>
+					<span class="date_posted" title="7/3/12 4:55pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

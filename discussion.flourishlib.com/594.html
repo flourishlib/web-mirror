@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Server error on fRecordSet::build &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Server error on fRecordSet::build</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					jonathanza			</span>
+	<span class="date_posted" title="2/24/12 11:34am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+MySQL PHP 5.3 Flourish 1042
+</p>
+
+<p>
+I seem to be hitting a 500 server error when attempting to build a recordset. The table is very simple and has no relations.
+</p>
+<pre class="block sql"><code>CREATE TABLE tx_ia_benchmark (
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+    crdate int(11) DEFAULT '0' NOT NULL,
+    tstamp int(11) DEFAULT '0' NOT NULL,
+    
+    data_key varchar(50) not null,
+    data_value varchar(255) not null,
+    
+    PRIMARY KEY (uid)
+);</code></pre>
+
+<p>
+ I created it just for testing. It contains just over 20 000 records.  This command will fail:
+</p>
+<pre class="block php"><code>$rsBenchmark = fRecordSet::build('Benchmark');</code></pre>
+
+<p>
+ as well as this:
+</p>
+<pre class="block php"><code>        $rsBenchmark = fRecordSet::build(
+            'Benchmark',
+            array(),
+            array(),
+            1500
+        );</code></pre>
+
+<p>
+ The schema is being cached in the database. 
+</p>
+
+<p>
+MySQL seems to be aborting the connection but the result set just seem so small. 
+</p>
+
+<p>
+I'd really appreciate it if anyone has some advice on where to look for a resolution to this issue.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1693">
+				<div class="body" id="body-1693">
+					
+<p>
+Anything in the PHP error logs regarding memory?  Have you tried running the query directly to MySQL to ensure it's not something wrong with MySQL?  Also try the query using whichever extension Flourish is picking up (probably mysqli).  Do all these succeed without issue?
+</p>
+
+<p>
+It seems very unlikely that Flourish itself would be causing the problem, but it certainly could be something to do with the fact that Flourish abstracts it -- it necessarily will consume more memory than non ORM based queries.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/24/12 7:59pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1694">
+				<div class="body" id="body-1694">
+					
+<p>
+Hi, thanks for the reply.
+</p>
+
+<p>
+After some more testing I've found that this also fails:
+</p>
+<pre class="block php"><code>$records = array();
+$result = mysql_query(&quot;SELECT tx_ia_benchmark.* FROM tx_ia_benchmark&quot;) 
+        or die(mysql_error());  
+        
+while($row = mysql_fetch_assoc( $result )) {
+   $records[] = $row; //Server error thrown here
+}</code></pre>
+
+<p>
+ It seems that storing the results in the array results in an error if there are more than 8300 records. 
+</p>
+
+<p>
+No PHP errors and just this in web server log:
+</p>
+<pre><code> (104)Connection reset by peer: mod_fcgid: error reading data from FastCGI server, referer: http://...</code></pre>
+
+<p>
+ The database is on a remote server so I'm guessing that some setting/s on either the web server or database needs to changed.
+</p>
+
+<p>
+It just seems odd that the error is thrown with such a relatively small set of records. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jonathanza											</span>
+					<span class="date_posted" title="2/25/12 1:25am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1695">
+				<div class="body" id="body-1695">
+					
+<p>
+It's not odd if the maximum memory limit you have is relatively small.  Look at phpinfo() and see what your max memory usage is limited to.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/25/12 11:53am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord::associate pluralisation &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord::associate pluralisation</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="2/5/10 5:04pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm not sure what's happening here, but it seems like flourish looks for the class name without taking pluralisation into account if it's given an array with only one member.  For instance, if i do $groups-&gt;associateGroupFields($fields) but $fields is an array with a count of 1, it will cause a fatal &quot;class GroupFields not found&quot; error, however if the array count is &gt; 1, it recognises the pluralisation correctly and calls the GroupField class.
+</p>
+
+<p>
+for example, check out this trace:
+</p>
+<pre><code>Fatal error: Class 'GroupFields' not found in /application/libraries/flourish/fORMRelated.php on line 107
+Call Stack
+#	Time	Memory	Function	Location
+1	0.0007	84544	{main}( )	../index.php:0
+2	0.0016	94380	require( '/application/bootstrap.php' )	../index.php:49
+3	0.1916	8140364	Router::run( )	../bootstrap.php:86
+4	0.1917	8140660	Router::matchURLToRoute( )	../Router.php:175
+5	0.1924	8143624	Router::dispatch( )	../Router.php:142
+6	0.3036	8292800	SurveyController-&gt;processEditSurvey( )	../Router.php:104
+7	0.3449	8463332	SurveyGroup-&gt;associateGroupFields( )	../SurveyController.php:192
+8	0.3449	8463712	fActiveRecord-&gt;__call( )	../fActiveRecord.php:0
+9	0.3454	8466104	fORMRelated::associateRecord( )	../fActiveRecord.php:811</code></pre>
+
+<p>
+ and here's the creates for the tables...
+</p>
+<pre class="block sql"><code>CREATE TABLE IF NOT EXISTS `surveys` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `creator` bigint(20) unsigned NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `date_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `creator` (`creator`),
+  KEY `theme` (`theme`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='surveys' AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `survey_groups` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `survey_id` bigint(20) unsigned DEFAULT NULL,
+  `display_order` int(10) unsigned DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `type` varchar(150) NOT NULL DEFAULT '',
+  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `display_order` (`survey_id`,`display_order`),
+  KEY `survey_id` (`survey_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='survey groups' AUTO_INCREMENT=7 ;
+ALTER TABLE `survey_groups`
+  ADD CONSTRAINT `survey_groups_ibfk_1` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `survey_group_fields` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` bigint(20) unsigned DEFAULT NULL,
+  `display_order` int(10) unsigned DEFAULT NULL,
+  `type` varchar(150) NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `default_value` varchar(250) DEFAULT NULL,
+  `selected` tinyint(1) DEFAULT '0',
+  `max_length` int(3) unsigned DEFAULT NULL,
+  `validation_regexp` varchar(255) DEFAULT NULL,
+  `required` tinyint(1) DEFAULT '0',
+  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `display order` (`group_id`,`display_order`),
+  KEY `group_id` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='survey group fields' AUTO_INCREMENT=1 ;
+ALTER TABLE `survey_group_fields`
+  ADD CONSTRAINT `survey_group_fields_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `survey_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;</code></pre>
+
+<p>
+ For reference, this is from code gleened from <a href="198.html">this previous thread</a> re: deep relations.
+</p>
+
+<p>
+Any ideas here?  It's got me stuck pretty bad.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-605">
+				<div class="body" id="body-605">
+					
+<p>
+If i duplicate the models and create new ones like &quot;GroupFields&quot; to try and get around the pluralisation issue, I just end up with a different exception claiming i have an invalidly formatted primary or unique key:
+</p>
+<pre><code>object(fProgrammerException)[19]
+  protected 'message' =&gt; string 'An invalidly formatted primary or unique key was passed to this Group Fields object' (length=83)
+  private 'string' =&gt; string '' (length=0)
+  protected 'code' =&gt; null
+  protected 'file' =&gt; string '/application/libraries/flourish/fActiveRecord.php' (length=119)
+  protected 'line' =&gt; int 1119
+  private 'trace' =&gt; 
+    array
+      0 =&gt; 
+        array
+          'file' =&gt; string '/application/libraries/flourish/fORMRelated.php' (length=117)
+          'line' =&gt; int 107
+          'function' =&gt; string '__construct' (length=11)
+          'class' =&gt; string 'fActiveRecord' (length=13)
+          'type' =&gt; string '-&gt;' (length=2)
+          'args' =&gt; 
+            array
+              0 =&gt; 
+                array
+                  0 =&gt; 
+                    object(GroupField)[18]
+                      protected 'cache' =&gt; 
+                        array
+                          empty
+                      protected 'old_values' =&gt; 
+                        array
+                          'selected' =&gt; 
+                            array
+                              0 =&gt; null
+                          'required' =&gt; 
+                            array
+                              0 =&gt; null
+                          'date_updated' =&gt; 
+                            array
+                              0 =&gt; null
+                          'date_created' =&gt; 
+                            array
+                              0 =&gt; null
+                          'display_order' =&gt; 
+                            array
+                              0 =&gt; null
+                          'type' =&gt; 
+                            array
+                              0 =&gt; null
+                          'default_value' =&gt; 
+                            array
+                              0 =&gt; null
+                          'max_length' =&gt; 
+                            array
+                              0 =&gt; null
+                          'validation_regexp' =&gt; 
+                            array
+                              0 =&gt; null
+                      protected 'related_records' =&gt; 
+                        array
+                          empty
+                      protected 'values' =&gt; 
+                        array
+                          'id' =&gt; null
+                          'group_id' =&gt; null
+                          'display_order' =&gt; null
+                          'type' =&gt; string 'text' (length=4)
+                          'label' =&gt; null
+                          'default_value' =&gt; null
+                          'selected' =&gt; boolean false
+                          'max_length' =&gt; string '100' (length=3)
+                          'validation_regexp' =&gt; null
+                          'required' =&gt; boolean false
+                          'date_updated' =&gt; 
+                            object(fTimestamp)[17]
+                              private 'timestamp' =&gt; int 1265589534
+                              private 'timezone' =&gt; string 'UTC' (length=3)
+                          'date_created' =&gt; string '0000-00-00 00:00:00' (length=19)
+      1 =&gt; 
+        array
+          'file' =&gt; string '/application/libraries/flourish/fActiveRecord.php' (length=119)
+          'line' =&gt; int 811
+          'function' =&gt; string 'associateRecord' (length=15)
+          'class' =&gt; string 'fORMRelated' (length=11)
+          'type' =&gt; string '::' (length=2)
+          'args' =&gt; 
+            array
+              0 =&gt; string 'SurveyGroup' (length=11)
+              1 =&gt; &amp;
+                array
+                  empty
+              2 =&gt; string 'GroupFields' (length=11)
+              3 =&gt; 
+                array
+                  0 =&gt; 
+                    object(GroupField)[18]
+                      protected 'cache' =&gt; 
+                        array
+                          empty
+                      protected 'old_values' =&gt; 
+                        array
+                          'selected' =&gt; 
+                            array
+                              0 =&gt; null
+                          'required' =&gt; 
+                            array
+                              0 =&gt; null
+                          'date_updated' =&gt; 
+                            array
+                              0 =&gt; null
+                          'date_created' =&gt; 
+                            array
+                              0 =&gt; null
+                          'display_order' =&gt; 
+                            array
+                              0 =&gt; null
+                          'type' =&gt; 
+                            array
+                              0 =&gt; null
+                          'default_value' =&gt; 
+                            array
+                              0 =&gt; null
+                          'max_length' =&gt; 
+                            array
+                              0 =&gt; null
+                          'validation_regexp' =&gt; 
+                            array
+                              0 =&gt; null
+                      protected 'related_records' =&gt; 
+                        array
+                          empty
+                      protected 'values' =&gt; 
+                        array
+                          'id' =&gt; null
+                          'group_id' =&gt; null
+                          'display_order' =&gt; null
+                          'type' =&gt; string 'text' (length=4)
+                          'label' =&gt; null
+                          'default_value' =&gt; null
+                          'selected' =&gt; boolean false
+                          'max_length' =&gt; string '100' (length=3)
+                          'validation_regexp' =&gt; null
+                          'required' =&gt; boolean false
+                          'date_updated' =&gt; 
+                            object(fTimestamp)[17]
+                              private 'timestamp' =&gt; int 1265589534
+                              private 'timezone' =&gt; string 'UTC' (length=3)
+                          'date_created' =&gt; string '0000-00-00 00:00:00' (length=19)
+              4 =&gt; null
+      2 =&gt; 
+        array
+          'function' =&gt; string '__call' (length=6)
+          'class' =&gt; string 'fActiveRecord' (length=13)
+          'type' =&gt; string '-&gt;' (length=2)
+          'args' =&gt; 
+            array
+              0 =&gt; string 'associateGroupFields' (length=20)
+              1 =&gt; 
+                array
+                  0 =&gt; 
+                    array
+                      0 =&gt; 
+                        object(GroupField)[18]
+                          protected 'cache' =&gt; 
+                            array
+                              empty
+                          protected 'old_values' =&gt; 
+                            array
+                              'selected' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'required' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'date_updated' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'date_created' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'display_order' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'type' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'default_value' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'max_length' =&gt; 
+                                array
+                                  0 =&gt; null
+                              'validation_regexp' =&gt; 
+                                array
+                                  0 =&gt; null
+                          protected 'related_records' =&gt; 
+                            array
+                              empty
+                          protected 'values' =&gt; 
+                            array
+                              'id' =&gt; null
+                              'group_id' =&gt; null
+                              'display_order' =&gt; null
+                              'type' =&gt; string 'text' (length=4)
+                              'label' =&gt; null
+                              'default_value' =&gt; null
+                              'selected' =&gt; boolean false
+                              'max_length' =&gt; string '100' (length=3)
+                              'validation_regexp' =&gt; null
+                              'required' =&gt; boolean false
+                              'date_updated' =&gt; 
+                                object(fTimestamp)[17]
+                                  private 'timestamp' =&gt; int 1265589534
+                                  private 'timezone' =&gt; string 'UTC' (length=3)
+                              'date_created' =&gt; string '0000-00-00 00:00:00' (length=19)
+      3 =&gt; 
+        array
+          'file' =&gt; string '/application/controllers/admin/SurveyController.php' (length=121)
+          'line' =&gt; int 196
+          'function' =&gt; string 'associateGroupFields' (length=20)
+          'class' =&gt; string 'SurveyGroup' (length=11)
+          'type' =&gt; string '-&gt;' (length=2)
+          'args' =&gt; 
+            array
+              0 =&gt; 
+                array
+                  0 =&gt; 
+                    object(GroupField)[18]
+                      protected 'cache' =&gt; 
+                        array
+                          empty
+                      protected 'old_values' =&gt; 
+                        array
+                          'selected' =&gt; 
+                            array
+                              0 =&gt; null
+                          'required' =&gt; 
+                            array
+                              0 =&gt; null
+                          'date_updated' =&gt; 
+                            array
+                              0 =&gt; null
+                          'date_created' =&gt; 
+                            array
+                              0 =&gt; null
+                          'display_order' =&gt; 
+                            array
+                              0 =&gt; null
+                          'type' =&gt; 
+                            array
+                              0 =&gt; null
+                          'default_value' =&gt; 
+                            array
+                              0 =&gt; null
+                          'max_length' =&gt; 
+                            array
+                              0 =&gt; null
+                          'validation_regexp' =&gt; 
+                            array
+                              0 =&gt; null
+                      protected 'related_records' =&gt; 
+                        array
+                          empty
+                      protected 'values' =&gt; 
+                        array
+                          'id' =&gt; null
+                          'group_id' =&gt; null
+                          'display_order' =&gt; null
+                          'type' =&gt; string 'text' (length=4)
+                          'label' =&gt; null
+                          'default_value' =&gt; null
+                          'selected' =&gt; boolean false
+                          'max_length' =&gt; string '100' (length=3)
+                          'validation_regexp' =&gt; null
+                          'required' =&gt; boolean false
+                          'date_updated' =&gt; 
+                            object(fTimestamp)[17]
+                              private 'timestamp' =&gt; int 1265589534
+                              private 'timezone' =&gt; string 'UTC' (length=3)
+                          'date_created' =&gt; string '0000-00-00 00:00:00' (length=19)</code></pre>
+
+<p>
+ is there something i'm missing here in my schema or something?  i can't figure out what's going wrong here...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="2/7/10 7:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-606">
+				<div class="body" id="body-606">
+					
+<p>
+uhm, ok... so... i rebuilt the database using single names rather than underscore notation, and changed the name of the classes so they're the exact, singular form of the database tables (i was using fORM::mapClassToTable before), and now it works and i'm further confused.
+</p>
+
+<p>
+here are the new creates in case you can spot something here
+</p>
+<pre class="block sql"><code>-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields`
+--
+
+CREATE TABLE IF NOT EXISTS `fields` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` bigint(20) unsigned NOT NULL,
+  `display_order` int(10) NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `default_value` varchar(255) NOT NULL,
+  `max_length` int(4) NOT NULL,
+  `validation_regexp` varchar(255) NOT NULL,
+  `selected` tinyint(1) NOT NULL,
+  `required` tinyint(1) NOT NULL,
+  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `display_order` (`group_id`,`display_order`),
+  KEY `group_id` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE IF NOT EXISTS `groups` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `survey_id` bigint(20) unsigned NOT NULL,
+  `display_order` int(10) NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `sublabel` varchar(255) NOT NULL,
+  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `display_order` (`survey_id`,`display_order`),
+  KEY `survey_id` (`survey_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surveys`
+--
+
+CREATE TABLE IF NOT EXISTS `surveys` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `creator` bigint(20) unsigned NOT NULL,
+  `theme` bigint(20) unsigned DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `thanks` varchar(255) DEFAULT NULL,
+  `start_date` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `end_date` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `date_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `creator` (`creator`),
+  KEY `theme` (`theme`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='surveys' AUTO_INCREMENT=1 ;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `fields`
+--
+ALTER TABLE `fields`
+  ADD CONSTRAINT `fields_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `groups`
+--
+ALTER TABLE `groups`
+  ADD CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `surveys`
+--
+ALTER TABLE `surveys`
+  ADD CONSTRAINT `surveys_ibfk_1` FOREIGN KEY (`creator`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;</code></pre>
+
+<p>
+ admittedly, i've been working on this all day so my brain my be a little run down.  maybe all this data can help you figure this out, i'm just glad it's working :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="2/7/10 8:39pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-676">
+				<div class="body" id="body-676">
+					
+<p>
+I wanted to let you guys know that all issues with mapped classes should be resolved as of r792.
+</p>
+
+<p>
+I also updated the documentation about <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> to recommend calling it in site-wide configuration and not in <a href="../flourishlib.com/api/fActiveRecord.html#configure">fActiveRecord::configure()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/31/10 12:26am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-610">
+				<div class="body" id="body-610">
+					
+<p>
+I think it has to do with the fact that there is an associate for *-to-many relationships, but there is also an associate for one-to-one relationships. My guess is that the code I have right now probably isn't robust enough to handle mapped class names. I'll try to look into this soon - I'm just finishing up a major patch to Flourish.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/11/10 9:15pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-634">
+				<div class="body" id="body-634">
+					
+<p>
+Same problem here. 
+</p>
+
+<p>
+Just FYI, if i use mapped table names, for example for users and groups, both $user-&gt;associateGroup($one_group) and $user-&gt;associateGroups($groups_array) wont work. 
+</p>
+
+<p>
+How can I associate user and groups in the meantime? should I make: $ref = new UserGroup(), set user_id and group_id and then $ref-&gt;store() ? 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="2/25/10 11:06am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-635">
+				<div class="body" id="body-635">
+					
+<p>
+In another thread, there was some thought that calling <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> for each model that needs table mapping in your init script rather than in the individual models' configure() methods might work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="2/26/10 10:34am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-636">
+				<div class="body" id="body-636">
+					
+<p>
+Yep I emmited that idea :) but in my case the association with mapped table names does not work even if the mapping is done
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="3/1/10 6:13am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

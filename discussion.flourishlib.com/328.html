@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>buildRecord clauses array does not translate as expected &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">buildRecord clauses array does not translate as expected</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="11/22/10 1:16am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi
+</p>
+
+<p>
+I have a problem with building a recordset. The clauses array is not respected 100%. This is the model I worked with (simplified):
+</p>
+<pre class="block sql"><code>
+CREATE TABLE `shops` (
+  `shop_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`shop_id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `products` (
+  `product_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `product_code` varchar(255) NOT NULL,
+  `catalog` varchar(255) NOT NULL,
+  PRIMARY KEY (`product_id`),
+  KEY `product_code` (`product_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `product_descriptions` (
+  `product_description_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) unsigned NOT NULL,
+  `shop_id` int(11) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`product_description_id`),
+  KEY `product_id` (`product_id`),
+  KEY `shop_id` (`shop_id`),
+  CONSTRAINT `product_descriptions_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE,
+  CONSTRAINT `product_descriptions_ibfk_2` FOREIGN KEY (`shop_id`) REFERENCES `shops` (`shop_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `offerings` (
+  `offering_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) unsigned NOT NULL,
+  `shop_id` int(11) unsigned NOT NULL,
+  `price` decimal(12,4) unsigned NOT NULL,
+  `visibility` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '0 = not visible 1 = catalog and search, 2 = catalog only, 3 = search only',
+  PRIMARY KEY (`offering_id`),
+  KEY `product_id` (`product_id`),
+  KEY `shop_id` (`shop_id`),
+  CONSTRAINT `offerings_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE,
+  CONSTRAINT `offerings_ibfk_2` FOREIGN KEY (`shop_id`) REFERENCES `shops` (`shop_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+
+<p>
+ The shop model is irrelevant, included as context.
+</p>
+
+<p>
+I'm querying the model with a clauses array like this:
+</p>
+<pre class="block php"><code>Array
+(
+    [products=&gt;product_descriptions.shop_id=] =&gt; 1
+    [shop_id=] =&gt; 1
+    [visibility=] =&gt; 1|2
+    [products.product_id=] =&gt; 5447|5448|7974
+)</code></pre>
+
+<p>
+ This particular query means that I want products for which I have an offering and for which there exists a description. The records I want to retrieve are Offerings.
+</p>
+
+<p>
+Invoking this query results in SQL like this:
+</p>
+<pre class="block sql"><code>SELECT offerings.* 
+FROM offerings 
+LEFT JOIN products ON offerings.product_id = products.product_id 
+LEFT JOIN product_descriptions product_descriptions1 ON products.product_id = product_descriptions1.product_id 
+WHERE 
+	product_descriptions1.shop_id = 1 AND 
+	offerings.shop_id = 1 AND 
+	offerings.visibility = TRUE AND 
+	products.product_id = NULL 
+GROUP BY offerings.offering_id, offerings.product_id, offerings.shop_id, offerings.price, offerings.visibility ORDER BY offerings.offering_id ASC</code></pre>
+
+<p>
+ First problem<hr />
+ The clause concerning visibility is translated into a boolean, from:
+</p>
+<pre class="block php"><code>&quot;visibility=&quot; =&gt; &quot;1|2&quot; </code></pre>
+
+<p>
+ into
+</p>
+<pre class="block sql"><code>visibility = TRUE</code></pre>
+
+<p>
+ where it should have been something like this:
+</p>
+<pre class="block php"><code>(visibility=1 OR visibility=2)</code></pre>
+
+<p>
+ I suspect this to relate to how booleans are detected in the model. If I convert the value type to smallint instead of tinyint it will translate like this:
+</p>
+<pre class="block sql"><code>visibility = NULL</code></pre>
+
+<p>
+ Second problem<hr />
+ The clause concerning the product ids is translated into NULL. From:
+</p>
+<pre class="block php"><code>&quot;products.product_id=&quot; =&gt; &quot;5447|5448|7974&quot;</code></pre>
+
+<p>
+ into:
+</p>
+<pre class="block sql"><code>products.product_id = NULL</code></pre>
+
+<p>
+ where it should have been something like this:
+</p>
+<pre class="block sql"><code>products.product_id = 5447 OR products.product_id = 5448 OR products.product_id = 7974</code></pre>
+
+<p>
+ I don't have a clue why this happens.
+</p>
+
+<p>
+Am I using the clauses notation correctly? (good place to start :)
+</p>
+
+<p>
+This is r928 of the lib.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1016">
+				<div class="body" id="body-1016">
+					
+<p>
+Hi
+</p>
+
+<p>
+I figured out so much:
+</p>
+
+<p>
+You should use:
+</p>
+<pre class="block php"><code>&quot;products.product_id=&quot; =&gt; array(5447, 5448, 7974)</code></pre>
+
+<p>
+ instead of:
+</p>
+<pre class="block php"><code>&quot;products.product_id=&quot; =&gt; &quot;5447|5448|7974&quot;</code></pre>
+
+<p>
+ (same for the visibility case)
+</p>
+
+<p>
+It seems like tinyint is &quot;reserved&quot; for booleans, so as long as I stay away of them everything is working.
+</p>
+
+<p>
+Note in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> though the data type mapping states:
+</p>
+<pre class="block php"><code>	'tinyint'	=&gt; 'integer',
+</code></pre>
+
+<p>
+ I wonder why it interprets it as boolean then?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="11/23/10 12:51am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1017">
+				<div class="body" id="body-1017">
+					
+<p>
+tinyint(1) isinterpreted as boolean
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="11/23/10 10:12am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1018">
+				<div class="body" id="body-1018">
+					
+<p>
+So
+</p>
+<pre class="block sql"><code>tinyint(2)</code></pre>
+
+<p>
+ that is, with length 2, would not be interpreted as boolean?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="11/23/10 11:15am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1019">
+				<div class="body" id="body-1019">
+					
+<p>
+far is i know, i remember i have this , and that resolve.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="11/23/10 3:14pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-1021">
+				<div class="body" id="body-1021">
+					
+<p>
+Yes, one of the downsides of MySQL is how they play fast and loose with the SQL spec. Unfortunately they interpret the <code>BOOLEAN</code> data type as <code>tinyint(1)</code>, making it impossible to determine which was intended. Currently Flourish interprets <code>tinyint(1)</code> as a boolean, which tends not to be too big an issue since <code>tinyint(1)</code>, <code>tinyint(2)</code>, <code>tinyint(3)</code>, <code>tinyint(4)</code> and <code>tinyint</code> all use 1 bytes of storage and can store the values -128 to 127. Thus, using any of the variations of <code>tinyint</code> other than <code>tinyint(1)</code> will result in the desired functionality.
+</p>
+
+<p>
+If you are using an existing database and the schema can not be changed, there is now an example in the <a href="../flourishlib.com/api/fSchema.html#getColumnInfo">fSchema::getColumnInfo()</a> API docs that shows how to override the detected column information, and treat the column as an integer, even if it uses <code>tinyint(1)</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/28/10 1:45am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fMailbox doesn&#039;t work on other hosting &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fMailbox doesn&#039;t work on other hosting</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dorogoff			</span>
+	<span class="date_posted" title="7/10/12 8:43am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, I have a problem, could anyone help me? I try to get a list messages via pop3 without SSL. And from my localhost and other hosting provider my sript works, but from other hosting I get this error after 10-15 sec after start:
+</p>
+
+<p>
+Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>' with message 'There was an error connecting to the server' in /home/docs/libs/flourish/<a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>.php:973 
+</p>
+
+<p>
+Stack trace: 
+</p>
+
+<ol>
+<li>0 /home/docs/libs/flourish/<a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>.php(1199): <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>-&gt;connect() </li>
+<li>1 /home/docs/getmail.php(43): <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>-&gt;listMessages(2) </li>
+<li>2 {main} thrown in /home/docs/libs/flourish/<a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>.php on line 973</li>
+</ol>
+
+<p>
+Do you have any ideas how to fix this?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1788">
+				<div class="body" id="body-1788">
+					
+<p>
+Do you have shell access on your host? My first guess is that they are blocking your outbound request. Can you SSH into your server and try pinging your mail server?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													titus											</span>
+					<span class="date_posted" title="7/17/12 11:27am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1789">
+				<div class="body" id="body-1789">
+					
+<p>
+Thank you! I ask hoster about this problem, and they sad that on this hosting only 21 and 80 port available.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dorogoff											</span>
+					<span class="date_posted" title="7/17/12 1:09pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1790">
+				<div class="body" id="body-1790">
+					
+<p>
+My guess is you're out of luck with that host. 21 is usually used for FTP, and 80 for web traffic. In my limited experience POP uses 110 and IMAP 993, usually. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													titus											</span>
+					<span class="date_posted" title="7/17/12 3:51pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1791">
+				<div class="body" id="body-1791">
+					
+<p>
+Yes, I know, and I solved this problem via crossdomain scripting. Handle email on the other hosting, and via curl send &quot;get&quot; requests to this troubled hosting. Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dorogoff											</span>
+					<span class="date_posted" title="7/17/12 4:08pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1792">
+				<div class="body" id="body-1792">
+					
+<p>
+and also <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> doesnt work  $email-&gt;setHTMLBody('&lt;p&gt;This it the HTML version of the body&lt;/p&gt;'); 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													isn											</span>
+					<span class="date_posted" title="7/19/12 6:12am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

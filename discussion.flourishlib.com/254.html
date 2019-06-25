@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>MongoDB Support &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">MongoDB Support</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="6/21/10 8:45pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+NUFF SAID
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-782">
+				<div class="body" id="body-782">
+					
+<p>
+I've never used MongoDB  what kind of functionality would you be looking for on top of the PECL mongo extension?
+</p>
+
+<p>
+I thought a little bit about the ORM, since that seems like a logical thing to support MongoDB. Unfortunately for MongoDB and other schema-less NoSQL databases, the Flourish ORM would be useless since it is completely driven by the database schema.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/22/10 8:58am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1029">
+				<div class="body" id="body-1029">
+					
+<p>
+I think providing a standard interface to interact with schema-less databases through flourish would be an awesome idea. 
+</p>
+
+<p>
+While the query based <a href="../flourishlib.com/docs/fORM.html">fORM</a>, <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> might not be the best fit for it we could create some alternatives to interact with  schema-less  data, like <a href="../flourishlib.com/docs/fActiveDocument.html">fActiveDocument</a> and <a href="../flourishlib.com/docs/fDocumentSet.html">fDocumentSet</a>. They could implement some of the core feature of the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes whilst providing a more flexible way to define field types and related records.
+</p>
+
+<p>
+This type of data storage is becoming more and more popular and would add great leverage for people when they are deciding thier development &quot;framework&quot;/ library.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ben.haines											</span>
+					<span class="date_posted" title="12/2/10 5:12pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1032">
+				<div class="body" id="body-1032">
+					
+<p>
+Like I said before, I don't have a ton of experience with NoSQL solutions, so in my current position I don't think I could add too much without the assistance of users who are currently using these systems.
+</p>
+
+<p>
+The other issue I see here is that while almost all relational databases share a query language (SQL) and quite a bit of functionality, NoSQL database all vary quite widely in terms of the external API, what they can do, and how to accomplish common tasks. I have a feeling that building a NoSQL database abstraction layer would be quite a complex task. If you do know of any projects that are working to solve this problem, I'd be interested to hear about them.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/2/10 10:31pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

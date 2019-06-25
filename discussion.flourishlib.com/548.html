@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRecordSet and bitwise operators ? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRecordSet and bitwise operators ?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="10/19/11 2:35pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello
+</p>
+
+<p>
+If i read the documentation correctly, bitwise operators are not supported in standard fRecordSet::build calls.
+</p>
+
+<p>
+Am i right?
+</p>
+
+<p>
+If yes, are there any plans to support them, should I help and send a patch, or should I go with a standard buildFromSql call ? In the last case, will this work with calling the oracle specific functions/operators in my query ?
+</p>
+
+<p>
+Thank you for your help
+</p>
+
+<p>
+Regards,
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1587">
+				<div class="body" id="body-1587">
+					
+<p>
+I don't know if bitwise operations are used enough to really value adding it to <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>.
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fRecordSet.html#buildFromSql">fRecordSet::buildFromSql()</a> should work fine in this case. You can use oracle-specific SQL in there, I just only document the cross-db SQL on the FlourishSql page.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/20/11 1:59pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1590">
+				<div class="body" id="body-1590">
+					
+<p>
+Ok understood.
+</p>
+
+<p>
+I have a call to fRecordSet::build, with a where condition array from different part of the code, which i cant easily change to standard where condition.
+</p>
+
+<p>
+Do you know a simple way to obtain the SQL where clause from an array of conditions (<a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> parameter) ?
+</p>
+
+<p>
+Thanks !
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="10/21/11 5:04am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

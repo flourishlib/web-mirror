@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Modularization / Override relation check &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Modularization / Override relation check</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ben			</span>
+	<span class="date_posted" title="4/26/11 2:27pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi!
+</p>
+
+<p>
+I have the following problem/question. I have a table 'images' and I have a table 'products', which references 'images'. My application is modularized, 'images' is in core and 'products' belongs to a module. Not all modules are loaded all the time, but the database-tables are still present.
+</p>
+
+<p>
+So the problem is, if the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> 'Product' is not present, i can not delete an entry from 'images'. An exception (&quot;The noun specified could not be singularized&quot;) is thrown. I think this message comes from a relation check?
+</p>
+
+<p>
+Is there a way to implement a &quot;clean&quot; solution for this problem? Can i override the relation check? 
+</p>
+
+<p>
+Please let me know if you need some code or a database-model. Thanks for your help!
+</p>
+
+<p>
+Greets Ben
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1276">
+				<div class="body" id="body-1276">
+					
+<p>
+So I can definitely tell you that it is trying to load the Product class to call <code>-&gt;delete()</code> on all child records. This ensures that any delete hook callbacks get called on the children.
+</p>
+
+<p>
+The message &quot;The noun specified could not be singularized&quot; is not a normal occurrence, or are you mapping table names to class names? If so, perhaps try moving your <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> calls to your common init code.
+</p>
+
+<p>
+Right now there is no way to prevent calling <code>-&gt;delete()</code> on related <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects, precisely because you are (normally) going to want to execute delete hook callbacks if they exist. It is also entirely possible the related <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> <code>-&gt;delete()</code> method has been overridden and does more than the default.
+</p>
+
+<p>
+Perhaps your core should include a skeleton of all <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes that can be loaded if they don't exist in a module? You could also use something like <a href="../flourishlib.com/api/fORM.html#defineActiveRecordClass">fORM::defineActiveRecordClass()</a>, but I wouldn't recommend it for production since it uses <code>eval()</code>. This technique seems like it could end up causing the wrong class/functionality to be loaded, but if you are careful to ensure a module is never disabled once database contents exist for it, it may work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/26/11 2:46pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1279">
+				<div class="body" id="body-1279">
+					
+<p>
+Thanks for your reply. Maybe I could include the skeletons in core, although in my opinion, this isn't the right way if trying to implement a clean modularization. The solution with <a href="../flourishlib.com/api/fORM.html#defineActiveRecordClass">fORM::defineActiveRecordClass()</a> seems a little bit cleaner to me, because it is more dynamic. Maybe I could try to override the delete-method, so i can prevent the records from being deleted. A simple exception if the image is referenced would be enough for me.
+</p>
+
+<p>
+Another thought: Maybe I should explain a little bit more precise what I want to do. I don't want to cascade. I would like to prevent image from being deleted if it is referenced. Like 'ON DELETE NO ACTION' in SQL. Is there a support for defining this 'relation-type'?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ben											</span>
+					<span class="date_posted" title="4/26/11 3:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1427">
+				<div class="body" id="body-1427">
+					
+<p>
+Sorry for the late follow-up. If in your database you define the <code>ON DELETE</code> clause of your foreign key to be <code>ON DELETE NO ACTION</code>, Flourish will respect that. It should also give you nice error messaging if it hits that situation.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/23/11 12:51am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

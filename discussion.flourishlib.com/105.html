@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>How is fFile-&gt;output() supposed to be used? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">How is fFile-&gt;output() supposed to be used?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="6/26/09 4:58am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello again.
+</p>
+
+<p>
+I have been trying to use <code>fFile-&gt;output()</code> to output a file but with no success. The method throws an exception because of the output buffer. Do I have to call <code>ob_start()</code> before running the function and then <code>ob_end_flush()</code> or something similar for it to work?
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-315">
+				<div class="body" id="body-315">
+					
+<p>
+Oh I noticed that output buffering is turned on in php.ini so I can't get past the check in <code>fFile-&gt;output()</code>.
+</p>
+
+<p>
+The exception message &quot;The method requested, output(), should not normally be used when output buffering is turned off, due to memory issues. If it is neccessary to have output buffering on, please pass 'TRUE' as the second parameter to this method.&quot; is rather confusing.
+</p>
+
+<p>
+First it says that the method shouldn't be used with output buffering turned off and then that you should pass in TRUE as the second parameter if you need to have it on. This seems like a mixed message and the method doesn't check the second parameter before throwing the exception, it simply gets tossed if <code>ob_get_level()</code> is above 0.
+</p>
+
+<p>
+What to do?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/26/09 5:14am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-316">
+				<div class="body" id="body-316">
+					
+<p>
+Yes, the exception message being thrown was out of date and incorrect. Since output buffering takes all data to be sent to the browser and saves it in memory, it can cause massive memory usage if you try to output a large file. To prevent this, I detect if output buffering is enabled and throw an exception. 
+</p>
+
+<p>
+I've update the exception message in r617 to indicate what should be done. In your case you'll want to call <code>ob_end_clean()</code> before calling <a href="../flourishlib.com/api/fFile.html#output">fFile::output()</a>:
+</p>
+<pre class="block php"><code>// Turn off output buffering
+ob_end_clean();
+// Output the file
+$file-&gt;output(TRUE);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/26/09 10:29am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

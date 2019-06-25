@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Best way to repopulate a form after an error or update request &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Best way to repopulate a form after an error or update request</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="12/15/10 8:52am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+self explanatory
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1059">
+				<div class="body" id="body-1059">
+					
+<p>
+Check out:
+</p>
+
+<ul>
+<li><a href="https://github.com/wbond/flourish-demo-site/blob/master/manage.php">https://github.com/wbond/flourish-demo-site/blob/master/manage.php</a></li>
+<li><a href="https://github.com/wbond/flourish-demo-site/blob/master/views/add_edit.php">https://github.com/wbond/flourish-demo-site/blob/master/views/add_edit.php</a></li>
+</ul>
+
+<p>
+The manage page handles the business logic and the add/edit page handles re-populating the form.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/15/10 10:06am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1060">
+				<div class="body" id="body-1060">
+					
+<p>
+What about select, checkbox, radio tags?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="12/16/10 9:04am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1061">
+				<div class="body" id="body-1061">
+					
+<p>
+Check out <a href="../flourishlib.com/docs/fHTML.html">fHTML</a>#SelectOptionsandCheckboxes for examples of <a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> and <a href="../flourishlib.com/api/fHTML.html#printOption">fHTML::printOption()</a>. Just pass data from the record object to those methods.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/16/10 9:08am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1502">
+				<div class="body" id="body-1502">
+					
+<p>
+Is there a security problem, this way ? (<a href="../flourishlib.com/docs/fRequest.html">fRequest</a> direct in the input value)
+</p>
+
+<p>
+register.php :
+</p>
+<pre class="block php"><code>$validator = new fValidation();
+try {} catch {}
+include '/../views/register.php';</code></pre>
+<pre><code>#!text/html
+&lt;form method=&quot;post&quot; action=&quot;register.php&quot;&gt;
+   &lt;input type=&quot;text&quot; name=&quot;email&quot; value=&quot;&lt;?php echo fRequest::encode('email') ?&gt;&quot; /&gt;
+   (...)
+&lt;/form&gt;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gill											</span>
+					<span class="date_posted" title="8/3/11 10:26am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1507">
+				<div class="body" id="body-1507">
+					
+<p>
+i dont believe so... and this is how i do it... just make sure you handle it going into the DB.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="8/5/11 6:37am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1508">
+				<div class="body" id="body-1508">
+					
+<p>
+That is fine from a security perspective. You just need to use either <a href="../flourishlib.com/api/fTemplating.html#encode">fTemplating::encode()</a>, <a href="../flourishlib.com/api/fRequest.html#encode">fRequest::encode()</a>, <a href="../flourishlib.com/api/fHTML.html#encode">fHTML::encode()</a> or <code>$active_record-&gt;encodeColumnName()</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/5/11 8:18am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

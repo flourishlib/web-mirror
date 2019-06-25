@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>odd SQL issue with fActiveRecord &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">odd SQL issue with fActiveRecord</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					oliverd			</span>
+	<span class="date_posted" title="3/8/11 8:18pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm having a very strange issue with <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that I can't figure out.
+</p>
+
+<p>
+I have a User class that has a static method getGroupId. This method checks to see if $_SERVER<a href="http://discussion.flourishlib.com/'REMOTE_USER'">'REMOTE_USER'</a> contains a value. If it does, it tries to find a user in the database with that username. Here's the relevant functions within my User class that extends fActiveRecord:
+</p>
+<pre class="block php"><code>	public static function getUsername()
+	{
+		return isset($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'] : false;
+	}
+	
+	public static function getGroupId()
+	{
+		if (!User::getUsername())
+		{
+			$value = 3;
+		}
+		else
+		{
+			try
+			{
+				$user = new User(array('name' =&gt; User::getUsername()));
+				$value = $user-&gt;values['group_id'];
+			}
+			catch (fNotFoundException $e)
+			{
+				$value = 3;
+			}
+		}
+		
+		return $value;
+	}</code></pre>
+
+<p>
+ This works perfectly both on my local machine and in another dev environment. However, on the client's staging environment, it throws the following exception:
+</p>
+<pre><code>Uncaught fSQLException
+----------------------
+[internal function]: fTemplating-&gt;__destruct()
+/usr/local/irodb/lib/flourish/fTemplating.php(86): fTemplating-&gt;placeBuffered()
+/usr/local/irodb/lib/flourish/fTemplating.php(437): preg_replace('/%%fTemplating:...', 'fBuffer::startC...', '%%fTemplating::...')
+/usr/local/irodb/lib/flourish/fTemplating.php(437) : regexp code(1): fTemplating-&gt;placeElement('header', '')
+/usr/local/irodb/lib/flourish/fTemplating.php(316): fTemplating-&gt;placePHP('header', 'defaultHeader.p...')
+/usr/local/irodb/lib/flourish/fTemplating.php(384): include('/usr/local/irod...')
+/usr/local/irodb/lib/template/defaultHeader.php(91): User::getGroupId()
+/usr/local/irodb/lib/class/User.php(30): fActiveRecord-&gt;__construct(Array)
+/usr/local/irodb/lib/flourish/fActiveRecord.php(1127): fActiveRecord-&gt;fetchResultFromUniqueKey(Array)
+/usr/local/irodb/lib/flourish/fActiveRecord.php(1740): call_user_func_array(Array, Array)
+[internal function]: fDatabase-&gt;translatedQuery('SELECT * FROM %...', 'users', 'name', 'adam')
+/usr/local/irodb/lib/flourish/fDatabase.php(2422): fDatabase-&gt;runQuery('SELECT * FROM &quot;...', 'fResult')
+/usr/local/irodb/lib/flourish/fDatabase.php(2228): fDatabase-&gt;executeQuery(Object(fResult))
+/usr/local/irodb/lib/flourish/fDatabase.php(1445): fDatabase-&gt;checkForError(Object(fResult))
+/usr/local/irodb/lib/flourish/fDatabase.php(361)
+MySQL error ({false}) in SELECT * FROM &quot;users&quot; WHERE &quot;name&quot; = ''</code></pre>
+
+<p>
+ As you can clearly see, in the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;translatedQuery call &quot;adam&quot; is passed as the name of the user. However, the value never appears in the actual MySQL query.
+</p>
+
+<p>
+Any ideas as to what is going on?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1164">
+				<div class="body" id="body-1164">
+					
+<p>
+Errors like this are usually related to the deconstruction of objects based on the order they were instantiated in. I think this is what is happening in your case, however I could be wrong. I know I've seen different behaviors with destructor execution order on different versions of PHP.
+</p>
+
+<p>
+Since you are using <a href="../flourishlib.com/api/fTemplating.html#buffer">fTemplating::buffer()</a>, the actual printing of the template doesn't happen until the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> object is destroyed. What appears to be happening is that the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> connection is no longer valid when it is called. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>'s destructor disconnects it from the database. Thus, I believe you need to make sure your <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object is being instantiated before instantiating your <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> object.
+</p>
+<pre class="block php"><code>// Good!
+$db = new fDatabase();
+$template = new fTemplating();
+$template-&gt;set('db', $db);
+
+// BAD!!!
+$template = new fTemplating();
+$db = new fDatabase();
+$template-&gt;set('db', $db);</code></pre>
+
+<p>
+ I just updated the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> documentation to reflect this edge case.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/18/11 2:10pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1194">
+				<div class="body" id="body-1194">
+					
+<p>
+Interesting theory but unfortunately doesn't apply to my problem as I'm already creating $db before $template.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													oliverd											</span>
+					<span class="date_posted" title="3/28/11 6:06pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord not handling different versions of UTF8 &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord not handling different versions of UTF8</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="6/1/09 6:33am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+Today I tried using the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>-class with my users table the way you do in the examples. Since my site is in Swedish I have to use utf8_swedish_ci as the table collation, otherwise MySQL doesn't know how to sort when the Swedish letters  come up.
+</p>
+
+<p>
+However the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class doesn't seem to be able to handle this collation. The only fields that end up in the user object are the ones that are ints and dates which are unaffected by the encoding.
+</p>
+
+<p>
+Is there some way to get this to work with utf8_swedish_ci? I've spent quite some time setting up the site to only use utf8 so it's a bit annoying when the script fails even though I am using utf8.
+</p>
+
+<p>
+If I change the encoding on a column to utf8_general_ci it shows up in the class so I'm pretty sure it's utf8_swedish_ci that's the issue.
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-245">
+				<div class="body" id="body-245">
+					
+<p>
+Never mind this, it seems to be fixed in the latest release!
+</p>
+
+<p>
+Thank you for the great work!
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/1/09 6:43am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-246">
+				<div class="body" id="body-246">
+					
+<p>
+Yes, originally <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> did not recognize some MySQL column options, causing whole columns to be lost. I think this has been resolved so that pretty much every possible part of a column definition is detected.
+</p>
+
+<p>
+Thanks for taking the time to ask. I appreciate it when people take the time to report bugs since it makes Flourish better for everyone.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/1/09 9:54am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

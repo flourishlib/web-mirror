@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>The opposite of  fURL::makeFriendly() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">The opposite of  fURL::makeFriendly()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					gill			</span>
+	<span class="date_posted" title="8/18/11 5:35am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is it possible to know the real URL of a web page (on the web, not mine), despite of some &quot;fURL::makeFriendly&quot; or routing ?<br />
+ Actualy, I've got a problem of relative URL. Here's an example:
+</p>
+
+<p>
+EDIT : wasn't a good example (there are &quot;absolute relative URLs&quot;, too... : &quot;/login.php&quot; )<br />
+ But the question remains...
+</p>
+
+<p>
+All this doesn't seem very &quot;friendly&quot; for me ;-)<br />
+ Is there a solution ? Thank's in advance.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1537">
+				<div class="body" id="body-1537">
+					
+<p>
+The term &quot;friendly&quot; means it is user-friendly to type in and read. Instead of <code>This%20is%20my%20page%21</code>, you would use <code>this_is_my_page</code>.
+</p>
+
+<p>
+Normally when using <a href="../flourishlib.com/api/fURL.html#makeFriendly">fURL::makeFriendly()</a>, you are going to want to pair it with an identifier that does not get mangled, such as a database id. So your URLs will commonly look like <code>/users/20-will_bond</code> and you look up the user by the <code>20</code> and not the <code>will_bond</code> part.
+</p>
+
+<p>
+If you do need to look it up and want a friendly URL, you can use the strategy of storing the friendly version of the URL in the database with the real name and then using the friendly URL column in your database to do lookups.
+</p>
+
+<p>
+I hope this helps.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/23/11 10:58pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1539">
+				<div class="body" id="body-1539">
+					
+<p>
+Thanks. I knew this, for our own website. My question was for the other sites on the web. The &quot;friendly URLs&quot; with many slashes perturb some algorythms that need to parse the URL and analyse it.
+</p>
+
+<p>
+(ex : &quot;/users/20-will_bond&quot; doesn't  mean &quot;the page '20-will_bond' in the directory 'users' &quot;)
+</p>
+
+<p>
+I managed with this, but I wonder if it'll be exhaustive...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gill											</span>
+					<span class="date_posted" title="8/24/11 1:34am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1544">
+				<div class="body" id="body-1544">
+					
+<p>
+I see what you mean. You are trying to come up with a way to parse other URLs. In this case I would probably start with a short list of patterns and then add more as you run into data that. Something like this is probably a good place to start:
+</p>
+<pre><code># Matches things like /users/20-will-bond
+^(.*)/(\\d+)-([^/]+)$
+
+# Matches things like /users/20/will-bond or
+# /people/20/will-bond/favorite/10/flourishlib_com
+^(.*)/(\\d+)/([^/]+)$</code></pre>
+
+<p>
+ Or perhaps instead you could write something that would split on <code>/</code> and then try to make pairs of data.
+</p>
+
+<p>
+Either way you are probably going to need have a person at least analyse some example URLs from a site to establish the semantic meaning of the elements.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/25/11 10:37am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1545">
+				<div class="body" id="body-1545">
+					
+<p>
+Thank you, for these ideas !
+</p>
+
+<p>
+Hmmm... so, there's not a unique simple solution. Hopefully I have a model to compare with the new URL, until I'm looking for successive pages, that are logically similar.
+</p>
+
+<p>
+Thank's again :) !
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gill											</span>
+					<span class="date_posted" title="8/26/11 8:17am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

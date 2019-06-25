@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Extending the ORM &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Extending the ORM</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="2/17/10 2:19pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+So this is an idea from Silverstripe which also has a ORM system.
+</p>
+
+<p>
+Let's say I have a User class which extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> with the proper table set up in the database. Then if I wanted different kinds of users I would set up classes that extend User that in turn have tables set up with a one-to-one relationship to the users table via the primary key.
+</p>
+
+<p>
+For example, let's say I have the tables users, company_users and private_users then I would create the classes User-&gt;<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, CompanyUser-&gt;User, PrivateUser-&gt;User. Ideally Flourish would handle the joins behind the scenes and even though the two child classes consist of two tables it could be treated as one through the get/set methods.
+</p>
+
+<p>
+I've actually managed to get a very basic version of this set up with Flourish today by overriding <span class="underline">call() and sending along all methods to the child class which I store internally in the User class. This is of course not a really good, or I suspect, safe method so this kind of functionality would be awesome to have in Flourish.</span>
+</p>
+
+<p>
+<span class="underline"> I have no idea how big of a job it would be to implement this or even if it's the way you want to be doing things but I wanted to put it out there as an idea.</span>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-623">
+				<div class="body" id="body-623">
+					
+<p>
+It should be possible to implement such functionality using the plugin architecture, in the same way as <a href="../flourishlib.com/docs/fORMCOlumn.html">fORMCOlumn</a>, <a href="../flourishlib.com/docs/fORMMoney.html">fORMMoney</a>, <a href="../flourishlib.com/docs/fORMOrdering.html">fORMOrdering</a>, etc. You would basically need to reflect the parent object to get all of the applicable column-based method names, and proxy them. Then you'd have to implement custom load(), store(), validate(), etc that would call those methods on both objects.
+</p>
+
+<p>
+This is how I would probably implement it, I just don't know when I'd be able to get to it. The only other thing to consider is issues where the two tables share column names. I imagine such databases would just not be supported.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/17/10 2:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-629">
+				<div class="body" id="body-629">
+					
+<p>
+Ok so I have been trying out the plugin architecture with my current implementation in an effort to learn how all of this works and to see if I could make the functionality that I wrote in one class reusable as a plugin.
+</p>
+
+<p>
+However when I read the code in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> I realized that the <span class="underline">call method matches the callback to the raw $method_name and not the $action. Would it be possible to check for both or would that slow things down too much?</span>
+</p>
+
+<p>
+<span class="underline"> What I'm after is the ability to override all calls to get/set not just specific calls to, for example getId.</span>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="2/20/10 4:50pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-630">
+				<div class="body" id="body-630">
+					
+<p>
+Scratch that I found the {prefix}* stuff. Awesome :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="2/20/10 5:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-631">
+				<div class="body" id="body-631">
+					
+<p>
+Ok so I'm pretty much finished with my rather weird implementation and overall everything worked great. The only thing lacking for me is a callback for post::loadFromIdentityMap(). If the following could be added to loadFromIdentityMap()
+</p>
+<pre class="block php"><code>fORM::callHookCallbacks(
+	$this,
+	'post::loadFromIdentityMap()',
+	$this-&gt;values,
+	$this-&gt;old_values,
+	$this-&gt;related_records,
+	$this-&gt;cache,
+	$object
+);</code></pre>
+
+<p>
+ It would give me a chance to modify the returned object. Right now the object that's returned is &quot;bare bones&quot; so to speak so if I've added my own properties to my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes they won't get returned when loadFromIdentityMap() is used. With this callback I would get the chance to make those modifications. I've tried adding it and it works.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="2/20/10 8:33pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

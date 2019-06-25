@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>view tables &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">view tables</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dao27			</span>
+	<span class="date_posted" title="2/11/10 2:11pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+it's normally to receive error like this if i create some view tables? i must mentioned that i create this view for testing porposes and i don't used in script, and this created wies even don't emplies this &quot;facilitati&quot;, table.
+</p>
+<pre><code>{doc_root}\\turism\\admin\\index.php(54): Facilitati::cautaFacilitati()
+{doc_root}\\turism\\admin\\inc\\classes\\Facilitati.php(10): fRecordSet::build('Facilitati')
+{doc_root}\\turism\\admin\\inc\\flourish\\fRecordSet.php(189): fActiveRecord::forceConfigure('Facilitati')
+{doc_root}\\turism\\admin\\inc\\flourish\\fActiveRecord.php(524): fActiveRecord-&gt;__construct()
+{doc_root}\\turism\\admin\\inc\\flourish\\fActiveRecord.php(1053): fSchema-&gt;getKeys('facilitati', 'primary')
+{doc_root}\\turism\\admin\\inc\\flourish\\fSchema.php(1887): fSchema-&gt;fetchKeys()
+{doc_root}\\turism\\admin\\inc\\flourish\\fSchema.php(299): fSchema-&gt;fetchMySQLKeys()
+{doc_root}\\turism\\admin\\inc\\flourish\\fSchema.php(724)
+Undefined index: Create Table</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-608">
+				<div class="body" id="body-608">
+					<pre class="block sql"><code>
+CREATE TABLE IF NOT EXISTS `agency` (
+  `agency_id` int(11) NOT NULL AUTO_INCREMENT,
+  `agency_type` varchar(20) NOT NULL,
+  `agency_code` int(11) DEFAULT NULL,
+  `agency_name` varchar(200) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(10) NOT NULL,
+  `contact_name` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `phone` int(20) NOT NULL,
+  `fax` int(20) DEFAULT NULL,
+  `adress` varchar(200) NOT NULL,
+  `city` varchar(200) NOT NULL,
+  `postal_code` int(11) DEFAULT NULL,
+  `notes` text,
+  `resources` varchar(100) DEFAULT NULL,
+  `permissions` varchar(100) DEFAULT NULL,
+  `record_date` date NOT NULL,
+  `parent_id` varchar(10) NOT NULL,
+  PRIMARY KEY (`agency_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9013 ;
+
+
+CREATE TABLE IF NOT EXISTS `all_record` (
+`denumire` varchar(100)
+,`room_id` int(11)
+,`CAMERA_DE_X_PERSOANE` int(11)
+,`total_camere` int(11)
+,`numar_camere_rezervate` decimal(32,0)
+,`camere_libere` decimal(33,0)
+);
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE IF NOT EXISTS `booking` (
+  `booking_id` int(11) NOT NULL AUTO_INCREMENT,
+  `produs` varchar(100) DEFAULT NULL,
+  `id_produs` int(11) NOT NULL,
+  `id_camera` varchar(300) DEFAULT NULL,
+  `numar_camere` int(11) DEFAULT NULL,
+  `user` varchar(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `check_in` date NOT NULL,
+  `check_out` date NOT NULL,
+  `agent` varchar(100) DEFAULT NULL,
+  `pax_name` varchar(500) DEFAULT NULL,
+  `booking_expire_date` date DEFAULT NULL,
+  `booking_reference` int(11) DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `moneda` varchar(20) NOT NULL,
+  `certain_booking` tinyint(1) DEFAULT NULL,
+  `invoice_date` date NOT NULL,
+  `record_date` timestamp NULL DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`booking_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10037 ;
+
+
+CREATE TABLE IF NOT EXISTS `croaziere` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nume_client` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `destinatie` varchar(100) DEFAULT NULL,
+  `plecare` date DEFAULT NULL,
+  `adulti` int(11) DEFAULT NULL,
+  `copii` int(11) DEFAULT NULL,
+  `denumire` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `croaziere`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `currency`
+--
+
+CREATE TABLE IF NOT EXISTS `currency` (
+  `currency` char(3) NOT NULL DEFAULT '',
+  `rate` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`currency`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-
+
+CREATE TABLE IF NOT EXISTS `facilitati` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `facilitate` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+
+--
+-- Dumping data for table `facilitati`
+--
+
+INSERT INTO `facilitati` (`id`, `facilitate`) VALUES
+(1, 'Wi-Fi/Wireless LAN'),
+(2, 'Spa &amp; Wellness Centre'),
+(3, 'Rooms/Facilities for Disabled Guests'),
+(4, 'Hotel');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `h`
+--
+CREATE TABLE IF NOT EXISTS `h` (
+`denumire` varchar(100)
+,`ROOM_ID` int(11)
+,`NUME_CAMERA` varchar(100)
+,`CAMERA_DE_X_PERSOANE` int(11)
+,`id_camera` varchar(300)
+,`TOTAL_BOOKING` bigint(21)
+,`NUMAR_CAMERE_REZERVATE` decimal(32,0)
+,`TOTAL_CAMERE` int(11)
+,`CAMERE_LIBERE` decimal(33,0)
+);
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hoteluri`
+--
+
+CREATE TABLE IF NOT EXISTS `hoteluri` (
+  `id_hotel` int(11) NOT NULL AUTO_INCREMENT,
+  `tara` varchar(100) NOT NULL,
+  `oras` varchar(100) NOT NULL,
+  `denumire` varchar(100) NOT NULL,
+  `descriere` text NOT NULL,
+  `stele` tinyint(5) NOT NULL,
+  `adresa` varchar(100) NOT NULL,
+  `zip` varchar(10) NOT NULL,
+  `telefon` varchar(20) NOT NULL,
+  `fax` varchar(20) NOT NULL,
+  `locatie` varchar(300) NOT NULL,
+  `detalii_locatie` varchar(300) DEFAULT NULL,
+  `lat` int(11) DEFAULT NULL,
+  `lon` int(11) DEFAULT NULL,
+  `facilitati_hotel` varchar(300) NOT NULL,
+  `servicii_hotel` varchar(300) DEFAULT NULL,
+  `currency` varchar(5) DEFAULT NULL,
+  `check_in_hour` varchar(20) NOT NULL COMMENT 'politica hotel',
+  `check_out_hour` varchar(20) NOT NULL COMMENT 'politica hotel',
+  `cancellation_without_charged` int(11) NOT NULL COMMENT 'politica hotel',
+  `cancellation_with_charged` int(11) NOT NULL COMMENT 'politica hotel',
+  `exterior` varchar(300) DEFAULT NULL,
+  `poster` varchar(20) DEFAULT NULL,
+  `video` varchar(20) DEFAULT NULL,
+  `top_ten` int(11) DEFAULT NULL COMMENT 'daca apare pe prima pagina',
+  `informatii` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id_hotel`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
+
+--
+-- Dumping data for table `hoteluri`
+--
+
+INSERT INTO `hoteluri` (`id_hotel`, `tara`, `oras`, `denumire`, `descriere`, `stele`, `adresa`, `zip`, `telefon`, `fax`, `locatie`, `detalii_locatie`, `lat`, `lon`, `facilitati_hotel`, `servicii_hotel`, `currency`, `check_in_hour`, `check_out_hour`, `cancellation_without_charged`, `cancellation_with_charged`, `exterior`, `poster`, `video`, `top_ten`, `informatii`) VALUES
+(1, 'England', 'London', 'HOTEL RUSSELL', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ultrices vestibulum adipiscing. Aliquam in nisi ligula, condimentum tempor diam. Sed magna risus, faucibus ut tincidunt vel, elementum at dolor. Ut viverra luctus massa vel laoreet. Suspendisse quis magna augue. Nulla consequat, nisl nec pretium egestas, justo diam pretium metus, id posuere ligula dui sit amet purus. Curabitur sed porttitor ante. Aliquam erat volutpat. Donec ac ipsum elit, in condimentum velit. Curabitur ut lacus lectus.\\r\\n\\r\\nCurabitur nec mi quam. Donec sem nunc, lacinia vitae ultricies in, suscipit sit amet lacus. Suspendisse pellentesque cursus accumsan. Pellentesque aliquam velit at mauris egestas vitae porttitor sapien eleifend. Nulla aliquet, sapien at sollicitudin luctus, mi nibh sodales tortor, sit amet commodo mi nulla ac nisi. Nullam commodo accumsan semper. Mauris eget quam mi, id posuere orci. Proin risus urna, semper eu fermentum nec, fermentum eu lacus. Aliquam varius adipiscing justo, quis ullamcorper dolor lacinia eu. Nam et mi non justo blandit tempor sed et mauris. Suspendisse interdum tortor tristique ipsum facilisis aliquet. Aliquam ante nibh, condimentum ac dictum non, lobortis ut tellus. Integer accumsan fermentum odio, id egestas velit tincidunt eu. Duis id quam ligula, vel mollis enim. Aliquam sed nisl sed magna mollis tempus eu vitae justo. ', 4, 'adresa', '', '0', '0', 'lorem ipsum', NULL, 0, 0, '', '', 'EUR', '', '', 0, 4, NULL, 'tzd3CrUVKX.jpg', NULL, 1, NULL),
+(2, 'France', 'Paris', 'HOTEL CONCORDE LA FAYETTE', 'Close to Covent Garden and Londons Theatreland, The Strand Palace Hotel has 3 bars and contemporary rooms. Charing Cross tube and rail station is a short walk away.\\r\\n\\r\\nSome rooms have a plasma-screen TV and free access to the Virgin Active Gym, directly opposite the hotel. There is 24-hour room service.\\r\\n\\r\\nJohnstons Brasserie is a busy open-plan restaurant, while the Strand Carvery serves a traditional English menu.\\r\\n\\r\\nThere is an on-site conference and banqueting centre. ', 5, 'Aleea Nucului', '', '0', '0', '', '', 0, 0, '', '', 'EUR', '', '', 0, 4, '', '42575.jpg', NULL, 1, NULL),
+(3, 'France', 'Paris', 'Banke Hotels', 'Partly refurbished in 2009, this hotel has free Wi-Fi. It is 5 minutes walk from Hyde Park, Kensington Gardens and Bayswater and Queensway London Underground stations.\\r\\n\\r\\nThe Blakemore Hotel Hyde Park is located in Bayswater, close to theatres, restaurants, shops and cinemas. Oxford Street and Bond Street are about half a mile (800 metres) away.\\r\\n\\r\\nWalking distance from the Tube, The Blakemore is within easy reach of Harrods, Madame Tussauds, Buckingham Palace, the London Eye and Piccadilly Circus.\\r\\n\\r\\nIn the conservatory, the restaurant offers a relaxing atmosphere for an evening meal. The Rossetti Bar serves drinks until 01:00 and has a giant plasma-screen TV.', 3, 'Bucuresti, titan', '', '0000000000', '0000000000', 'edit', NULL, 0, 0, 'Restaurant,Wi-Fi/Wireless LAN,Rooms/Facilities for Disabled Guests', 'Meeting/Banquet Facilities, Dry Cleaning, Tour Desk', 'EUR', '', '', 0, 4, NULL, '42575.jpg', NULL, 1, NULL),
+(27, 'France', 'Paris', 'St Giles Hotel', 'St Giles Hotel is in Londons West End, 50 metres from the Tube and Oxford Street shops. Its leisure club has a swimming pool and gym. The hotel has Italian, Japanese and Asian restaurants', 3, 'Bedford Avenue, Camden, WC1B 3GH London', '', '0', '0', 'locatii', 'detalii locatie', 0, 0, 'Restaurant', 'Meeting/Banquet Facilities, Dry Cleaning, Tour Desk', 'EUR', '', '', 0, 4, NULL, '42575.jpg', NULL, 1, NULL),
+(50, 'Romania', 'Bucuresti', 'Intercontinental', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ultrices vestibulum adipiscing. Aliquam in nisi ligula, condimentum tempor diam. Sed magna risus, faucibus ut tincidunt vel, elementum at dolor. Ut viverra luctus massa vel laoreet. Suspendisse quis magna augue. Nulla consequat, nisl nec pretium egestas, justo diam pretium metus, id posuere ligula dui sit amet purus. Curabitur sed porttitor ante. Aliquam erat volutpat. Donec ac ipsum elit, in condimentum velit. Curabitur ut lacus lectus.\\r\\n\\r\\nCurabitur nec mi quam. Donec sem nunc, lacinia vitae ultricies in, suscipit sit amet lacus. Suspendisse pellentesque cursus accumsan. Pellentesque aliquam velit at mauris egestas vitae porttitor sapien eleifend. Nulla aliquet, sapien at sollicitudin luctus, mi nibh sodales tortor, sit amet commodo mi nulla ac nisi. Nullam commodo accumsan semper. Mauris eget quam mi, id posuere orci. Proin risus urna, semper eu fermentum nec, fermentum eu lacus. Aliquam varius adipiscing justo, quis ullamcorper dolor lacinia eu. Nam et mi non justo blandit tempor sed et mauris. Suspendisse interdum tortor tristique ipsum facilisis aliquet. Aliquam ante nibh, condimentum ac dictum non, lobortis ut tellus. Integer accumsan fermentum odio, id egestas velit tincidunt eu. Duis id quam ligula, vel mollis enim. Aliquam sed nisl sed magna mollis tempus eu vitae justo. ', 1, 'Aleea Scolii nr 4', '', '0', '0', 'Nord Vest', NULL, 123, 213, 'Spa &amp; Wellness Centre,Rooms/Facilities for Disabled Guests,Spa &amp; Wellness Centre,Rooms/Facilities for Disabled Guests', NULL, 'EUR', '10', '20', 10, 4, NULL, 'EKNLVCdBra.jpg', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `info_booking`
+--
+
+CREATE TABLE IF NOT EXISTS `info_booking` (
+  `id_info_booking` int(11) NOT NULL AUTO_INCREMENT,
+  `id_camera` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_info_booking`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `info_booking`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `m`
+--
+CREATE TABLE IF NOT EXISTS `m` (
+`denumire` varchar(100)
+,`ROOM_ID` int(11)
+,`CAMERA_DE_X_PERSOANE` int(11)
+,`TOTAL_CAMERE` int(11)
+);
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `media`
+--
+
+CREATE TABLE IF NOT EXISTS `media` (
+  `id_media` int(11) NOT NULL AUTO_INCREMENT,
+  `categorie` varchar(20) DEFAULT NULL,
+  `denumire` varchar(20) DEFAULT NULL,
+  `id_articol` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_media`),
+  UNIQUE KEY `denumire` (`denumire`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+
+
+
+CREATE TABLE IF NOT EXISTS `newsletter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `newsletter`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oferte`
+--
+
+CREATE TABLE IF NOT EXISTS `oferte` (
+  `id_oferta` int(11) NOT NULL AUTO_INCREMENT,
+  `id_hotel` int(11) DEFAULT NULL,
+  `destinatie` varchar(100) NOT NULL,
+  `titlu` varchar(300) NOT NULL,
+  `text` text,
+  `servicii_incluse` text NOT NULL,
+  `servicii_optionale` text NOT NULL,
+  `check_in` date NOT NULL,
+  `check_out` date NOT NULL,
+  `poster` varchar(20) DEFAULT NULL,
+  `superposter` varchar(20) DEFAULT NULL,
+  `first_page` tinyint(1) DEFAULT '0',
+  `superoferta` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id_oferta`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+
+
+
+CREATE TABLE IF NOT EXISTS `perioada_oferte` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `check_in` date NOT NULL,
+  `check_out` date NOT NULL,
+  `moneda` varchar(5) NOT NULL,
+  `single_room` varchar(5) NOT NULL,
+  `double_room` varchar(5) NOT NULL,
+  `triple_room` varchar(5) NOT NULL,
+  `id_oferte` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+
+CREATE TABLE IF NOT EXISTS `reviews` (
+  `id_user` int(11) NOT NULL DEFAULT '0',
+  `id_articol` int(11) NOT NULL,
+  `pro` varchar(200) DEFAULT NULL,
+  `contra` varchar(200) DEFAULT NULL,
+  `staff` int(11) DEFAULT NULL,
+  `services` int(11) DEFAULT NULL,
+  `clean` int(11) DEFAULT NULL,
+  `comfort` int(11) DEFAULT NULL,
+  `location` int(11) DEFAULT NULL,
+  `data` date NOT NULL,
+  PRIMARY KEY (`id_user`,`id_articol`),
+  KEY `hotel review` (`id_articol`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_hotel` int(11) NOT NULL,
+  `camera` int(11) NOT NULL,
+  `completare_tip` varchar(100) DEFAULT NULL,
+  `numar_persoane` int(11) DEFAULT NULL,
+  `descriere_camera` text,
+  `pret` int(11) NOT NULL,
+  `inclus_in_pret` varchar(300) DEFAULT NULL,
+  `reducere` int(11) DEFAULT NULL,
+  `poster` varchar(20) DEFAULT NULL,
+  `total_camere` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `camera` (`camera`),
+  KEY `id_hotel` (`id_hotel`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+
+
+
+CREATE TABLE IF NOT EXISTS `servicii` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `serviciu` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+
+
+
+CREATE TABLE IF NOT EXISTS `tip_camera` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tip` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+
+CREATE TABLE IF NOT EXISTS `turist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `country` varchar(100) NOT NULL COMMENT 'informatii personale',
+  `city` varchar(100) NOT NULL COMMENT 'informatii personale',
+  `first_name` varchar(100) NOT NULL COMMENT 'informatii personale',
+  `last_name` varchar(100) NOT NULL COMMENT 'informatii personale',
+  `email` varchar(100) NOT NULL COMMENT 'date login',
+  `confirm_email` varchar(100) NOT NULL,
+  `password` varchar(20) NOT NULL COMMENT 'date login',
+  `parent_id` int(11) DEFAULT NULL,
+  `adresa` varchar(100) DEFAULT NULL,
+  `accept_conditions` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+
+
+
+--
+-- Structure for view `all_record`
+--
+DROP TABLE IF EXISTS `all_record`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `all_record` AS select `m`.`denumire` AS `denumire`,`m`.`ROOM_ID` AS `room_id`,`m`.`CAMERA_DE_X_PERSOANE` AS `CAMERA_DE_X_PERSOANE`,`m`.`TOTAL_CAMERE` AS `total_camere`,`h`.`NUMAR_CAMERE_REZERVATE` AS `numar_camere_rezervate`,`h`.`CAMERE_LIBERE` AS `camere_libere` from (`m` left join `h` on((`m`.`ROOM_ID` = `h`.`ROOM_ID`))) group by `m`.`ROOM_ID`;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `h`
+--
+DROP TABLE IF EXISTS `h`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `h` AS select `hoteluri`.`denumire` AS `denumire`,`rooms`.`id` AS `ROOM_ID`,`tip_camera`.`tip` AS `NUME_CAMERA`,`rooms`.`numar_persoane` AS `CAMERA_DE_X_PERSOANE`,`booking`.`id_camera` AS `id_camera`,count(0) AS `TOTAL_BOOKING`,sum(`booking`.`numar_camere`) AS `NUMAR_CAMERE_REZERVATE`,`rooms`.`total_camere` AS `TOTAL_CAMERE`,(`rooms`.`total_camere` - sum(`booking`.`numar_camere`)) AS `CAMERE_LIBERE` from (((`hoteluri` join `rooms`) join `tip_camera`) join `booking`) where ((`hoteluri`.`id_hotel` = `rooms`.`id_hotel`) and (`rooms`.`camera` = `tip_camera`.`id`) and (`booking`.`id_camera` = `rooms`.`id`) and (`rooms`.`numar_persoane` in (1,2,3,4))) group by `booking`.`id_camera` having (`CAMERE_LIBERE` &gt; -(50)) limit 0,30;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `m`
+--
+DROP TABLE IF EXISTS `m`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `m` AS select `hoteluri`.`denumire` AS `denumire`,`rooms`.`id` AS `ROOM_ID`,`rooms`.`numar_persoane` AS `CAMERA_DE_X_PERSOANE`,`rooms`.`total_camere` AS `TOTAL_CAMERE` from ((`hoteluri` join `rooms`) join `booking`) where ((`hoteluri`.`id_hotel` = `rooms`.`id_hotel`) and (`rooms`.`numar_persoane` in (1,2,3,4))) group by `rooms`.`id`;
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dao27											</span>
+					<span class="date_posted" title="2/11/10 2:22pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-613">
+				<div class="body" id="body-613">
+					
+<p>
+I'll try to look into this in the next couple of days - thanks for the report
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/11/10 9:29pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

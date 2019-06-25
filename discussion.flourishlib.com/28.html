@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>file upload &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">file upload</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="3/9/09 1:03pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+how must look the code to alert the user inputed a file bigger than limit set by me, or other alert like file type. my code look like this :
+</p>
+<pre class="block php"><code>if(isset($_POST['upload'])) {
+		
+    $uploader = new fUpload();
+    $dir = new fDirectory('./images');	
+		
+    $uploader-&gt;setMIMETypes( array( 'image/jpeg'), 'The file uploaded is not an jpg');
+
+    $uploader-&gt;setMaxFileSize('2MB');
+
+
+    //$uploader-&gt;enableOverwrite();
+
+    if($file = $uploader-&gt;move($dir, 'file')) echo 'fisier uploadat cu succes'; else print 'dsfds ';
+}</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-84">
+				<div class="body" id="body-84">
+					
+<p>
+actually is coing to error_reporting like: Uncaught exception '<a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a>' with message 'Please upload a file' in C:<br />
+wamp<br />
+www<br />
+admin<br />
+inc<br />
+flourish<br />
+<a href="../flourishlib.com/docs/fUpload.html">fUpload</a>.php:286 Stack trace:
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/9/09 1:04pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-85">
+				<div class="body" id="body-85">
+					
+<p>
+I think what is most likely happening is that the file uploaded is larger than even the <a href="http://us.php.net/manual/en/ini.core.php#ini.post-max-size">post_max_size</a> ini setting. If a post is larger than that, all of the post data is scrapped, so no errors will show up.
+</p>
+
+<p>
+It looks like you can detect such an error by checking to see if the <code>$_POST</code> and <code>$_FILES</code> superglobals are empty. I can probably enhance <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> to detect such a situation, however the user would also loose any non-file upload data. Because of this, it might be good to set your <code>post_max_size</code> ini setting fairly high.
+</p>
+
+<p>
+If you don't mind, open a ticket for <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> detecting if the maximum post size was exceeded. I can probably add that functionality in the next day or two.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/9/09 1:32pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-86">
+				<div class="body" id="body-86">
+					
+<p>
+waw, fast reply, tank you. i want to mentioned the fact that i don't have more than one year experience in programming so if if i get wrong to put the problem i apologize. 2 days ago i find this library and i start to work whit. return to my post, ok i check if the FILES is empty and i retun a message to the user, but your class verify if the file types is wrong or the file upload is larger than my setMaxFileSize('x'); .But i want to alert user for his mistake, no to pass to the <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a>. So if you can do something like this please...  it's hurry.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="3/9/09 5:09pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-88">
+				<div class="body" id="body-88">
+					
+<p>
+You are going to want to so a try/catch block to catch the fValidationException:
+</p>
+<pre class="block php"><code>if(isset($_POST['upload'])) {
+    try {		
+        $uploader = new fUpload();
+        $uploader-&gt;setMIMETypes( array( 'image/jpeg'), 'The file uploaded is not an jpg');
+        $uploader-&gt;setMaxFileSize('2MB');
+        
+        $file = $uploader-&gt;move('./images', 'file');
+        echo 'fisier uploadat cu succes';
+        
+    } catch (fValidationException $e) {
+        echo $e-&gt;getMessage();
+    }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/9/09 9:19pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-90">
+				<div class="body" id="body-90">
+					
+<p>
+tank you very much for feedback, i will study more every class. you share here a gold mine, tank u again :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/9/09 10:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-91">
+				<div class="body" id="body-91">
+					
+<p>
+No problem. Let me know if you have any other questions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/9/09 10:25pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

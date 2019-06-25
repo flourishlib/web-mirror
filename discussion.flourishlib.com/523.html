@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fMailbox - Only get unread messages &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fMailbox - Only get unread messages</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					paul			</span>
+	<span class="date_posted" title="8/18/11 8:42am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+How will I be able to only get a list of unread messages? I tried changing the following:
+</p>
+<pre class="block php"><code>			$response = $this-&gt;write('STATUS &quot;INBOX&quot; (MESSAGES)');
+			foreach ($response as $line) {
+				if (preg_match('#^\\s*\\*\\s+STATUS\\s+&quot;?MESSAGES&quot;?\\s+\\((.*)\\)$#', $line, $match)) {
+					$details = self::parseResponse($match[1], TRUE);
+					$total_messages = $details['messages'];
+				}
+			}</code></pre>
+
+<p>
+ Into:
+</p>
+<pre class="block php"><code>			$response = $this-&gt;write('STATUS &quot;INBOX&quot; (UNSEEN)');
+			foreach ($response as $line) {
+				if (preg_match('#^\\s*\\*\\s+STATUS\\s+&quot;?INBOX&quot;?\\s+\\((.*)\\)$#', $line, $match)) {
+					$details = self::parseResponse($match[1], TRUE);
+					$total_messages = $details['unseen'];
+				}
+			}</code></pre>
+
+<p>
+ This returns the amount of UNSEEN messages (in my case 1), but this still returns all of the emails that I have in my mailbox. I assume there should be something changed/added to the FETCH command, but I don't have any experience with IMAP at all.
+</p>
+
+<p>
+I hope someone could help me with this :)
+</p>
+
+<p>
+Thanks in advance!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1531">
+				<div class="body" id="body-1531">
+					
+<p>
+I currently fixed it by doing:
+</p>
+<pre class="block php"><code>			$total_messages = 0;
+			$response = $this-&gt;write('SEARCH (UNSEEN)');
+			foreach ($response as $line) {
+				if (preg_match('#^\\s*\\*\\s+SEARCH\\s+(.*)$#', $line, $match)) {
+					$messages = str_replace(&quot; &quot;, &quot;,&quot;, $match[1]);
+					$total_messages = count(explode(&quot; &quot;, $match[1]));
+				}
+			}
+
+			if ($start &gt; $total_messages) {
+				return array();
+			}
+			
+			if ($end &gt; $total_messages) {
+				$end = $total_messages;
+			}
+
+			$output = array();
+			$response = $this-&gt;write('FETCH ' . $messages . ' (UID INTERNALDATE RFC822.SIZE ENVELOPE)');</code></pre>
+
+<p>
+ If anyone knows a better solution for this, please let me know!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													paul											</span>
+					<span class="date_posted" title="8/18/11 12:38pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

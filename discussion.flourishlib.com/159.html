@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORMValidation with regex &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORMValidation with regex</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					kris			</span>
+	<span class="date_posted" title="10/15/09 3:46pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is there anyway to use fORMValidation::addValidValuesRule with a regex? If not any clues on the best alternative? Many thanks, Kris.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-483">
+				<div class="body" id="body-483">
+					
+<p>
+you can use <a href="../flourishlib.com/api/fORM.html#registerHookCallback">fORM::registerHookCallback()</a> to do this if you'd like.  for example, modifying the example from the docs, say you have a User class with a phone_number field and you want it to match the format (<code>#)</code>#-...
+</p>
+<pre class="block php"><code>class User extends fActiveRecord
+{
+    protected function configure()
+    {
+        fORM::registerHookCallback($this, 'post::validate()', 'User::validatePhoneNumber');
+    }
+ 
+    static public function validatePhoneNumber($object, &amp;$values, &amp;$old_values, &amp;$related_records, &amp;$cache, &amp;$validation_messages)
+    {
+        if (preg_match('/\\(\\d{3}\\)\\d{3}\\-\\d{4}/', $values['phone_number']) === 0) {
+            $validation_messages[] = 'Phone Number: The value entered is not in the correct (###)###-#### format';
+        }     
+    }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="10/15/09 5:56pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-484">
+				<div class="body" id="body-484">
+					
+<p>
+hello vena. i didn't use till now this hook callback, please give an example, after i write this function, how i can call it, before populate and store method?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/15/09 6:43pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-485">
+				<div class="body" id="body-485">
+					
+<p>
+check out the docs under <a href="../flourishlib.com/docs/fORM.html">fORM</a> for <a href="../flourishlib.com/docs/fORM.html#AddingFunctionalitytofActiveRecord">'Adding Functionality to fActiveRecord'</a>.  by setting the second parameter (the hook) of registerHookCallback to 'post::validate()', the function will automatically fire at the end of the validate() step, adding the message you've defined to $validation_messages and causing the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object to throw an exception.  validate() is automatically done when you attempt to store() the record.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="10/15/09 8:44pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-486">
+				<div class="body" id="body-486">
+					
+<p>
+Tank you. i understood. was so easy :) is any solution to show this warning only if the not null default flourish warning don't show?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/15/09 9:09pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-487">
+				<div class="body" id="body-487">
+					
+<p>
+sorry, i'm not sure i understand.  if you want it only to add the error message if there are no other errors, you can probably just check the length of the $validation_messages array.  since post::validate() hooks fire *after* the regular flourish validation routines, if there were existing errors from that process then they would be set in the $validation_messages variable.
+</p>
+<pre class="block php"><code>        if (preg_match('/\\(\\d{3}\\)\\d{3}\\-\\d{4}/', $values['phone_number']) === 0 &amp;&amp; count($validation_messages) &gt; 0) {
+            $validation_messages[] = 'Phone Number: The value entered is not in the correct (###)###-#### format';
+        }</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="10/15/09 9:28pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-488">
+				<div class="body" id="body-488">
+					
+<p>
+i try to exaplain better. so flowrish has built in errror message for not null and number. and if a field is empty, the not null warning is show, but when the field it's fill with letter or letter and numbers, the 'Please enter a number' message show. this i want in my case. if both check rules return an error to show only first like in the built in.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/15/09 9:39pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-489">
+				<div class="body" id="body-489">
+					
+<p>
+ah, i see.  i believe you'll have to search the $validation_messages array for the error message, then.
+</p>
+<pre class="block php"><code>if (preg_match('/\\(\\d{3}\\)\\d{3}\\-\\d{4}/', $values['phone_number']) === 0) {
+    $key = array_search($validation_messages, 'Phone Number: Please enter a value');
+    if($key !== FALSE) $validation_messages[$key] = 'Phone Number: The value entered is not in the correct (###)###-#### format';
+}</code></pre>
+
+<p>
+ so basically, array_search finds the existing error message, and then you use its key to set the new one.  this overwrites the existing message.
+</p>
+
+<p>
+you'll have to use the exact error message in the array_search for it to work, though.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="10/15/09 9:56pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-490">
+				<div class="body" id="body-490">
+					
+<p>
+tank u for taking your time.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/15/09 10:00pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-491">
+				<div class="body" id="body-491">
+					
+<p>
+Works like a charm. Thanks for your help vena. Kris.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													kris											</span>
+					<span class="date_posted" title="10/16/09 11:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

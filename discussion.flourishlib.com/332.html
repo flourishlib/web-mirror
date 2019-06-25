@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Suggestion for config files class &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Suggestion for config files class</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ilo			</span>
+	<span class="date_posted" title="12/2/10 3:55am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, first of all, I've found the kind of library I was looking for, finally, great!
+</p>
+
+<p>
+I've been reading the whole documentation and playing with the demo application (northshorewebgeeks.com) and the more ready to start using flourishlib I feel, the more things I'm missing, hehe. There is one class that I've found very usefull, considering that flourishlib is just the library, and as developers we are going to reuse our own code from site to site: store site configuration in a separate file, so we can share the rest of code from site to site.
+</p>
+
+<p>
+Do you think a coniguration file class fits in flourishlib? I'm not sure yet about the scope of the class (reading files, writting files also) but the interface of frequest to get the url parameters is perfect for this case - ::get($varname, $cast, $default); -. 
+</p>
+
+<p>
+As long as the database is only being used for real live data, things like site Title, an email address, an about paragraph or any other things could go into this file, to avoid touching several .php files when building a new site.
+</p>
+
+<p>
+I'w love to work in this if you think is usefull (I'm going to write something for me if flourishlib does not include it).
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1030">
+				<div class="body" id="body-1030">
+					
+<p>
+I think there are two types of configuration I would normally use:
+</p>
+
+<ol>
+<li>Simple configuration used to bootstrap an app - such as database connection parameters</li>
+<li>More complex configuration, with a more robust editing interface, often requiring better performance</li>
+</ol>
+
+<p>
+For the first, I would opt for using Yaml. For the second, I would store the configuration in a database. 
+</p>
+
+<p>
+I have a commercial project I've been working on that uses sfYaml and just wraps it with a lightweight class to load and save the configuration. I wouldn't be opposed to exploring something similar for Flourish.
+</p>
+
+<p>
+What are your thoughts on Yaml?
+</p>
+
+<p>
+The other idea that just came to my head was using <a href="../flourishlib.com/docs/fCache.html">fCache</a> with the file backend, however that is not user-editable.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/2/10 9:41pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1033">
+				<div class="body" id="body-1033">
+					
+<p>
+Yaml is my preference to php-ini or XML.
+</p>
+
+<ul>
+<li>much easier to read</li>
+<li>multi-level (no need to simulate this like in php-inis)</li>
+</ul>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="12/3/10 12:32am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1035">
+				<div class="body" id="body-1035">
+					
+<p>
+I agree that configuration can be splitted into 'bootstrap' and 'live' information, but seriously I doubt that any of them (considering the purpose of configuration) requires a nested multilevel schema that Yaml is able to handle not being simulated. 
+</p>
+
+<p>
+I see Yaml (or even XML) in the same package as MongoDB, using an structured 'fake' schema for the ORM to handle this kind of information, but I'd not introduce a new language nor dependency to just handle a database configuration, or a site's title: IMHO this is an overkilling solution.
+</p>
+
+<p>
+After a quick review, the Hosting provider I use to use doesn't include the Yaml extension on PHP, so I guess a fallback solution (custom Yaml parser) would help, but the more I think, the worse I see the idea.
+</p>
+
+<p>
+So, back to the 'approach', considering the use case: complex or more advance configuration (or regularly changing configuration) in my case is also going into Database, nothing more to say here, I guess. About the bootstrapping, what kind of information should be considered?
+</p>
+
+<ul>
+<li>Database credentials</li>
+<li>Templating information (location of files, images?)</li>
+<li>Site information?: A title perhaps?</li>
+<li>Email settings?</li>
+</ul>
+
+<p>
+Read only or Read-Write class? well, actually it would be great to have full support, considering that a site can change or customize its own settings (an installer perhaps?).
+</p>
+
+<p>
+I don't get the point of using Yaml for this, however I can forsee that a Class to handle the Get/Set/Other operations regardless the backend could be usefull.. What types of backend could be available? A .ini, XML or Yaml file? a Database connection?
+</p>
+
+<p>
+Not sure if I'm being clear in my answer..
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ilo											</span>
+					<span class="date_posted" title="12/3/10 3:12am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1039">
+				<div class="body" id="body-1039">
+					
+<p>
+I think I understand what you are saying - you are looking for a class to handle reading and saving configuration options to some backend. It seems that different people would have different preferences on what the backend would be.
+</p>
+
+<p>
+In one sense, this feels like it is starting to venture more into framework-type territory. Building a configuration class that could use a database, PHP array structures, ini format, or yaml starts getting complex fast. I think I am more interested in providing tools that allow developers to pick what kind of configuration works for them and run with it. I understand that it will be more work than just dropping in a Config interface and using any backend that they choose, but it has always been my intent with Flourish to provide more of the building blocks.
+</p>
+
+<p>
+Right now <a href="../flourishlib.com/docs/fCache.html">fCache</a> provides a way write config options to a file in a machine readable format. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> make saving options to a database easy. Something like a yaml class would make writing config files in human-readable format easy. You could use <a href="../flourishlib.com/docs/fJSON.html">fJSON</a> to write JSON encoded data, it just doesn't have file loading and saving facility built in.
+</p>
+
+<p>
+The problem with creating a general class to use any of these is that they all just store data. To build a config class, I would be enforcing a specific structure on how config data should be stored, and building infrastructure on how to store this structure in the different backends. I almost feel like this should be a separate library built on top of Flourish and not part of the core of Flourish.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/4/10 9:07am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1042">
+				<div class="body" id="body-1042">
+					
+<p>
+So, I just suggested to read ini files, you pointed that Yaml could be of your interest, and I finished talking about a generic class supporting several backends. 
+</p>
+
+<p>
+Actually, my real purpose was to clearly separate code and configuration regardless the way the class or backend works. Having several classes for different backends or a single class is not a concern for me in this case, but finding a way to don't mix code and configuration, and make code more portable or reusable, yes, this was my concern.
+</p>
+
+<p>
+So, right now I'm unsure about what approach to take :)
+</p>
+
+<p>
+Thanks Wbond! 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ilo											</span>
+					<span class="date_posted" title="12/4/10 7:02pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SQLite and column named &#039;weight&#039; or &#039;time&#039;; or something is wrong here... &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SQLite and column named &#039;weight&#039; or &#039;time&#039;; or something is wrong here...</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="5/3/11 4:41am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I am working on making my site compatible with SQLite3(so I can demo it live running on my iPhone without having to run MySQL). First I figured out that translatedQuery() is not going to fix a lot of the problems between SQLite and MySQL like the following:
+</p>
+
+<p>
+MySQL to SQLite:
+</p>
+
+<ul>
+<li>AUTO_INCREMENT -&gt; AUTOINCREMENT (although this is unnecessary but if a PRIMARY KEY clause exists it must remain)
+<ul>
+<li>id INT PRIMARY KEY NOT NULL AUTO_INCREMENT -&gt; id INT PRIMARY KEY</li>
+</ul>
+</li>
+<li>CREATE TABLE tablename(...) ENGINE=InnoDB DEFAULT CHARSET=utf8; -&gt; CREATE TABLE tablename(...);</li>
+</ul>
+
+<p>
+Also, all indexes are unique across tables unlike in MySQL in SQLite.
+</p>
+
+<p>
+This table seems to fail to find its column named 'weight' with fActiveRecord:
+</p>
+<pre class="block sql"><code>DROP TABLE IF EXISTS css_files;
+CREATE TABLE css_files (
+  cid INT PRIMARY KEY,
+  filename VARCHAR(128) NOT NULL,
+  media VARCHAR(128) NOT NULL DEFAULT 'all',
+  weight INT SIGNED NOT NULL DEFAULT 0
+);
+CREATE INDEX idx_css_files_filename_media ON css_files (filename, media);</code></pre>
+<pre class="block php"><code>    $cssFiles = fRecordSet::build('Base_Css', array(), array('weight' =&gt; 'asc'));
+    if ($cssFiles-&gt;count() &gt; 0) {
+      foreach ($cssFiles as $record) {
+        $attr['href'] = $baseUrl.$record-&gt;getFilename();
+        $attr['media'] = $record-&gt;getMedia();
+        $this-&gt;head-&gt;createElement('link', $attr);
+      }
+    }</code></pre>
+
+<p>
+ Flourish parts of exception:
+</p>
+<pre><code>#!text/html
+Uncaught exception 'fProgrammerException' with message 'The column specified, weight, does not exist in the table css_files' in /private/var/www/sutra/Libraries/Flourish/fSchema.php:2339
+Stack trace:
+#0 /private/var/www/sutra/Libraries/Flourish/fORMDatabase.php(417): fSchema-&gt;getColumnInfo('css_files', 'weight', 'type')
+#1 /private/var/www/sutra/Libraries/Flourish/fRecordSet.php(233): fORMDatabase::addOrderByClause(Object(fDatabase), Object(fSchema), Array, 'css_files', Array)</code></pre>
+
+<p>
+ This happened with a column named time for me as well so I renamed that to stamp (thinking it might be a naming conflict with reserved word time) but that didn't actually fix it. Instead it just cannot find the column stamp now.
+</p>
+
+<p>
+One other questions regarding Flourish SQL:
+</p>
+
+<ul>
+<li>Why doesn't Flourish resolve to using InnoDB by default if it finds support in MySQL? Or does it use what the table default is? This is part of the reason why all my SQL CREATE TABLE statements mention the engine and DEFAULT CHARSET=utf8.</li>
+</ul>
+
+<p>
+Thanks
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1303">
+				<div class="body" id="body-1303">
+					
+<p>
+The main issues you are having with FlourishSql is that you are almost, but not quite following the standardized syntax. If you look at the page, you'll notice that <code>integer signed</code> is not a standard data type across the databases. If you drop the <code>signed</code> everything will work as you expect. If you open a ticket I can try to be more flexible about the schema detection with SQLite, but it is not the simplest task since users can use any number of almost any word for a data type in SQLite.
+</p>
+
+<p>
+In terms of the autoincrementing primary key, you need to do <code>integer autoincrement primary key</code>. If you don't put the <code>autoincrement</code> between <code>integer</code> and <code>primary key</code> it won't translate properly.
+</p>
+
+<p>
+For <code>CREATE TABLE</code> statements, <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a> does currently set the table to use <code>ENGINE=InnoDB</code>. If you aren't seeing that, then perhaps there is some issue with it translating properly.
+</p>
+
+<p>
+Are you running all of your <code>CREATE TABLE</code> statements through <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> or <a href="../flourishlib.com/api/fDatabase.html#translatedExecute">fDatabase::translatedExecute()</a>? If not, this would explain a number of the issues you are seeing.
+</p>
+
+<p>
+I have been working on some great enhancements to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a>. If things go well, they should be pushed live today or tomorrow. One of the fixes in there is the addition of specifying the character set for MySQL tables. In addition, it will be possible to pass SQL into a method on <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and have it spit out the translated SQL, without actually running it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/3/11 12:51pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1307">
+				<div class="body" id="body-1307">
+					<pre><code>#!text/html
+Are you running all of your CREATE TABLE statements through fDatabase::translatedQuery() or fDatabase::translatedExecute()? If not, this would explain a number of the issues you are seeing.</code></pre>
+
+<p>
+ Which one should I use for CREATE TABLE?
+</p>
+
+<p>
+I have fixed the SQL and this works so far on MySQL and SQLite without issue. The main thing is that for the moment all my SQL has been written to be executed in MySQL not anything else (hence ENGINE and etc).
+</p>
+
+<p>
+Perhaps sometime I'll create a readline or something similar that will use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and translatedQuery() as an alternative to running CLI MySQL. (Mode of development just for speed purposes has been to write the create table syntax, make the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class file, add it to my relationships list, and paste the SQL into CLI MySQL where it expects nothing but MySQL syntax).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="5/3/11 6:51pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1308">
+				<div class="body" id="body-1308">
+					
+<p>
+Also with SQLite 3 having trouble finding the column stamp on this table:
+</p>
+<pre class="block sql"><code>DROP TABLE IF EXISTS event_log;
+CREATE TABLE event_log (
+  eid INTEGER AUTOINCREMENT PRIMARY KEY,
+  class VARCHAR(128) NOT NULL,
+  line INTEGER UNSIGNED NOT NULL,
+  location VARCHAR(255) NOT NULL,
+  referrer VARCHAR(255) NOT NULL DEFAULT '',
+  message TEXT NOT NULL,
+  severity INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  uid INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  ip VARCHAR(64) NOT NULL DEFAULT '',
+  stamp INTEGER NOT NULL
+);</code></pre>
+<pre><code>#!text/html
+Query time was 0.00023293495178223 seconds for:
+SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'event_log'
+
+The column specified, stamp, does not exist' in Libraries/Flourish/fActiveRecord.php:2608
+Stack trace:
+#0 Libraries/Flourish/fActiveRecord.php(895): fActiveRecord-&gt;set('stamp', 1304466628)
+#1 EventLogEntry.php(30): fActiveRecord-&gt;__call('setStamp', Array)</code></pre>
+
+<p>
+ Removing SIGNED on the weight column fixed the issue with the css_files table but removing it here has not.
+</p>
+
+<p>
+EDIT: Was running into this problem because it kept using old versions of a file with the SQL that created the table. Removed UNSIGNED and SIGNED from the table and all works now.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="5/3/11 7:56pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

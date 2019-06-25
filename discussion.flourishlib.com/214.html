@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Something for routing... &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Something for routing...</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					s.zares			</span>
+	<span class="date_posted" title="3/8/10 1:32pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, Will Thanks for releasing this great tool! I already some times add it in my index.php:
+</p>
+<pre class="block php"><code>define('URL', fURL::get());
+
+// I need to receive:
+// $SEGMENT[n] n-segment value in current URL;
+// $LAST_SEGMENT last segment in current URL;
+// $LAST_SEGMENT_WOP last segment without page_number_segment ('page2' for example);
+
+define('URL', fURL::get());
+
+if (URL != '' &amp;&amp; URL != '/') {
+    $parts = explode('/', URL);
+    if (count($parts) &gt; 5) { exit('ERROR: Some message...'); }
+    $n = 1;
+    for ($i = 1; $i &lt; 10; $i++) {
+        $SEGMENT[$n] = $parts[$i];
+        $n++;
+    }
+    $LAST_SEGMENT = (substr(URL, -1)  == '/') ? $SEGMENT[count($parts)-2] : $SEGMENT[count($parts)-1];
+    $start_ls = substr($LAST_SEGMENT, 0, 4);
+    $end_ls = substr($LAST_SEGMENT, 4, strlen($LAST_SEGMENT));
+    if ($start_ls == &quot;page&quot; &amp;&amp; (preg_match('/^\\d*$/', $end_ls) == 1)) {
+        $LAST_SEGMENT_WOP = (substr(URL, -1) == '/') ? $SEGMENT[count($parts)-3] : $SEGMENT[count($parts)-2];
+        $PGE_NUMBER = $end_ls;
+    } else {
+        $LAST_SEGMENT_WOP = $LAST_SEGMENT;
+    }
+}
+
+// Then...
+$_GET['limit'] = $SEGMENT[2];
+$limit = fRequest::get('limit', 'integer', 10);
+
+// Or...
+$_GET['limit'] = $LAST_SEGMENT_WOP;
+$limit = fRequest::get('limit', 'integer', 10);</code></pre>
+
+<p>
+ There are thoughts?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-641">
+				<div class="body" id="body-641">
+					
+<p>
+If you are looking for a routing solution, I would recommend checking out <a href="http://github.com/jeffturcotte/moor">Moor</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/9/10 1:57am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-642">
+				<div class="body" id="body-642">
+					
+<p>
+Yes, it will solve all my problems, thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													s.zares											</span>
+					<span class="date_posted" title="3/9/10 9:22am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1484">
+				<div class="body" id="body-1484">
+					
+<p>
+I've just discovered the Petalon Framework (Moor + Flourish).
+</p>
+
+<p>
+Great stuff to organize a project.
+</p>
+
+<p>
+<a href="http://github.com/zares/petalon">http://github.com/zares/petalon</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="7/29/11 1:31pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1520">
+				<div class="body" id="body-1520">
+					
+<p>
+There's also the Slim Framework : <a href="http://www.slimframework.com/">http://www.slimframework.com/</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="8/6/11 7:06am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

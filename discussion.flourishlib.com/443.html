@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Update Peformance Tips includes &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Update Peformance Tips includes</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="6/3/11 7:24pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+This is up to date with r1004.
+</p>
+
+<p>
+include() version:
+</p>
+<pre class="block php"><code>// NOTE These must be in order
+include($root . 'fException.php');
+include($root . 'fExpectedException.php');
+include($root . 'fEmptySetException.php');
+include($root . 'fNoRemainingException.php');
+include($root . 'fNoRowsException.php');
+include($root . 'fNotFoundException.php');
+include($root . 'fValidationException.php');
+include($root . 'fUnexpectedException.php');
+include($root . 'fConnectivityException.php');
+include($root . 'fEnvironmentException.php');
+include($root . 'fProgrammerException.php');
+include($root . 'fSQLException.php');
+// NOTE The order here does not matter
+include($root . 'fActiveRecord.php');
+include($root . 'fAuthorization.php');
+include($root . 'fAuthorizationException.php');
+include($root . 'fBuffer.php');
+include($root . 'fCRUD.php');
+include($root . 'fCache.php');
+include($root . 'fCookie.php');
+include($root . 'fCore.php');
+include($root . 'fCryptography.php');
+include($root . 'fDatabase.php');
+include($root . 'fDate.php');
+include($root . 'fDirectory.php');
+include($root . 'fEmail.php');
+include($root . 'fFile.php');
+include($root . 'fFilesystem.php');
+include($root . 'fGrammar.php');
+include($root . 'fHTML.php');
+include($root . 'fImage.php');
+include($root . 'fJSON.php');
+include($root . 'fMailbox.php');
+include($root . 'fMessaging.php');
+include($root . 'fMoney.php');
+include($root . 'fNumber.php');
+include($root . 'fORM.php');
+include($root . 'fORMColumn.php');
+include($root . 'fORMDatabase.php');
+include($root . 'fORMDate.php');
+include($root . 'fORMFile.php');
+include($root . 'fORMJSON.php');
+include($root . 'fORMMoney.php');
+include($root . 'fORMOrdering.php');
+include($root . 'fORMRelated.php');
+include($root . 'fORMSchema.php');
+include($root . 'fORMValidation.php');
+include($root . 'fRecordSet.php');
+include($root . 'fRequest.php');
+include($root . 'fResult.php');
+include($root . 'fSMTP.php');
+include($root . 'fSQLSchemaTranslation.php');
+include($root . 'fSQLTranslation.php');
+include($root . 'fSchema.php');
+include($root . 'fSession.php');
+include($root . 'fStatement.php');
+include($root . 'fTemplating.php');
+include($root . 'fText.php');
+include($root . 'fTime.php');
+include($root . 'fTimestamp.php');
+include($root . 'fURL.php');
+include($root . 'fUTF8.php');
+include($root . 'fUnbufferedResult.php');
+include($root . 'fUpload.php');
+include($root . 'fValidation.php');
+include($root . 'fXML.php');</code></pre>
+
+<p>
+ If you prefer require() (gives fatal error instead of warning):
+</p>
+<pre class="block php"><code>// NOTE These must be in order
+require($root . 'fException.php');
+require($root . 'fExpectedException.php');
+require($root . 'fEmptySetException.php');
+require($root . 'fNoRemainingException.php');
+require($root . 'fNoRowsException.php');
+require($root . 'fNotFoundException.php');
+require($root . 'fValidationException.php');
+require($root . 'fUnexpectedException.php');
+require($root . 'fConnectivityException.php');
+require($root . 'fEnvironmentException.php');
+require($root . 'fProgrammerException.php');
+require($root . 'fSQLException.php');
+// NOTE The order here does not matter
+require($root . 'fActiveRecord.php');
+require($root . 'fAuthorization.php');
+require($root . 'fAuthorizationException.php');
+require($root . 'fBuffer.php');
+require($root . 'fCRUD.php');
+require($root . 'fCache.php');
+require($root . 'fCookie.php');
+require($root . 'fCore.php');
+require($root . 'fCryptography.php');
+require($root . 'fDatabase.php');
+require($root . 'fDate.php');
+require($root . 'fDirectory.php');
+require($root . 'fEmail.php');
+require($root . 'fFile.php');
+require($root . 'fFilesystem.php');
+require($root . 'fGrammar.php');
+require($root . 'fHTML.php');
+require($root . 'fImage.php');
+require($root . 'fJSON.php');
+require($root . 'fMailbox.php');
+require($root . 'fMessaging.php');
+require($root . 'fMoney.php');
+require($root . 'fNumber.php');
+require($root . 'fORM.php');
+require($root . 'fORMColumn.php');
+require($root . 'fORMDatabase.php');
+require($root . 'fORMDate.php');
+require($root . 'fORMFile.php');
+require($root . 'fORMJSON.php');
+require($root . 'fORMMoney.php');
+require($root . 'fORMOrdering.php');
+require($root . 'fORMRelated.php');
+require($root . 'fORMSchema.php');
+require($root . 'fORMValidation.php');
+require($root . 'fRecordSet.php');
+require($root . 'fRequest.php');
+require($root . 'fResult.php');
+require($root . 'fSMTP.php');
+require($root . 'fSQLSchemaTranslation.php');
+require($root . 'fSQLTranslation.php');
+require($root . 'fSchema.php');
+require($root . 'fSession.php');
+require($root . 'fStatement.php');
+require($root . 'fTemplating.php');
+require($root . 'fText.php');
+require($root . 'fTime.php');
+require($root . 'fTimestamp.php');
+require($root . 'fURL.php');
+require($root . 'fUTF8.php');
+require($root . 'fUnbufferedResult.php');
+require($root . 'fUpload.php');
+require($root . 'fValidation.php');
+require($root . 'fXML.php');</code></pre>
+
+<p>
+ In each case, I've read that require_once and include_once both do NOT allow for APC to perform proper caching. <a href="http://www.php.net/manual/en/function.spl-autoload.php#103548">http://www.php.net/manual/en/function.spl-autoload.php#103548</a>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

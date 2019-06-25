@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Error finding table when using multiple databases &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Error finding table when using multiple databases</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bret			</span>
+	<span class="date_posted" title="3/23/10 2:17pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm receiving the following error: 
+</p>
+<pre><code>Uncaught fProgrammerException
+-----------------------------
+{doc_root}\\manage\\ads.php(10): fActiveRecord-&gt;__construct()
+{doc_root}\\inc\\flourish\\fActiveRecord.php(1053): fSchema-&gt;getKeys('ad_blocks', 'primary')
+{doc_root}\\inc\\flourish\\fSchema.php(1885) The table specified, ad_blocks, does not exist in the database</code></pre>
+
+<p>
+ when trying to use multiple databases.  In my config file I setup the databases like so: 
+</p>
+<pre class="block php"><code>//  INIT DB
+$db = new fDatabase('mysql', 'database1', 'username', 'password', 'ip', '3306');
+fORMDatabase::attach($db);
+
+$db2 = new fDatabase('mysql', 'database2', 'username', 'password', 'ip', '3306');
+fORMDatabase::attach($db2, 'adserver');</code></pre>
+
+<p>
+ and declare the database relation in the class file:
+</p>
+<pre class="block php"><code>class AdBlock extends fActiveRecord
+{
+  protected function configure()
+  {
+	fORM::mapClassToDatabase($this, 'adserver');
+  }
+}</code></pre>
+
+<p>
+ Any ideas on what's going on?  I've double-checked that the table does exist ;)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-651">
+				<div class="body" id="body-651">
+					
+<p>
+<a href="../flourishlib.com/api/fORM.html#mapClassToDatabase">fORM::mapClassToDatabase()</a> call needs to use the same name that you specified in your <a href="../flourishlib.com/api/fORMDatabase.html#attach">fORMDatabase::attach()</a> call:
+</p>
+<pre class="block php"><code>class AdBlock extends fActiveRecord
+{
+  protected function configure()
+  {
+    fORM::mapClassToDatabase($this, 'adserver');
+  }
+}</code></pre>
+
+<p>
+ I noticed in your original post you had the db name as <code>database2</code>, but youve since changed it to <code>adserver</code>. Does it work set as <code>adserver</code>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/10 2:32pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-652">
+				<div class="body" id="body-652">
+					
+<p>
+no, that was just a mistake in the original post.  i was renaming the database names and ip's and accidentally changed that.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/23/10 2:34pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-653">
+				<div class="body" id="body-653">
+					
+<p>
+Can you post the output of the following SQL statement when you run it in the mysql command line client (or PHPMyAdmin)?
+</p>
+<pre class="block sql"><code>SHOW CREATE TABLE ad_blocks;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/10 2:36pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-654">
+				<div class="body" id="body-654">
+					<pre><code>CREATE TABLE `ad_blocks` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `image_id` int(11) unsigned default NULL,
+  `title` varchar(25) default NULL,
+  `text` varchar(70) NOT NULL,
+  `link_text` varchar(15) default NULL,
+  `link_href` varchar(100) NOT NULL,
+  `advertiser_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `image_id` (`image_id`),
+  KEY `advertiser_id` (`advertiser_id`),
+  CONSTRAINT `ad_block_image_fk` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`),
+  CONSTRAINT `ad_block_advertiser_fk` FOREIGN KEY (`advertiser_id`) REFERENCES `advertisers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/23/10 2:38pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-655">
+				<div class="body" id="body-655">
+					
+<p>
+What about the output from:
+</p>
+<pre class="block sql"><code>SHOW FULL TABLES WHERE table_type = 'BASE TABLE'</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/10 2:41pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-656">
+				<div class="body" id="body-656">
+					<pre><code>ad_blocks, BASE TABLE
+advertisers, BASE TABLE
+images, BASE TABLE
+images_sizes, BASE TABLE</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/23/10 2:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-657">
+				<div class="body" id="body-657">
+					
+<p>
+Everything so far is looking fine. Let's try explicitly setting a schema object and see if that fixes it:
+</p>
+<pre class="block php"><code>// After calling fORMDatabase::attach() for adserver
+fORMSchema::attach(new fSchema($db2), 'adserver');</code></pre>
+
+<p>
+ If so there may be a bug in creating the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> object for the non-default database.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/10 2:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-658">
+				<div class="body" id="body-658">
+					
+<p>
+I'm receiving the same error message with the <a href="../flourishlib.com/api/fORMSchema.html#attach">fORMSchema::attach()</a> call added.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/23/10 2:58pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-659">
+				<div class="body" id="body-659">
+					
+<p>
+How about putting this code right where you attach the databases?
+</p>
+<pre class="block php"><code>fORM::mapClassToDatabase('AdBlock', 'adserver');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/10 3:02pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-660">
+				<div class="body" id="body-660">
+					
+<p>
+yup, that did the trick.  any insight on what was happening? i know that the class' configure function was getting called...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/23/10 3:06pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-661">
+				<div class="body" id="body-661">
+					
+<p>
+Well, the configure method is called the first time an object of that type is created. I've tried to make it so that the ORM calls the configure method before any operations related to that record are performed, but it appears that whatever you were doing on ad.php was acting on the ad_blocks table, but had not yet configured AdBlock.
+</p>
+
+<p>
+What operation were you performing on line 10 of ads.php?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/10 3:30pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-662">
+				<div class="body" id="body-662">
+					<pre class="block php"><code>$adblock = new AdBlock();</code></pre>
+
+<p>
+ I was just creating a new AdBlock instance to test the <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a> configuration.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/23/10 3:36pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-677">
+				<div class="body" id="body-677">
+					
+<p>
+I wanted to let you guys know that all issues with mapped classes should be resolved as of r792.
+</p>
+
+<p>
+I also updated the documentation about <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> to recommend calling it in site-wide configuration and not in <a href="../flourishlib.com/api/fActiveRecord.html#configure">fActiveRecord::configure()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/31/10 12:29am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

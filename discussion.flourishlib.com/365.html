@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Quotes and Prepare &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Quotes and Prepare</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					irob			</span>
+	<span class="date_posted" title="2/23/11 12:19pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello everybody... I'm newer flourish user -i likes a lot- and this is my first post... I got only 1 week using FL and averything is ok .... well just for only one thing.... the quotes, I really don't understand how does it works and I don't know how solve it....  why the &quot; turns &amp;amp;quot; ??  why if I use it inside the &amp;lt;&amp;gt; works and in other case don't ?? .... watch the next code please and give me a tip or something...
+</p>
+
+<p>
+Thank you!
+</p>
+
+<p>
+file.php
+</p>
+<pre class="block php"><code>	$js_jquery = '&lt;script type=&quot;text/javascript&quot;&gt;
+		$().ready(function() {
+			&quot;&quot;
+		}
+	&lt;/script&gt;';
+	$tmpl-&gt;set('js_jquery', $js_jquery);</code></pre>
+
+<p>
+ views/index.php
+</p>
+<pre class="block php"><code>	&lt;?php echo $this-&gt;prepare('js_jquery') ?&gt;</code></pre>
+
+<p>
+ result (&quot; changed by &amp;amp;quot;):
+</p>
+<pre><code>#!text/html
+	&lt;script type=&quot;text/javascript&quot;&gt;
+		$().ready(function() {
+			&amp;amp;quot;&amp;amp;quot;
+		}
+	&lt;/script&gt;</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1120">
+				<div class="body" id="body-1120">
+					
+<p>
+So the <a href="../flourishlib.com/api/fHTML.html#prepare">fHTML::prepare()</a>, and consequently the <a href="../flourishlib.com/api/fTemplating.html#prepare">fTemplating::prepare()</a> method, will take semi-valid HTML and fix unencoding ampersands, less than symbols, greater than symbols and quotes that are not part of a valid HTML tag or HTML entity. In the case of the example you provided, it did the &quot;right&quot; thing because those quotes are not part of an HTML tag or entity and thus should be written as HTML entities.
+</p>
+
+<p>
+That said, why are you trying to prepare your javascript? It seems like you should just be able to echo it, especially since I presume it is coming from a safe source.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/24/11 9:46pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1122">
+				<div class="body" id="body-1122">
+					
+<p>
+ooooh! I got it... thanku wbond
+</p>
+
+<p>
+I didn't think in that option, I'm always thinking that the -templates- were ultra-protected, I'm so newer in flourish but I likes a lot....
+</p>
+
+<p>
+Thank you again!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													irob											</span>
+					<span class="date_posted" title="2/25/11 3:56am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

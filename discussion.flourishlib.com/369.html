@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>$db-&gt;query is not working &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">$db-&gt;query is not working</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mohammad			</span>
+	<span class="date_posted" title="2/28/11 2:37pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+its my code below... &lt;?php include_once(&quot;./inc/init.php&quot;); 
+</p>
+
+<p>
+$gamesResult = $db-&gt;query(&quot;SELECT game_id,game_name,game_url,game_image FROM games where active_status ='0' order by  game_id DESC limit 0 ,15&quot;); echo &quot;xdqws&quot;;
+</p>
+
+<p>
+and many html.... ?&gt; please tell me its not giving any out and any error on screen while a lot of html on this page.. pleasse tell me 
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1129">
+				<div class="body" id="body-1129">
+					
+<p>
+You probably need to turn up error reporting and tell PHP to display errors:
+</p>
+<pre class="block php"><code>error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 1);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/1/11 8:59am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1130">
+				<div class="body" id="body-1130">
+					
+<p>
+great help  very very thanx
+</p>
+
+<p>
+now its giving one error
+</p>
+
+<p>
+Fatal error: Call to undefined function mysqli_set_charset() in /hsphere/local/home/newhind/testing.newhind.com/newdesign/inc/flourish/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php on line 583 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/1/11 10:22am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1131">
+				<div class="body" id="body-1131">
+					
+<p>
+That implies you are using a VERY old version of PHP. According to <a href="http://us.php.net/mysqli_set_charset,">http://us.php.net/mysqli_set_charset,</a> mysqli_set_charset() was added in v5.0.5. Unfortunately there are many parts of Flourish that require PHP 5.1.2 or newer.
+</p>
+
+<p>
+You are going to want to upgrade PHP anyway since there are quite a number of security vulnerabilities in older versions, and 5.0 is no longer supported. Personally, I would recommend trying to get 5.3.x installed if you can.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/1/11 10:27am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1134">
+				<div class="body" id="body-1134">
+					
+<p>
+I am using PHP Version 5.2.5. so mysqli_set_charset() sholud be present there. 
+</p>
+
+<p>
+you can check my version by given below url <a href="http://testing.newhind.com/newdesign/test.php">http://testing.newhind.com/newdesign/test.php</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mohammad shakeel											</span>
+					<span class="date_posted" title="3/1/11 11:49pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1135">
+				<div class="body" id="body-1135">
+					
+<p>
+Ok, from further investigation, not only do you need to have a specific version of PHP, but MySQL must be of a specific version. It looks like you need MySQL 4.1.11 or newer, whereas you have 4.1.7.
+</p>
+
+<p>
+I'll update <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to only call that function if it exists.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/2/11 8:57am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1137">
+				<div class="body" id="body-1137">
+					
+<p>
+please update fdatabase class for call the  function if exists........i still waiting for your response .... i will be thnkfull to u
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/3/11 10:45am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1138">
+				<div class="body" id="body-1138">
+					
+<p>
+I made a changes in fdatabase class --- please check is it right ...
+</p>
+
+<p>
+if ($this-&gt;connection &amp;&amp; !mysqli_set_charset($this-&gt;connection, 'utf8')) {                 throw new <a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>(                     'There was an error setting the database connection to use UTF-8'                 );             } should be if ($this-&gt;connection &amp;&amp; function_exists('mysqli_set_charset') &amp;&amp; !mysqli_set_charset($this-&gt;connection, 'utf8')) {                 throw new <a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>(                     'There was an error setting the database connection to use UTF-8'                 );             }
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/3/11 11:38pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1139">
+				<div class="body" id="body-1139">
+					
+<p>
+finally i resolved my problem myself ... thank you for your cooperation....
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													shakeel 											</span>
+					<span class="date_posted" title="3/4/11 12:34pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1140">
+				<div class="body" id="body-1140">
+					
+<p>
+I've also included the fix in r975
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/4/11 2:15pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

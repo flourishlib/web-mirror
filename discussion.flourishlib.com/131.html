@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Extending Flourish Classes? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Extending Flourish Classes?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="9/3/09 1:47am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+For the life of me, I can't seem to extend flourish classes.  It seems something about them protects them from being extended.  Is this possible?
+</p>
+
+<p>
+For example, I want to extend the <a href="../flourishlib.com/docs/fFile.html">fFile</a> class.  I'd like to do something different with the &quot;write($data)&quot; method.  So, I go about it like this : 
+</p>
+<pre class="block php"><code>class WriteAppend extends fFile
+{
+
+	public function write($data)
+	{
+		echo &quot;I got here first!!!&quot;;
+		exit;
+	}
+}
+
+$temp_file = '/data/my_file.txt';
+$stuff_file = WriteAppend::create($temp_file,'Stuff');
+$stuff_file-&gt;write('More Stuff');
+</code></pre>
+
+<p>
+ Now, what I THINK should have happened is this :
+</p>
+
+<ol>
+<li> A file called /data/my_file.txt gets created.  It contains the single line 'Stuff'.</li>
+</ol>
+
+<ol>
+<li>The script tries to write 'More Stuff' to the file.  </li>
+</ol>
+
+<ol>
+<li>I've overridden the method 'write', so, the script should actually echo &quot;I got here first&quot; and then exit.</li>
+</ol>
+
+<p>
+Step 3 doesn't happen.  Instead, the file gets overwritten with 'More Stuff'.  
+</p>
+
+<p>
+Why is that?  Every example I've come up with that doesn't use flourish overrides the parent method 'write' with no problems.  Why does this not happen with flourish?
+</p>
+
+<p>
+Here's my goal: I want to append to a file using <a href="../flourishlib.com/docs/fFile.html">fFile</a>, not just overwrite the contents.  I'm not sure why the method write in <a href="../flourishlib.com/docs/fFile.html">fFile</a> does not have an append option such as :
+</p>
+<pre class="block php"><code>file_put_contents($this-&gt;file, $data, FILE_APPEND);</code></pre>
+
+<p>
+ Any suggestions?  Should I just give up on using <a href="../flourishlib.com/docs/fFile.html">fFile</a> and use plain old php file handles?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-386">
+				<div class="body" id="body-386">
+					
+<p>
+The issue you are running into is that <code>WriteAppend::create()</code> is extending <a href="../flourishlib.com/api/fFile.html#create">fFile::create()</a>, but not overriding it. Thus when you call <code>WriteAppend::create()</code> it is actually calling <a href="../flourishlib.com/api/fFile.html#create">fFile::create()</a>, which explicitly calls <code>new fFile()</code>. You'll need to override <a href="../flourishlib.com/api/fFile.html#create">fFile::create()</a> with your own <code>WriteAppend::create()</code> that explicitly calls <code>new WriteAppend()</code>.
+</p>
+
+<p>
+By the way, this sounds like a great enhancement to <a href="../flourishlib.com/docs/fFile.html">fFile</a>feel free to open a ticket!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/3/09 8:33am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

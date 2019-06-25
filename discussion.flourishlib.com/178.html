@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Fatal error: Call to undefined method &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Fatal error: Call to undefined method</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					o			</span>
+	<span class="date_posted" title="11/26/09 1:17pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Im using this code begining of every page
+</p>
+<pre class="block php"><code>include($_SERVER['DOCUMENT_ROOT'] . '/lib/config.php')</code></pre>
+
+<p>
+ All flourish files stored in /lib
+</p>
+
+<p>
+In config.php im using spl_register_autoload
+</p>
+<pre class="block php"><code>function flourish_autoload($class) {
+    $path = $_SERVER['DOCUMENT_ROOT']. '/lib/' . $class . '.php';
+    if (file_exists($path)) {
+        return include $path;
+    }
+}
+spl_autoload_register('flourish_autoload');
+</code></pre>
+
+<p>
+ But this errors occures ;
+</p>
+
+<p>
+Fatal error: Call to undefined method <a href="../flourishlib.com/api/fAuthorization.html#checkLoggedIn">fAuthorization::checkLoggedIn()</a> in /home/xxx/public_html/login.php on line 4 and Fatal error: Interface 'Iterator' not found in /home/xxx/public_html/lib/<a href="../flourishlib.com/docs/fResult.html">fResult</a>.php on line 22
+</p>
+
+<p>
+Everything works perfect under Mac Os X MAMP, but this problems occurs under CentOS 5.4 Cpanel Server
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-525">
+				<div class="body" id="body-525">
+					
+<p>
+It sounds like there might be some problems with the CentOS server since it can't find the Iterator interface. That is part of the SPL. You can try calling <code>print_r(spl_classes())</code> to see if the SPL is loaded.
+</p>
+
+<p>
+In terms of <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> being loaded, are you sure that there is no <code>__autoload()</code> function defined? <code>__autoload()</code> and <code>spl_autoload_regsiter()</code> do not work together. It appears that <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> is just not being loaded. Perhaps try including <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> manually to see if it is a problem with your autoload functions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/27/09 12:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-526">
+				<div class="body" id="body-526">
+					
+<p>
+Im not using extra <span class="underline">autoload Only spl_autoload... </span>
+</p>
+
+<p>
+<span class="underline"> Array (     <a href="http://discussion.flourishlib.com/AppendIterator">AppendIterator</a> =&gt; AppendIterator     <a href="http://discussion.flourishlib.com/ArrayIterator">ArrayIterator</a> =&gt; ArrayIterator     <a href="http://discussion.flourishlib.com/ArrayObject">ArrayObject</a> =&gt; ArrayObject     <a href="http://discussion.flourishlib.com/BadFunctionCallException">BadFunctionCallException</a> =&gt; BadFunctionCallException     <a href="http://discussion.flourishlib.com/BadMethodCallException">BadMethodCallException</a> =&gt; BadMethodCallException     <a href="http://discussion.flourishlib.com/CachingIterator">CachingIterator</a> =&gt; CachingIterator     <a href="http://discussion.flourishlib.com/Countable">Countable</a> =&gt; Countable     <a href="http://discussion.flourishlib.com/DirectoryIterator">DirectoryIterator</a> =&gt; DirectoryIterator     <a href="http://discussion.flourishlib.com/DomainException">DomainException</a> =&gt; DomainException     <a href="http://discussion.flourishlib.com/EmptyIterator">EmptyIterator</a> =&gt; EmptyIterator     <a href="http://discussion.flourishlib.com/FilterIterator">FilterIterator</a> =&gt; FilterIterator     <a href="http://discussion.flourishlib.com/InfiniteIterator">InfiniteIterator</a> =&gt; InfiniteIterator     <a href="http://discussion.flourishlib.com/InvalidArgumentException">InvalidArgumentException</a> =&gt; InvalidArgumentException     <a href="http://discussion.flourishlib.com/IteratorIterator">IteratorIterator</a> =&gt; IteratorIterator     <a href="http://discussion.flourishlib.com/LengthException">LengthException</a> =&gt; LengthException     <a href="http://discussion.flourishlib.com/LimitIterator">LimitIterator</a> =&gt; LimitIterator     <a href="http://discussion.flourishlib.com/LogicException">LogicException</a> =&gt; LogicException     <a href="http://discussion.flourishlib.com/NoRewindIterator">NoRewindIterator</a> =&gt; NoRewindIterator     <a href="http://discussion.flourishlib.com/OuterIterator">OuterIterator</a> =&gt; OuterIterator     <a href="http://discussion.flourishlib.com/OutOfBoundsException">OutOfBoundsException</a> =&gt; OutOfBoundsException     <a href="http://discussion.flourishlib.com/OutOfRangeException">OutOfRangeException</a> =&gt; OutOfRangeException     <a href="http://discussion.flourishlib.com/OverflowException">OverflowException</a> =&gt; OverflowException     <a href="http://discussion.flourishlib.com/ParentIterator">ParentIterator</a> =&gt; ParentIterator     <a href="http://discussion.flourishlib.com/RangeException">RangeException</a> =&gt; RangeException     <a href="http://discussion.flourishlib.com/RecursiveArrayIterator">RecursiveArrayIterator</a> =&gt; RecursiveArrayIterator     <a href="http://discussion.flourishlib.com/RecursiveCachingIterator">RecursiveCachingIterator</a> =&gt; RecursiveCachingIterator     <a href="http://discussion.flourishlib.com/RecursiveDirectoryIterator">RecursiveDirectoryIterator</a> =&gt; RecursiveDirectoryIterator     <a href="http://discussion.flourishlib.com/RecursiveFilterIterator">RecursiveFilterIterator</a> =&gt; RecursiveFilterIterator     <a href="http://discussion.flourishlib.com/RecursiveIterator">RecursiveIterator</a> =&gt; RecursiveIterator     <a href="http://discussion.flourishlib.com/RecursiveIteratorIterator">RecursiveIteratorIterator</a> =&gt; RecursiveIteratorIterator     <a href="http://discussion.flourishlib.com/RecursiveRegexIterator">RecursiveRegexIterator</a> =&gt; RecursiveRegexIterator     <a href="http://discussion.flourishlib.com/RegexIterator">RegexIterator</a> =&gt; RegexIterator     <a href="http://discussion.flourishlib.com/RuntimeException">RuntimeException</a> =&gt; RuntimeException     <a href="http://discussion.flourishlib.com/SeekableIterator">SeekableIterator</a> =&gt; SeekableIterator     <a href="http://discussion.flourishlib.com/SimpleXMLIterator">SimpleXMLIterator</a> =&gt; SimpleXMLIterator     <a href="http://discussion.flourishlib.com/SplFileInfo">SplFileInfo</a> =&gt; SplFileInfo     <a href="http://discussion.flourishlib.com/SplFileObject">SplFileObject</a> =&gt; SplFileObject     <a href="http://discussion.flourishlib.com/SplObjectStorage">SplObjectStorage</a> =&gt; SplObjectStorage     <a href="http://discussion.flourishlib.com/SplObserver">SplObserver</a> =&gt; SplObserver     <a href="http://discussion.flourishlib.com/SplSubject">SplSubject</a> =&gt; SplSubject     <a href="http://discussion.flourishlib.com/SplTempFileObject">SplTempFileObject</a> =&gt; SplTempFileObject     <a href="http://discussion.flourishlib.com/UnderflowException">UnderflowException</a> =&gt; UnderflowException     <a href="http://discussion.flourishlib.com/UnexpectedValueException">UnexpectedValueException</a> =&gt; UnexpectedValueException )</span>
+</p>
+
+<p>
+<span class="underline"> ( ! ) Fatal error: Interface 'Iterator' not found in /var/www/lib/<a href="../flourishlib.com/docs/fResult.html">fResult</a>.php on line 22 Call Stack
+<ol>
+<li>Time	Memory	Function	Location</li>
+</ol>
+ 1	0,0007	60040	{main}( )	../cache.php:0 2	0,0517	293040	Models::cache_Categories( )	../cache.php:6 3	0,0518	293428	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query( )	../Models.php:573 4	0,0519	294112	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;prepareSQL( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:2196 5	0,0519	294316	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;connectToDatabase( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:2051 6	0,0631	295892	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:530 7	0,0640	297624	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;runQuery( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:2200 8	0,0643	298540	flourish_autoload( )	../config.php:0 9	0,0652	311820	require_once( '/var/www/lib/<a href="../flourishlib.com/docs/fResult.html">fResult</a>.php' )	../config.php:9</span>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="11/27/09 1:00pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-527">
+				<div class="body" id="body-527">
+					
+<p>
+I'd sended mail about my config.php 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="11/27/09 1:21pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-528">
+				<div class="body" id="body-528">
+					
+<p>
+Hi Will
+</p>
+
+<p>
+Im starting with very minimal config under ubuntu
+</p>
+
+<p>
+config.php
+</p>
+<pre class="block php"><code>function flourish_autoload($class) {
+    $path = $_SERVER['DOCUMENT_ROOT']. '/lib/' . $class . '.php';
+    if (file_exists($path)) {
+        return require_once($path);
+    }
+}
+spl_autoload_register('flourish_autoload');
+$db = new fDatabase('mysql', 'odb', 'root', 'root', 'localhost');</code></pre>
+
+<p>
+ index.php
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM categories ORDER BY categories.categoryid ASC LIMIT 10&quot;);
+$categories = $result-&gt;fetchAllRows();</code></pre>
+<pre><code>#!text/html
+Fatal error: Call to undefined method fResult::setAutoIncrementedValue() in /var/www/lib/fDatabase.php on line 1659
+Call Stack
+#	Time	Memory	Function	Location
+1	0.0000	50572	{main}( )	../index.php:0
+2	0.0013	74456	fDatabase-&gt;query( )	../index.php:2
+3	0.0014	75144	fDatabase-&gt;prepareSQL( )	../fDatabase.php:2196
+4	0.0014	75468	fDatabase-&gt;connectToDatabase( )	../fDatabase.php:2051
+5	0.0018	77044	fDatabase-&gt;query( )	../fDatabase.php:530
+6	0.0018	78776	fDatabase-&gt;runQuery( )	../fDatabase.php:2200
+7	0.0018	93468	fDatabase-&gt;executeQuery( )	../fDatabase.php:2228
+8	0.0024	94196	fDatabase-&gt;handleAutoIncrementedValue( )	../fDatabase.php:1470</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="11/28/09 11:05am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-529">
+				<div class="body" id="body-529">
+					
+<p>
+Sorry, I haven't had too much time on the computer the past few days.
+</p>
+
+<p>
+The issues you are having sound like problems I have heard of with some PHP opcode caches, such as eAccelerator, XCache, APC, etc. If you have any of those running, can you try disabling them?
+</p>
+
+<p>
+I'm fairly certain it is not a loading issue since <a href="../flourishlib.com/api/fResult.html#handleAutoIncrementedValue">fResult::handleAutoIncrementedValue()</a> is called in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> <strong>after</strong> other <a href="../flourishlib.com/docs/fResult.html">fResult</a> methods.
+</p>
+
+<p>
+If you don't have an opcode cache, can you paste a list of PHP extensions you do have loaded? You should be able to get it on the command line by <code>php -m</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/28/09 2:25pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-530">
+				<div class="body" id="body-530">
+					
+<p>
+Hi Will
+</p>
+
+<p>
+All problem is &quot;setlocale(LC_ALL...&quot; in config.php
+</p>
+
+<p>
+If i used this function, flourishlib cant work on Linux environments
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="11/29/09 7:17am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-531">
+				<div class="body" id="body-531">
+					
+<p>
+You should check and make sure that locale is available on you Linux machine. Nothing on Flourish should cause those types of issues when setlocale() is called. It is worth noting that setlocale() is not threadsafe, and thus could cause issues when Apache is set up to use a threaded mpm such as the worker mpm.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/29/09 8:59am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

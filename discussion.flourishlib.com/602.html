@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>How efficient is the SQL? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">How efficient is the SQL?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					rirez			</span>
+	<span class="date_posted" title="3/23/12 11:29am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+How efficient with SQL is Flourish? For example, if we do a simple <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> call to pull out a row from a database, does Flourish automatically fetch all the row's data? Or does it wait for a request to one of its columns, and proceed to fetch just that?
+</p>
+
+<p>
+As another example, if I were to count all the rows in a database, would it be okay to simply build a full <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object and using count() on it? Does building an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object try to get all the data (which would be catastrophic for extremely large tables) or does it wait for us to do an operation?
+</p>
+
+<p>
+Poking around in the source seems a bit unclear, though I did find a function called tally() in <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> that suggests that more queries are done on the fly as data is requested. I can see both options having drawbacks, though: lazy querying leads to more queries in the long run, while the alternative can easily load way too much data than necessary.
+</p>
+
+<p>
+Some explanations would be really useful!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1709">
+				<div class="body" id="body-1709">
+					
+<p>
+The Flourish ORM (and the whole database subsytem, with the exception of <a href="../flourishlib.com/docs/fUnbufferedResult.html">fUnbufferedResult</a>) uses eager loading, so all data it loaded in a single query/request. When you load build an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, all columns from all rows are load in a single query that has its results buffered in memory. When you create an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object, if it hasn't already been created during the current execution, all columns are loaded in a single query.
+</p>
+
+<p>
+In my experience, this is more efficient than lazy loading. Lazy loading only sends the data you ask for when you need it, but involves more round-trips and more PHP code execution.
+</p>
+
+<p>
+The result of this is that you should only ask for data you are planning on using, and possibly segment your database tables such that blobs and text columns be in separate tables if you only rarely access them. So if you only want to count records that match a pattern, it is definitely better to use <a href="../flourishlib.com/api/fRecordSet.html#tally">fRecordSet::tally()</a>. That way all of your conditions are used, but a single number is returned rather than processing every row and constructing <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects.
+</p>
+
+<p>
+Additionally, I find that for areas that are hit a lot, I tend to write custom SQL inside of methods in my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes so that I get better performance, but the data access is encapsulated. Basically the ORM helps you get up and running quickly and easy tweak things and handle lots of situations without much work, but all of the convenience and extensibility does cost extra processing. Using a profiler such as xdebug is very useful to identify points in your code that are the most expensive, but also the areas you will get the most benefit from optimizing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/12 11:55am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1710">
+				<div class="body" id="body-1710">
+					
+<p>
+Thanks for the quick reply!
+</p>
+
+<p>
+I see. This would be a reason to further normalize entire databases.
+</p>
+
+<p>
+Would, for example, fRecordSet::buildFromSQL help with this issue by only grabbing the columns we need, if we're in a read-only situation? Or is there a better solution for only getting the data we need?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="3/23/12 12:03pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1711">
+				<div class="body" id="body-1711">
+					
+<p>
+No, that is not possible. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> is built around an interpretation of the active record pattern where an object represents one complete row in a table and encapsulates logic related to that row. There is no support in any form for only loading part of a row. In fact, I would probably expect the extra complexity of implementing that in a flexible manner that supported all of the current functionality would likely further decrease the performance of the ORM. <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> will throw an exception if you don't <code>SELECT *</code> or <code>SELECT table.*</code> in your SQL statement. 
+</p>
+
+<p>
+If you only want to select specific columns, <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and <a href="../flourishlib.com/docs/fResult.html">fResult</a> are the tools in Flourish to do that. <a href="../flourishlib.com/api/fResult.html#unescape">fResult::unescape()</a> allows easily mapping raw DB values into PHP objects. Where I work there have been some situations where we've built lighter-weight abstractions on top of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and <a href="../flourishlib.com/docs/fResult.html">fResult</a> for situations where we needed more specialized access, such as situations where we were dealing with poorly constructed legacy database tables that hand hundreds of columns. This approach takes more work, but allows the code to be specialized for your situation.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/12 12:14pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1712">
+				<div class="body" id="body-1712">
+					
+<p>
+I guess this means a good rule of thumb is to use <a href="../flourishlib.com/docs/fORM.html">fORM</a> for well-structured databases with well-structured access, and fall back to our usual patterns of SQL work with the help of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>/<a href="../flourishlib.com/docs/fResult.html">fResult</a> to keep it sane (and retain that flourish-y goodness) when working with uglier schemas and data.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="3/23/12 12:17pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

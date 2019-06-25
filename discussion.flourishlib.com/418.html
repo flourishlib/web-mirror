@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Search &amp; Pagination &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Search &amp; Pagination</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					raff			</span>
+	<span class="date_posted" title="5/3/11 1:52am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I want to create a search script but I need to paginate the results any ideas?
+</p>
+
+<p>
+I have been using sessions the problem its people who uses the multi tab browsers :S
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1301">
+				<div class="body" id="body-1301">
+					
+<p>
+<a href="https://github.com/wbond/flourish-alpha/tree/master/fPagination">https://github.com/wbond/flourish-alpha/tree/master/fPagination</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="5/3/11 3:37am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1302">
+				<div class="body" id="body-1302">
+					
+<p>
+I think the problem its that you miss the search string right? If so, you can hash it and save it into one table.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="5/3/11 12:10pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1305">
+				<div class="body" id="body-1305">
+					
+<p>
+Why are you storing search results in the session? Do your searches take that long to execute?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/3/11 12:55pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1306">
+				<div class="body" id="body-1306">
+					
+<p>
+I have more than 1000000 records to show. I already paginate this and it works fine. My problem begins when the user use the filters to reduce the numeber or records. I can paginate the first page but after this I lost the original search string beacuse I cant include the search terms into the url so I saved it into the the session but if the user uses a multitab browser it fails.
+</p>
+
+<p>
+As an example
+</p>
+
+<p>
+<a href="http://www.example.com/products/search/">www.example.com/products/search/</a>
+</p>
+
+<p>
+This page shows the last 25 records from the table.
+</p>
+
+<p>
+1 2 3 ... .. 25
+</p>
+
+<p>
+First &lt;  1  2  3  4  5  ... &gt; Last
+</p>
+
+<p>
+<a href="http://www.example.com/products/search/1">www.example.com/products/search/1</a> <a href="http://www.example.com/products/search/26">www.example.com/products/search/26</a> <a href="http://www.example.com/products/search/51">www.example.com/products/search/51</a>
+</p>
+
+<p>
+etc
+</p>
+
+<p>
+In this page I show 2 inputs <strong>Product name</strong>, <strong>Price</strong>, and one select <strong>Category</strong> the user can use them to filter the results 
+</p>
+
+<p>
+1 2 3 ... .. 25
+</p>
+
+<p>
+First &lt;  1  2  3  &gt; Last
+</p>
+
+<p>
+When the user click in one of this links I lost the query terms because I cant include them into the url
+</p>
+
+<p>
+<a href="http://www.example.com/products/search/'''silver'''/.../51">www.example.com/products/search/'''silver'''/.../51</a> /
+</p>
+
+<p>
+I'm saving it into the session but if the user open a secound tab in his browser the terms are overwritten.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													raff											</span>
+					<span class="date_posted" title="5/3/11 2:45pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1313">
+				<div class="body" id="body-1313">
+					
+<p>
+Any ideas?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													raff											</span>
+					<span class="date_posted" title="5/6/11 12:21pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1314">
+				<div class="body" id="body-1314">
+					
+<p>
+Why can't the search terms be in the query string?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/6/11 12:22pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1317">
+				<div class="body" id="body-1317">
+					
+<p>
+                                                                       category/price/record SEO U_U and they doesn't like how it looks example.com/products/search/medicine/10/25
+</p>
+
+<p>
+I created a table where I insert the serialize() of the serach terms using a sha1 hash as a Key
+</p>
+
+<p>
+example.com/products/search/azkf59785SD455.../25
+</p>
+
+<p>
+They like it but since the user can save the url in a bookmark but I dont feel good with this behaviour any Good practice for Paginate search results?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="5/6/11 2:30pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

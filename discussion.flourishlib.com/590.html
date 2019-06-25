@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Adding live and/or historic exchange rates to flourishlib&#039;s fMoney class. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Adding live and/or historic exchange rates to flourishlib&#039;s fMoney class.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					netcarver			</span>
+	<span class="date_posted" title="2/7/12 2:33pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Flourish is a great library but I find the conversion between currencies using <a href="../flourishlib.com/docs/fMoney.html">fMoney</a> somewhat limiting. I've worked up an few extension classes that build on Flourish's <a href="../flourishlib.com/docs/fMoney.html">fMoney</a> foundation and add live and/or historic exchange rate support courtesy of Joss Crowcroft's <a href="http://openexchangerates.org">http://openexchangerates.org</a> project.
+</p>
+
+<p>
+My extension adds an interface (fxCurrencyExchange), a concrete implementation for openexchangerates.org (fxOpenExchangeRateCurrencyExchange) an extension to <a href="../flourishlib.com/docs/fMoney.html">fMoney</a> (fxMoney) to allow simplified conversion and a convenience class for handling leap years (fxYear.)
+</p>
+
+<p>
+Basic usage is the same as <a href="../flourishlib.com/docs/fMoney.html">fMoney</a>...
+</p>
+<pre class="block php"><code>fxMoney::setDefaultCurrency('USD');
+$usd = new fxMoney( '100' ); // Create a USD amount.
+fxMoney::defineCurrency( 'GBP', 'Pound Sterling', '', 2 ); // Define a new currency, 'GBP' (Pound Sterling) -- use ISO 4217 three-letter codes.</code></pre>
+
+<p>
+ But, you can now specify a currency exchange (and, if needed, an exchange rate cache using flourish's <a href="../flourishlib.com/docs/fCache.html">fCache</a>)...
+</p>
+<pre class="block php"><code>$currency_cache = new fCache(...); // Setup an fCache for currency values as required. Using a non-volatile cache is probably a good idea here.
+$exchange = new fxOpenExchangeRateCurrencyExchange( $currency_cache ); // Setup an exchange
+fxMoney::setCurrencyExchange( $exchange );  // Tells fxMoney to use this as its exchange.</code></pre>
+
+<p>
+ You can now use fxMoney to convert using live exchange rates...
+</p>
+<pre class="block php"><code>$gbp = $usd-&gt;toGBP(); // Convert to GBP using the live exchange rate from OpenExchangeRates.org at the time of call.</code></pre>
+
+<p>
+ ... or fixed exchange rates...
+</p>
+<pre class="block php"><code>$gbp = $usd-&gt;toGBP('0.65'); // Conversion done using a fixed exchange rate between the two currencies : GBP = 0.65 * USD.</code></pre>
+
+<p>
+ ... or some historical exchange rate if you give it a date...
+</p>
+<pre class="block php"><code>$gbp = $usd-&gt;toGBP( '2011-01-31' ); // Conversion done using historical market rate. The historical data will be cached if a cache is defined.</code></pre>
+
+<p>
+ Code is available from <a href="https://gist.github.com/fc8b9fd41e66cb36af2c">https://gist.github.com/fc8b9fd41e66cb36af2c</a> if you want to try this out. Feedback welcome here or on the github page.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

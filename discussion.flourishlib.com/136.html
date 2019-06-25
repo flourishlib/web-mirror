@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>gzip &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">gzip</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					eu			</span>
+	<span class="date_posted" title="9/19/09 12:14am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+is there any chance tha flourish stop tge gzip commpresion, ob_start(&quot;ob_gzhandler&quot;);  i put in the head of my script and page speed firefox add on still advice4 me to gzip files.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-407">
+				<div class="body" id="body-407">
+					
+<p>
+I can't think of anything in Flourish that would change anything related to output buffering unless you enabled buffered output on an <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> object, or called an <a href="../flourishlib.com/docs/fBuffer.html">fBuffer</a> method.
+</p>
+
+<p>
+You might try using your webserver to do the gzip encoding. With Apache you should be able to add the following line to your .htaccess or httpd.conf file.
+</p>
+<pre><code>AddOutputFilterByType DEFLATE text/html application/javascript text/css</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/19/09 2:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-408">
+				<div class="body" id="body-408">
+					
+<p>
+tanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="9/19/09 3:33pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-412">
+				<div class="body" id="body-412">
+					
+<p>
+Can you make a test of one of your script? i set the htacces, and still no gzip files, i try on two separated host. i don't use any of ftemplating ot Buffer method
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="9/21/09 9:33pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-413">
+				<div class="body" id="body-413">
+					
+<p>
+I actually run that Apache configuration on lots of websites, including this very one. How are you checking that your HTML is being sent as with gzip encoding? Can you provide me a URL to look at?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/21/09 10:05pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-414">
+				<div class="body" id="body-414">
+					
+<p>
+Yes, I look better and is see is gzip-ed, but only the html page, i expected all to gzip, js and css, i know from some time ago this think is possible. <a href="http://www.alpab.ro/index.php">http://www.alpab.ro/index.php</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="9/22/09 7:54am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-419">
+				<div class="body" id="body-419">
+					
+<p>
+The Apache <code>AddOutputFilterByType</code> directive requires that you identify the mime type of each kind of file to gzip. From looking at the headers on your site using Firebug, I noticed that none of your JS or CSS files have <code>Content-type</code> headers. This is probably why Apache is not compressing them.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/23/09 10:15pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-420">
+				<div class="body" id="body-420">
+					
+<p>
+Content-Type	text/css
+</p>
+
+<p>
+now have content type and still don't compress. i know maybe it's not related to flowrish, but you have any another ideea why this happend?
+</p>
+
+<p>
+don't have content type because i put this line !AddOutputFilterByType DEFLATE text/html application/javascript text/css
+</p>
+
+<p>
+in .htacces, but server is set up for gzip encoding already whithot set myself from htacces, i erase that line and now have content type but how i say still nothing
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="9/24/09 8:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-422">
+				<div class="body" id="body-422">
+					
+<p>
+I'm still not seeing any <code>Content-type</code> on the .js and .css file on the page you linked to. It seems to me you are definitely running into an Apache configuration issue. Try adding these configuration lines to your .htaccess to give js and css files a content-type:
+</p>
+<pre><code>AddType application/javascript .js
+AddType text/css .css</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/25/09 1:15pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-423">
+				<div class="body" id="body-423">
+					
+<p>
+Response Headers Date	Fri, 25 Sep 2009 19:01:25 GMT Server	Apache/2.2.10 (Linux/SUSE) Last-Modified	Tue, 22 Sep 2009 04:10:16 GMT Etag	&quot;230679-ac2a-47422c691da00&quot; Accept-Ranges	bytes Content-Length	44074 Keep-Alive	timeout=15, max=89 Connection	Keep-Alive <strong>Content-Type	text/css</strong> Request Headers Host	<a href="http://www.alpab.ro">www.alpab.ro</a> User-Agent	Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14 FirePHP/0.3 Accept	text/css,*/*;q=0.1 Accept-Language	en-gb,en;q=0.5 Accept-Encoding	gzip,deflate Accept-Charset	ISO-8859-1,utf-8;q=0.7,*;q=0.7 Keep-Alive	300 Connection	keep-alive Referer	<a href="http://www.alpab.ro/">http://www.alpab.ro/</a> Cookie	style_cookie=printonly; phpbb3_7wdam_u=1; phpbb3_7wdam_k=; phpbb3_7wdam_sid=a2956a965706e6f9d118cbc6b0f758a9; PHPSESSID=tm4408e6rt609sarirv3ig3fd0vfesaq
+</p>
+
+<p>
+this is from firebug for default.css file, so it's have content type, if i put that line in htacces, content-type don't show.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="9/25/09 3:07pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

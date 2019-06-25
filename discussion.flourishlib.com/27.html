@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Logging to Destination Not Working? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Logging to Destination Not Working?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/8/09 12:38am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I think logging to any destination other than HTML might be broken.  I can't send output to an email address or to a log file.  Am I doing something wrong or is this a bug?
+</p>
+
+<p>
+I have just updated to flourish r526.
+</p>
+
+<p>
+Here is a very basic example file. This should attempt to put a 62bit generated string into a char(32) field in the database.  Obviously, this will fail.  I get the follow error via command line.  However, I get nothing via email nor via log file if I replace the email address with  a valid file path (for example, the constant ERR_LOG in the script).
+</p>
+<pre><code> php error_test.php 
+        Unable to store a collection key. Message:
+        exception 'fValidationException' with message '&lt;p&gt;The following problems were found:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Key Code: Please enter exactly 32 characters&lt;/li&gt;
+&lt;/ul&gt;' in /app/appbeacon_collection/flourish/fActiveRecord.php:1958
+Stack trace:
+#0 /app/appbeacon_collection/flourish/fActiveRecord.php(1787): fActiveRecord-&gt;validate()
+#1 /app/appbeacon_collection/scripts/error_test.php(44): fActiveRecord-&gt;store()
+#2 {main}
+        Exiting at 2009-03-07.</code></pre>
+<pre class="block php"><code>&lt;?php
+
+define('APP_PATH','/app/REPLACED/');
+define('ERR_LOG',APP_PATH . '/logs/error_log.log');
+
+error_reporting(E_STRICT | E_ALL);
+
+
+fCore::enableErrorHandling('REPLACED');
+fCore::enableExceptionHandling('REPLACED');
+ 
+fTimestamp::setDefaultTimezone('America/Chicago');
+ 
+/**
+ * Database connection parameters
+ */
+define('DB_HOST','REPLACED');
+define('DB_USER','REPLACED');
+define('DB_PASS','REPLACED');
+define('DB','REPLACED');
+define('DB_PORT',REPLACED);
+
+
+/**
+ * Connect to the database with ORM
+ */
+// Connecting to a MySQL database on the server example.com
+$appb_db = new fDatabase('mysql', DB, DB_USER, DB_PASS, DB_HOST);
+fORMDatabase::attach($appb_db); 
+
+
+
+/**
+ * Create a unique key and save in database (Table collect_keys)
+ * 
+ * Called URL will check for matching code as security measure.
+ * @var key_code
+ */
+try
+{
+	$key_code = random_alpha(62);
+	$key = new Collect_key();
+	$key-&gt;setKey_code($key_code);
+	$key-&gt;store();
+} catch (Exception $e)
+	{
+		echo &quot;\\tUnable to store a collection key. Message:\\n&quot;;
+		echo &quot;\\t$e\\n&quot;;
+		echo &quot;\\tExiting at &quot; . date('Y-m-d') . &quot;.\\n&quot;;
+		exit(1);
+	}
+
+
+ 
+/**
+ * Automatically includes classes for flourish
+ * database models and functional models.
+ * 
+ * @throws Exception
+ * 
+ * @param  string $class  Name of the class to load
+ * @return void
+ */
+function __autoload($class)
+{
+    $flourish_file = APP_PATH . '/flourish/' . $class . '.php';
+ 
+    if (file_exists($flourish_file)) {
+        return require $flourish_file;
+    }
+
+	// Automatically include database models
+    $file = APP_PATH . '/db_models/' . $class . '.php';
+ 
+    if (file_exists($file)) {
+        return require $file;
+    }
+
+	// Automatically include functional models
+    $file = APP_PATH . '/models/' . $class . '.php';
+ 
+    if (file_exists($file)) {
+        return require $file;
+    }
+    
+    throw new Exception('The class ' . $class . ' could not be loaded');
+}
+
+
+
+/**
+ * Generate a random string.
+ * 
+ * @return 
+ * @param object $length[optional], Default = 32 char
+ */
+function random_alpha($length = 32) 
+{
+  $random = '';
+  for ($i = 0; $i &lt; $length; $i++) {
+    $random .= chr(rand(ord('a'), ord('z')));
+  }
+  return $random;
+}
+
+?&gt;
+
+?&gt;</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-79">
+				<div class="body" id="body-79">
+					
+<p>
+Sounding a bit silly here, but the logging to email is working.  They just took a VERY long time to arrive.  That's strange since mail tests direct from command line appeared instantly.
+</p>
+
+<p>
+However, I still can not get this to log to the ERR_LOG as defined above.
+</p>
+
+<p>
+Also, let me clarify about code above.  &quot;REPLACED&quot; means that for security reasons, I removed the actual content.  For enableErrorHandling and enableExceptionHandling, I had an email address in there at the time.  If you put ERR_LOG in there instead, I can't get it to write to that file.  Permissions = 766.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/8/09 3:30am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-87">
+				<div class="body" id="body-87">
+					
+<p>
+I checked this out and confirmed that both email and file logging are working on my end. My guess is that somehow your <code>ERR_LOG</code> constant is being pointed to a file that isn't writable. I need to add some validation of the log file to the code so that it is easy to tell what is going on. Right now it just silently returns if something doesn't look correct.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/9/09 9:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

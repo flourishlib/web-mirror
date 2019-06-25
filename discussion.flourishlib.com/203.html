@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fTimestamp error in documentation and question &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fTimestamp error in documentation and question</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="2/3/10 11:00am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<pre class="block php"><code>$now = new fTimestamp();
+$day_ago = new fTimestamp('-1 day');
+ 
+// These return TRUE
+$now-&gt;eq();
+$now-&gt;eq('now');
+$now-&gt;gt($day_ago);
+$now-&gt;gte($day_ago);
+$now-&gt;lt('+5 min');
+ 
+// These calls return FALSE
+$day_ago-&gt;lt($now);
+$now-&gt;gt($day_ago);
+$now-&gt;gte($day_ago);
+</code></pre>
+
+<p>
+ The &quot;FALSE&quot; commands also returns true... well 2 of them are actually the same as above :)
+</p>
+
+<p>
+Question : Is the following really true ??
+</p>
+<pre class="block php"><code>$now-&gt;eq('now');</code></pre>
+
+<p>
+ I thought that when $now is stored, is different from the timestamp it makes when invoquing lt method with 'now' param.
+</p>
+
+<p>
+Maybe it is the same except if the script is so slow the two commands take place on a different second (which could happen even for the example if the script runs exactly at the time of going from one second to another)
+</p>
+
+<p>
+Yes?
+</p>
+
+<p>
+Aurelien
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-614">
+				<div class="body" id="body-614">
+					
+<p>
+You are right - it is entirely possible that the code will occur at the exact moment before a second change, and then the second statement after the second change.
+</p>
+
+<p>
+Thanks for the bug report - I've added a ticket to make sure I get it updated
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/11/10 9:31pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

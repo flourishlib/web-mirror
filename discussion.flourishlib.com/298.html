@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>$user-&gt;populate() // Is there a method to populate with data array? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">$user-&gt;populate() // Is there a method to populate with data array?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mrocha.me			</span>
+	<span class="date_posted" title="9/24/10 10:45am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Part of my html:<br />
+
+</p>
+<pre><code>#!text/html
+&lt;div class=&quot;field email&quot;&gt;
+&lt;label for=&quot;users[email]&quot;&gt;E-mail:&lt;/label&gt;&lt;span class=&quot;error&quot;&gt;* &lt;?php print $this-&gt;get('error[email]'); ?&gt;&lt;/span&gt;
+&lt;input type=&quot;text&quot; name=&quot;users[email]&quot; value=&quot;&lt;?php print $this-&gt;get('users[email]'); ?&gt;&quot;/&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+ Part of my code:<br />
+
+</p>
+<pre class="block php"><code>
+$user = fRequest::get('users');
+
+if($user!=NULL){
+    $error=Array(
+        'email'=&gt;'campo obrigatrio', // required field
+        'password'=&gt;'campo obrigatrio' // required field
+    );
+    $errors=count($error);
+    foreach($user as $key=&gt;$value){
+        if($value!='' &amp;&amp; array_key_exists($key, $error)){
+            if($key==&quot;email&quot; &amp;&amp; !eregi(&quot;^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$&quot;, $value)) {
+                $error[$key]='e-mail invlido'; // invalid e-mail
+            }
+            else {
+                $error[$key]=&quot;&quot;;
+                $errors--;
+            }
+        }
+    }
+    if($errors&lt;=0){
+        $result = User::save($user);
+    } else {
+        $template-&gt;set('users', $user );
+    }
+} else {
+    $error=Array();
+}
+</code></pre>
+
+<p>
+ By the flourish_demo_site &amp; documentation I could understand that I can get the data from $_POST (HTTP), but I would like to get the data from a variable array and save them.
+</p>
+<pre class="block php"><code>class User extends fActiveRecord
+
+function save($data){
+...
+fORMDatabase::attach($mydb);
+fORM::mapClassToTable('User', 'users');
+$user = fRecordSet::build('User');
+
+try {
+$user = new User();
+$user-&gt;setEmail($data[&quot;email&quot;]) 
+
+</code></pre>
+
+<p>
+ How can I populate without having to do one-by-one?<br />
+
+</p>
+
+<p>
+$data produces:
+</p>
+<pre class="block php"><code>[users] {
+     [ID] =&gt; &quot;&quot;,
+     [email] =&gt; &quot;myemail@myhost.com&quot;,
+     [password] =&gt; &quot;123456&quot;
+}</code></pre>
+
+<p>
+ This might not be the best way to do that, but I like to have a separated file to render the template, verify the data and produces error messages to the user, and them have all set to save them.
+</p>
+
+<p>
+By the way, congratulations for such a nice library, and thank you.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-934">
+				<div class="body" id="body-934">
+					
+<p>
+Currently there is no method to do this.
+</p>
+
+<p>
+This would probably be a good candidate for writing a plugin for. If you check out the <a href="../flourishlib.com/docs/fORMJSON.html">fORMJSON</a> class, you can see a simple example of writing a plugin. You could write a plugin that creates a <code>hydrate()</code> method that accepts an associative array and sets the values to the <code>$values</code> array that is passed to the plugin. The <a href="../flourishlib.com/docs/fORM.html">fORM</a> page has documentation about what parameters are passed to plugins.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/30/10 9:33pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

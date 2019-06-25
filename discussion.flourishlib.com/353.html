@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORMSchema::retrieve($class) ? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORMSchema::retrieve($class) ?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/mattsah">			mattsah		</a> 	</span>
+	<span class="date_posted" title="1/8/11 5:50pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Looking into multiple databases I was curious as to what <a href="../flourishlib.com/docs/fORMSchema.html">fORMSchema</a> would do with regards to retrieving the schema of particular databases and I noted that the documentation (as far as code examples go) is fairly limited, but the API does reference that you can pass a class, with which the schema will be &quot;used with.&quot;
+</p>
+
+<p>
+My understanding of this is likely that it would look for a class to database mapping and retrieve the schema of that database, but since the schema object returned is on the database, wouldn't it make more sense to have the database name as set up with <a href="../flourishlib.com/api/fORMDatabase.html#attach">fORMDatabase::attach()</a> used instead of a class?
+</p>
+
+<p>
+I guess this is partially a &quot;ticket&quot; of some sorts, but perhaps I'm missing something and I'm just misunderstanding.  It would seem, for example, a bit backwards for me to have to think of a random class on a database in order to do something like this:
+</p>
+<pre class="block php"><code>fORMSchema::retrieve('classOnOtherDB')-&gt;getTables();</code></pre>
+
+<p>
+ vs.
+</p>
+<pre class="block php"><code>fORMSchema::retrieve('other_db')-&gt;getTables();</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1079">
+				<div class="body" id="body-1079">
+					
+<p>
+The purpose of <a href="../flourishlib.com/api/fORMSchema.html#retrieve">fORMSchema::retrieve()</a> is to retrieve the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> for use with <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. Thus, instead of having to look up what database an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class is in and pass it to <a href="../flourishlib.com/api/fORMSchema.html#retrieve">fORMSchema::retrieve()</a>, you simply pass the class name. Since any related class must be in the same database, the schema object will give you access to all related classes/tables also.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/9/11 8:53pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1081">
+				<div class="body" id="body-1081">
+					
+<p>
+If this is the case, is there any way to easily determine all tables across only attached databases?  
+</p>
+
+<p>
+This is kind of my point with regards to using the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class name... if I am just trying to get a list of tables across all attached databases I now have to pick a random <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> for each attached database which has been mapped to that database in order to get tables.
+</p>
+
+<p>
+This is similarly constrained with <a href="../flourishlib.com/api/fORMDatabase.html#retrieve">fORMDatabase::retrieve()</a>.
+</p>
+
+<p>
+In short, assuming I know my attached database names but perhaps don't have any class to database mappings yet, or perhaps not even any <a href="../flourishlib.com/docs/fActiveRecords.html">fActiveRecords</a> at all, but I just want a list of tables on each...any way to do this at all?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/9/11 9:45pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1082">
+				<div class="body" id="body-1082">
+					
+<p>
+No there isn't. In fact, there isn't even a way to get a list of all database names.
+</p>
+
+<p>
+It sounds to me like you need a totally different mechanism for the management of named databases.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/9/11 11:04pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1083">
+				<div class="body" id="body-1083">
+					
+<p>
+I'm assuming you're talking about the attached names and not the actual database names.  I did notice the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> also has the getDatabases() method, but that appears to be all databases across the server:
+</p>
+<pre><code>[/var/www/dotink.org/inkwell/includes]# print_r(fORMSchema::retrieve()-&gt;getDatabases());
+Array
+(
+    [0] =&gt; inkwelldemo_dotink_org
+    [1] =&gt; jackshighwayrc_org
+    [2] =&gt; kmw
+    [3] =&gt; postgres
+    [4] =&gt; redmine_default
+    [5] =&gt; template0
+    [6] =&gt; template1
+)</code></pre>
+
+<p>
+ It seems the only way I could likely do this is to keep independent track of the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> objects by their attached names, and then manually create <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> objects per those <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> objects.  Well, back to the drawing board there.  Much appreciated.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/10/11 3:08am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

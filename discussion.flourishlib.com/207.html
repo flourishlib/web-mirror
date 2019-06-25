@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Sometimes mapcClassToTable is not enough &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Sometimes mapcClassToTable is not enough</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="2/11/10 7:19am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello All,
+</p>
+
+<p>
+I dont know if the topic has been discussed before, but I met some issues in my code because of using costum table names.
+</p>
+
+<p>
+I used fORM::mapClassToTable method to specify the custom table names, however it was not working with related records.
+</p>
+
+<p>
+For example : when doing a $user = new MyUser(); $user-&gt;store(); it would fail in the method classisize for a related table, for example classisize('my_group_notplural') (sould have returned 'MyGroup' for example).
+</p>
+
+<p>
+Workaround was to do a &quot;foreach $model_class: $activate = new $model_class;&quot; : instanctiating the classes updates <a href="../flourishlib.com/docs/fORM.html">fORM</a> with the class to table map.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-607">
+				<div class="body" id="body-607">
+					
+<p>
+sounds like what i was dealing with <a href="204.html">over here</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="2/11/10 1:09pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-616">
+				<div class="body" id="body-616">
+					
+<p>
+I'd obviously like to get this resolved - can you give me the error message being produced (with line number) and a small sample of code causing it?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/11/10 9:36pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-618">
+				<div class="body" id="body-618">
+					
+<p>
+For the above code, let's say i have two tables : company_proj_jobs_ref, and company_proj_files_ref with many files_ref for one jobs_ref. I made too model classes : JobsRef and FilesRef.
+</p>
+
+<p>
+The following code will fail :
+</p>
+<pre class="block php"><code>$job = new JobsRef($existing_pk);
+$job-&gt;store();</code></pre>
+
+<p>
+ With an error like the one bellow :
+</p>
+
+<p>
+Mon Feb 15 11:57:35 2010 error 141.33.102.211 PHP Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>' with message 'The noun specified could not be singularized' in /opt/apache/***/<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>.php:517<br />
+nStack trace:<br />
+n#0 /opt/apache/***/<a href="../flourishlib.com/docs/fORM.html">fORM</a>.php(337): fGrammar::singularize('company_proj_files_...')<br />
+n#1 /opt/apache/***/<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.php(2668): fORM::classize('company_proj_files_...')<br />
+n#2 /opt/apache/+++/ajax.php(196): <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>-&gt;store()<br />
+n#3 /opt/apache/+++/index.php(18): include('/opt/apache/...')<br />
+n#4 {main}<br />
+n thrown in /opt/apache/***/<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>.php on line 517, referer: xxx
+</p>
+
+<p>
+Reason : in the method fORM::classize, it does not find the related table in the table-to-class array, and then tries to find it by singularizing/camelizing the table name, and fails at it.
+</p>
+
+<p>
+When calling $activate = new FilesRef(); previously, it loads the table to class reference into <a href="../flourishlib.com/docs/fORM.html">fORM</a> and classize works.
+</p>
+
+<p>
+I am not sure of the actual PHP code that produces an error. If the one i provide does not actually fails for you, i can look into it further to provide the code that is failing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="2/15/10 6:15am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-619">
+				<div class="body" id="body-619">
+					
+<p>
+But I don't think anything is wrong actually :
+</p>
+
+<p>
+If the class is not instantiated, the configure() method is not called, hence <a href="../flourishlib.com/docs/fORM.html">fORM</a> table to class map not beeing updated.
+</p>
+
+<p>
+The solution may be to add a convention about <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> : do not use it in configure() but in the init.php file or whatever file is called first. (in that case, it might be better suited to have a method like mapClassNameToTable instead)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="2/15/10 11:12am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-620">
+				<div class="body" id="body-620">
+					
+<p>
+Maybe a call like this :
+</p>
+<pre class="block php"><code>fORM::mapClassToTables(array(
+  'MyClass' =&gt; 'my_custom_table',
+  'MyOtherTable' =&gt; 'my_other_custom_table'
+));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="2/15/10 11:15am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-622">
+				<div class="body" id="body-622">
+					
+<p>
+I will be looking into the issue with configure() not being called yet at this point - I should be able to fix that.
+</p>
+
+<p>
+Please note that you can pass a class name as the first parameter to <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>. I might also just need to change the recommendation to have <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> be called in the init script instead of in ::configure(). I'll update here with what I find.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/17/10 2:39pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

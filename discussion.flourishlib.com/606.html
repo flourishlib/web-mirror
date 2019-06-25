@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>How do you fetch specific records by column value? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">How do you fetch specific records by column value?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					hcker2000			</span>
+	<span class="date_posted" title="4/11/12 10:12am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I am trying to figure out how to do the following query. I figured I would just make a new Article object and then do some thing like $article-&gt;find(array('article_type_id' =&gt; 3));
+</p>
+<pre class="block sql"><code>select * from articles where article_type_id = 3</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1721">
+				<div class="body" id="body-1721">
+					
+<p>
+Hi hcker2000 you should take a look at the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> documentation <a href="../flourishlib.com/docs/fActiveRecord.html#CreatingandLoadingRecords">http://flourishlib.com/docs/fActiveRecord#CreatingandLoadingRecords</a>
+</p>
+
+<p>
+The simplest case of fetching a record by its primary key is very easy
+</p>
+<pre class="block php"><code>$article = new Article(1);</code></pre>
+
+<p>
+ .. but I guess you already figured that out.
+</p>
+
+<p>
+In your example you want to find all articles by type id. You can do that like this:
+</p>
+<pre class="block php"><code>$articles = fRecordSet::build('Article', array('article_type_id=' =&gt; 3));   // note the equal sign in the key
+
+foreach ($articles as $article) {
+    // read article
+}
+</code></pre>
+
+<p>
+ $articles is a <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object. If you want a regular array you can call the getRecords() method or getRecord(0) to get any specific record.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="4/12/12 4:01am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1778">
+				<div class="body" id="body-1778">
+					
+<p>
+but if i only want single value?.. do i need to do looping??? i had used getRecord()method but...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													isn											</span>
+					<span class="date_posted" title="7/10/12 2:40am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1779">
+				<div class="body" id="body-1779">
+					
+<p>
+Hi isn
+</p>
+
+<p>
+In general you have to do looping yes. But if you create a unique index on a column you can fetch using the constructor function.
+</p>
+
+<p>
+Say for User you have both user_id and email which are both unique. The normal way to fetch a single unique record. Just like in the 
+</p>
+<pre class="block php"><code>$user = new User(1);</code></pre>
+
+<p>
+ So if you've created a unique index on email you can do like this:
+</p>
+<pre class="block php"><code>$user = new User(array('email' =&gt; $email));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="7/10/12 3:05am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1783">
+				<div class="body" id="body-1783">
+					
+<p>
+but i think its not a good idea making unique to every field, i mean cant we just get a single data like
+</p>
+
+<p>
+select address from db where id=5; (ie only address if we can get its id)
+</p>
+
+<p>
+<a href="http://discussion.flourishlib.com/help!">help!</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													isn											</span>
+					<span class="date_posted" title="7/11/12 12:55am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1785">
+				<div class="body" id="body-1785">
+					
+<p>
+If you just want a specific column of a specific record, you should use fDatabase:
+</p>
+<pre class="block php"><code>$db  = new fDatabase('mysql', 'my_database', 'username', 'password');
+$address = $db-&gt;query(&quot;SELECT address FROM db WHERE id = 5&quot;)-&gt;fetchScalar(); </code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/11/12 1:01am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

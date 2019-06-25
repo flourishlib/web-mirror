@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Question about fRequest::isPost(); &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Question about fRequest::isPost();</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					czapata			</span>
+	<span class="date_posted" title="7/2/10 5:44pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a form something like this:
+</p>
+<pre><code>#!text/html
+&lt;form action=&quot;&lt;?php echo  fURL::getDomain() . fURL::getWithQueryString(); ?&gt;&quot; 
+   enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; &gt;
+&lt;!-- I have additional fields here --&gt;	
+	&lt;div class=&quot;form_row&quot;&gt;
+	    &lt;label for=&quot;image_1&quot;&gt;Image 1:&lt;/label&gt;
+	    &lt;input type=&quot;file&quot; id=&quot;image_1&quot; name=&quot;listing_image[]&quot; /&gt;
+	    &lt;label for=&quot;image_2&quot;&gt;Image 2:&lt;/label&gt;
+	    &lt;input type=&quot;file&quot; id=&quot;image_2&quot; name=&quot;listing_image[]&quot; /&gt;
+	    &lt;label for=&quot;image_3&quot;&gt;Image 3:&lt;/label&gt;
+	    &lt;input type=&quot;file&quot; id=&quot;image_3&quot; name=&quot;listing_image[]&quot; /&gt;
+	    &lt;span class=&quot;hint&quot;&gt;
+	        You can upload JPEG, GIF, or PNG files up to 500 KB.
+	    &lt;/span&gt;
+	&lt;/div&gt;
+	&lt;div class=&quot;form_row_last&quot;&gt;
+		&lt;input type=&quot;submit&quot; value=&quot;Save Listing&quot; /&gt;
+		&lt;input type=&quot;hidden&quot; name=&quot;token&quot; value=&quot;&lt;?php echo fRequest::generateCSRFToken() ?&gt;&quot; /&gt;
+	&lt;/div&gt;
+&lt;/form&gt;</code></pre>
+
+<p>
+ In the page I use to process the post I have something like:
+</p>
+<pre class="block php"><code>if ($action == 'edit') {
+  try {
+	//other code here
+	echo('This is fired!');
+	if (fRequest::isPost()) {
+	    echo('But not this!');
+	);
+   } catch (fException $e {
+      //etc...etc...
+   }
+}</code></pre>
+
+<p>
+ I'm also passing variables in the querystring.  My server's access log records the access as a POST but the code inside the isPost is not executed. Could the querystring be causing a conflict? Any Ideas?
+</p>
+
+<p>
+Thanks, Carlos
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-806">
+				<div class="body" id="body-806">
+					
+<p>
+<a href="../flourishlib.com/api/fRequest.html#isPost">fRequest::isPost()</a> just compares <code>strtoupper($_SERVER['REQUEST_METHOD'])</code> to the string <code>POST</code>.
+</p>
+
+<p>
+Can you paste the output of <code>fCore::expose($_SERVER)</code>? Are you using ModRewrite at all? Or <code>ErrorDocument 404</code> in Apache?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/3/10 1:35pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-809">
+				<div class="body" id="body-809">
+					<pre class="block php"><code>Array
+(
+    [HTTP_HOST] =&gt; 192.168.91.25
+    [HTTP_USER_AGENT] =&gt; Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 GTB7.1
+    [HTTP_ACCEPT] =&gt; text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    [HTTP_ACCEPT_LANGUAGE] =&gt; en-us,en;q=0.5
+    [HTTP_ACCEPT_ENCODING] =&gt; gzip,deflate
+    [HTTP_ACCEPT_CHARSET] =&gt; ISO-8859-1,utf-8;q=0.7,*;q=0.7
+    [HTTP_KEEP_ALIVE] =&gt; 115
+    [HTTP_CONNECTION] =&gt; keep-alive
+    [HTTP_REFERER] =&gt; [EDITED]/listings.php?action=edit&amp;id=10
+    [HTTP_COOKIE] =&gt; PHPSESSID=satpbi0cgk14k5ahbn7h9ac9n5
+    [PATH] =&gt; /usr/local/bin:/usr/bin:/bin
+    [SERVER_SIGNATURE] =&gt; &lt;address&gt;Apache/2.2.14 (Ubuntu) Server at [EDITED] Port 80&lt;/address&gt;
+  
+    [SERVER_SOFTWARE] =&gt; Apache/2.2.14 (Ubuntu)
+    [SERVER_NAME] =&gt; [EDITED]
+    [SERVER_ADDR] =&gt; [EDITED]
+    [SERVER_PORT] =&gt; 80
+    [REMOTE_ADDR] =&gt; [EDITED]
+    [DOCUMENT_ROOT] =&gt; /var/www
+    [SERVER_ADMIN] =&gt; webmaster@localhost
+    [SCRIPT_FILENAME] =&gt; [EDITED]/listings.php
+    [REMOTE_PORT] =&gt; 55398
+    [GATEWAY_INTERFACE] =&gt; CGI/1.1
+    [SERVER_PROTOCOL] =&gt; HTTP/1.1
+    [REQUEST_METHOD] =&gt; GET
+    [QUERY_STRING] =&gt; action=edit&amp;id=10
+    [REQUEST_URI] =&gt; [EDITED]/listings.php?action=edit&amp;id=10
+    [SCRIPT_NAME] =&gt; [EDITED]/listings.php
+    [PHP_SELF] =&gt; [EDITED]/listings.php
+    [REQUEST_TIME] =&gt; 1278180348
+)</code></pre>
+
+<p>
+ I edited some of the sensitive info but here it is. I know the request method is shown as GET however the form has is set as POST. I'm have mod_rewrite active but I was having syntax issues with redirecting via htaccess so I commented out all my htaccess redirections.
+</p>
+
+<p>
+Thanks, czapata
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													czapata											</span>
+					<span class="date_posted" title="7/3/10 2:20pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-810">
+				<div class="body" id="body-810">
+					
+<p>
+Yeah, so it definitely looks like the request is a <code>GET</code>. What does the opening <code>&lt;form&gt;</code> tag look like in your HTML? I wonder if your <code>action</code> attribute has a query string if the form will submit as a <code>GET</code> instead of <code>POST</code>?
+</p>
+
+<p>
+If you use Firefox, I would recommend trying <a href="https://addons.mozilla.org/en-US/firefox/addon/3829/">Live HTTP Headers</a> to debug what exactly is happening in terms of redirects or submissions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/3/10 2:25pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-815">
+				<div class="body" id="body-815">
+					
+<p>
+I followed your recommendations and used the plugin. It shows the request as a POST and a response from apache that is a 302 then a 200. The redirect si to the same page so I'm stumped here, any ideas? Also, my .htaccess has been commented out completely, so I don't think that's the cause.
+</p>
+<pre><code>http://192.168.80.134/infotohand/listings.php
+
+POST /infotohand/listings.php HTTP/1.1
+Host: 192.168.80.134
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 GTB7.1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 115
+Connection: keep-alive
+Referer: http://192.168.80.134/infotohand/listings.php?action=edit&amp;id=10
+Cookie: PHPSESSID=088fbi44alpbes4c0kqat4np12
+Content-Type: multipart/form-data; boundary=---------------------------31750465428540
+Content-Length: 2552
+-----------------------------31750465428540
+Content-Disposition: form-data; 
+
+[FORM DATA IS GIVEN HERE]
+
+HTTP/1.1 302 Found
+Date: Tue, 06 Jul 2010 15:47:20 GMT
+Server: Apache/2.2.14 (Ubuntu)
+X-Powered-By: PHP/5.3.2-1ubuntu4.2
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Location: http://192.168.80.134/infotohand/listings.php?action=edit&amp;id=10
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 573
+Keep-Alive: timeout=15, max=100
+Connection: Keep-Alive
+Content-Type: text/html
+----------------------------------------------------------
+http://192.168.80.134/infotohand/listings.php?action=edit&amp;id=10
+
+GET /infotohand/listings.php?action=edit&amp;id=10 HTTP/1.1
+Host: 192.168.80.134
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 GTB7.1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 115
+Connection: keep-alive
+Referer: http://192.168.80.134/infotohand/listings.php?action=edit&amp;id=10
+Cookie: PHPSESSID=088fbi44alpbes4c0kqat4np12
+
+HTTP/1.1 200 OK
+Date: Tue, 06 Jul 2010 15:47:20 GMT
+Server: Apache/2.2.14 (Ubuntu)
+X-Powered-By: PHP/5.3.2-1ubuntu4.2
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 1762
+Keep-Alive: timeout=15, max=99
+Connection: Keep-Alive
+Content-Type: text/html
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													czapata											</span>
+					<span class="date_posted" title="7/6/10 11:57am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-816">
+				<div class="body" id="body-816">
+					
+<p>
+Any ideas on this?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													czapata											</span>
+					<span class="date_posted" title="7/6/10 11:58am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-819">
+				<div class="body" id="body-819">
+					
+<p>
+So something in your PHP or Apache is definitely redirecting the user. Are you using any other libraries other than Flourish in your PHP? If so, I'd look into those to see if they are doing a 302 redirect.
+</p>
+
+<p>
+Are you using <a href="../flourishlib.com/api/fCRUD.html#redirectWithLoadedValues">fCRUD::redirectWithLoadedValues()</a>? I'm not sure if PHP sets the HTTP status to 302 when doing a <code>Location: </code> header redirect.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/7/10 10:35am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-811">
+				<div class="body" id="body-811">
+					
+<p>
+Here's my form tag:
+</p>
+<pre><code>#!text/html
+&lt;form action=&quot;http://[edited]/listings.php?action=edit&amp;id=10&quot; enctype=&quot;multipart/form-data&quot; method=&quot;post&quot; &gt;
+</code></pre>
+
+<p>
+ I'll try to see if it works without the querystring. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													czapata											</span>
+					<span class="date_posted" title="7/3/10 2:30pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-812">
+				<div class="body" id="body-812">
+					
+<p>
+Note: I'm using <a href="../flourishlib.com/api/fRequest.html#getValid">fRequest::getValid()</a> to specify the actions allowed (don't know if the issue is with that). Here's what that declaration looks like:
+</p>
+<pre class="block php"><code>	// set allowed actions, default is list
+	$action = fRequest::getValid(
+		'action',
+		array('list', 'add', 'edit', 'delete', 'view')
+	);</code></pre>
+
+<p>
+ I removed the querystring part from the form action and added a hidden field to the form to hold the 'action' vale but still no joy, any recommendations?
+</p>
+
+<p>
+Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="7/3/10 2:45pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

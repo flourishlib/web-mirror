@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord seems to be a memory hog &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord seems to be a memory hog</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="6/8/09 7:12am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+I've been using the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class and I really like the functionality. However when I started looking at the memory usage of my script I noticed that the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object stands for a whooping 2 megabytes of memory (about half of the memory that my script uses).
+</p>
+
+<p>
+Is this normal/expected? If one instance of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> pulls that much creating an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> could be potentially devastating memory wise.
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-267">
+				<div class="body" id="body-267">
+					
+<p>
+Can you give me some information about how many columns are in the table being modeled? Do you have a large database schema? The whole database schema needs to be loaded into memory to use the ORM, so if you have a large schema, that could use some memory.
+</p>
+
+<p>
+At my company we have not seen any memory issues, however that doesn't mean there aren't any issues. Have you tried loading multiple records to see how the memory usage goes up?  
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/09 7:37am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-269">
+				<div class="body" id="body-269">
+					
+<p>
+There's 13 columns in the table. The database contains 20 tables so it's not that big (I think). Anyway the cost of about 2 megabytes of memory seems to be a constant one time cost, not something that increases as more <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects are instantiated. I put in some dummy data and made an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> of them and the memory usage for that was pretty much the same.
+</p>
+
+<p>
+What is the &quot;normal&quot; cost for an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> instantiation? Does it tend to end up in the megabyte class or are they usually smaller?
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/8/09 10:26am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-271">
+				<div class="body" id="body-271">
+					
+<p>
+Each instance of an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class holds the following data:
+</p>
+
+<ul>
+<li>An array of values, in the form <code>column =&gt; value</code></li>
+<li>An array of array of old values, if they've changes. This is in the form <code>column =&gt; old_values_array</code>.</li>
+<li>An array of cached related records. This holds references to record sets of related records that have been built. If you have a <code>User</code> and call <code>$user-&gt;buildGroups()</code> it keeps a reference to that <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> so you can call it again without going to the database and re-fetching it. The nice thing is that by themselves <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> are pretty light weight since they are mostly holding references to <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects.</li>
+<li>A cache array, that is completely up to the end-developer to use</li>
+</ul>
+
+<p>
+For a typical <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that models a table not storing large text blocks or binary blobs, I would expect usage to be 1k or so. 1k is basically 1024 characters as long as you don't have a lot of multi-byte characters.
+</p>
+
+<p>
+The initial 2MB memory usage is probably largely loading the Flourish classes into memory and loading the database schema into memory. Looking at a recent snapshot of Flourish, it is 2.38MB on the filesystem. Obviously a good third or so of this is comments, so the memory usage you are seeing is probably exactly that.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/09 1:15pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

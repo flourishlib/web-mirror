@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Prepared Statements? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Prepared Statements?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="6/18/09 5:16pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I don't see anything on the site that suggests flourish supports prepared statements.  I've gone through the code and don't see anything either....
+</p>
+
+<p>
+Am I missing something?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-305">
+				<div class="body" id="body-305">
+					
+<p>
+Currently there is no explicit usage of prepared statements, although if the PDO driver is selected by <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> prepared statements are used by PDO.
+</p>
+
+<p>
+The ticket #231 has requested adding support, although it is fairly low on my own priority list. There are minimal benefits from prepared statements for <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> already provides a complete set of escaping functions for data types and provides prepared statement-like syntax for interpolating values via the <code>%</code> placeholders.
+</p>
+
+<p>
+The things that prepared statements could add to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> include better performance for lots of repetitive queries since the query plan can be cached by the DB and the ability to insert large binary data values, such as images, without creating huge SQL statements.
+</p>
+
+<p>
+Honestly, I haven't seen conclusive evidence that prepared statements improve performance with MySQL or PostgreSQL for typical web app loads. That said, I've only read a few PHP related posts/articles about it, and it was last year. I have heard that for very high loads, Oracle can fall over if not using prepared statements and executing many very similar queries. The situation I heard about was the DB server filling up the ram with cached query plans and causing memory to be paged to disk, which killed the performance.
+</p>
+
+<p>
+That said, some of the database extensions supported by <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> don't provide the ability to use prepared statements, so it would only benefit certain kinds of DBs with certain PHP extensions and certain types of queries.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/18/09 11:50pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-306">
+				<div class="body" id="body-306">
+					
+<p>
+Will,
+</p>
+
+<p>
+Thanks for the response.  Bummer.   Unfortunately, I don't have &quot;web app loads&quot;.  I'm using Flourish primarily from the CLI for heavy lifting of massive telecom datasets.  I process many tens of millions of queries per day in some of my apps.  Usually, all of this is done in the first few hours of the morning.  I don't have the data anymore, but several years ago I proved to myself that prepared statements saved massive amounts of time.  Processing of some data went from hours to minutes.
+</p>
+
+<p>
+I know most people will be using Flourish for web apps.  However, don't lock out the rest of us!  It's an awesome library that has really helped me a lot.  Unfortunately, I'll have to roll my own database handler for this...
+</p>
+
+<p>
+Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="6/19/09 12:36am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-307">
+				<div class="body" id="body-307">
+					
+<p>
+I can definitely see how prepared statements could make a big difference if you are using Flourish for large data sets. I definitely want to add this functionality at some point, however it is further down on my priority list, partially because I am still thinking about the best and cleanest way to approach it.
+</p>
+
+<p>
+Most of the prepared statement APIs in PHP require an extra class to be used to keep track of the prepare statement. I'm thinking that there would need to be a new class created in Flourish that would hold a SQL query and the prepared statement and that would translate the various data-type placeholders into the appropriate parameter and binding syntax for the database driver in question.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/19/09 8:38pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-371">
+				<div class="body" id="body-371">
+					
+<p>
+In case anyone is interested,  I've added my own class and instructions on how to use it at:
+</p>
+
+<p>
+http://flourishlib.com/ticket/231
+</p>
+
+<p>
+Hopefully it will help someone out.  Using this class and many prepared statements, I was able to reduce processing time for a script from about 2.5 minutes down to 1.6 SECONDs on average.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="8/25/09 11:25am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>determineExtension in fDatabase.php &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">determineExtension in fDatabase.php</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="7/9/09 10:28am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Will, 
+</p>
+
+<p>
+I'm still attempting to be able to force <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to use the mysqli extension instead of mysql.
+</p>
+
+<p>
+I've tried to use the new r635 with the class that extends <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> as you suggested.  
+</p>
+
+<p>
+However, I guess I just don't understand how to make it work.  If I use it after attaching the database, it can't work because the extension has already been chosen as mysql.  I can't change the extension AFTER the fact either as the connection is already established.
+</p>
+
+<p>
+Simple Example:
+</p>
+<pre class="block php"><code>try
+{
+	fORMDatabase::attach(
+		$db_conn = new fDatabase('mysql', CGADB, CGADB_USER, CGADB_PASS, CGADB_HOST, CGADB_PORT)
+	); 
+} catch ( fException $e ) {echo $e; manage_error($e); } catch ( Exception $e ) { echo $e; manage_error($e); }
+
+
+$stps = Stp::fetchAllStps();
+
+
+class Stp extends fDatabase
+{
+    protected function determineExtension() 
+	{
+        $this-&gt;extension = 'mysqli';
+    }	
+	
+	/**
+	 * Get a list of all STPs from CGA db
+	 * @return Object|BOOL	// False if no records found.  flourish resultset object when records found
+	 */
+	public static function fetchAllStps()
+	{
+		try
+		{
+			
+			$sql =	
+				&quot;
+					select stps_id,clli from stps
+				&quot;;
+				
+			$db = fORMDatabase::retrieve();
+
+			print_r($db);
+			
+			$result = $db-&gt;query($sql);
+			$result-&gt;tossIfNoRows();
+			
+			return $result;
+			
+		} catch ( fNoRowsException $e ) { return false; } catch ( fException $e ) { manage_error($e); } catch ( Exception $e ) { manage_error($e); }
+	}
+</code></pre>
+
+<p>
+ The print_r($db) clearly shows the database connection is with mysql, not mysqli.  So, I've done something wrong.
+</p>
+<pre><code>fDatabase Object
+(
+    [cache:private] =&gt; 
+    [connection:private] =&gt; Resource id #12
+    [database:private] =&gt; cga
+    [debug:private] =&gt; 
+    [extension:protected] =&gt; mysql
+    [host:private] =&gt; 127.0.0.1
+    [inside_transaction:private] =&gt; 
+    [password:private] =&gt; SOMEPASSWORD
+    [port:private] =&gt; 3382
+    [query_time:private] =&gt; 1.05250096321
+    [schema_info:protected] =&gt; Array
+        (
+        )
+
+    [slow_query_threshold:private] =&gt; 
+    [translation:private] =&gt; 
+    [type:private] =&gt; mysql
+    [unbuffered_result:private] =&gt; 
+    [username:private] =&gt; SOMEUSERNAME
+)</code></pre>
+
+<p>
+ Can you explain how to use this?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-322">
+				<div class="body" id="body-322">
+					
+<p>
+Yes, here is how you would use it:
+</p>
+<pre class="block php"><code>class myDatabase extends fDatabase {
+    protected function determineExtension() {
+        if ($this-&gt;getType() == 'mysql') {
+            $this-&gt;extension = 'mysqli';
+        } else {
+            parent::determineExtension();
+        }
+    }
+}
+
+fORMDatabase::attach(new myDatabase('mysql', CGADB, CGADB_USER, CGADB_PASS, CGADB_HOST, CGADB_PORT));</code></pre>
+
+<p>
+ <code>determineExtension()</code> is called automatically inside of the class to figure out what extension to use. By overriding it, the class always picks <code>mysqli</code> whenever the type is mysql, otherwise it does the normal detection.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/9/09 11:03am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

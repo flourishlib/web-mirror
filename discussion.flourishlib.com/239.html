@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORMFile &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORMFile</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="6/1/10 12:04pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Great improvement for this. I try this new methods and it seems that i receive an error:
+</p>
+
+<p>
+The <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> method specified, setMaxFileSize(), is not a valid method
+</p>
+
+<p>
+this is the way i put in my configuration class:
+</p>
+<pre class="block php"><code>
+		fORM::mapClassToTable($this, 'stiri');
+		fORMDate::configureDateCreatedColumn($this, 'data');
+		fORMFile::configureFileUploadColumn($this, 'media', $_SERVER['DOCUMENT_ROOT'] . '/cd/uploads/stiri/');
+		fORMFile::addFImageMethodCall($this, 'media', 'cropToRatio', array(
+			1,
+			1
+		));
+		fORMFile::addFUploadMethodCall($this, 'media', 'setMaxFileSize', array(
+			'1mb'
+		));
+		fORMFile::addFImageMethodCall($this, 'media', 'resize', array(
+			200,
+			200
+		));
+		fORMValidation::setMessageOrder($this, array(
+			'Uploads:',
+			'Text:',
+			'Titlu:'
+		));
+		fORMValidation::addStringReplacement($this, 'Media: Please enter a value', 'Uploads: Please enter a value');</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-750">
+				<div class="body" id="body-750">
+					
+<p>
+That was an error in the documentation, it should be <code>setMaxSize()</code>. The method name was changed in r840, and I just fixed the <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> class documentation.
+</p>
+
+<p>
+On a semi-related, there is a page BackwardsCompatibilityBreak that contains details of all such changes.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/1/10 12:14pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-752">
+				<div class="body" id="body-752">
+					
+<p>
+Tanks, I have another question, can you tell me if i want to change the name of the file can I do this in this configuration?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/2/10 12:00am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-761">
+				<div class="body" id="body-761">
+					
+<p>
+No, you'd probably have to write a custom function and use <a href="../flourishlib.com/api/fORM.html#registerHookCallback">fORM::registerHookCallback()</a> to inject the functionality into the object. Let me know if you have trouble after reading through the documentation. If you do need help, be sure to include the code you've written so far.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/4/10 1:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

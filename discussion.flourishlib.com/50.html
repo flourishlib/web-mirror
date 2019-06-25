@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>The noun specified could not be singularized &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">The noun specified could not be singularized</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/23/09 8:19pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm having trouble with a column name.  I have a table &quot;stps&quot; with a primary key of &quot;stps_id&quot;.  
+</p>
+
+<p>
+This function results in an <a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a> that I can't seem to overcome.
+</p>
+<pre class="block php"><code>static function confirmStp($clli)
+{
+
+	try
+	{
+		$stp = fRecordSet::build(
+			__CLASS__,
+			array('clli='=&gt;$clli)
+		);	
+		
+		$stp-&gt;tossIfEmpty('');
+		
+		return $stp-&gt;getStpsId();
+		
+	} catch	(fEmptySetException $e)
+		{
+			return false;
+		} catch (fException $e) 
+			{
+				//TODO Need to handle this exception better
+				echo &quot;Unable to process confirmStp($clli) : $e&quot;;
+				exit;
+			}
+}</code></pre>
+
+<p>
+ It results in this output:
+</p>
+<pre><code>Unable to process confirmStp(phnaazia04w) : exception 'fProgrammerException' with message 'The noun specified could not be singularized' in /mnt/san3/ss7auto_web/flourish/fGrammar.php:440
+Stack trace:
+#0 /mnt/san3/ss7auto_web/flourish/fRecordSet.php(489): fGrammar::singularize('StpsId')
+#1 [internal function]: fRecordSet-&gt;__call('getStpsId', Array)
+#2 /mnt/san3/ss7auto_web/db_models/Stp.php(35): fRecordSet-&gt;getStpsId()
+#3 /mnt/san3/ss7auto_web/models/buildOrder.php(162): Stp::confirmStp('phnaazia04w')
+#4 /mnt/san3/ss7auto_web/models/buildOrder.php(57): buildOrder-&gt;addCmdGroup()
+#5 /mnt/san3/ss7auto_web/web/index.php(34): buildOrder-&gt;__construct()
+#6 {main}</code></pre>
+
+<p>
+ I can't figure out how to make flourish realize getStpsId should return the value of stps_id.  I attempted to use several variations of :
+</p>
+<pre class="block php"><code>    protected function configure()
+    {
+		fORM::overrideColumnName($this, 'stp_id', 'stps_id');        
+    }</code></pre>
+
+<p>
+ However, all the combinations I tried failed to work.
+</p>
+
+<p>
+How should I go about solving this?  For the meantime, I've simply tossed the ActiveRecord version of this function and replaced it with traditional SQL.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-142">
+				<div class="body" id="body-142">
+					
+<p>
+You are trying to call <code>getStpsId()</code> on an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, and it has a <code>__call()</code> method to handle some dynamic <code>prebuild</code> methods. I can probably fix it so you don't get that error message, but rather something more instructive.
+</p>
+
+<p>
+If you are expecting only a single record in return, try this:
+</p>
+<pre class="block php"><code>static function confirmStp($clli)
+{
+	try
+	{
+		$stp = fRecordSet::build(
+			__CLASS__,
+			array('clli='=&gt;$clli)
+		);    
+		
+		$stp-&gt;tossIfEmpty('');
+		
+		return $stp-&gt;fetchRecord()-&gt;getStpsId();
+		
+	} catch (fEmptySetException $e) {
+		return false;
+		
+	} catch (fException $e) {
+		//TODO Need to handle this exception better
+		echo &quot;Unable to process confirmStp($clli) : $e&quot;;
+		exit;
+	}
+}</code></pre>
+
+<p>
+ If you want to call <code>getStpsId()</code> on every record in the record set and get an array of all the ids, use this:
+</p>
+<pre class="block php"><code>static function confirmStp($clli)
+{
+	try
+	{
+		$stp = fRecordSet::build(
+			__CLASS__,
+			array('clli='=&gt;$clli)
+		);    
+		
+		$stp-&gt;tossIfEmpty('');
+		
+		return $stp-&gt;call('getStpsId');
+		
+	} catch (fEmptySetException $e) {
+		return false;
+		
+	} catch (fException $e) {
+		//TODO Need to handle this exception better
+		echo &quot;Unable to process confirmStp($clli) : $e&quot;;
+		exit;
+	}
+}</code></pre>
+
+<p>
+ However, if the <code>clli</code> column is a unique column and you are just trying to load a single record, you could do something like this:
+</p>
+<pre class="block php"><code>static function confirmStp($clli)
+{
+	try
+	{
+		$stp = new Stp(array('clli'=&gt;$clli)); 
+		
+		return $stp-&gt;call('getStpsId');
+		
+	} catch (fNotFoundException $e) {
+		return false;
+		
+	} catch (fException $e) {
+		//TODO Need to handle this exception better
+		echo &quot;Unable to process confirmStp($clli) : $e&quot;;
+		exit;
+	}
+}</code></pre>
+
+<p>
+ The <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> constructor accepts a single-column primary key value, or an associative array of <code>column =&gt; value</code> for any multi-column primary keys, or any unique keys in the table.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/09 10:32pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-151">
+				<div class="body" id="body-151">
+					
+<p>
+Thanks... that helped some.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/25/09 2:49pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-155">
+				<div class="body" id="body-155">
+					
+<p>
+Ticket #160 and r542 resolved this exception message issue. If you tried to execute the old code now, you would get an exception saying an unknown method was called.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/27/09 10:56pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

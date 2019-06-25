@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fAuthorization::requireAuthLevel() callback? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fAuthorization::requireAuthLevel() callback?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="5/25/09 11:28am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+I have been trying out the <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> class today and I am loving it so far.
+</p>
+
+<p>
+I was wondering if there's some way to hook into or catch when requireAuthLevel() fails? If someone reaches my login page by trying to visit a restricted page I want to display a message saying something about restricted access but if they go directly to the login page or get there through the public page I don't want to display this message.
+</p>
+
+<p>
+So is there any way to hook into requireAuthLevel() and for example store a message if it fails?
+</p>
+
+<p>
+Also, I was wondering what the difference is between requireAuthLevel() and isLoggedIn()? If someone passes a requireAuthlevel-check doesn't that imply that the user is either logged in or has the necessary credentials? Or do I need to use both?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-235">
+				<div class="body" id="body-235">
+					
+<p>
+Normally when dealing with displaying messages related to <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a>, I use <a href="../flourishlib.com/api/fAuthorization.html#getRequestedURL">fAuthorization::getRequestedURL()</a>. It accepts a boolean to indicate if the requested URL should be cleared when it is retrieved.
+</p>
+
+<p>
+Thus to display a message I would do something like:
+</p>
+<pre class="block php"><code>if (fAuthorization::getRequestedURL(FALSE)) {
+    fHTML::show('You must log in before viewing ' . fHTML::encode(fAuthorization::getRequestedURL()), 'error');
+}</code></pre>
+
+<p>
+ Then usually once they log in, I'll retrieve the requested URL to redirect the user. At this point I'll clear it out so that if they log back to the login page they won't see the message again:
+</p>
+<pre class="block php"><code>// Once user logs in
+fURL::redirect(fAuthorization::getRequestedURL(TRUE, '/'));</code></pre>
+
+<p>
+ <a href="../flourishlib.com/api/fAuthorization.html#requireAuthLevel">fAuthorization::requireAuthLevel()</a> will force a user to have the specified auth level or else they will be redirected to the login page. <a href="../flourishlib.com/api/fAuthorization.html#isLoggedIn">fAuthorization::isLoggedIn()</a> simply returns a boolean and works with auth levels, ACLs and simple user tokens. If any of those three are set, then a user is determined to be &quot;logged in.&quot; This is used for display logic to only show certain elements, sch as log out links, to logged-in users.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/25/09 10:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

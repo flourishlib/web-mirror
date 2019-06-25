@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SQL IN and escaping data &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SQL IN and escaping data</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="7/4/12 1:18am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+I am trying to pass an array of strings to IN function...
+</p>
+<pre class="block php"><code>$data = array('a, 'b', 'c', 'd');
+//or
+$data = implode(&quot;', '&quot;, array('a, 'b', 'c', 'd'));</code></pre>
+<pre class="block sql"><code>$result = $db-&gt;query(&quot;SELECT * FROM ... WHERE ... AND carriers IN (%s)&quot;, $data);</code></pre>
+
+<p>
+ However I just cant get it to produce the correct bind data as it puts a <em> around the lot.</em>
+</p>
+
+<p>
+<em> Any help would be appreciated.</em>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1774">
+				<div class="body" id="body-1774">
+					
+<p>
+You are doing it right:
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM .. WHERE ... AND carriers IN (%s)&quot;, $data);</code></pre>
+
+<p>
+ Note that you can pass values both as an array and as individual arguments:
+</p>
+<pre class="block php"><code>$db-&gt;query(&quot;SELECT * FROM .. WHERE ... AND carriers IN (%s)&quot;, $arg1, $arg2, $arg3);</code></pre>
+<pre class="block php"><code>$db-&gt;query(&quot;SELECT * FROM .. WHERE ... AND carriers IN (%s)&quot;, array($arg1, $arg2, $arg3));</code></pre>
+
+<p>
+ It might be that (due to the rest of your SQL that you've hidden) that flourish thinks of your $data as the list of arguements. Trying wrapping data in an array.
+</p>
+<pre class="block php"><code>$db-&gt;query(&quot;SELECT * FROM .. WHERE ... AND carriers IN (%s)&quot;, array($data));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="7/5/12 2:19am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1775">
+				<div class="body" id="body-1775">
+					
+<p>
+Hi mblarsen,
+</p>
+<pre class="block php"><code>$db-&gt;query(&quot;SELECT * FROM .. WHERE ... AND carriers IN (%s)&quot;, array($data));</code></pre>
+
+<p>
+ The %s will only accept a string value otherwise you end up with...
+</p>
+<blockquote>
+<p>
+Array to string conversion error
+</p>
+</blockquote>
+<p>
+If i used %i and integer values it would be fine...
+</p>
+<pre class="block php"><code>$data = implode(',', array('ab', 'cd'));
+
+is translated to
+IN ('ab,cd')
+
+$data = implode(&quot;','&quot;, array('ab', 'cd'));
+is translated to
+IN ('ab\\',\\'cd')</code></pre>
+
+<p>
+ I am thinking that its not possible doing it this way and will probably have to run...
+</p>
+<pre class="block php"><code>$db-&gt;escape('string', $value);</code></pre>
+
+<p>
+ over each of the values and then pass it directly to the query that way.
+</p>
+
+<p>
+thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="7/6/12 12:49am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1776">
+				<div class="body" id="body-1776">
+					
+<p>
+Hi Darren
+</p>
+
+<p>
+You are giving Flourish lib to little credit :D, it will do all the escaping for you.
+</p>
+
+<p>
+Here is a working example:
+</p>
+<pre class="block php"><code>$sql = &quot;SELECT * FROM products WHERE product_code IN (%s) AND stock &gt; %i&quot;;
+$result = $db-&gt;query($sql, array(array('T013', 'T014'), 0));</code></pre>
+
+<p>
+ This is translated into:
+</p>
+<pre class="block sql"><code>SELECT * FROM products WHERE product_code IN ('T013', 'T014') AND stock &gt; 0</code></pre>
+
+<p>
+ If you want your model objects directly you can do like this:
+</p>
+<pre class="block php"><code>$products = fRecordSet::buildFromSql('Product', array($sql, array(array('T013', 'T014'), 0)));</code></pre>
+
+<p>
+ or without SQL
+</p>
+<pre class="block php"><code>$products = fRecordSet::build('Product', array('product_code=' =&gt; array('T013', 'T014'), 'stock&gt;' =&gt; 0));</code></pre>
+
+<p>
+ I hope these examples are helpful. Otherwise just ask again.
+</p>
+
+<p>
+Cheers
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="7/6/12 2:03am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1777">
+				<div class="body" id="body-1777">
+					
+<p>
+Hi Darren
+</p>
+
+<p>
+You are giving Flourish lib to little credit :D, it will do all the escaping for you.
+</p>
+
+<p>
+Here is a working example:
+</p>
+<pre class="block php"><code>$sql = &quot;SELECT * FROM products WHERE product_code IN (%s) AND stock &gt; %i&quot;;
+$result = $db-&gt;query($sql, array(array('T013', 'T014'), 0));</code></pre>
+
+<p>
+ This is translated into:
+</p>
+<pre class="block sql"><code>SELECT * FROM products WHERE product_code IN ('T013', 'T014') AND stock &gt; 0</code></pre>
+
+<p>
+ If you want your model objects directly you can do like this:
+</p>
+<pre class="block php"><code>$products = fRecordSet::buildFromSql('Product', array($sql, array(array('T013', 'T014'), 0)));</code></pre>
+
+<p>
+ or without SQL
+</p>
+<pre class="block php"><code>$products = fRecordSet::build('Product', array('product_code=' =&gt; array('T013', 'T014'), 'stock&gt;' =&gt; 0));</code></pre>
+
+<p>
+ I hope these examples are helpful. Otherwise just ask again.
+</p>
+
+<p>
+Cheers
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="7/6/12 2:03am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1780">
+				<div class="body" id="body-1780">
+					
+<p>
+Hi mblarsen,
+</p>
+
+<p>
+Still the same error :(
+</p>
+
+<p>
+&quot;Array to string conversion&quot; .../flourish/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php on line 2831
+</p>
+<pre class="block sql"><code>$results = $db-&gt;query(&quot;
+	SELECT
+		*
+	FROM cube.complex_porting cp
+	WHERE cp.cntldate BETWEEN '2012-06-01' AND '2012-06-30'
+		AND cp.losing_carrier IN (%s)
+	ORDER BY cp.port_ref_num&quot;, array(array('T013', 'T014'))
+);
+
+## OR
+
+$results = $db-&gt;query(&quot;
+	SELECT
+		*
+	FROM cube.complex_porting cp
+	WHERE cp.cntldate BETWEEN '2012-06-01' AND '2012-06-30'
+		AND cp.losing_carrier IN (%s)
+	ORDER BY cp.port_ref_num&quot;, array('T013', 'T014')
+);</code></pre>
+
+<p>
+ Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="7/10/12 11:17pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1781">
+				<div class="body" id="body-1781">
+					
+<p>
+I believe that error message was added in 5.4, so it may need to be changed to not make noise on newer versions of PHP.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/10/12 11:19pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1782">
+				<div class="body" id="body-1782">
+					
+<p>
+Hi Will,
+</p>
+<blockquote>
+<p>
+ I believe that error message was added in 5.4, so it may need to be changed to not make noise on newer versions of PHP.
+</p>
+</blockquote>
+<p>
+Well probably makes sense as I am running 5.4.4, so does mean it will not work as above and go back to my original idea of escaping each value then placing directly into the SQL?
+</p>
+
+<p>
+Thanks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="7/11/12 12:43am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1784">
+				<div class="body" id="body-1784">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+At line 2831, do you think it will cause any problems if i do the following as a temporary workaround?
+</p>
+<pre class="block php"><code>} elseif ($piece == '%s' &amp;&amp; $value !== NULL &amp;&amp; ((string) $value) == '') {
+
+// to
+
+} elseif ($piece == '%s' &amp;&amp; $value !== NULL &amp;&amp; $value == '') {</code></pre>
+
+<p>
+ Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="7/11/12 12:56am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

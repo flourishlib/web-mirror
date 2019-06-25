@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>setUserAuthLevel not saving across session &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">setUserAuthLevel not saving across session</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					wes			</span>
+	<span class="date_posted" title="5/16/11 12:49am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, I'm new to Flourish, but an experienced PHP dev... I understand the docs &amp; code, and I created a basic login page based on the demo site. I'm using the basic auth, with only three levels (admin, user and guest). Upon login, I use setUserAuthLevel and setUserToken to save the auth level and their username as token, then redirect to the homepage. The token is saved and I can retrieve it using getUserToken but the auth level is not saved. Am I missing something??
+</p>
+
+<p>
+Thanks, wes
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1332">
+				<div class="body" id="body-1332">
+					
+<p>
+If you expose the <code>$_SESSION</code> superglobal, do you see the auth level in there?
+</p>
+<pre class="block php"><code>fCore::expose($_SESSION);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/16/11 10:00pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1337">
+				<div class="body" id="body-1337">
+					
+<p>
+hey Will,
+</p>
+
+<p>
+Yes, I can see the auth level in $_SESSION and that got me thinking - turns out it was a file system (permissions) issue. I was switching between Windows (ugh) and Linux and forgot to configure something. I feel stupid, sorry for wasting your time. Thanks for pointing me in the right direction though!
+</p>
+
+<p>
+Awesome library/framework btw - first one I've stuck with so far. I just posted a link to flourishlib.com on LinkedIn as well. Cheers.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="5/17/11 6:45pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Retrieving ActiveRecord Queries &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Retrieving ActiveRecord Queries</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/21/09 1:28am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is there any way to retrieve the query that was performed during an ActiveRecord store() ?
+</p>
+
+<p>
+For example
+</p>
+<pre class="block php"><code>$log = new AppLog();
+$log-&gt;setLogType($info['type']);
+$log-&gt;setLogData($info['data']);
+$log-&gt;setAppLogGroupsId($log_groups_id);
+$log-&gt;store();</code></pre>
+
+<p>
+ How could I get the actual query that was performed when this record was created?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-128">
+				<div class="body" id="body-128">
+					
+<p>
+Are you looking to log for the sake of logging, or are you trying to use the SQL for something else? If you just want to see what is being executed, the following code can do it. To actually capture it for another purpose might be more difficult depending on what you are trying to do.
+</p>
+<pre class="block php"><code>fORMDatabase::retrieve()-&gt;enableDebugging(TRUE);
+$log = new AppLog();
+$log-&gt;setLogType($info['type']);
+$log-&gt;setLogData($info['data']);
+$log-&gt;setAppLogGroupsId($log_groups_id);
+$log-&gt;store();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/21/09 4:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-133">
+				<div class="body" id="body-133">
+					
+<p>
+A requirement for an application I'm building requires that all database changes be logged to file for archiving purposes.  So, I'm kind of restricted to using traditional SQL right now.  
+</p>
+
+<p>
+Thanks for answering in the other thread: <a href="39.html#132">http://flourishlib.com/discussion/2/39/132#132</a>
+</p>
+
+<p>
+It looks like that might be my best solution if I am going to be able to use ActiveRecord.
+</p>
+
+<p>
+Thanks, Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/21/09 6:36pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

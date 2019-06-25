@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>odd issue with MySQL/phpMyAdmin &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">odd issue with MySQL/phpMyAdmin</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					oliverd			</span>
+	<span class="date_posted" title="1/18/09 6:24pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Not a problem with Flourish per se, but something I'm sure a lot of people are going to be running into if they are using phpMyAdmin.
+</p>
+
+<p>
+I stumbled upon this when I created a User class that extended <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, and a users table with the following structure:
+</p>
+<pre class="block sql"><code>CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL auto_increment,
+  `user_name` varchar(20) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(75) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `join_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `last_active` timestamp NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;</code></pre>
+
+<p>
+ Frustratingly, I was able to insert records with blank names, email addresses, and passwords despite the fact that I had specified those columns to be NOT NULL. When I exported the structure of the table I had just created, I got the following:
+</p>
+<pre class="block sql"><code>CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL auto_increment,
+  `user_name` varchar(20) NOT NULL default '',
+  `first_name` varchar(50) NOT NULL default '',
+  `last_name` varchar(50) NOT NULL default '',
+  `email` varchar(75) NOT NULL default '',
+  `password` varchar(50) NOT NULL default '',
+  `join_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `last_active` timestamp NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;</code></pre>
+
+<p>
+ So it looks like phpMyAdmin has added blank default values to the columns that I had specified to be NOT NULL, and thus I am able to insert null values. Very annoying!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-9">
+				<div class="body" id="body-9">
+					
+<p>
+Hmmm, so it doesn't look like it is a phpMyAdmin issue after all because I recreated the table via the command line and I'm still having the same issue!
+</p>
+
+<p>
+Any ideas on what I'm doing wrong?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													oliverd											</span>
+					<span class="date_posted" title="1/18/09 6:38pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-10">
+				<div class="body" id="body-10">
+					
+<p>
+Well, the behaviour you describe is correct <em>if</em> you actually have the second table definition you entered where each column has a <code>DEFAULT</code> of <code>''</code>. If a <code>NULL</code> value is inserted into a column that has a default value, the default value will be used when inserting or updating.
+</p>
+
+<p>
+Now, this would only be the case if there are defaults. I created the first table definition on my server and when I tried to store a new User object I got an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> listing the columns that needed values.
+</p>
+
+<p>
+So, go back and ensure that your users table does not somehow have those default values. If that isn't the case, we can do a little more in-depth investigation.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/18/09 10:14pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-11">
+				<div class="body" id="body-11">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+I recreated the first table definition and did not get an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a>. I then performed the command SHOW CREATE TABLE users which gave me the following:
+</p>
+<pre class="block sql"><code>CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL auto_increment,
+  `user_name` varchar(20) NOT NULL default '',
+  `first_name` varchar(50) NOT NULL default '',
+  `last_name` varchar(50) NOT NULL default '',
+  `email` varchar(75) NOT NULL default '',
+  `password` varchar(50) NOT NULL default '',
+  `join_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `last_active` timestamp NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</code></pre>
+
+<p>
+ Looking at the MySQL documentation, I see the following: 
+</p>
+
+<p>
+&quot;If the column cannot take NULL as the value, MySQL defines the column with an explicit DEFAULT clause, using the implicit default value for the column data type. Implicit defaults are defined as follows: 
+</p>
+
+<p>
+For string types other than ENUM, the default value is the empty string. For ENUM, the default is the first enumeration value.&quot;
+</p>
+
+<p>
+So basically, inserting the first table definition results in the second one being created.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													oliverd											</span>
+					<span class="date_posted" title="1/19/09 9:54am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-12">
+				<div class="body" id="body-12">
+					
+<p>
+What version of MySQL are you running? I'm running 5.0.68 here and I'm not have the result. My <code>SHOW CREATE TABLE users</code> displays the following:
+</p>
+<pre class="block sql"><code>CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL auto_increment,
+  `user_name` varchar(20) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(75) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `join_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `last_active` timestamp NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 </code></pre>
+
+<p>
+ Looking at the MySQL documentation, it appears you must be running MySQL 4.x. Version 5.0 seems to have fixed this, plus a lot of other issues.
+</p>
+
+<p>
+As a work-around for your issue, you can run the following code to override the database schema:
+</p>
+<pre class="block php"><code>fORMSchema::retrieve()-&gt;setColumnInfoOverride(
+	array (
+		'user_name' =&gt; array (
+			'default' =&gt; NULL
+		),
+		'first_name' =&gt; array (
+			'default' =&gt; NULL
+		),
+		'last_name' =&gt; array (
+			'default' =&gt; NULL
+		),
+		'email' =&gt; array (
+			'default' =&gt; NULL
+		),
+		'password' =&gt; array (
+			'default' =&gt; NULL
+		)
+	),
+	'users'
+);</code></pre>
+
+<p>
+ This will cause <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to require a non-empty value for those columns before the record can be saved.
+</p>
+
+<p>
+For the above code to execute properly, please be sure to be running the latest revision of Flourish, r487. You can get it on the <a href="../flourishlib.com/docs/Download">download page</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/19/09 11:25am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-13">
+				<div class="body" id="body-13">
+					
+<p>
+Yes, I am running MySQL 4.1.11. I'm using !MediaTemple and they have not upgraded to 5 yet, unfortunately.
+</p>
+
+<p>
+Regardless, your workaround fixes the problem. Thank you very much!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													oliverd											</span>
+					<span class="date_posted" title="1/19/09 11:52am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

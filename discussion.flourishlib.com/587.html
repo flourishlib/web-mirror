@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>@vars in query &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">@vars in query</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="1/23/12 1:40am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Guys,
+</p>
+
+<p>
+I have the following query...
+</p>
+<pre class="block sql"><code>SELECT DATE(pm.rstdtime) AS cntldate, sh.sd_no, sh.work_group,
+	(
+		IF(@sd_id = sh.sd_no, 
+			(TIMESTAMPDIFF(SECOND, @dt, sh.data_entry_dtime) / 86400) * 86400 + LEAST(0, @dt := sh.data_entry_dtime),
+			NULL + LEAST(0, @sd_id := sh.sd_no) + (@dt := sh.data_entry_dtime)
+		)) AS duration
+INTO OUTFILE '{$file}'
+FIELDS TERMINATED BY '||'
+OPTIONALLY ENCLOSED BY '\\&quot;'
+FROM tablea pm 
+LEFT JOIN tableb sh 
+	ON pm.sd_no = sh.sd_no,
+(SELECT (@sd_id := 0)) AS a 
+WHERE sh.log_text IN ('Created', 'Dispatched', 'Restored') 
+AND CONVERT_TZ(sh.data_entry_dtime, 'GMT', 'Australia/NSW') &lt;= pm.rstdtime 
+ORDER BY sh.sd_no, sh.data_entry_dtime, sh.log_text
+limit 10</code></pre>
+
+<p>
+ When i run this inside SQLyog for instance everything works as expected, however when i use it via PHP (<a href="../flourishlib.com/docs/fDatatabase.html">fDatatabase</a> query) <strong>duration</strong> is null.
+</p>
+
+<p>
+Its like <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is manipulating the @vars?
+</p>
+
+<p>
+Any help would be appreciated... thnaks.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1670">
+				<div class="body" id="body-1670">
+					
+<p>
+I would file this as a bug.  Last I checked there is some light translation work that Flourish does to normalize queries.  It could be an error or lack of support there.  Will would likely know exactly where that support or error is lacking.  Whether or not it's easy to fix is another question.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/27/12 9:24pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

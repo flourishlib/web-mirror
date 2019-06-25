@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Getting related data for query &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Getting related data for query</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					hcker2000			</span>
+	<span class="date_posted" title="4/9/12 11:26am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have the following code and I'm trying to figure out how to get calendar.name to be in the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> so I can display it.
+</p>
+
+<p>
+Any help would be great.
+</p>
+<pre class="block php"><code>  static function featured($date = null) {
+    $date = ($date ? $date : new fDate());
+    
+    $candidates = fRecordSet::buildFromSQL(
+      'CalendarEvent',
+      array('SELECT &quot;calendar_events&quot;.*
+               FROM &quot;calendar_events&quot;
+               JOIN &quot;calendars&quot; ON &quot;calendars&quot;.&quot;calendar_id&quot; = &quot;calendar_events&quot;.&quot;calendar_id&quot;
+              WHERE &quot;calendars&quot;.&quot;publication_id&quot; = %i
+                AND &quot;calendar_events&quot;.&quot;date&quot; = %d
+                AND &quot;calendar_events&quot;.&quot;featured&quot; = %b', Publication::id(), $date, true)
+    );
+    
+    
+    if($candidates-&gt;count() &gt; 0) {
+	return $candidates;
+    } 
+    
+    return null;
+  }</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1713">
+				<div class="body" id="body-1713">
+					
+<p>
+An <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> is a collection of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects and an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object represents all columns from a single row of a single table. Thus, you can't.
+</p>
+
+<p>
+To get data from multiple tables in a single database query you need to use <a href="../flourishlib.com/api/fDatabase.html#query">fDatabase::query()</a>. If you don't mind possibly doing multiple queries, you can call <code>$calendar_event-&gt;createCalendar()-&gt;getName()</code>. If the calendar has been loaded into memory before, it will not invoke an extra DB query.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/9/12 11:30am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1714">
+				<div class="body" id="body-1714">
+					
+<p>
+Ok I have tried to switch this over to use query. The following code produces the following error.
+</p>
+<pre class="block php"><code>  static function featured($date = null) {
+    $date = ($date ? $date : new fDate());
+    
+    $candidates = fDatabase::query('SELECT &quot;calendar_events&quot;.*
+               FROM &quot;calendar_events&quot;
+               JOIN &quot;calendars&quot; ON &quot;calendars&quot;.&quot;calendar_id&quot; = &quot;calendar_events&quot;.&quot;calendar_id&quot;
+              WHERE &quot;calendars&quot;.&quot;publication_id&quot; = %i
+                AND &quot;calendar_events&quot;.&quot;date&quot; = %d
+                AND &quot;calendar_events&quot;.&quot;featured&quot; = %b', Publication::id(), $date, true);
+    
+/*    $candidates = fRecordSet::buildFromSQL(
+      'CalendarEvent',
+      array('SELECT &quot;calendar_events&quot;.*
+               FROM &quot;calendar_events&quot;
+               JOIN &quot;calendars&quot; ON &quot;calendars&quot;.&quot;calendar_id&quot; = &quot;calendar_events&quot;.&quot;calendar_id&quot;
+              WHERE &quot;calendars&quot;.&quot;publication_id&quot; = %i
+                AND &quot;calendar_events&quot;.&quot;date&quot; = %d
+                AND &quot;calendar_events&quot;.&quot;featured&quot; = %b', Publication::id(), $date, true)
+    );
+  */  
+    
+    if($candidates-&gt;count() &gt; 0) {
+	return $candidates-&gt;asObjects();
+    } 
+    
+    return null;
+  }</code></pre>
+<pre><code>#!text/html
+Fatal error: Using $this when not in object context in /Users/uwmanager/Sites/testsite.com/protected/lib/flourish/fDatabase.php on line 2710</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hcker2000											</span>
+					<span class="date_posted" title="4/9/12 11:50am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1715">
+				<div class="body" id="body-1715">
+					
+<p>
+The query method of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is not static, the :: is just used by this wiki for auto-linking. See the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> page for examples. You'll also need to use <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a> to retrieve the database instance used by the ORM.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/9/12 11:59am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1716">
+				<div class="body" id="body-1716">
+					
+<p>
+I gave it a try as <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query and get the following error.
+</p>
+<pre><code>#!text/html
+Parse error: syntax error, unexpected T_OBJECT_OPERATOR in /Users/uwmanager/Sites/testsite.com/protected/lib/classes/Calendar.php on line 33</code></pre>
+
+<p>
+ I am using 1.0.0b25. I attempted to update to the latest release but got lots of errors so my existing application would need a major overhaul I fear to use the newest version. Hoping I can stick with 1.0.0b25
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hcker2000											</span>
+					<span class="date_posted" title="4/9/12 12:06pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1717">
+				<div class="body" id="body-1717">
+					
+<p>
+You need to have an instance of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. Look at the examples on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> page.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/9/12 12:07pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1718">
+				<div class="body" id="body-1718">
+					
+<p>
+Thanks we are on the same page now.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hcker2000											</span>
+					<span class="date_posted" title="4/9/12 12:20pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1719">
+				<div class="body" id="body-1719">
+					
+<p>
+If I use the -&gt;createCalendar()-&gt;getName() how would i then access that info just so I know both ways to do things.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hcker2000											</span>
+					<span class="date_posted" title="4/9/12 12:28pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

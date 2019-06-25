@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>timestamp global format &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">timestamp global format</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/netpork">			netpork		</a> 	</span>
+	<span class="date_posted" title="6/18/12 6:17am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a recordset with some data and timestamp. Default displayed date format is 'Y-m-d H:i:s', how can I globally format that, so, doing some localization, thus, display a date in this format 'd-m-Y H:i:s' without doing it in a loop manually calling <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>-&gt;format() for every record.
+</p>
+
+<p>
+I have tried using <a href="../flourishlib.com/api/fTimestamp.html#registerFormatCallback">fTimestamp::registerFormatCallback()</a> and <a href="../flourishlib.com/api/fTimestamp.html#registerUnformatCallback">fTimestamp::registerUnformatCallback()</a> without success since if I do date formatting in <a href="../flourishlib.com/api/fTimestamp.html#registerFormatCallback">fTimestamp::registerFormatCallback()</a>, <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, where I do some date comparison, then does not yield any records.
+</p>
+<pre class="block php"><code>$rhr = fRecordSet::build(
+		__CLASS__,
+
+		array(
+			'rhr_datetime&gt;=' =&gt; $from,
+			'rhr_datetime&lt;=' =&gt; $to,
+			'rhr_usr_id=' =&gt; $userId
+			),
+		array(
+			'rhr_datetime' =&gt; 'desc'
+			)
+		);</code></pre>
+
+<p>
+ Huh, I hope I am clear enough!? :)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1762">
+				<div class="body" id="body-1762">
+					
+<p>
+The <code>Y-m-d H:i:s</code> format is used in the toString() method of <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>, and as you've found, quite a bit of Flourish relies on that functioning properly.
+</p>
+
+<p>
+You aren't going to be able to get away with not calling format() if you want a different format from the ISO-8601 style. You can, however, define a standard format to use throughout your app - <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>#DefiningFormats. This gives you the ability to control the format from a single place instead of having to update code in lots of different places if you want to tweak your default format.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/20/12 9:32am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

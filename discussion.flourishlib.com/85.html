@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>What are the constants in the static classes for? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">What are the constants in the static classes for?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="6/4/09 8:56am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello again.
+</p>
+
+<p>
+I have noticed that your static classes all have a load of constants defined and that each of those refers to a function in the class.
+</p>
+
+<p>
+The reason for this according to the code is &quot;The following constants allow for nice looking callbacks to static methods&quot; but I don't understand what the effect of the constants are.
+</p>
+
+<p>
+You seem to be referring to the class methods in the normal way and when calling on other static methods from other classes you seem to do that in the normal way too.
+</p>
+
+<p>
+So what exactly does this do? I am very curious!
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-255">
+				<div class="body" id="body-255">
+					
+<p>
+Right, the static method callback constants. If you've worked with javascript, python, or a host of other languages where functions are first class elements of the language, you'll find you can reference a function by writing the name without the <code>()</code> at the end. Such a reference won't actually execute the function, but will pass a reference so it can be called later. For example, in javascript:
+</p>
+<pre class="block js"><code>function foo() {
+    alert('hi');
+}
+
+setTimeout(foo, 1000);</code></pre>
+
+<p>
+ This code will alert <code>hi</code> 1 second after it is called. The thing with PHP is that callbacks have to be in strings, which sometimes feels weird, and editor autocompletion can't help you. To make PHP callbacks feel a little more dynamic and to allow for completion, I define constants with the same names as the static functions. For example, let's say I want to convert a list of names to uppercase:
+</p>
+<pre class="block php"><code>$names = array_map('fUTF8::upper', $names);</code></pre>
+
+<p>
+ With the class constants, you can write:
+</p>
+<pre class="block php"><code>$names = array_map(fUTF8::upper, $names);</code></pre>
+
+<p>
+ As you can see, it is purely a stylistic kind of thing. The only downside is that it isn't supported by the rest of PHP natively and that PHP 5.1 doesn't recognize string-style static method callbacks. For 5.1, <code>'fUTF8::upper'</code> would have to be <code>array('fUTF8', 'upper')</code>. 
+</p>
+
+<p>
+You'll also notice that every class that has instance methods contains a <code>__get()</code> method. This allows for instance callbacks. Instance callbacks are in the form <code>array($object, 'method')</code>, so if you look at the <code>__get()</code> methods, you'll see they do exactly that.
+</p>
+
+<p>
+Here is an example of calling a database query with a variable number of parameters:
+</p>
+<pre class="block php"><code>$result = call_user_func_array($db-&gt;query, $params);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/4/09 9:12am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

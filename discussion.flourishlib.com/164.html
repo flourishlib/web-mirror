@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCryptography hash getting corrupted when given as URL param -&gt; UTF8 issue? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCryptography hash getting corrupted when given as URL param -&gt; UTF8 issue?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="10/28/09 4:06pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi everyone,
+</p>
+
+<p>
+Maybe somebody can help me, i am really stuck with a URL param getting corrupted.
+</p>
+
+<p>
+I have a <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> symmetric hash in a URL param.
+</p>
+
+<p>
+When I set a variable in the target page using <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> to gather URL param containing the hash, I never get the same hash as it was generated in the calling script.
+</p>
+
+<p>
+I tried urlencode, rawurlencode, base64_encode + base64_decode, my webpage declare itself as UTF8 encoded... i dont know why my text data gets scrambled when passed in URL :( (I encode the variable because there are some # characters in the hash, not very URL friendly)
+</p>
+
+<p>
+Can this be related to UTF8 encoding? Web server issue? Web browser issue?
+</p>
+
+<p>
+Thanks for any help
+</p>
+
+<p>
+Aurlien
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-503">
+				<div class="body" id="body-503">
+					
+<p>
+I doubt it is a UTF-8 encoding issue. Can you paste some example code/URLs so I can see what might be the problem?
+</p>
+
+<p>
+And yes, both the <code>#</code> and <code>:</code> are special characters for URLs. You can always deconstruct the format by chopping the fingerprint off the front and then splitting on <code>#</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/28/09 8:53pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-505">
+				<div class="body" id="body-505">
+					
+<p>
+I must have mistaken something at first
+</p>
+
+<p>
+I did a little test page to provide POC of the issue, and... tada! It works fine :x
+</p>
+
+<p>
+Here is the test for anyone sake :
+</p>
+<pre class="block php"><code>&lt;?php
+
+// Including flourish files required for this test
+include('fCryptography.php');
+
+// Source data
+$secret_key = '1l2rt6kP0kqdID-@$AMf6Y0M0CtOU';
+$filename = '/tmp/testcrypt/my_test_file.txt';
+$hash = fCryptography::symmetricKeyEncrypt($filename, $secret_key);
+$url_compatible_hash = urlencode($hash);
+
+// Received data
+$received_hash = $_GET['filename_hash'];
+if ($received_hash) {
+    $received_filename = fCryptography::symmetricKeyDecrypt($received_hash, $secret_key);
+}
+
+echo &quot;&lt;h2&gt;This page tests url transimision of crypted hash.&lt;/h2&gt;&quot;;
+
+// This script is named testcrypt.php
+echo &quot;&lt;hr&gt;&lt;a href=\\&quot;testcrypt.php?filename_hash=$url_compatible_hash\\&quot;&gt;&quot;;
+echo &quot;click here to send hash by URL and see how it goes\\n&lt;/a&gt;&quot;;
+
+// Displaying source data
+echo &quot;&lt;hr&gt;&lt;h3&gt;Source data :&lt;/h3&gt;&quot;;
+echo &quot;&lt;b&gt;secret_key&lt;/b&gt; = &quot;.htmlentities($secret_key).&quot;&lt;br /&gt;&quot;;
+echo &quot;&lt;b&gt;filename&lt;/b&gt; = &quot;.htmlentities($filename).&quot;&lt;br /&gt;&quot;;
+echo &quot;&lt;b&gt;hash&lt;/b&gt; = &quot;.htmlentities($hash).&quot;&lt;br /&gt;&quot;;
+echo &quot;&lt;b&gt;url_compatible_hash&lt;/b&gt; = &quot;.htmlentities($url_compatible_hash).&quot;&lt;br /&gt;&quot;;
+
+// Displaying received data
+echo &quot;&lt;hr&gt;&lt;h3&gt;Received data from URL :&lt;/h3&gt;&quot;;
+echo &quot;&lt;b&gt;received_hash&lt;/b&gt; = &quot;.htmlentities($received_hash).&quot;&lt;br /&gt;&quot;;
+echo &quot;&lt;b&gt;received_filename&lt;/b&gt; = &quot;.htmlentities($received_filename).&quot;&lt;br /&gt;&quot;;
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="11/2/09 10:01am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

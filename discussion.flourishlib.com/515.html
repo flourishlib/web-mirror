@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fTemplating CSS Url &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fTemplating CSS Url</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dberry			</span>
+	<span class="date_posted" title="8/4/11 12:36pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I am using the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a>/minification. The problem I am having is that the end result of the place is just giving the path of /assets/css/example.css, which works great if the requested page is in my doc root. But for example if the page is at <a href="http://www.mydomain.com/user/me,">www.mydomain.com/user/me,</a> it gives the css a path of /user/me/assets....
+</p>
+
+<p>
+How can I specify an absolute path rather than relative? example i would like it to be <a href="http://www.mydomain.com/assets/css/example.css">http://www.mydomain.com/assets/css/example.css</a>
+</p>
+
+<p>
+Here is my code...
+</p>
+<pre><code>$template = new fTemplating('assets/');
+$template-&gt;enableMinification('development', 'assets/cache/');
+
+// add css to be minified
+$template-&gt;add('css' , '/assets/css/1140.css');
+$template-&gt;add('css' , '/assets/css/formalize.css');
+$template-&gt;add('css' , '/assets/css/combined.css');</code></pre>
+
+<p>
+ and using place to stick it into my template:
+</p>
+<pre><code>&lt;!-- CSS: implied media=&quot;all&quot; --&gt;
+&lt;?php $template-&gt;place('css') ?&gt;</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1510">
+				<div class="body" id="body-1510">
+					
+<p>
+I believe changing the cache directory to an absolute filesystem path should fix it for you.
+</p>
+<pre class="block php"><code>$template-&gt;enableMinification('development', $_SERVER['DOCUMENT_ROOT'] . '/assets/cache/');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/5/11 8:23am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1517">
+				<div class="body" id="body-1517">
+					
+<p>
+That fixed it... Thank you, and there aren't enough awesome ways to describe your work on Flourish and the time you take to individually answer questions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dberry											</span>
+					<span class="date_posted" title="8/5/11 2:24pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

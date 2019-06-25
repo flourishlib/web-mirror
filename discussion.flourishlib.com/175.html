@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fDirectory check if dir exists? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fDirectory check if dir exists?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="11/17/09 8:18am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hey,
+</p>
+
+<p>
+I'm can't find an simple option to check if a directory exists or not in the <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> class? Maybe I looked over it, ..or is it really missing? Because I do not want to catch exceptions first after creating a directory!?
+</p>
+
+<p>
+With kind regards,
+</p>
+
+<p>
+Frank
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-519">
+				<div class="body" id="body-519">
+					
+<p>
+Strange I logged into my account because the forum notified I was putting spam into the forum!? After that i could submit this post but now I posted it anonymous?
+</p>
+
+<p>
+Gr Frank
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													frank											</span>
+					<span class="date_posted" title="11/17/09 8:29am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-521">
+				<div class="body" id="body-521">
+					
+<p>
+Something like this into de <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> class? 
+</p>
+
+<p>
+// The following constants allow for nice looking callbacks to static methods const create        = '<a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: create'; const makeCanonical = '<a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: makeCanonical'; const exists = '<a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: exists'; &lt;-- new entry
+</p>
+
+<p>
+/**
+</p>
+
+<ul>
+<li>Check to see if the current directory exists</li>
+<li>@param  string $directory  The directory to check</li>
+<li>@return boolean  If the directory exists</li>
+<li>/</li>
+</ul>
+
+<p>
+static public function exists($directory) {    $exists = false;    if (file_exists($directory) &amp;&amp; is_dir($directory)) {        $exists=true;     }     return $exists; }
+</p>
+
+<p>
+Now you can do the following :
+</p>
+
+<p>
+if( ! <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: exists('somedir/'.$tempMemberId)) { 	$new_directory = <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: create('somedir/'.$tempMemberId); } else { 	$new_directory = new <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a>('somedir/'.$tempMemberId); }
+</p>
+
+<p>
+So if it doesn't exists you now have a dir called -&gt; somedir/&lt;memberid&gt; ..for example.	
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													frank											</span>
+					<span class="date_posted" title="11/17/09 9:12am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-534">
+				<div class="body" id="body-534">
+					
+<p>
+Currently the file_exists() check is done when creating an <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> object. If the path passed is not an <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> then an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> will be thrown. It is also possible to pass a file path to <a href="../flourishlib.com/api/fFilesystem.html#createObject">fFilesystem::createObject()</a> and get back the appropriate kind of <a href="../flourishlib.com/docs/fFile.html">fFile</a>, <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> or <a href="../flourishlib.com/docs/fImage.html">fImage</a> object. This method will also throw an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> if the path can't be found or isn't readable.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/8/09 11:35am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

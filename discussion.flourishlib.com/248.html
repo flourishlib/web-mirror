@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Problem with autoincrement in no primary key &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Problem with autoincrement in no primary key</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="6/13/10 10:54am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have found a problem with the autoincrement (serial) field in the following table:
+</p>
+<pre class="block sql"><code>CREATE TABLE user_group (
+    id              serial,
+    id_user         integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id_group        integer NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+    role            varchar(32) NOT NULL,
+    created         timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_user, id_group)
+);</code></pre>
+
+<p>
+ I'm using the following code (in Group model) to create a new group and related usergroup:
+</p>
+<pre class="block php"><code>...
+// Define a user-group link
+$usergroup = new UserGroup();
+$usergroup-&gt;setIdUser ($user-&gt;getId());
+$usergroup-&gt;setRole ('owner');
+                        
+// And save the new group
+$this-&gt;associateUserGroups($usergroup);
+$this-&gt;store();
+...</code></pre>
+
+<p>
+ But for some reason the store action attempts to fill the serial field as well, so I get the following error:
+</p>
+
+<p>
+Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fSQLException.html">fSQLException</a>' with message 'PostgreSQL error (ERROR: null value in column &quot;id&quot; violates not-null constraint) in INSERT INTO &quot;user_groups&quot; (&quot;id&quot;, &quot;id_user&quot;, &quot;id_group&quot;, &quot;role&quot;, &quot;created&quot;) VALUES (NULL, 1, 1, <a href="mailto:'myuser@my.net">'myuser@my.net</a>', 'member', '2010-06-08 19:15:29')' in /usr/local/share/php/flourish/classes/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:409
+</p>
+
+<p>
+The output of fCore::expose($schema-&gt;getColumnInfo('user_groups')) about that 'id' field is as follows:
+</p>
+<pre><code>    [id] =&gt; Array
+        (
+            [type] =&gt; integer
+            [min_value] =&gt; fNumber Object
+                (
+                    [&quot;scale&quot;:&quot;fNumber&quot;:private] =&gt; 0
+                    [&quot;value&quot;:&quot;fNumber&quot;:private] =&gt; -2147483648
+                )
+        
+            [max_value] =&gt; fNumber Object
+                (
+                    [&quot;scale&quot;:&quot;fNumber&quot;:private] =&gt; 0
+                    [&quot;value&quot;:&quot;fNumber&quot;:private] =&gt; +2147483647
+                )
+        
+            [auto_increment] =&gt; {true}
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %i
+            [default] =&gt; {null}
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [decimal_places] =&gt; {null}
+        )</code></pre>
+
+<p>
+ By the way, defining the 'id' field as primary key (instead of the id_user, id_group pair), all goes with no problem. Currently using PostgreSQL 8.4.4.
+</p>
+
+<p>
+Any help?
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-795">
+				<div class="body" id="body-795">
+					
+<p>
+Yes, that appears to be a bug. Sometimes it takes me a little while to dig through the backlog of messages on the forum, so if you think you have found a bug, please feel free to open a ticket. Those are all tracked through a nice interface and I try to make sure all defects are fixed as quickly as I have time.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/25/10 1:25pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

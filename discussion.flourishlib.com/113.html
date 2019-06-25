@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Password hashing and logging in &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Password hashing and logging in</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					pxl			</span>
+	<span class="date_posted" title="7/16/09 7:10pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm not all that bright when it comes to cryptography, so I hope you guys can give me a hand.
+</p>
+
+<p>
+I'm looking at building a simple login - Single user, one Auth level. 
+</p>
+
+<p>
+I have an install script which creates an initial password for the login. This password is then saved into the DB. 
+</p>
+
+<p>
+Once the user has finished installing they can then login using that password. However, it seems that fCryptography::hashPassword hashes the password differently each time it's passed.
+</p>
+
+<p>
+How do I compare the password already saved in the DB with one that the user inputs to allow the user to login?
+</p>
+
+<p>
+Thank you very much for your assistance!
+</p>
+
+<p>
+Best,
+</p>
+
+<p>
+PXL.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-328">
+				<div class="body" id="body-328">
+					
+<p>
+If you check out <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>#HashingandChecking, you'll see there is a method called <a href="../flourishlib.com/api/fCryptography.html#checkPasswordHash">fCryptography::checkPasswordHash()</a> that can check a password against a hash.
+</p>
+
+<p>
+The reason the hash is different each time is because a unique salt is used to help prevent rainbow table attacks. You can read some more about it at <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>#PasswordHashing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/17/09 9:06am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1093">
+				<div class="body" id="body-1093">
+					
+<p>
+Will,
+</p>
+
+<p>
+I simply can't understand how this makes any sense.  If generating a hash uses a new salt each time, how can you validate a hash without also knowing the salt?  If the salt changes every time, that would seem to imply you must store the salt to later validate the password.  If you are storing the salt and the password in the db, you have no security.
+</p>
+
+<p>
+Obviously, I am wrong here.  However, the documents provide no explanation of how this can possibly work.
+</p>
+
+<p>
+Here is some sample code to generate a hash per the documents.
+</p>
+<pre class="block php"><code>&lt;?php
+/**
+ * Get the base constants and includes
+ */
+require_once( realpath(dirname(__FILE__) . '/../includes/constants.php') );
+require_once( realpath(dirname(__FILE__) . '/../includes/common_functions.php') );
+
+
+echo &quot;\\n&quot;;
+
+$hash = fCryptography::hashPassword('Example password');
+print_r($hash);
+
+echo &quot;\\n\\n&quot;;
+?&gt;</code></pre>
+
+<p>
+ The result of this code in this single instance is : fCryptography::password_hash#VTcChsYK0f#61d3f97424db52a40e223c0878385a90ad82e979
+</p>
+
+<p>
+Now, to validate a user password, I would need to use some code similar to this :
+</p>
+<pre class="block php"><code>&lt;?php
+/**
+ * Get the base constants and includes
+ */
+require_once( realpath(dirname(__FILE__) . '/../includes/constants.php') );
+require_once( realpath(dirname(__FILE__) . '/../includes/common_functions.php') );
+
+
+$password = 'Example password';
+
+$checked = fCryptography::checkPasswordHash($password,'61d3f97424db52a40e223c0878385a90ad82e979');
+
+if($checked === true)
+{
+    echo &quot;\\nThis is the right password!\\n&quot;;
+    
+} else
+    {
+        echo &quot;\\nThis is the NOT right password!\\n&quot;;
+    }
+?&gt;
+</code></pre>
+
+<p>
+ Needless to say, this does NOT work.
+</p>
+
+<p>
+Without providing the salt, how in the world can checkPasswordHash produce the same hash used in the first example?  
+</p>
+
+<p>
+Again, I know I am doing something wrong here. 
+</p>
+
+<p>
+Please clarify.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="1/16/11 5:53pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1094">
+				<div class="body" id="body-1094">
+					
+<p>
+I THINK I have figured this out.  Rather than storing just a 32bit hash as the password, you actually need to store an 80bit string such as &quot;fCryptography::password_hash#B8CnJMDK29#acdec016d3e6608703f1684139dcfa40e424eb55&quot; to validate a provided password against.
+</p>
+
+<p>
+So, the validation code in the example above SHOULD have been:
+</p>
+<pre class="block php"><code>&lt;?php
+/**
+ * Get the base constants and includes
+ */
+require_once( realpath(dirname(__FILE__) . '/../includes/constants.php') );
+
+$password = 'Example password';
+
+$checked = fCryptography::checkPasswordHash($password,'fCryptography::password_hash#VTcChsYK0f#61d3f97424db52a40e223c0878385a90ad82e979');
+
+if($checked === true)
+{
+    echo &quot;\\nThis is the right password!\\n&quot;;
+    
+} else
+    {
+        echo &quot;\\nThis is the NOT right password!\\n&quot;;
+    }
+
+?&gt;</code></pre>
+
+<p>
+ To save a bit of db space, you could actually just store the salt#hash combo such as &quot;VTcChsYK0f#61d3f97424db52a40e223c0878385a90ad82e979&quot; and use string concatenation to put the whole string together.
+</p>
+<pre class="block php"><code>
+$sp = 'VTcChsYK0f#61d3f97424db52a40e223c0878385a90ad82e979';
+fCryptography::checkPasswordHash($password,'fCryptography::password_hash#' . $sp);
+
+</code></pre>
+
+<p>
+ Okay, so this explains the problem I was having.  However, can someone explain the security of this?  Isn't storing the hash and the password together insecure?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="1/16/11 7:17pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1097">
+				<div class="body" id="body-1097">
+					
+<p>
+Right, so in your first example you were breaking <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> because you were removing the fingerprint and the salt from the hash. <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> fingerprints hash for forwards compatibility. In the future I can add support for bcrypt and change the fingerprint and <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> will be able to accurately check the hashes.
+</p>
+
+<p>
+In the second example you at least left the salt alone, but again you removed the fingerprint, which could cause your code to break with a future upgrade.
+</p>
+
+<p>
+On to salting passwords. So when an attacker gets ahold of the contents of you database, they now have everyone's email address and hashed password. Since you did some research you know you should at least be hashing the passwords so the attacker doesn't get a nice easy list of email accounts and passwords. However, most users use passwords that are too short.
+</p>
+
+<p>
+Rainbow tables are lists of precomputed hashes for short passwords. You can download a compressed MySQL database that includes the md5() of every 6 character or less password. Now they can take the hash stored in your database and look up all of the passwords, again with little effort.
+</p>
+
+<p>
+What a salt does is lengthen short passwords to make rainbow table useless. Instead of simply look up a hash, they have to brute-force each password. This is the whole purpose of the salt. By its nature, since it is combined with the password to create the hash, it must be used on subsequent requests to verify the password. Because of this, it needs to be stored with the password. It is also imperative that each password have a different salt. If each password used the same salt, an attacker could build a rainbow table for the salt you used, and again do very simple lookups to get the passwords.
+</p>
+
+<p>
+Complicating the fact is that many cryptographic hashes are intended to be fast, so that the performance of checking information is not too computationally expensive. Unfortunately this is a bad thing for password hashes. You want them to be as slow as possible, but not to slow that it affects the user when performing a login. There are specialized software packages out there that can generate millions to billions of md5() and sha1() hashes per second on GPU hardware. The simplest way to make this more expensive is to use many rounds of hashing. For instance, <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> uses sha1() since it is available on all PHP 5.1+ installs, but performs it 1000 times to make the hashing process slower. Inevitably this is not going to be enough and <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> will need to be &quot;upgraded&quot; to help prevent this.
+</p>
+
+<p>
+The best way to hash a password is to use bcrypt. This algorithm uses a variable setup time, which means to can cause the algorithm to take as long as you want, helping making brute force attacks infeasible. Unfortunately this algorithm was not available on many platforms until PHP 5.3, and in the interest of compatibility, I chose to go with something I knew would work everywhere.
+</p>
+
+<p>
+In the future I am planning on updating <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> to use bcrypt when available for hashing. This is where that fingerprint comes in nice and handy. :-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/18/11 8:56pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1101">
+				<div class="body" id="body-1101">
+					
+<p>
+The PHPass project (<a href="http://www.openwall.com/phpass/">http://www.openwall.com/phpass/</a>) is an interesting place to look for PHP based password hashing. It uses salts, allows variable length stretching (the number of hashing rounds used) and is pretty portable. I've used it a few times and it is seeing some adoption amongst various CMSs. The code is public domain.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="1/19/11 5:39am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

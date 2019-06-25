@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>ORM Validation skip blank email values &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">ORM Validation skip blank email values</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					plankton			</span>
+	<span class="date_posted" title="7/29/11 1:03pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<pre class="block php"><code>        fORMColumn::configureEmailColumn($this, 'email');
+
+...
+
+        $user-&gt;setEmail(&quot;&quot;);
+        $user-&gt;store();
+</code></pre>
+
+<p>
+ No exception is thrown but I think it should be.
+</p>
+
+<p>
+Maybe it would be better to change the code below in ORMValidaton (780-783) ?
+</p>
+<pre class="block php"><code>if (!strlen($values[$column])) {
+				continue;
+			}</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1480">
+				<div class="body" id="body-1480">
+					
+<p>
+If you make your field <code>NOT NULL</code> in the database, it will be required. If I changed <a href="../flourishlib.com/docs/fORMValidation.html">fORMValidation</a>, it would not be possible to have an optional email field.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 1:04pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1481">
+				<div class="body" id="body-1481">
+					
+<p>
+Hmm.. But it is set to NOT NULL. I even tried to set it with       fORMValidation::addRequiredRule($this, 'email');
+</p>
+
+<p>
+No luck :(
+</p>
+
+<p>
+PS. It works for other columns but not for a emailColumn type
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													plankton											</span>
+					<span class="date_posted" title="7/29/11 1:07pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1482">
+				<div class="body" id="body-1482">
+					
+<p>
+Does it have a default value?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 1:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1483">
+				<div class="body" id="body-1483">
+					
+<p>
+No. It does not. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													plankton											</span>
+					<span class="date_posted" title="7/29/11 1:10pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1486">
+				<div class="body" id="body-1486">
+					
+<p>
+Alright, you win, it is a bug. However, the bug is fixed in r1021. :-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 2:13pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1490">
+				<div class="body" id="body-1490">
+					
+<p>
+Great. Now it works like a charm. Thank you.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													plankton											</span>
+					<span class="date_posted" title="7/29/11 3:01pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

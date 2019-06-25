@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>An invalidly formatted primary or unique key was passed to this object &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">An invalidly formatted primary or unique key was passed to this object</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="3/18/11 12:05pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Creating a very basic user table and attempting to check for a user upon login. This file uses namespaces so global <br />
+ is used.
+</p>
+<pre class="block sql"><code>DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+  uid INTEGER PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(64) NOT NULL,
+  pass VARCHAR(64) NOT NULL,
+  access INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  created INTEGER UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX uid_name ON users (uid, name);</code></pre>
+<pre class="block php"><code>    public function validate() {
+      try {
+        $hasher = new \\PasswordHash(8, TRUE);
+        $hash = $hasher-&gt;HashPassword($this-&gt;post['pass']);
+        
+        $user = new \\Base\\User(array('name' =&gt; $this-&gt;post['name'], 'pass' =&gt; $hash));
+      }
+      catch (\\fNotFoundException $e) {
+        die($e-&gt;getMessage());
+      }
+    }</code></pre>
+
+<p>
+ I get Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>' with message 'An invalidly formatted primary or unique key was passed to this User object'
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1158">
+				<div class="body" id="body-1158">
+					
+<p>
+With <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> you can load by the primary key or a unique key. It doesn't appear from your SQL that there is a unique constraint over (name, pass), so that will not work. Instead you need to load by uid or (uid, name).
+</p>
+
+<p>
+Normally I will make the name column unique, then you can load by the name, and afterwards check the password hash. Your password hash should use a salt, and if it does, it will not be possible to use the password to load a user out of the database because the salt is used to generate the hash. See <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>#PasswordHashing for more info.
+</p>
+
+<p>
+Here is some altered SQL that will allow you to load by name.
+</p>
+<pre class="block sql"><code>DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+  uid INTEGER PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(64) NOT NULL UNIQUE,
+  pass VARCHAR(64) NOT NULL,
+  access INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  created INTEGER UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;</code></pre>
+
+<p>
+ The following PHP uses <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> for password checking. For this code to work, you'd need to hash the password using <a href="../flourishlib.com/api/fCryptography.html#hashPassword">fCryptography::hashPassword()</a> inside of a custom <code>setPass()</code> method on your <code>\\Base\\User</code> class.
+</p>
+<pre class="block php"><code>class \\Base\\User extends \\fActiveRecord
+{
+  // Flourish is smart enough to use this overridden method when
+  // -&gt;populate() is called on the record
+  public function setPass($password)
+  {
+    // If the user provides a blank password, keep their current password
+    // instead of hashing a blank string
+    if (strlen($password) == 0) {
+      // This allows for method chaining
+      return $this;
+    }
+    return $this-&gt;set('pass', \\fCryptography::hashPassword($password));
+  }
+}
+
+// ...
+
+public function validate() {
+      try {
+        $user = new \\Base\\User(array('name' =&gt; $this-&gt;post['name']));
+        if (!fCryptography::checkPasswordHash($this-&gt;post['pass'], $user-&gt;getPass())) {
+          throw new \\fNotFoundException('The password specified is invalid');
+        }
+      }
+      catch (\\fNotFoundException $e) {
+        die($e-&gt;getMessage());
+      }
+    }</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/18/11 12:37pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1165">
+				<div class="body" id="body-1165">
+					
+<p>
+Thanks, figured it out. I'm using PHPass for password hashing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="3/18/11 3:29pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1167">
+				<div class="body" id="body-1167">
+					
+<p>
+Using PHPass is great. Just to rephrase what I said before, the output of PHPass is not deterministic due to the salt, so you would be unable to select a user out of a database using that.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/18/11 4:12pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

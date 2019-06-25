@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Sutra 1.2-beta release &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Sutra 1.2-beta release</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="4/18/12 5:14pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have been working on a sort of unframework for a little while (although at first it was intended to be a complete framework with routing and similar functionality not in Flourish). Instead, I have opted to leave it  more open just like Flourish does and so the classes I have made (all of which begin with 's') are designed to be used just about anywhere, be it your MVC framework, or generic procedural code, or even CLI scripts.
+</p>
+
+<p>
+A short description of what each class intends to do or help with:
+</p>
+
+<p>
+<em>sArray</em> - array utility functions
+</p>
+
+<p>
+<em>sAuthorization</em> - has a method requireNotLoggedIn() that does the reverse of requireLoggedIn()
+</p>
+
+<p>
+<em>sCache</em> - extension of <a href="../flourishlib.com/docs/fCache.html">fCache</a> but makes each key unique so cache keys (like those of APC) do not collide
+</p>
+
+<p>
+<em>sGrammar</em> - extension of <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>; has a method dashize() that does the same as underscorize() but with dashes; it uses <a href="../flourishlib.com/api/fURL.html#makeFriendly">fURL::makeFriendly()</a> but also supports camelCase notation
+</p>
+
+<p>
+<em>sHTTPRequest</em> - a simple object class to do HTTP requests from the server side
+</p>
+
+<p>
+<em>sImage</em> - a questionable extension to <a href="../flourishlib.com/docs/fImage.html">fImage</a>; this was mainly made because <a href="../flourishlib.com/api/fImage.html#rotate">fImage::rotate()</a> does not take into account IFD* exif data that contains the orientation information; has a flip() method for flipping pixels vertically or horizontally or both (this is required by some orientations)
+</p>
+
+<p>
+<em>sJSONP</em> - like <a href="../flourishlib.com/docs/fJSON.html">fJSON</a>, but for sending JSONP responses
+</p>
+
+<p>
+<em>sProcess</em> - An object class to run processes, including interactive processes; tested on Windows as well
+</p>
+
+<p>
+<em>sRequest</em> - Generally, when I handle a POST request, I redirect the user after. This means that if the user hits the back button, first they are not bothered by that annoying message that is meaningless to 99% of users, but also it means that the data from the form is not put back by the browser (which means less usability). sRequest::savePostValues('some_id') can save the POST values into session for later retrieval. You can delete the values when the form is submitted successfully by calling sRequest::deletePostValues(). You can restore the POST values (calls <a href="../flourishlib.com/api/fRequest.html#set">fRequest::set()</a>) when re-rendering the form after a validation error by calling sRequest::setPostValues(). This class also has a non-throwing method to check a CSRF token string, useful with <a href="../flourishlib.com/api/fValidation.html#addCallbackRule">fValidation::addCallbackRule()</a>.
+</p>
+
+<p>
+<em>sResponse</em> - For general HTTP header responses. More to come in this class.
+</p>
+
+<p>
+<em>sTemplate</em> - This is an alternative to <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> which is similar to PHPTemplate. If you have used Drupal in the past, consider sTemplate::buffer() to be equivalent to Drupal's theme() function and the .tpl.php files will not be unusual to you. Features CSS minification optionally using CssMin and CDN support. See the documentation and tutorial for more details.
+</p>
+
+<p>
+<em>sTimestamp</em> - This is an extension <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> that can receive a RFC3339 timestamp as well as whatever can be parsed by <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>.
+</p>
+
+<p>
+<a href="https://github.com/tatsh/sutra">https://github.com/tatsh/sutra</a>
+</p>
+
+<p>
+Of course, this unframework is dependent on a potentially patched Flourish (see the patches directory).
+</p>
+
+<p>
+There is a tutorial here on how to get started fast: <a href="https://github.com/tatsh/sutra/wiki/Tutorial">https://github.com/tatsh/sutra/wiki/Tutorial</a>
+</p>
+
+<p>
+Documentation: <a href="http://tatsh.github.com/sutra/">http://tatsh.github.com/sutra/</a>
+</p>
+
+<p>
+I'm doing a final check before the final version of 1.2 is released. Will be very soon.
+</p>
+
+<p>
+Ideas for version 1.3: <a href="https://github.com/tatsh/sutra/wiki/Roadmap">https://github.com/tatsh/sutra/wiki/Roadmap</a>
+</p>
+
+<p>
+And of course if you would like to join, simply fork, and make a pull request with your changes. My standards are almost the same as Flourish', but just a few changes: 'public static' instead of 'static public', bracket on the same line for (public static function {), end bracket on separate line (not '} else {'), and 2-spaces instead of real tabs.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1722">
+				<div class="body" id="body-1722">
+					
+<p>
+My only suggestion would have been to do this as a fork to Flourish and either create patches to be applied, or wait for the full move to github.
+</p>
+
+<p>
+I plan to be adding a <a href="../flourishlib.com/api/fJSON.html#encodeWithPadding">fJSON::encodeWithPadding()</a> method for JSONP to my fork tonight -- timing is rather coincidential.
+</p>
+
+<p>
+A few of the newer classes seem interesting, but what were your reasons for not forking and keeping the same class names/structure?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="4/19/12 7:44pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1723">
+				<div class="body" id="body-1723">
+					
+<p>
+I am actually waiting for Flourish to officially be on Github before I do any serious forking because then Will will be able to accept pull requests and it will be a lot easier to collaborate. I really do not even want my <em>sImage</em> class because I want Flourish to have the 2 methods it has properly done with the operations queue that <a href="../flourishlib.com/docs/fImage.html">fImage</a> uses. (1.3 is likely to not have the <em>sImage</em> class as I hope Flourish will have the methods and ideas merged in, unless <a href="../flourishlib.com/docs/fImage.html">fImage</a> fully becomes easily extendable.)
+</p>
+
+<p>
+Maybe someday there will be no Sutra project and it will simply be a fork of Flourish. But as for now, it made more sense since there is no easy collaboration, to just extend where possible.
+</p>
+
+<p>
+Otherwise, the structure is relatively the same I thought? I'm just using the letter <em>s</em> instead of <em>f</em>. Like Flourish, I have a <em>classes</em> directory and a <em>tests</em> directory (although the <em>tests</em> directory is not the same because I do not have the same requirements as Flourish for testing). I think this naming style is a neat alternative to PHP namespaces (whether using <em>_</em> to emulate or actual namespaces with the <em>namespace</em> and <em>using</em> keywords). I have actually got into arguments about this with those writing standards (like PSR-0) as they are very pro <em>Vendor<br />
+Namespace<br />
+Style</em> class names and completely against global namespaces. It's a new road of PHP I do not feel like going down at all, especially in my personal projects (this being one of them). This makes PHP far too complicated and even more Java-like (I prefer the term <em>corporate-style</em>), and I am strictly not a fan. They are also encouraging the use of auto-loading when it has been made quite clear again and again that APC and others are better off with code loading with static includes (which is what <a href="../flourishlib.com/docs/fLoader.html">fLoader</a> does, and my <em>sLoader</em> class).
+</p>
+
+<p>
+I did forget to mention the class <em>sHTML</em> which is just a general class for making HTML element strings with valid attribute values, but its use is not exactly fully encouraged for everything since it can be a performance bottleneck from my experience so far.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/19/12 8:11pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1724">
+				<div class="body" id="body-1724">
+					
+<p>
+I agree to some extent with the namespacing.  In particular, I feel like frameworks *should* use the global namespacing.  The reason I think Flourish can also get away with global namespacing is because of the breadth of the library.  It's very unlikely that I will need other general purpose classes outside of Flourish.
+</p>
+
+<p>
+Namespacing makes sense for more specific libraries, namely because it's a good way to ensure a certain level of modularity.  If 10 people release a TwitterOAuth class for PHP, having the vendor specified helps for someone who might release a general twitter app that requires that library and wouldn't work if you got the wrong one.
+</p>
+
+<p>
+This all being said, my general point was just more about forking, which you answered.  Even though I can't send will push requests, I still find it's much cleaner to fork the mirrored github repo so I can merge from upstream cleanly when he does updates.  Also it doesn't require all the patches stuff you're doing.
+</p>
+
+<p>
+For me, part of the balance overall is what should be in the general purpose library vs. what should be in more of a traditional framework.  I don't think a general purpose library should say much at all about loading, static or auto, as such, I stay away from <a href="../flourishlib.com/docs/fLoader.html">fLoader</a> and the like.
+</p>
+
+<p>
+Also on sHTTPRequest and sResponse.  It might do good to heavily focus on the internals of HTTP with some of these.  sResponse, for example, seems a bit limited with regards to how extensible it would be to add other HTTP error responses.  One of the things that I've taken great care to do with inKWell's Controller class is focus heavily on the full expanse of HTTP.  I realize you're classes might be a bit younger, but it's something I certainly recommend baking in early, as it took me some time to refactor my previous mistakes.
+</p>
+
+<p>
+That said, sHTTPRequest::getJSON for example should send more specific Accept headers to define which types it will accept.  The web seems to be moving pretty heavily away from extensions on files, which means the accept headers become much more useful for requesting specific formats of data.
+</p>
+
+<p>
+90% of my personal projects now do not differentiate the URL for JSON vs. HTML, even by extension, so my code ends up doing something like this:
+</p>
+<pre class="block php"><code>switch(self::acceptTypes('text/html', 'application/json')) {
+    case 'text/html':
+         return $view;
+    case 'application/json':
+         return fJSON::encode($view);
+}</code></pre>
+
+<p>
+ Although the framework also supports adding a request_format parameter for much more ambiguous accept headers (which most normal browsers send), I am seeing the reliance on this as somewhat legacy.  In short, you should be able to say &quot;I want JSON and only JSON&quot; and the server should respond with either JSON or saying &quot;Sorry we don't support JSON.&quot;  Although the actual content it responds with to say they don't support it can, by the RFC, at that point vary... the HTTP status code *should* not.
+</p>
+
+<p>
+Just some thoughts.  You can read much more specifically how this works here: <a href="http://inkwell.dotink.org/docs/http_support">http://inkwell.dotink.org/docs/http_support</a>  -- you will also note that it handles mismatches between the Accept headers and the request format.  So let's say I set up a route like the following:
+</p>
+
+<p>
+'/users/:username.:request_format'
+</p>
+
+<p>
+And someone then requests /users/mattsah.json but Accept headers only specify that they want text/html -- this will actually throw a 404, since the URL is trying to indicate the request format, but it's unavailable.  Much more common, however is for me simply to implement /users/:username and depend quite strictly on the Accept header they send.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="4/19/12 8:55pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1725">
+				<div class="body" id="body-1725">
+					
+<p>
+Right now I'm just keeping the library very simple. I use Moor for routing typically and it is there I handle responses. The sResponse class is just for organising the various headers that are not so easy to remember (I might even rename it to sHTTPHeader or something like that). I know a true 'response' class would handle everything HTTP can do. Generally however, I am coding for myself and my exact needs. I welcome others to join in if they choose to use my code.
+</p>
+
+<p>
+I was originally intending for Sutra to not be a generic set of code. It was going to include well thought out routing, database handling, etc. But then I decided I did not like that. It was too limited or hacky. If you look in the commit history, you can see a large commit (merge) that deleted most of Sutra 1.0 (which was tagged before that commit).
+</p>
+
+<p>
+Rather, I am giving the programmer the option on the way to route, how to manage databases (you really don't have to use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> if you don't want to), and responses. sCore is merely a suggestion and is how I am doing sites. I extend from sCore and write those methods as well anything else that the specific site might need in general (methods like isProductionMode() and similar things).
+</p>
+
+<p>
+I will consider adding the Accept header to send in the getJSON method in sHTTPRequest.
+</p>
+
+<p>
+I rarely look at the incoming Accept headers in my code but I may start to do so. My general rule with AJAX is JSON only. I really do not see a reason to send other formats for AJAX requests.
+</p>
+<pre class="block php"><code>if (fRequest::isAjax() || (!myCore::isProductionMode() &amp;&amp; fRequest::get('ajax', 'bool', FALSE))) {
+  fJSON::sendHeader();
+  $data = array();
+  // handle getting data...
+  print fJSON::encode($data);
+  return;
+}
+
+// HTML version if necessary</code></pre>
+
+<p>
+ On a side note, one site I have implements OAuth 1.0 (using the pecl-oauth extension) and only sends back JSON data. Rather than read Accept headers, this fact is documented.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/20/12 1:27am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1728">
+				<div class="body" id="body-1728">
+					
+<p>
+By the way a little more on namespacing and its current incaration in PHP. Symfony2 and Zend are of course very into namespacing and I wouldn't disagree with those projects since they are very large (however I question their need as Flourish does nearly everything (except routing) Symfony does without using real namespaces). It's not really to do with the separator (although I still have criticisms about that). It is more to do with claiming that code is getting that complicated. I do like that PHP goes back to mix and match however this is not like how we use Flourish in combination with large libraries such as HTML Purifier. This is mix and match as long as you are using a framework like Symfony2 or Zend.
+</p>
+
+<p>
+I disagree things are this complicated or getting to that point. Maybe you understand my viewpoint since I know you stress the KISS principle in your inKWell project. It looks like I'm on the outskirts of some kind of 'corporate revolution' of PHP where everything is getting the features of Java (in reality, emulation). I am happy to be at this position. None of my code is so complicated I need namespaces to solve collision issues or to provide 'organisation'. Truly if I ran into an issue like the one you described, I would fork and rename the class, for I do not wish to begin using namespaces in a project that is not using them.
+</p>
+
+<p>
+And more on the Flourish style of namespacing as opposed to underscore/real namespacing (with many useless subdirectories); I do not understand the point of this:
+</p>
+<pre><code>  VendorName/
+    NamespaceName/
+      Exceptions/
+        BadValueException.php</code></pre>
+
+<p>
+ where of course, this would map to a namespace named: <br />
+VendorName<br />
+NamespaceName<br />
+Exceptions and a class BadValueException (prior to real namespaces: VendorName_NamespaceName_Exceptions_BadValueException &lt;- of course this is horrible and why I got away from anything Zend back then (like Magento)). But someone needs to explain to me why the subdirectories are even necessary. This is not organisation by any means. Having to navigate several subdirectories to get to the file in question means there is a problem.
+</p>
+
+<p>
+Furthermore, on all the projects I have done with Flourish so far, it satisfies all my needs except for what I write as library code of course, be it in Sutra or in the project's private ('proprietary') code. One website I worked on has classes that begin with <em>p</em> and they may extend from Flourish/Sutra and another I am working on has <em>h</em> as the prefix. <em>hYouTube</em> for example is a static class that deals with the YouTube API (it even uses <a href="../flourishlib.com/docs/fXML.html">fXML</a> to parse responses).
+</p>
+
+<p>
+This is an easier to use directory structure (say the site was called Hello :) ):
+</p>
+<pre><code>site-root/
+  flourish/ prefix: 'a'
+  moor/     prefix: 'Moor'
+  sutra/    prefix: 's'
+  hello/    prefix: 'h'
+  hello/hLoader.php &lt;- extends sLoader (which extends fLoader), calls parent:: methods
+  model/ &lt;-- fORM classes; the 'M' in MVC; of course nobody is forcing the use of fORM
+  model/User.php
+    (there is no prefix because it should be very obvious what this class is,
+      especially since it extends fActiveRecord;
+      should be seen as such in your IDE)
+  router/ &lt;-- router classes/files; the 'C' in MVC; no prefix required
+    when using Moor, I use the suffix 'ActionController' because my routers extend off MoorActionController
+  template/ &lt;-- suppose this could be where templates exist for use with fTemplating; the 'V' in MVC
+  index.php</code></pre>
+
+<p>
+ index.php:
+</p>
+<pre class="block php"><code>require 'hello/sLoader.php'; // loads all classes, including model and router
+hLoader::best();</code></pre>
+
+<p>
+ (also if you look at the Sutra tutorial you can see that I do not actually put anything in the site root except the bare minimum; all the general utility code is in /usr/share/php via ebuilds).
+</p>
+
+<p>
+I'm happy to stick with my personal projects staying far far away from real namespaces in PHP, even with all the fanfare. There is no need for this level of complication. And also, having to type '<br />
+strlen' to get the global strlen() in a namespaced section of code is stupid. I actually tried using Flourish with namespaces and got so fed up with typing '<br />
+<a href="../flourishlib.com/docs/fRequest.html">fRequest</a>; and similar that I finally figured out to be like Flourish and adopt a single letter as a prefix for my general utility classes (such as those in Sutra).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/21/12 3:12am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1729">
+				<div class="body" id="body-1729">
+					
+<p>
+See this change: <a href="https://github.com/tatsh/sutra/commit/c843caca347445a378aaf6426c174317a847669d">https://github.com/tatsh/sutra/commit/c843caca347445a378aaf6426c174317a847669d</a> :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/22/12 12:32am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>help with relationships &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">help with relationships</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					jason			</span>
+	<span class="date_posted" title="2/21/09 11:41am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,  I am really enjoying  your library.  I am working on a test site and have a few questions about using the ORM. 
+</p>
+
+<p>
+For starters, here's my schema:
+</p>
+<pre class="block sql"><code>create table teams (
+  id integer primary key autoincrement,
+  name varchar(128),
+)
+
+create table matchups (
+  id integer primary key autoincrement,
+  gametime datetime,
+  home_team_id integer references teams(id),
+  away_team_id integer references teams(id),
+  winner int default null  references teams(id)
+)</code></pre>
+
+<p>
+ Pretty simple, I keep track of teams and also when they play.  What I would like to do is get a list of matchups for a date with the team info already populated.  I am a little confused about how to define these relationships in my model classes.   Can I get these all in one query?  Or do I have to make a query for each matchup object?
+</p>
+
+<p>
+Also, is there an easy way to get the sql that was executed?  I see that you can get it from the <a href="../flourishlib.com/docs/fResult.html">fResult</a> object, but I haven't been able to get that after I do a <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> call.  
+</p>
+
+<p>
+Any help would be appreciated.  
+</p>
+
+<p>
+Thanks, Jason
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-38">
+				<div class="body" id="body-38">
+					
+<p>
+Hi Jason,
+</p>
+
+<p>
+Looking at your schema I think you are using SQLite, is that correct? You may already know this, but the only special thing about foreign key constraints in SQLite is that they aren't enforced by default. You need to create triggers to enforce the constraints. If you run your SQL <code>CREATE</code> statements through <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a>, it will add the appropriate SQL for triggers. Here is an example of the output:
+</p>
+<pre class="block sql"><code>create table teams (
+  id integer primary key autoincrement,
+  name varchar(128)
+);
+ 
+create table matchups (
+  id integer primary key autoincrement,
+  gametime datetime,
+  home_team_id integer references teams(id),
+  away_team_id integer references teams(id),
+  winner int default null  references teams(id)
+);
+
+CREATE TRIGGER fki_ver_teams_home_team_id
+	BEFORE INSERT ON teams
+	FOR EACH ROW BEGIN
+		SELECT RAISE(ROLLBACK, 'insert on table &quot;teams&quot; violates foreign key constraint on column &quot;home_team_id&quot;')
+			WHERE NEW.home_team_id IS NOT NULL AND  (SELECT id FROM teams WHERE id = NEW.home_team_id) IS NULL;
+	END;
+CREATE TRIGGER fku_ver_teams_home_team_id
+	BEFORE UPDATE ON teams
+	FOR EACH ROW BEGIN
+		SELECT RAISE(ROLLBACK, 'update on table &quot;teams&quot; violates foreign key constraint on column &quot;home_team_id&quot;')
+			WHERE NEW.home_team_id IS NOT NULL AND  (SELECT id FROM teams WHERE id = NEW.home_team_id) IS NULL;
+	END;
+CREATE TRIGGER fki_ver_teams_away_team_id
+	BEFORE INSERT ON teams
+	FOR EACH ROW BEGIN
+		SELECT RAISE(ROLLBACK, 'insert on table &quot;teams&quot; violates foreign key constraint on column &quot;away_team_id&quot;')
+			WHERE NEW.away_team_id IS NOT NULL AND  (SELECT id FROM teams WHERE id = NEW.away_team_id) IS NULL;
+	END;
+CREATE TRIGGER fku_ver_teams_away_team_id
+	BEFORE UPDATE ON teams
+	FOR EACH ROW BEGIN
+		SELECT RAISE(ROLLBACK, 'update on table &quot;teams&quot; violates foreign key constraint on column &quot;away_team_id&quot;')
+			WHERE NEW.away_team_id IS NOT NULL AND  (SELECT id FROM teams WHERE id = NEW.away_team_id) IS NULL;
+	END;
+CREATE TRIGGER fki_ver_teams_winner
+	BEFORE INSERT ON teams
+	FOR EACH ROW BEGIN
+		SELECT RAISE(ROLLBACK, 'insert on table &quot;teams&quot; violates foreign key constraint on column &quot;winner&quot;')
+			WHERE NEW.winner IS NOT NULL AND  (SELECT id FROM teams WHERE id = NEW.winner) IS NULL;
+	END;
+CREATE TRIGGER fku_ver_teams_winner
+	BEFORE UPDATE ON teams
+	FOR EACH ROW BEGIN
+		SELECT RAISE(ROLLBACK, 'update on table &quot;teams&quot; violates foreign key constraint on column &quot;winner&quot;')
+			WHERE NEW.winner IS NOT NULL AND  (SELECT id FROM teams WHERE id = NEW.winner) IS NULL;
+	END;</code></pre>
+
+<p>
+ To see what is going on behind the scenes with SQL, the easiest method is to call <a href="../flourishlib.com/api/fDatabase.html#enableDebugging">fDatabase::enableDebugging()</a> on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> instance that is being attached to fORMDatabase:
+</p>
+<pre class="block sql"><code>$db = new fDatabase('sqlite', '/path/to/db');
+fORMDatabase::attach($db);
+$db-&gt;enableDebugging(TRUE);</code></pre>
+
+<p>
+ With that enabled you will notice some queries where the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class sets some options and inspects the structure of the database.
+</p>
+
+<p>
+On to your real question, about querying records over a relationship. The Flourish ORM actually inspects the structure of the database, so you don't need to define any relationships in your models at all. By simply having the foreign key constraints set up, Flourish is able to find those and figure everything out.
+</p>
+
+<p>
+I believe this code below will give you an idea of how to pull your information out of the database.
+</p>
+<pre class="block php"><code>class Team extends fActiveRecord { }
+
+class Matchup extends fActiveRecord
+{
+    static function findByGametime($start_date, $end_date)
+    {
+        $set = fRecordSet::build(
+            'Matchup',
+            array(
+                'start_date&gt;=' =&gt; $start_date,
+                'end_date&lt;='   =&gt; $end_date
+            ),
+            array('gametime' =&gt; 'asc')
+        );
+
+        // This is an optimization to load all related records
+        // in just three extra queries instead of one query 
+        // per related record
+        $set-&gt;precreateTeams('home_team_id');
+        $set-&gt;precreateTeams('away_team_id');
+        $set-&gt;precreateTeams('winner');
+
+        return $set;
+    }    
+}
+
+$matchups = Matchup::findByGametime('today', '+1 week');
+
+foreach ($matchups as $matchup) {
+    // If we hadn't precreated the objects in the find method, each
+    // method call here would perform a SQL query to load the record
+    $home_team = $matchup-&gt;createTeam('home_team_id');
+    $away_team = $matchup-&gt;createTeam('away_team_id');
+    $winner    = $matchup-&gt;createTeam('winner');
+
+    echo 'Matchup between ' . $home_team-&gt;encodeName() . ' and ' . $away_team-&gt;encodeName() . ' at ' . $matchup-&gt;encodeGametime('g:ia \\o\\n n/j/y') . '.';
+
+    // The winner object will be a new, non-existing object if
+    // the winner column contained NULL. Thus, if the object
+    // exists, a winner has been defined.
+    if ($winner-&gt;exists()) {
+        echo 'The winner was ' . $winner-&gt;encodeName() . '.';
+    }
+
+    echo '&lt;br /&gt;';
+}</code></pre>
+
+<p>
+ Let me know if any of this is still unclear or if you have any other questions.
+</p>
+
+<p>
+Will
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/21/09 3:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-39">
+				<div class="body" id="body-39">
+					
+<p>
+Thanks for that example.  I was getting close, but your example made things much more clear. 
+</p>
+
+<p>
+I turned on the debugging and it is still executing a query to retrieve each team.  I checked out the precreate method in <a href="../flourishlib.com/docs/fAR.html">fAR</a> and it looks like it is getting a new recordset, but it doesn't add those records to the existing recordset, like it does in the prebuild method.  
+</p>
+
+<p>
+Thanks for your help, Jason
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="2/22/09 9:58am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-40">
+				<div class="body" id="body-40">
+					
+<p>
+Doh!  my bad.  I copied the code into a method I wasn't calling!  Once I realized my error, everything worked fine.  Sorry about that. 
+</p>
+
+<p>
+Jason
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jason											</span>
+					<span class="date_posted" title="2/22/09 10:25am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-42">
+				<div class="body" id="body-42">
+					
+<p>
+No problem, let me know if there is anything else I can help with.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/23/09 11:33pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

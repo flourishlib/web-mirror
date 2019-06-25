@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRecordSet for Single Table &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRecordSet for Single Table</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/16/09 10:31am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When using fRecordSet::build, I'd like a way to limit the construction of the recordset to ONLY a specific table.  Right now, when trying to build a recordset from a table, flourish executes a &quot;show create table ...&quot; on every table in the database.  That's great when you want that extended table information for relationships etc.
+</p>
+
+<p>
+However, when you simply want a recordset from a single table, you're losing lots of time waiting for those &quot;show create table&quot; queries to execute.  What if you have 50+ tables?
+</p>
+
+<p>
+Here is my suggestion: fRecordSet::build($class,$table_limited) : Table limited would be a boolean value to indicate that no table associations need to be investigated.  Just build a recordset from the specific $class table.
+</p>
+
+<p>
+fRecordSet::buildFromSql($class,$sql) : When building from SQL, I think that flourish should automatically know to only execute the SQL without doing any other &quot;show create table&quot; statements.  After all, if the developer is manually creating SQL, it's a good bet they don't want any other info anyway.
+</p>
+
+<p>
+Thanks, Justin
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-114">
+				<div class="body" id="body-114">
+					
+<p>
+Here is a different suggestion :  fRecordSet::build($class,$table_array) : $table_array would be an array of tables to build the recordset from.  This would allow all of the regular <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> functionality.  However, it would allow the developer to designate which tables to include.  This would prevent the need for the &quot;SHOW TABLES&quot; and &quot;SHOW CREATE TABLES...&quot; for every table in the db.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/16/09 10:37am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-115">
+				<div class="body" id="body-115">
+					
+<p>
+<a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> will only build from a single table. What you are noticing is the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> object detecting the structure of your database. This is needed to properly escape data and allow creating related records. With many other ORMs you have to add this information to your code or in an XML file.
+</p>
+
+<p>
+During development, you'll probably want to leave it as is since it will notice changes to your database immediately. Once you are in production, you will probably want to use <a href="../flourishlib.com/docs/fORMSchema.html#SchemaCaching">fORMSchema schema caching</a>. This takes the schema of your database and caches it to a file. The cache will be cleared and rebuilt if any <a href="../flourishlib.com/docs/fUnexpectedException.html">fUnexpectedException</a> are thrown, such as a <a href="../flourishlib.com/docs/fSQLException.html">fSQLException</a> or <a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>.
+</p>
+
+<p>
+In the future I'm probably going to provide a technique for caching to anything, such as APC or memcached.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/16/09 10:38am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

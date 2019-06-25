@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Executing multiple Update Query &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Executing multiple Update Query</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					emadgh			</span>
+	<span class="date_posted" title="11/15/11 2:39am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, I need to update several records. but storing these data take time. I need to store them faster.
+</p>
+
+<p>
+The first code I wrote for this was
+</p>
+<pre class="block php"><code>foreach ($items as $key =&gt; $value)
+{
+	$loan = new loan($key);
+	$loan -&gt; setStatus($value);
+	$loan -&gt; store();
+}</code></pre>
+
+<p>
+ This took 1.2s.
+</p>
+
+<p>
+So then I wrote this
+</p>
+<pre class="block php"><code>$statment = $db-&gt;prepare(&quot;UPDATE `loans` SET `status`=%s WHERE id=%i;&quot;);
+
+foreach ($items as $key =&gt; $value)
+{
+	$db-&gt;execute($statment,$value,$key);
+}</code></pre>
+
+<p>
+ This took 0.8s. but it's not enough So I wrote This one. But there is no diffrent between this and the upper one.
+</p>
+<pre class="block php"><code>foreach ($items as $key =&gt; $value)
+{
+	$sd .= &quot;UPDATE `loans` SET `status`='$value' WHERE id=$key;&quot;;
+}
+$db-&gt;execute($sd);</code></pre>
+
+<p>
+ Please, Give me some Help to make this faster.
+</p>
+
+<p>
+Sorry for my bad English.
+</p>
+
+<p>
+Thanks in Advance...
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1608">
+				<div class="body" id="body-1608">
+					
+<p>
+You should check your database design &amp; indexes first.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="11/15/11 6:33am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1609">
+				<div class="body" id="body-1609">
+					
+<p>
+Hmmm, I didn't think about this. 
+</p>
+
+<p>
+Thanks...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													emadgh											</span>
+					<span class="date_posted" title="11/15/11 6:37am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1616">
+				<div class="body" id="body-1616">
+					
+<p>
+How many items are there that you are looping through?
+</p>
+
+<p>
+In addition, it is very dangerous to write code like this:
+</p>
+<pre class="block php"><code>foreach ($items as $key =&gt; $value)
+{
+    $sd .= &quot;UPDATE `loans` SET `status`='$value' WHERE id=$key;&quot;;
+}</code></pre>
+
+<p>
+ It is vulnerable to SQL injection since the values are not being properly escaped. You should always use the percent placeholders, either with a direct <a href="../flourishlib.com/api/fDatabase.html#execute">fDatabase::execute()</a>/<a href="../flourishlib.com/api/fDatabase.html#query">fDatabase::query()</a> call, or the prepared statement like you have.
+</p>
+<pre class="block php"><code>foreach ($items as $key =&gt; $value) {
+    $db-&gt;execute(&quot;UPDATE loans SET status = %s WHERE id = %i&quot;, $value, $key);
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/11 9:26am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

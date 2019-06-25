@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Authorization &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Authorization</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="10/11/09 11:28pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i try to figure out how auth works.
+</p>
+<pre class="block php"><code>if (fAuthorization::checkAuthLevel(9)) {
+  echo 'sunt admin';
+}
+echo 'Actual level is'.fAuthorization::getUserAuthLevel();</code></pre>
+
+<p>
+ the html print : sunt adminActual level is3.   if actual level is 3, why printed the string?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-467">
+				<div class="body" id="body-467">
+					
+<p>
+Can you show me your code where you call <a href="../flourishlib.com/api/fAuthorization.html#setAuthLevels">fAuthorization::setAuthLevels()</a>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/12/09 11:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-468">
+				<div class="body" id="body-468">
+					
+<p>
+this is in config.php
+</p>
+<pre class="block php"><code>fAuthorization::setAuthLevels(
+	array(
+		'3' =&gt; 'user',
+		'9' =&gt; 'admin'
+	)
+);</code></pre>
+
+<p>
+ in top.php i have:
+</p>
+<pre class="block php"><code>																fSession::set('current_user_id', $user-&gt;getUserId());
+																fSession::set('logo', $user-&gt;getLogo());
+																//fSession::set('curent_user_name', $user-&gt;getNume().' '.$user-&gt;getPrenume());
+																//fSession::set('curent_user_email', $user-&gt;getEmail());
+
+							
+																fAuthorization::setUserAuthLevel($user-&gt;getLevel());
+																fAuthorization::setUserToken($user-&gt;getEmail());</code></pre>
+
+<p>
+ and the call:
+</p>
+<pre class="block php"><code>&lt;?php 
+include_once ($_SERVER ['DOCUMENT_ROOT'] . 'anunt/inc/init.php');
+include_once ($_SERVER ['DOCUMENT_ROOT'] . 'anunt/inc/language.php');
+/*fCore::enableDebugging(TRUE);
+fCore::registerDebugCallback('trace_debug');
+ 
+function trace_debug($msg){
+ 
+    // check that FirePHP is loaded
+    if(!class_exists('FirePHP'))
+        // class not found, load it
+        include('fb.php');
+ 
+    // get FirePHP instance
+    $firephp = FirePHP::getInstance(TRUE);
+ 
+    // send trace
+//$firephp-&gt;trace($msg);
+ 
+}*/
+
+include &quot;meta.php&quot;;
+include &quot;top.php&quot;;
+include &quot;left.php&quot;;
+$xtpl-&gt;assign_file(&quot;FILE_CONTENT&quot;, 'templates/home.html');
+//include &quot;right.php&quot;;
+//include &quot;inner.php&quot;;
+include &quot;bottom.php&quot;;
+
+fText::registerComposeCallback('pre', 'traducere_ro');
+
+
+if (fAuthorization::checkAuthLevel(9)) {
+  echo 'sunt admin';
+}
+echo 'Actual level is'.fAuthorization::getUserAuthLevel();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/12/09 12:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-469">
+				<div class="body" id="body-469">
+					
+<p>
+So the issue is that you aren't using the auth level properly. The correct setup would be:
+</p>
+<pre class="block php"><code>fAuthorization::setAuthLevels(
+    array(
+        'user' =&gt; 3,
+        'admin' =&gt; 9
+    )
+);</code></pre>
+
+<p>
+ And the proper checking is:
+</p>
+<pre class="block php"><code>f (fAuthorization::checkAuthLevel('admin')) {
+  echo 'sunt admin';
+}
+echo 'Actual level is '.fAuthorization::getUserAuthLevel();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/12/09 12:26pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-470">
+				<div class="body" id="body-470">
+					
+<p>
+i see, i have in the database level set as number, because of this i inversate that. so my question, why use that number as value ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/12/09 12:48pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-471">
+				<div class="body" id="body-471">
+					
+<p>
+The way the class is set up is so that programmers reference the name of the authorization level, e.g. <code>admin</code> and <code>user</code>, and those are compared by their value, the number. To the average developer, they are going to remember <code>admin</code> better than <code>9</code>.
+</p>
+
+<p>
+If you are just using numbers in your app, you can just set up the &quot;names&quot; as numbers and the values as numbers too:
+</p>
+<pre class="block php"><code>fAuthorization::setAuthLevels(
+    array(
+        '3' =&gt; 3,
+        '9' =&gt; 9
+    )
+);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/12/09 12:52pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-472">
+				<div class="body" id="body-472">
+					
+<p>
+no, it isn't important, i can use words no problem, but i want to understand and i did, that comparation by number value, and how it's works. tanks again.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/12/09 1:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

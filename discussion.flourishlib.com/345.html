@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>many-to-many with ordering &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">many-to-many with ordering</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					normany			</span>
+	<span class="date_posted" title="12/14/10 4:53pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i currently have a DB setup that involves 2 classes defined by 2 tables and a many-to-many joining table.
+</p>
+<pre class="block sql"><code>
+CREATE TABLE IF NOT EXISTS `items` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `sections` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `sections_items` (
+  `section_id` int(10) unsigned NOT NULL,
+  `item_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`section_id`,`photo_id`),
+  KEY `photo_id` (`photo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+
+<p>
+ conceptually, i have a lot of *Item* objects that could be associated with multiple *Section* objects... so i would be able to say &quot;Item *a* is /in/ Section *x* and also /in/ Section *y*&quot;
+</p>
+
+<p>
+my schema above functions fine. what I would like to do is to order the Items that are in Sections--ideally add a 3rd field 'order' to the *sections_items* table such that i could expect a certain order when i call $section-&gt;buildItems(). is there a way i could configure this using the ORM conventions in flourishlib?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1057">
+				<div class="body" id="body-1057">
+					
+<p>
+If you add an ordering column to <code>sections_items</code> you will no longer be able to directly build a record set of <code>Item</code> objects, but you can use the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> <code>build</code> method to create another <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> from the ordered linking table.
+</p>
+<pre class="block sql"><code>CREATE TABLE IF NOT EXISTS `sections_items` (
+  `section_id` int(10) unsigned NOT NULL,
+  `item_id` int(10) unsigned NOT NULL,
+  `display_order` int(10) NOT NULL,
+  UNIQUE (`section_id`, `display_order`),
+  PRIMARY KEY (`section_id`,`photo_id`),
+  KEY `photo_id` (`photo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;</code></pre>
+<pre class="block php"><code>class Section extends fActiveRecord {
+    protected function configure() {
+        fORMRelated::setOrderBys($this, 'SectionsItem', array('display_order' =&gt; 'asc'));
+    }
+}
+class SectionsItem extends fActiveRecord { }
+class Item extends fActiveRecord { }
+
+$items = $section-&gt;buildSectionsItems()-&gt;buildItems();</code></pre>
+
+<p>
+ It would also be pretty trivial to writing your own <code>Section::buildItems()</code> method that just calls <code>$section-&gt;buildSectionsItems()-&gt;buildItems()</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/14/10 9:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

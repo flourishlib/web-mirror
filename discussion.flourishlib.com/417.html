@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>table specified does not exist in the database &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">table specified does not exist in the database</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					cecil chua			</span>
+	<span class="date_posted" title="4/28/11 2:03am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've got another problem.  With <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, I can connect to the table &quot;patient&quot; just fine.  <a href="../flourishlib.com/docs/fORM.html">fORM</a> tells me the table &quot;patient&quot; doesn't exist.  I've tried &quot;dbo.Patient&quot; in <a href="../flourishlib.com/docs/fORM.html">fORM</a> with the same result.  I note in the error message that <a href="../flourishlib.com/docs/fORM.html">fORM</a> seems to be able to figure out that PatientID is the name of the primary key.
+</p>
+
+<p>
+This is the output
+</p>
+<pre><code>AbelBethCharlieDanielElizabethFionaGeorgeHarryIgnatiusJacobKarenLeslieMarionNickOscarPeterQureshiRomeoSallyTerenceUlyssesVictorWilliamXavierYosemiteZaharaAliceBeatriceCallyDowhop Fatal error: Uncaught exception 'fProgrammerException' with message 'The table specified, patient, does not exist in the database' in E:\\Websites\\INFOSYS280\\flourish\\fSchema.php:2329
+Stack trace:
+#0 E:\\Websites\\INFOSYS280\\flourish\\fORMDatabase.php(1144): fSchema-&gt;getColumnInfo('patient', 'PatientID', 'placeholder')
+#1 E:\\Websites\\INFOSYS280\\flourish\\fORMDatabase.php(482): fORMDatabase::makeCondition(Object(fSchema), 'Patient', 'PatientID', '=', 'p01')
+#2 E:\\Websites\\INFOSYS280\\flourish\\fActiveRecord.php(1869): fORMDatabase::addPrimaryKeyWhereParams(Object(fSchema), Array, 'Patient', 'Patient', Array, Array)
+#3 E:\\Websites\\INFOSYS280\\flourish\\fActiveRecord.php(1168): fActiveRecord-&gt;load()
+#4 E:\\Websites\\INFOSYS280\\LabWork\\aehchua\\testflourish.php(26): fActiveRecord-&gt;__construct('p01')
+#5 {main} thrown in E:\\Websites\\INFOSYS280\\flourish\\fSchema.php on line 2329 </code></pre>
+
+<p>
+ This is the code
+</p>
+<pre class="block php"><code>
+&lt;?php 
+ini_set(&quot;error_reporting&quot;,E_ALL);
+ini_set(&quot;display_errors&quot;,1);
+
+include_once $_SERVER['DOCUMENT_ROOT'] . &quot;/flourish/toinclude.php&quot;;
+class Patient extends fActiveRecord
+{
+  protected function configure()
+   {
+   }
+}
+
+
+$connstr=&quot;ISOMTEACHING5\\INFOSYS280&quot;;
+$conninfo=array(&quot;Database&quot;=&gt;&quot;hospitalSQL&quot;);
+
+$testdb=new fDatabase(&quot;mssql&quot;, &quot;hospitalSQL&quot;,&quot;mytest&quot;,&quot;&quot;,$connstr,61495);
+$result=$testdb-&gt;query(&quot;Select PatientName from Patient&quot;);
+foreach ($result as $row)
+  echo $row[&quot;PatientName&quot;];
+
+//echo &quot;It is working&quot;; 
+
+fORMDatabase::attach(new fDatabase(&quot;mssql&quot;, &quot;hospitalSQL&quot;,&quot;mytest&quot;,&quot;&quot;,$connstr,61495));
+fORM::mapClassToTable(&quot;Patient&quot;,&quot;Patient&quot;);
+$mypatient = new Patient(&quot;p01&quot;);
+echo $mypatient-&gt;PatientName;
+
+?&gt;}}}
+
+
+</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1293">
+				<div class="body" id="body-1293">
+					
+<p>
+Just a note this is happening with every database I try.  I've tried with three databases on the same server, and I get an error message that the table in the database is not found.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													cecil chua											</span>
+					<span class="date_posted" title="4/28/11 1:36pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1294">
+				<div class="body" id="body-1294">
+					
+<p>
+From a casual glance, this appears to be because the table names are not all lower case. In a new version of <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> that should come out in the next day or two I can include a fix for this. Alternatively you can try editing the <code>-&gt;getTables()</code> method in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to add strtolower() around the lines assigning values to <code>$this-&gt;tables[]</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/28/11 1:40pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1296">
+				<div class="body" id="body-1296">
+					
+<p>
+What I did was change all the table names to lowercase in the database.
+</p>
+
+<p>
+Another bug.  It seems to have problems converting ntext.  I would have thought ntext would be converted to a string rather than a blob (like it seems to be trying to do).  I changed my ntext to nvarchar(50) and it worked fine.
+</p>
+
+<p>
+So far, the short segment of code seems to be working.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													cecil chua											</span>
+					<span class="date_posted" title="4/28/11 2:46pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

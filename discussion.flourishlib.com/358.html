@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCORE OS issue &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCORE OS issue</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="1/18/11 10:46pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Will,
+</p>
+
+<p>
+Theres a problem with <a href="../flourishlib.com/docs/fCORE.html">fCORE</a> in checking for OSES which in turn fails my use of <a href="../flourishlib.com/docs/fEMAIL.html">fEMAIL</a>.
+</p>
+
+<p>
+Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fEnvironmentException.html">fEnvironmentException</a>' with message 'Unable to determine the current OS' in /PATH/php/flourish/<a href="../flourishlib.com/docs/fCore.html">fCore</a>.php:439 Stack trace: #0 /PATH/php/flourish/<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php(1191): fCore::checkOS('windows') #1 /PATH/daily.php(40): <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>-&gt;send() #2 {main} thrown in /PATH/php/flourish/<a href="../flourishlib.com/docs/fCore.html">fCore</a>.php on line 439
+</p>
+
+<p>
+The server we are using is AIX so you would need to either add that to the list of have a generic catch for those not in the list which defaults to PHP mail?
+</p>
+
+<p>
+Thanks,
+</p>
+
+<p>
+Darren
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1098">
+				<div class="body" id="body-1098">
+					
+<p>
+I'd be happy to add support for AIX, I just need you to provide a little information since I don't have access to an AIX machine to test.
+</p>
+
+<ol>
+<li>Is there a program <code>hostname</code> and if so, does it have a flag <code>--fqdn</code>?</li>
+<li>Does AIX use <code>/etc/resolv.conf</code> and have a line <code>domain example.com</code>?</li>
+<li>Does AIX have the <code>whereis</code> command, and if so, does it have the <code>-b</code> flag?</li>
+<li>Can you paste the output of <code>uname -s</code>?</li>
+<li>Does AIX have the file <code>/dev/urandom</code>?</li>
+</ol>
+
+<p>
+Thanks for your help!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/18/11 11:09pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1099">
+				<div class="body" id="body-1099">
+					
+<p>
+Hi,
+</p>
+
+<p>
+Heres the info.
+</p>
+
+<ol>
+<li>hostname YES, flag NO</li>
+<li>YES and YES</li>
+<li>YES, YES -b &quot;Searches for binary sections of a file.&quot;</li>
+<li>uname -s = AIX</li>
+<li>YES</li>
+</ol>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="1/19/11 12:00am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1100">
+				<div class="body" id="body-1100">
+					
+<p>
+r960 should have fixed the issue with <a href="../flourishlib.com/docs/fCore.html">fCore</a> not detecting AIX. You can grab it from the <a href="../flourishlib.com/docs/Download">download page</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/19/11 1:48am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1102">
+				<div class="body" id="body-1102">
+					
+<p>
+Thanks heaps Will seems to work perfectly
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="1/19/11 6:03pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

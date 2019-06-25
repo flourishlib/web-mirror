@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord-&gt;set.. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord-&gt;set..</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					frank			</span>
+	<span class="date_posted" title="9/21/09 10:08am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I'm having troubles with the set functionality of the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. In our MySQL database is a table which contains a column <code>region1</code> So I try to set the column:
+</p>
+<pre class="block php"><code>$member-&gt;setRegion1(&quot;something&quot;);
+// exception : The column specified, region_1, does not exist</code></pre>
+
+<p>
+ But it now misses the column <code>region_1</code> which is ofcourse not available because it's called <code>region1</code>. So how can I set the column <code>region1</code> without altering the column name to <code>region_1</code> in the database?
+</p>
+
+<p>
+With kind regards,
+</p>
+
+<p>
+Frank
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-411">
+				<div class="body" id="body-411">
+					
+<p>
+The method that will do this for you is <a href="../flourishlib.com/api/fGrammar.html#addCamelUnderscoreRule">fGrammar::addCamelUnderscoreRule()</a>. You could add this method call to the <code>configure()</code> method for your <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class.
+</p>
+<pre class="block php"><code>protected function configure()
+{
+    fGrammar::addCamelUnderscoreRule('Region1', 'region1');
+}</code></pre>
+
+<p>
+ This will have the side effect of causing any instance of <code>Region1</code> becoming <code>region1</code> in any code that uses <a href="../flourishlib.com/api/fGrammar.html#underscorize">fGrammar::underscorize()</a>. I'm guessing that won't really be an issue though.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/21/09 10:19am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-415">
+				<div class="body" id="body-415">
+					
+<p>
+Thanx, that solved the problem, but is it now a problem if another table uses the same field names? So for this database table it should become region1 instead of region_1 also.. right? Sorry if this is a beginners mistake, but it just won't seems to work.
+</p>
+<pre><code>Uncaught Exception
+------------------
+..\\register.php(68): Dat_geo_nl-&gt;GetRegion_1()
+[internal function]: fActiveRecord-&gt;__call('GetRegion_1', Array)
+..\\inc\\flourish\\fActiveRecord.php(239): fORM::getActiveRecordMethod(Object(Dat_geo_nl),'GetRegion_1')
+..\\inc\\flourish\\fORM.php(346): fORM::parseMethod('GetRegion_1')
+Invalid method, GetRegion_1(), called</code></pre>
+
+<p>
+ with kind regards,
+</p>
+
+<p>
+Frank
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													frank											</span>
+					<span class="date_posted" title="9/22/09 9:44am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-416">
+				<div class="body" id="body-416">
+					
+<p>
+The issue here is that you have capitalized <code>Get</code>. Try calling <code>getRegion1()</code> instead.
+</p>
+
+<p>
+With the <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> change, <code>getRegion1()</code> will look for a column named <code>region1</code> for any table. If you have a table with <code>region_1</code> you might need to type <code>getRegion_1()</code>, however I don't know for sure if that will work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/22/09 10:00am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-417">
+				<div class="body" id="body-417">
+					
+<p>
+Thanx this is correct,
+</p>
+
+<p>
+After hours behind the computer screen i overlooked this typo. By the way this library is awesome, i'm using it for a dating site, when it's finished i will sent you the link!!
+</p>
+
+<p>
+By the way is there a way to use regualar expressions in the <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> class?
+</p>
+
+<p>
+Frank
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													frank											</span>
+					<span class="date_posted" title="9/22/09 10:18am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-647">
+				<div class="body" id="body-647">
+					
+<p>
+This solution should be included somewhere in the documentation around <a href="../flourishlib.com/docs/fORM.html#ColumnandRecordNames">http://flourishlib.com/docs/fORM#ColumnandRecordNames</a>. I was going nutz trying to figure this out and had to click on each thread hoping to find a solution.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/gabrielu">							gabrielu						</a> 					</span>
+					<span class="date_posted" title="3/17/10 4:02pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-678">
+				<div class="body" id="body-678">
+					
+<p>
+Thanks for the note. I've added links to the <a href="../flourishlib.com/docs/fORM.html">fORM</a>, OrmConventions and <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> pages about this.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/6/10 1:22pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-680">
+				<div class="body" id="body-680">
+					
+<p>
+To all drivers! Hello! Come on &lt;a href=<a href="http://vancuver.in">http://vancuver.in</a>&gt;Auto portal today&lt;/a&gt;.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													automobilist											</span>
+					<span class="date_posted" title="4/16/10 3:39am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

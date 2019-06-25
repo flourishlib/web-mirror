@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Improvement to fTemplating &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Improvement to fTemplating</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="7/1/10 11:38am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+In using the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> class I've found the <a href="../flourishlib.com/api/fTemplating.html#add">fTemplating::add()</a> method to be a handy way to encapsulate arrays of display elements that can change from page to page.  My use case has a fairly common default, so I set that up in a common init script.  I decided that it would be helpful to have a symmetric <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> function to remove a value from an array.  An example is provided below.
+</p>
+<pre class="block php"><code>//In the common init.php
+
+$template = new fTemplating('/path/to/templates/');
+
+//On most pages we will show the a, b, c, and d widgets
+$template-&gt;set('a-widget', 'widgets/a.widget.php');
+$template-&gt;set('b-widget', 'widgets/b.widget.php');
+$template-&gt;set('c-widget', 'widgets/c.widget.php');
+$template-&gt;set('d-widget', 'widgets/d.widget.php');
+
+$template-&gt;add('widgets', 'a-widget');
+$template-&gt;add('widgets', 'b-widget');
+$template-&gt;add('widgets', 'c-widget');
+$template-&gt;add('widgets', 'd-widget');
+</code></pre>
+
+<p>
+ Then later on in some special page that doesn't show the c-widget for some reason
+</p>
+<pre class="block php"><code>//Special page, don't show the c-widget
+
+$template-&gt;remove('widgets', 'c-widget');
+$template-&gt;place('widget-panel');
+</code></pre>
+
+<p>
+ To acheive this I added a method to the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> class following the same code style as the rest of the class.
+</p>
+<pre class="block php"><code>  /**
+   * Removes a value from an array element
+   *
+   * @param string $element The element to remove from
+   * @param mixed  $value   The value to remove
+   * @return fTemplating The template object, to allow for method chaining
+   */
+  public function remove($element, $value) {
+    if(!is_array($this-&gt;elements[$element])) {
+      throw new fProgrammerException(
+        '%1$s was called for an element, %2$s, which is not an array',
+        'remove()',
+        $element
+      );
+    }
+    
+    $key = array_search($value, $this-&gt;elements[$element]);
+    if($key === FALSE) {
+      throw new fProgrammerException(
+        '%1$s was called for a value, %2$s, which is not in element, %3$s',
+        'remove()',
+        $value,
+        $element
+      );
+    } else {
+      unset($this-&gt;elements[$element][$key]);
+    }
+    
+    return $this;
+  }</code></pre>
+
+<p>
+ I would like to release this code to be considered for inclusion in the Flourish library.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-830">
+				<div class="body" id="body-830">
+					
+<p>
+<a href="../flourishlib.com/api/fTemplating.html#delete">fTemplating::delete()</a> and <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> were both added in r868.
+</p>
+
+<p>
+The main difference between your code and the method in r868 is that <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> does not throw an exception if an element has nothing in it, and all instances of a matching element are removed, instead of just the first.
+</p>
+
+<p>
+Thanks for taking the time to contribute!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/15/10 1:56am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

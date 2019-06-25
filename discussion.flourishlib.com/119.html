@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>diacritic &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">diacritic</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="8/8/09 6:14am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Do you know if activerecord have problem with romanian diacritics  mark, i save the file utf and i put the meta in html but i still have problems.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-340">
+				<div class="body" id="body-340">
+					
+<p>
+Yes, all of Flourish, including <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> is capable of handling diacritics. Every classes uses UTF-8 for character encoding.
+</p>
+
+<p>
+My guess is that your database it not set up for UTF-8.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/8/09 8:41pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-341">
+				<div class="body" id="body-341">
+					
+<p>
+My database is set for utf, using a normal mysql query diacritics looks good but when i use flourish not.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/9/09 4:03am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-342">
+				<div class="body" id="body-342">
+					
+<p>
+Are you calling <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a> before starting HTML output?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/9/09 12:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-343">
+				<div class="body" id="body-343">
+					
+<p>
+This is a part of html output:
+</p>
+<pre><code>#!text/html
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; 
+&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+
+&lt;title&gt;Inspectia Sociala&lt;/title&gt;
+&lt;link href=&quot;blueprint/default.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; /&gt;
+&lt;!--[if lt IE 8]&gt;&lt;link rel=&quot;stylesheet&quot; href=&quot;blueprint/ie.css&quot; type=&quot;text/css&quot; media=&quot;screen, projection&quot; /&gt;&lt;![endif]--&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;blueprint/print.css&quot; type=&quot;text/css&quot; media=&quot;print&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+  &lt;div class=&quot;column span-40&quot; id=&quot;header&quot;&gt;&lt;/div&gt;
+
+  &lt;ul class=&quot;column span-40 last&quot; id=&quot;menu&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;index.php&quot; class=&quot;&quot;&gt;HOME&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;despre-noi.php&quot; class=&quot;&quot;&gt;DESPRE NOI&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;institutii-supuse-controlului.php&quot; class=&quot;&quot;&gt;INSTITUTII SUPUSE CONTROLULUI&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;proiecte-legislative.php&quot; class=&quot;active&quot;&gt;PROIECTE LEGISLATIVE&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;relatii-publice.php&quot; &gt;RELATII PUBLICE&lt;/a&gt;&lt;/li&gt;
+
+    &lt;li&gt;&lt;a href=&quot;stiri.php?n=comunicate&quot; class=&quot;&quot;&gt;STIRI&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;cariera.php&quot;&gt;CARIERA&lt;/a&gt;&lt;/li&gt;
+    &lt;li class=&quot;last_link&quot;&gt;&lt;a href=&quot;contact.php&quot; class=&quot;&quot;&gt;CONTACT&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+
+&lt;div class=&quot;column span-40&quot; id=&quot;content&quot;&gt;
+&lt;div class=&quot;column span-32&quot;&gt;
+  &lt;h3&gt;&lt;i&gt; &lt;b&gt;&lt;/b&gt;&lt;/i&gt;&lt;/h3&gt;
+
+&lt;div class=&quot;span-30 column pdf&quot; id=&quot;home&quot;&gt;
+        &lt;a href=&quot;#&quot;  class=&quot;no-pdf span-28&quot;&gt;&lt;/a&gt;&lt;br /&gt;&lt;p&gt;&lt;strong&gt;Proiecte de acte normative elaborate i &amp;icirc;naintate spre analiz i aprobare Ministerului Muncii, Familiei i Egalitii de anse&lt;/strong&gt;&lt;/p&gt;&lt;br /&gt;
+</code></pre>
+
+<p>
+ i put that function, i dont know exactly if i used corectly:
+</p>
+<pre class="block php"><code>&lt;?php include_once ($_SERVER ['DOCUMENT_ROOT'] . '/inc/init.php');
+fHTML::sendHeader();
+include &quot;meta.php&quot;;
+include &quot;top.php&quot;;
+$xtpl-&gt;assign_file(&quot;FILE_CONTENT&quot;, 'templates/proiecte-legislative.html');
+include &quot;right.php&quot;;
+include &quot;bottom.php&quot;;
+
+
+
+$proiecte = new Proiecte();
+$proiecte = Proiecte::cautaP();
+foreach ($proiecte as $p) {
+	
+					$xtpl-&gt;assign ( 'text', $p-&gt;getText() );
+					$exista_document = $p-&gt;getPoza1();
+					if(!empty($exista_document)) {
+					$xtpl-&gt;assign ( 'link', '&lt;a href=&quot;media/pdf/'.$p-&gt;getPoza1().'&quot;  class=&quot;yes-pdf span-28&quot;&gt;'.$p-&gt;getTitlu().'&lt;/a&gt;' );
+					} else { 			$xtpl-&gt;assign ( 'link', '&lt;a href=&quot;#&quot;  class=&quot;no-pdf span-28&quot;&gt;'.$p-&gt;getTitlu().'&lt;/a&gt;' );
+ }
+					$xtpl-&gt;parse ( 'main.row' );
+	
+	}
+
+
+
+
+$xtpl-&gt;parse ( 'main' );
+$xtpl-&gt;out ( 'main' );
+?&gt;</code></pre>
+
+<p>
+ Still don't show diacritics marks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/9/09 1:44pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-346">
+				<div class="body" id="body-346">
+					
+<p>
+Alright, can you show me the output of the <code>SHOW CREATE TABLE your_table_name</code>?
+</p>
+
+<p>
+Your code looks correct nowI'm wondering if some data got into the database in an incorrect encoding so it is coming back out incorrectly too.
+</p>
+
+<p>
+We use UTF-8 all the time here at the company I work for. Here are the main steps to ensure everything is UTF-8:
+</p>
+
+<ol>
+<li>For MySQL, set the encoding to UTF-8 for each <code>CREATE TABLE</code> statement. For PostgreSQL, do it when creating the database.</li>
+<li>Make sure you specify that the Content-type HTTP header is specifying that the encoding is UTF-8. <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a> does this.</li>
+<li>Add the charset meta tag to the HTML, which you have</li>
+</ol>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/10/09 10:18am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-357">
+				<div class="body" id="body-357">
+					
+<p>
+i trought the floourish was the prooblem but isn't so, i was make the site with flourish and admin part with another platform, and something goes wrong, but now when i use florish integral is workin fine, sorry for disturbing.
+</p>
+
+<p>
+But i have another question. flourish have a lot of standard english message, error, atentions etc, if i want to make bilingual sites, what options do i have, to use another copy of flowrish with text translated or i have another option? tank you very much for yours suport.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/18/09 10:20am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-358">
+				<div class="body" id="body-358">
+					
+<p>
+The page InternationalizationLocalization has information about how to translate messages, numbers, dates, etc for other languages and locales. Please do give feedback on the process if you end up implementing it. I haven't used those features extensively, so I'm sure there is room for improvement.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/18/09 10:23am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

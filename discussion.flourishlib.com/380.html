@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>The noun specified could not be singularized &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">The noun specified could not be singularized</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="3/20/11 2:49pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+how can i get rid of this, it give me troubles, because i dont kave name of tables in english, and a i change and mapping class to table but when i have foreign key in schema still appears.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1174">
+				<div class="body" id="body-1174">
+					
+<p>
+<a href="../flourishlib.com/api/fGrammar.html#addSingularPluralRule">fGrammar::addSingularPluralRule()</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/20/11 2:51pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1175">
+				<div class="body" id="body-1175">
+					
+<p>
+so whete i put this i have something like 
+</p>
+<pre class="block php"><code> $schema = fORMSchema::retrieve();
+            $tables = $schema-&gt;getTables();
+            $related = ($schema-&gt;getRelationships(strtolower($class)));
+            //$table  = self::tablize($class);
+            fORM::mapClassToTable(ucfirst($class), strtolower($class));
+            foreach ($related as $value) {
+                if (count($value) &gt; 0) {
+                    fORM::mapClassToTable(ucfirst($value[0][&quot;related_table&quot;]), ($value[0][&quot;related_table&quot;]));
+                }
+            }
+            if (in_array(strtolower($class), $tables)) {
+                eval('class ' . $class . ' extends Transparentrecords { };');
+                return;
+            }
+
+            throw new fProgrammerException(
+                    'The class specified, %s, does not correspond to a database table',
+                    $class
+            );</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/20/11 3:45pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1176">
+				<div class="body" id="body-1176">
+					<pre class="block php"><code>static public function defineActiveRecordClass($class, $options = array()) {
+
+        if (class_exists($class, FALSE)) {
+            return;
+        }if (count($options) &gt; 0) {
+            $schema = fORMSchema::retrieve();
+            $tables = $schema-&gt;getTables();
+            $related = ($schema-&gt;getRelationships(strtolower($class)));
+            //$table  = self::tablize($class);
+            fORM::mapClassToTable(ucfirst($class), strtolower($class));
+            foreach ($related as $value) {
+                if (count($value) &gt; 0) {
+                    fORM::mapClassToTable(ucfirst($value[0][&quot;related_table&quot;]), ($value[0][&quot;related_table&quot;]));
+                }
+            }
+            if (in_array(strtolower($class), $tables)) {
+                eval('class ' . $class . ' extends Transparentrecords { public function configure() {
+                    fORMFile::configureFileUploadColumn($this, &quot;pdf&quot;, $_SERVER[&quot;DOCUMENT_ROOT&quot;] . &quot;/PhpProject1/public/uploads/&quot;);
+                    }
+                    }');
+                return;
+            }
+
+            throw new fProgrammerException(
+                    'The class specified, %s, does not correspond to a database table',
+                    $class
+            );
+        } else {
+            $schema = fORMSchema::retrieve();
+            $tables = $schema-&gt;getTables();
+            $related = ($schema-&gt;getRelationships(strtolower($class)));
+            //$table  = self::tablize($class);
+            fORM::mapClassToTable(ucfirst($class), strtolower($class));
+            foreach ($related as $value) {
+                if (count($value) &gt; 0) {
+                    fORM::mapClassToTable(ucfirst($value[0][&quot;related_table&quot;]), ($value[0][&quot;related_table&quot;]));
+                }
+            }
+            if (in_array(strtolower($class), $tables)) {
+                eval('class ' . $class . ' extends Transparentrecords { };');
+                return;
+            }
+
+            throw new fProgrammerException(
+                    'The class specified, %s, does not correspond to a database table',
+                    $class
+            );
+        }</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/20/11 3:46pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

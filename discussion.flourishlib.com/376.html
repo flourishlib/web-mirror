@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>one to many &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">one to many</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="3/12/11 7:43am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+how i can get related record, now i receive Message: The table proprietati is not in a *-to-one relationship with the table costuri 
+</p>
+<pre class="block php"><code>fORM::defineActiveRecordClass(&quot;Proprietati&quot;);fORM::defineActiveRecordClass(&quot;Costuri&quot;);
+        $proprietati = fRecordSet::build(&quot;Proprietati&quot;);
+        //$costuri = fRecordSet::build(&quot;Costuri&quot;);
+        //foreach ($proprietati as $value) {
+                $costuri = $proprietati-&gt;buildCosturi();
+
+        //}</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1148">
+				<div class="body" id="body-1148">
+					
+<p>
+Do you have the relations in the schema?
+</p>
+
+<p>
+Also, you can try with the method createTableName('relation_field');
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="3/13/11 9:26pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1150">
+				<div class="body" id="body-1150">
+					
+<p>
+i have one to many proprietati have more costuri
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="3/14/11 4:14pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1151">
+				<div class="body" id="body-1151">
+					
+<p>
+Try with this, I have Services and Categories, also in a relation one to many
+</p>
+<pre class="block php"><code>$services = fRecordSet::build('Service');
+foreach ($services as $service):
+  $cs = $service-&gt;createCategoryService('category_id');
+  echo $service-&gt;prepareName().' - '.$cs-&gt;prepareCategoryName();
+endforeach;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="3/14/11 7:41pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1154">
+				<div class="body" id="body-1154">
+					
+<p>
+i dont want to find what category have a service i want all services for all categories.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="3/15/11 6:53pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1161">
+				<div class="body" id="body-1161">
+					
+<p>
+So the result of <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> is an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object. The only way you can call <code>build{RealtedClass}()</code> on an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> is if each record in the record set is in a *-to-one relationship with the related class.
+</p>
+
+<p>
+In you case you have multiple costuri per proprietati. Are you looking for a list of all costuri that are related to a proprietati? If so, the simplest and fastest way is:
+</p>
+<pre><code>// This assumes the foreign key to proprietati is proprietati_id
+$costuri = fRecordSet::build(&quot;Costuri&quot;, array('proprietati_id!=' =&gt; NULL));</code></pre>
+
+<p>
+ If you are looking for something else, let me know and I can help you get it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/18/11 12:46pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1168">
+				<div class="body" id="body-1168">
+					
+<p>
+i don't understand if i want to receive particular costuri for every proprietati how that can help me how does flourish know what costuri have proprietati, maybe like this foreach ($proprietati as $value) { //                $costuri = fRecordSet::build(&quot;Costuri&quot;,array(&quot;id=&quot;=&gt;$value-&gt;getId())); // //        } but a question is if i print objesc have sometning like this <a href="http://discussion.flourishlib.com/related_records:protected">related_records:protected</a> =&gt; Array                         (                         ) where is all the time empty, what was that useful. how in this case schema many to one is useful. pls explain me.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="3/19/11 7:01am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1169">
+				<div class="body" id="body-1169">
+					
+<p>
+rectify foreach ($proprietati as $value) { // $costuri = <a href="../flourishlib.com/docs/fRecordSetbuild.html">fRecordSetbuild</a>(&quot;Costuri&quot;,array(&quot;contract=&quot;$valuegetId())); whete costuri is foreign key from proprietati
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/19/11 7:02am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1172">
+				<div class="body" id="body-1172">
+					
+<p>
+I think I will be better able to help you if I know what your database schema looks like.
+</p>
+
+<p>
+If you want the costuri for each propretati, and there are multiple costuri that can reference a single proprietati, you would use the following code:
+</p>
+<pre class="block php"><code>foreach ($proprietatis as $proprietati) {
+    $costuris = $proprietati-&gt;buildCosturis();
+}</code></pre>
+
+<p>
+ The <code>build</code> action for related records will create an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>.
+</p>
+
+<p>
+If there is only one costuri per proprietati, use the following code:
+</p>
+<pre class="block php"><code>foreach ($proprietatis as $proprietati) {
+    $costuri = $proprietati-&gt;createCosturi();
+}</code></pre>
+
+<p>
+ The <code>create</code> action will construct a single <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object of the appropriate class.
+</p>
+
+<p>
+The <code>related_records</code> attribute of an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object is an internal cache that Flourish uses to reduce database calls.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/19/11 12:27pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1173">
+				<div class="body" id="body-1173">
+					
+<p>
+tanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/19/11 8:15pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Mass Mailing with fSMTP and fEmail &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Mass Mailing with fSMTP and fEmail</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="8/17/10 9:44am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've written a mass mailer using the <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> and <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> classes and am getting acceptable performance (around 500 emails / minute).  The problem that I'm running into is that even though the emails are being generated quickly enough people aren't receiving them until hours later.
+</p>
+
+<p>
+My initial thought was that if you try to send out 70,000 emails using one SMTP server at 500 emails / minute that the server just gets them all queued up and it just takes time for it to process them all.  I still think this is correct I just wanted to get some community feedback and eliminate Flourish as any source of problem.
+</p>
+
+<p>
+I would hate to have to dirty up my code using !SwiftMailer or some other mass mail lib, Flourish code is just so nice and clean and consistent.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-869">
+				<div class="body" id="body-869">
+					
+<p>
+From my experience when we use to run some mass mailing stuff on some of our servers, sending 70,000 emails can easily take 4+ hours. I think if you need the messages delivered faster, you will probably need to use multiple SMTP servers, or perhaps some dedicated SMTP service that focuses on speed.
+</p>
+
+<p>
+The only performance part that would be affected by the PHP side is how fast the emails get sent to the SMTP server. I have not profiled the performance of <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> at all, so there may be ways to improve it. I did, however, implement the SMTP <a href="http://tools.ietf.org/html/rfc2920">PIPELINING extension</a>, which allows sending a bunch of info without waiting for confirmation for each before continuing.
+</p>
+
+<p>
+Right now <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> and <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> do not try to send emails with the <a href="http://en.wikipedia.org/wiki/Extended_SMTP#8BITMIME">8BITMIME extension</a> in the interest of compatibility. Theoretically messages sent via 8BITMIME would be faster since the size of the messages would be smaller due to a more efficient encoding.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/17/10 10:43am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

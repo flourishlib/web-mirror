@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>[fORM] How to use fTiemstamps with fORM? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">[fORM] How to use fTiemstamps with fORM?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					istvan.m.antal			</span>
+	<span class="date_posted" title="11/8/10 3:42am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a database, I am trying to use <a href="../flourishlib.com/docs/fORM.html">fORM</a> instead of writing queries, I have a table where I have a timestamps column, how do I express the NOW() - 5 minutes in <a href="../flourishlib.com/docs/fORM.html">fORM</a>? I have tried this:
+</p>
+<pre class="block php"><code>$ts = new fTimestamp('now');
+$ts-&gt;adjust('-5 minutes');
+$users = fRecordSet::build('User', array('remind_login_time&gt;' =&gt; $ts));</code></pre>
+
+<p>
+ This didn't work, it asked for my timezone in PHP, but I want to avoid using PHP for time operations, I want this to use MySQL to manage that for me. How can I make a value that would expand to NOW() and friends?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-999">
+				<div class="body" id="body-999">
+					
+<p>
+The simple answer is that you will have to write raw SQL if you want to do date manipulation inside of MySQL.
+</p>
+
+<p>
+For the majority of web development, using a date from PHP should be more than satisfactory. Both MySQL and PHP base their times off of the system time, all you need to do is make sure they are both using the same default timezone. It looks like in MySQL you can get the system and connection timezones by executing <code>SELECT @@global.time_zone, @@session.time_zone;</code>. Then simply call <code>date_default_timezone_set()</code> in PHP and pass in the timezone. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/8/10 8:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

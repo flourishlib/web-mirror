@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>connection reset with demo site &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">connection reset with demo site</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					max			</span>
+	<span class="date_posted" title="2/26/09 3:43pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+First of all. Congratulation for this classes collection which seems very interesting to me. I really would like to use it in my projects.
+</p>
+
+<p>
+Unfortunately, I'm stuck with a problem in the very early stage of my testing.
+</p>
+
+<p>
+I would like to run the flourish demo site within my xampp server. I created a &quot;flourih&quot; database in phpmyadmin and added a table with the sql code:
+</p>
+<pre class="block sql"><code>CREATE TABLE meetups (
+	date DATE PRIMARY KEY,
+	venue VARCHAR(255) NOT NULL,
+	venue_website VARCHAR(255) NOT NULL DEFAULT '',
+	city VARCHAR(255) NOT NULL,
+	state CHAR(2) NOT NULL,
+	start_time TIME NOT NULL,
+	end_time TIME NOT NULL,
+	description TEXT NOT NULL DEFAULT '',
+	yahoo_upcoming_url VARCHAR(255) NOT NULL DEFAULT '',
+	google_maps_html TEXT NOT NULL DEFAULT '',
+	date_posted TIMESTAMP NOT NULL
+);</code></pre>
+
+<p>
+ then, I changed the <code>init.php</code> from
+</p>
+<pre class="block php"><code>$db = new fDatabase('sqlite', DOC_ROOT . '/storage/db/northshorewebgeeks.db');</code></pre>
+
+<p>
+ to:
+</p>
+<pre class="block php"><code>$db = new fDatabase('mysql', 'flourish', 'root', '', 'localhost');</code></pre>
+
+<p>
+ when trying to view the demo site in my browser, I get a &quot;The connection to the server was reset while the page was loading&quot; error.
+</p>
+
+<p>
+Can you help me understand why and what to do, please?
+</p>
+
+<p>
+more info:
+</p>
+
+<ul>
+<li>I'm using a fresh install of Xampp lite 1.7</li>
+<li>if I let the sqlite connection, as I haven't sqlite installed, I get an exception described below:</li>
+</ul>
+<pre><code>Context
+-------
+
+$_SERVER
+Array
+(
+    [REDIRECT_STATUS] =&gt; 200
+    [HTTP_HOST] =&gt; localhost
+    [HTTP_USER_AGENT] =&gt; Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6
+    [HTTP_ACCEPT] =&gt; text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    [HTTP_ACCEPT_LANGUAGE] =&gt; en-us,en;q=0.5
+    [HTTP_ACCEPT_ENCODING] =&gt; gzip,deflate
+    [HTTP_ACCEPT_CHARSET] =&gt; ISO-8859-1,utf-8;q=0.7,*;q=0.7
+    [HTTP_KEEP_ALIVE] =&gt; 300
+    [HTTP_CONNECTION] =&gt; keep-alive
+    [HTTP_COOKIE] =&gt; ci_session=a%3A4%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%22ab0a94998d7686e1488bbe901f72b61f%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A9%3A%22127.0.0.1%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A50%3A%22Mozilla%2F5.0+%28Windows%3B+U%3B+Windows+NT+5.1%3B+en-US%3B+rv%22%3Bs%3A13%3A%22last_activity%22%3Bs%3A10%3A%221235337017%22%3B%7D459018a8d474b9052ec5a37e083ca57c
+    [HTTP_CACHE_CONTROL] =&gt; max-age=0
+    [PATH] =&gt; C:\\Program Files\\MiKTeX 2.7\\miktex\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\Program Files\\MKVtoolnix
+    [SystemRoot] =&gt; C:\\WINDOWS
+    [COMSPEC] =&gt; C:\\WINDOWS\\system32\\cmd.exe
+    [PATHEXT] =&gt; .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH
+    [WINDIR] =&gt; C:\\WINDOWS
+    [SERVER_SIGNATURE] =&gt; &lt;address&gt;Apache/2.2.11 (Win32) DAV/2 mod_ssl/2.2.11 OpenSSL/0.9.8i mod_autoindex_color PHP/5.2.8 Server at localhost Port 80&lt;/address&gt;  
+    [SERVER_SOFTWARE] =&gt; Apache/2.2.11 (Win32) DAV/2 mod_ssl/2.2.11 OpenSSL/0.9.8i mod_autoindex_color PHP/5.2.8
+    [SERVER_NAME] =&gt; localhost
+    [SERVER_ADDR] =&gt; 127.0.0.1
+    [SERVER_PORT] =&gt; 80
+    [REMOTE_ADDR] =&gt; 127.0.0.1
+    [DOCUMENT_ROOT] =&gt; C:/xampplite/htdocs
+    [SERVER_ADMIN] =&gt; admin@localhost
+    [SCRIPT_FILENAME] =&gt; C:/xampplite/htdocs/flourish_demo_site/index.php
+    [REMOTE_PORT] =&gt; 2726
+    [REDIRECT_QUERY_STRING] =&gt; type=html
+    [REDIRECT_URL] =&gt; /flourish_demo_site/
+    [GATEWAY_INTERFACE] =&gt; CGI/1.1
+    [SERVER_PROTOCOL] =&gt; HTTP/1.1
+    [REQUEST_METHOD] =&gt; GET
+    [QUERY_STRING] =&gt; type=html
+    [REQUEST_URI] =&gt; /flourish_demo_site/
+    [SCRIPT_NAME] =&gt; /flourish_demo_site/index.php
+    [PHP_SELF] =&gt; /flourish_demo_site/index.php
+    [REQUEST_TIME] =&gt; 1235680362
+    [argv] =&gt; Array
+        (
+            [0] =&gt; type=html
+        )  
+    [argc] =&gt; 1
+)
+
+$_POST
+Array
+(
+)
+
+$_GET
+Array
+(
+    [type] =&gt; html
+)
+
+$_FILES
+Array
+(
+)
+
+$_SESSION
+{null}
+
+$_COOKIE
+Array
+(
+    [ci_session] =&gt; a:4:{s:10:&quot;session_id&quot;;s:32:&quot;ab0a94998d7686e1488bbe901f72b61f&quot;;s:10:&quot;ip_address&quot;;s:9:&quot;127.0.0.1&quot;;s:10:&quot;user_agent&quot;;s:50:&quot;Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv&quot;;s:13:&quot;last_activity&quot;;s:10:&quot;1235337017&quot;;}459018a8d474b9052ec5a37e083ca57c
+)
+
+Uncaught Exception
+------------------
+C:\\xampplite\\htdocs\\flourish_demo_site\\index.php(2): include('C:\\xampplite\\ht...')
+C:\\xampplite\\htdocs\\flourish_demo_site\\inc\\init.php(8): fDatabase-&gt;__construct('sqlite', 'C:\\xampplite\\ht...')
+C:\\xampplite\\htdocs\\flourish_demo_site\\inc\\flourish\\fDatabase.php(233): fDatabase-&gt;determineExtension()
+The database specified is an SQLite v3 database and the pdo_sqlite extension is not installed</code></pre>
+
+<p>
+ Thanks in advance
+</p>
+
+<p>
+Cheers from France
+</p>
+
+<p>
+max
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-45">
+				<div class="body" id="body-45">
+					
+<p>
+It should be fine to switch from SQLite to MySQL. The error message you are getting is implying that Apache may be crashing during the request, or some other major error is occurring.
+</p>
+
+<p>
+If you can, try to look at the Apache error log. It should be located at C:<br />
+xampplite<br />
+apache<br />
+logs<br />
+error.log. I'll try to look into it some more tomorrow.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/26/09 11:21pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-46">
+				<div class="body" id="body-46">
+					
+<p>
+Indeed, Apache seems to crash and reboot...
+</p>
+
+<p>
+I noticed
+</p>
+<pre><code>[error] an unknown filter was not added: DEFLATE</code></pre>
+
+<p>
+ in the error log so I commented out this in the .htaccess
+</p>
+<pre><code>#AddOutputFilterByType	DEFLATE		text/html text/plain application/javascript application/x-javascript text/css</code></pre>
+
+<p>
+ now my error.log looks like that
+</p>
+
+<ul>
+<li>-- launching XAMPP</li>
+</ul>
+<pre><code>[Fri Feb 27 13:22:54 2009] [notice] Digest: generating secret for digest authentication ...
+[Fri Feb 27 13:22:54 2009] [notice] Digest: done
+[Fri Feb 27 13:22:56 2009] [notice] Apache/2.2.11 (Win32) DAV/2 mod_ssl/2.2.11 OpenSSL/0.9.8i mod_autoindex_color PHP/5.2.8 configured -- resuming normal operations
+[Fri Feb 27 13:22:56 2009] [notice] Server built: Dec 10 2008 00:10:06
+[Fri Feb 27 13:22:56 2009] [notice] Parent: Created child process 3548
+[Fri Feb 27 13:22:57 2009] [notice] Digest: generating secret for digest authentication ...
+[Fri Feb 27 13:22:57 2009] [notice] Digest: done
+[Fri Feb 27 13:22:57 2009] [notice] Child 3548: Child process is running
+[Fri Feb 27 13:22:57 2009] [notice] Child 3548: Acquired the start mutex.
+[Fri Feb 27 13:22:57 2009] [notice] Child 3548: Starting 250 worker threads.
+[Fri Feb 27 13:22:57 2009] [notice] Child 3548: Starting thread to listen on port 443.
+[Fri Feb 27 13:22:57 2009] [notice] Child 3548: Starting thread to listen on port 80.
+</code></pre>
+
+<ul>
+<li>-- Requesting <a href="http://localhost/flourish_demo_site/">http://localhost/flourish_demo_site/</a></li>
+</ul>
+<pre><code>[Fri Feb 27 13:23:48 2009] [notice] Parent: child process exited with status 3221225477 -- Restarting.
+[Fri Feb 27 13:23:48 2009] [notice] Digest: generating secret for digest authentication ...
+[Fri Feb 27 13:23:48 2009] [notice] Digest: done
+[Fri Feb 27 13:23:49 2009] [notice] Apache/2.2.11 (Win32) DAV/2 mod_ssl/2.2.11 OpenSSL/0.9.8i mod_autoindex_color PHP/5.2.8 configured -- resuming normal operations
+[Fri Feb 27 13:23:49 2009] [notice] Server built: Dec 10 2008 00:10:06
+[Fri Feb 27 13:23:49 2009] [notice] Parent: Created child process 496
+[Fri Feb 27 13:23:50 2009] [notice] Digest: generating secret for digest authentication ...
+[Fri Feb 27 13:23:50 2009] [notice] Digest: done
+[Fri Feb 27 13:23:50 2009] [notice] Child 496: Child process is running
+[Fri Feb 27 13:23:50 2009] [notice] Child 496: Acquired the start mutex.
+[Fri Feb 27 13:23:50 2009] [notice] Child 496: Starting 250 worker threads.
+[Fri Feb 27 13:23:51 2009] [notice] Child 496: Starting thread to listen on port 80.
+[Fri Feb 27 13:23:51 2009] [notice] Child 496: Starting thread to listen on port 443.
+[Fri Feb 27 13:23:51 2009] [notice] Parent: child process exited with status 3221225477 -- Restarting.
+[Fri Feb 27 13:23:51 2009] [notice] Digest: generating secret for digest authentication ...
+[Fri Feb 27 13:23:51 2009] [notice] Digest: done
+[Fri Feb 27 13:23:52 2009] [notice] Apache/2.2.11 (Win32) DAV/2 mod_ssl/2.2.11 OpenSSL/0.9.8i mod_autoindex_color PHP/5.2.8 configured -- resuming normal operations
+[Fri Feb 27 13:23:52 2009] [notice] Server built: Dec 10 2008 00:10:06
+[Fri Feb 27 13:23:52 2009] [notice] Parent: Created child process 2188
+[Fri Feb 27 13:23:53 2009] [notice] Digest: generating secret for digest authentication ...
+[Fri Feb 27 13:23:53 2009] [notice] Digest: done
+[Fri Feb 27 13:23:53 2009] [notice] Child 2188: Child process is running
+[Fri Feb 27 13:23:53 2009] [notice] Child 2188: Acquired the start mutex.
+[Fri Feb 27 13:23:53 2009] [notice] Child 2188: Starting 250 worker threads.
+[Fri Feb 27 13:23:53 2009] [notice] Child 2188: Starting thread to listen on port 443.
+[Fri Feb 27 13:23:53 2009] [notice] Child 2188: Starting thread to listen on port 80.</code></pre>
+
+<p>
+ and i'm still getting a reset error. Here is the Google Chrome message:
+</p>
+<pre><code>Erreur 101 (net::ERR_CONNECTION_RESET) : Erreur inconnue</code></pre>
+
+<p>
+ It's very strange. I'll try to investigate other logs later.
+</p>
+
+<p>
+thanks max
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													macol											</span>
+					<span class="date_posted" title="2/27/09 7:34am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-49">
+				<div class="body" id="body-49">
+					
+<p>
+Hi again,
+</p>
+
+<p>
+The PDO engine seems to make the application crash.
+</p>
+
+<p>
+As i'm not familiar with these database drivers, I'm not sure if they are supposed to work properly in XAMPP
+</p>
+
+<p>
+I succeed to (kind of) run the demo site in my XAMPP lite by forcing the mysql (or mysqli) engine.
+</p>
+
+<p>
+Is there a clean way - i mean, without modifying the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class - to avoid using PDO drivers ?
+</p>
+
+<p>
+thanks
+</p>
+
+<p>
+max
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													macol											</span>
+					<span class="date_posted" title="2/27/09 4:00pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-50">
+				<div class="body" id="body-50">
+					
+<p>
+You should be able to disabled PDO by adjusting the <code>disable_classes</code> setting in your php.ini. The php.ini for XAMPPLite is in <code>C:\\xampplite\\php\\php.ini</code>. Search for <code>disable_classes =</code> and change it to <code>disable_classes = PDO</code>. 
+</p>
+
+<p>
+That should do the trick.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/28/09 8:50pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

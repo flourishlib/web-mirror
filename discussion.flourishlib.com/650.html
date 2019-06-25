@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fDatabase and MySQL, why are prepared statement &quot;disabled&quot; ? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fDatabase and MySQL, why are prepared statement &quot;disabled&quot; ?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/cnicodeme">			cnicodeme		</a> 	</span>
+	<span class="date_posted" title="11/7/12 2:59am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<p>Hello!</p>
+
+<p>Looking at the code, I saw that Flourish uses PDO for Mysql queries (at least for MySQL), but disable prepared statement (MYSQL_ATTR_DIRECT_QUERY to 1).</p>
+
+<p>I'm aware that MySQL prepared statement were a "theoretical performance hit and source of annoyance" (http://stackoverflow.com/a/13239868/330867), but it seems to evolve in the good way now (quote: "Starting with MySQL 5.1.17, some but not all prepared statements can now use the query cache. The other minor concerns are still present.").</p>
+
+<p>But in Flourish, queries generated with fDatabase, and managed through fStatement are simply used as a query storage.
+Even more, PDOStatement::bindParam/bindValue escape quotes which prevent some sql injections attacks, but Flourish don't do that at all :
+https://github.com/flourishlib/flourish-classes/blob/master/fStatement.php#L741</p>
+
+<p>Why this choice ? Is it planned in the future to use prepared statement for MySQL ?</p>
+
+<p>Thanks for the reply.</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1808">
+				<div class="body" id="body-1808">
+					<p>Flourish will use any of three database extensions for MySQL: <code>mysqli</code>, <code>pdo_mysql</code> and <code>mysql</code>. The <code>mysql</code> extension is old and "bad" in that it lacks features and has a pretty gross API.</p>
+
+<p>For <code>pdo_mysql</code>, Flourish disables automatically translating <em>all queries</em> into prepared statements, which is what <code>MYSQL_ATTR_DIRECT_QUERY</code> does. This was a performance decision - things may have changed since then. You can always call fDatabase::getConnection() and change this attribute to <code>0</code> to see how it will affect your site.</p>
+
+<p>Queries through fStatement do end up using real mysql prepared statements, <em>if</em> the extension on your server supports them. The <code>mysql</code> extension does not. <code>mysqli</code> and <code>pdo_mysql</code> do. fDatabase will pick the best one of those available on your server.</p>
+
+<p>The line you referenced does not mean that values are not escaped to prevent against sql injection, instead it is showing that no extension-specific code is required for those listed database extensions. Since the <code>mysql</code> extension doesn't support real prepared statements, we just end up doing a regular query. If you look at https://github.com/flourishlib/flourish-classes/blob/master/fStatement.php#L349, you'll see that the fDatabase::escape() method is used when running the query, thus preventing SQL injection attacks.</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/7/12 3:11am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1809">
+				<div class="body" id="body-1809">
+					<p>Ok! I was a bit confused about the "$type" and "$extensions" you use, differing PDO and MySQL.
+Now it's clearer.</p>
+
+<p>Thanks :)</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/cnicodeme">							cnicodeme						</a> 					</span>
+					<span class="date_posted" title="11/7/12 3:22am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

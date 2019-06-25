@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SQL query not working within fRecordSet::buildFromSQL() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SQL query not working within fRecordSet::buildFromSQL()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="10/4/10 8:11am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+The following SQL query is running fine when executed on console to retrieve the names of those groups acting as parents of another group:
+</p>
+<pre class="block sql"><code>SELECT g.id, group_name, role, parent_id, 
+(SELECT group_name FROM groups p WHERE g.parent = p.id) AS parent_group
+FROM groups g 
+JOIN user_groups ON user_groups.id_group = g.id 
+JOIN roles ON user_groups.id_role = roles.id 
+WHERE user_groups.id_user= 3 ;</code></pre>
+
+<p>
+ And it results in a table such as the following one:
+</p>
+<pre><code> id |   group_name   | role  | parent_id | parent_group  
+----+----------------+-------+-----------+--------------
+  8 | Test group     | Owner |           |
+  9 | Another group  | Owner |           |
+ 12 | A subgroup     | Owner |         8 | Test group
+(3 rows)</code></pre>
+
+<p>
+ However, this same SQL query doesn't run within a <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> call, resulting in the error message 'The SQL statement specified ... does not appear to be in the form SELECT * FROM table'.
+</p>
+
+<p>
+Changing the query to: &quot;SELECT *, (SELECT group_name FROM groups p WHERE g.parent = p.id) AS ...&quot; doesn't make any difference, so it looks as the second SELECT is causing the problem.
+</p>
+
+<p>
+BTW, the table doesn't have any foreign key self-referencing itself (not all groups have a parent group), and any self-join constructed query returns only the groups having a parent.
+</p>
+
+<p>
+There would be any other way to get this recordset built?
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-939">
+				<div class="body" id="body-939">
+					
+<p>
+An <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object is a collection of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> represents exactly one row from a table in the database. You have to select every column in a table for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to work properly. You can't select any extra, or exclude any.
+</p>
+
+<p>
+In your situation you a either going to need to use <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> to get the data back, or use the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> API to create the parent object and get the name. You can make getting the parent object more efficient by requesting them in batch:
+</p>
+<pre class="block php"><code>// I don't know your DB schema, so the where conditions may need to be adjusted
+$groups = fRecordSet::build('Group', array('users.id_user=' =&gt; 3));
+
+// This tells the fRecordSet to create all parent objects in a single SQL call
+$groups-&gt;precreateGroups();
+
+foreach ($groups as $group) {
+    echo 'Parent name: ' . $group-&gt;createGroup()-&gt;getName();
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/4/10 8:31am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-940">
+				<div class="body" id="body-940">
+					
+<p>
+Thanks for your response!
+</p>
+
+<p>
+The problem is somewhat complex, because there are three tables around, 'user_groups' referencing 'users', 'groups' and 'roles', and 'groups' referencing itself:
+</p>
+<pre><code>groups
+------
+id
+name
+parent references groups(id)
+...
+
+user_groups
+-----------
+id_user references users(id)
+id_group references groups(id)
+id_role references roles(id)
+
+roles
+-----
+id
+role
+...</code></pre>
+
+<p>
+ The goal here is to get a recordset with the name of all the groups a given user (id_user) is member of, with his role in each of these and the name of the parent group, if it exists. I can't use the groups table as you said because of the error 'The table groups is not in a *-to-one relationship with the table roles'.
+</p>
+
+<p>
+Alternatively, I'm using the user_groups table for the query because from there I have relationships with all the other tables. Let us say something as (a very simplistic coding):
+</p>
+<pre class="block php"><code>$usergroups = fRecordSet::build('UserGroup', array('users.id_user=' =&gt; 3));
+$usergroups-&gt;precreateGroups();
+$usergroups-&gt;precreateRoles();
+foreach ($usergroups as $ug) {
+   $role  = $ug-&gt;createRole();
+   $group = $ug-&gt;createGroup();
+   $parent_group = $group-&gt;createGroup();
+   echo $group-&gt;getName() . ' ' . $role-&gt;getRole() . ' ' . $parent_group-&gt;getGname();
+};</code></pre>
+
+<p>
+ This runs fine. You will note, however, that I'm precreating Groups and Roles only, but I'm not sure how could I do to precreate the second &quot;Groups&quot; (for parents), although that $parent_group = $group-&gt;createGroup();  within the loop is making the trick.
+</p>
+
+<p>
+Another issue is related to sorting, as I'm in doubt about how to reference the parents column for fCRUD::getColumnClass and fCRUD::printSortableColumn, given that groups.name is already referencing the group names column, of course.
+</p>
+
+<p>
+A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="10/4/10 3:37pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-943">
+				<div class="body" id="body-943">
+					
+<p>
+Since the parent <code>group</code> is two associations away from the <code>user_groups</code> tables, you won't be able to precreate it. Flourish does use an identity map though, which means a record will only be loaded out of the database once per request, except when the record is loaded via <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> (since all records are loaded in a single request). If you can't get the appropriate performance out of the ORM, it might be necessary to ditch it for plain SQL queries for this one situation.
+</p>
+
+<p>
+In terms of the ordering, you can order via tables up to two associations away using the once-removed syntax (<code>related_table=&gt;once_removed_table.column</code>) that is shown on the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> API page. Here is an example:
+</p>
+<pre><code>// This should order by the parent group name
+array('groups=&gt;groups.name' =&gt; 'asc')</code></pre>
+
+<p>
+In terms of referencing it with <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a>, I would use something like <code>parent_group_name</code> and translate that to <code>groups=&gt;groups.name</code> in your database model(s).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/10/10 3:55pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-950">
+				<div class="body" id="body-950">
+					<blockquote>
+<p>
+ In terms of referencing it with <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a>, I would use something like <code>parent_group_name</code> and translate that to <code>groups=&gt;groups.name</code> in your database model(s).
+</p>
+</blockquote>
+<p>
+Great! I assume that translation should be done in the configuration method of the model. However, I have not found what precise class/method to use to do that. <a href="../flourishlib.com/docs/fORMColumn.html">fORMColumn</a> seems to be restricted to a few configureXxx methods and I don't see any examples in neither <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> or <a href="../flourishlib.com/docs/fORM.html">fORM</a> for that matter.
+</p>
+
+<p>
+A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="10/11/10 1:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-954">
+				<div class="body" id="body-954">
+					
+<p>
+Well, in this case you are using a full call to <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, so it accepts the <code>$order_bys</code> array so there isn't a configuration directive to override it. If you we using the built in <code>fActiveRecord-&gt;build{RelatedRecords}()</code> method, then you can set the order by with <a href="../flourishlib.com/api/fORMRelated.html#setOrderBys">fORMRelated::setOrderBys()</a>.
+</p>
+
+<p>
+In my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes, I add static methods to handle building related records that require special conditions and/or order bys.
+</p>
+<pre class="block php"><code>class User extends fActiveRecord
+{
+    static public function buildActive($order_by, $direction)
+    {
+        if ($order_by == 'parent_group') {
+            $order_by = 'groups=&gt;groups.name';
+        }
+        $order_bys = array($order_by =&gt; $direction);
+        return fRecordSet::build(__CLASS__, array('status=' =&gt; 'Active'), $order_bys);
+    }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/12/10 1:21pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

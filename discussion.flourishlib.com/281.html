@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Help with fSession::enablePersistence &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Help with fSession::enablePersistence</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="8/17/10 1:05am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi there i am having some real trouble with this function, at the moment it dosent seem to be working. Here is my code, below. I have a feeling it may have something to do with the settings php.ini file but am not to sure, i have a pretty standard macports php/apache install. Any help would be greatly appreciated.
+</p>
+<pre class="block php"><code>//init.php 
+
+fSession::setPath(BASE_FOLDER.'storage/sessions');
+fSession::setLength('30 minutes', '1 week');
+</code></pre>
+<pre class="block php"><code>//Users.php
+
+public function log_in(){
+
+			if(fRequest::isPost()){
+
+				try{
+					$user = User(array('email'=&gt;fRequest::get('email')));
+
+					if(!fCryptography::checkPasswordHash(fRequest::get('password'), $user-&gt;getPassword())){
+						throw new fValidationException('The login or password entered is invalid');
+					}
+					
+					$user-&gt;setActiveAt(fTimestamp('now'))-&gt;store()-&gt;login();
+					
+					if(fRequest::get('remember_me', 'boolean')){
+						fSession::enablePersistence();
+					}
+					
+					$user-&gt;redirect();
+					
+				}catch (fValidationException $e) {
+					fMessaging::create('error', fURL::get(), 'The login or password entered is invalid');
+				}catch(fException $e){
+						var_dump($e-&gt;getMessage());
+				}
+				
+			
+			}
+			
+			include BASE_FOLDER.'views/users/log_in.php';
+		}</code></pre>
+
+<p>
+ Thanks Ben. 
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-868">
+				<div class="body" id="body-868">
+					
+<p>
+Ben, 
+</p>
+
+<p>
+After looking over your code it doesn't appear that you are actually storing any authorization information into the session, now I maybe wrong as I'm not sure what happens in the $user-&gt;login() function, but this code looks ok so I will go out on a limb.  Please see below and also have a look at the <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> docs.
+</p>
+<pre class="block php"><code>
+public function log_in(){
+ 
+            if(fRequest::isPost()){
+ 
+                try{
+                    $user = User(array('email'=&gt;fRequest::get('email')));
+ 
+                    if(!fCryptography::checkPasswordHash(fRequest::get('password'), $user-&gt;getPassword())){
+                        throw new fValidationException('The login or password entered is invalid');
+                    }
+                    
+                    $user-&gt;setActiveAt(fTimestamp('now'))-&gt;store()-&gt;login();
+                    
+                    //Authorization Code Here
+                    fAuthorization::setUserAuthLevel('user');
+                    fAuthorization::setUserToken($user-&gt;getUserId()); 
+                    //End new code
+
+                    if(fRequest::get('remember_me', 'boolean')){
+                        fSession::enablePersistence();
+                    }
+                    
+                    $user-&gt;redirect();
+                    
+                }catch (fValidationException $e) {
+                    fMessaging::create('error', fURL::get(), 'The login or password entered is invalid');
+                }catch(fException $e){
+                        var_dump($e-&gt;getMessage());
+                }
+                
+            
+            }
+            
+            include BASE_FOLDER.'views/users/log_in.php';
+        }
+
+</code></pre>
+
+<p>
+ Then in any secured pages you can use the following code
+</p>
+<pre class="block php"><code>//This will boot them to whatever path you pass to fAuthorization::setLoginPage() 
+fAuthorization::requireLoggedIn();
+
+//Alternately you can do some manual handling of the situation
+if(fAuthorization::checkLoggedIn()) {
+  //Happy days are here again
+} else {
+  //Display some error message, redirect, whatever
+}
+</code></pre>
+
+<p>
+ The thing to keep in mind is that <a href="../flourishlib.com/api/fAuthorization.html#requireLoggedIn">fAuthorization::requireLoggedIn()</a> and <a href="../flourishlib.com/api/fAuthorization.html#checkLoggedIn">fAuthorization::checkLoggedIn()</a> are both looking for the presence of either ACL or AuthLevel authorization.
+</p>
+
+<p>
+Without knowing the content of $user-&gt;login() I could be way off base, but I hope it helps.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="8/17/10 9:34am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-870">
+				<div class="body" id="body-870">
+					
+<p>
+Thanks for your insight, but login is indeed setting the the authorization data, there is something wrong with the cookie persisting, the session will last until i close the browser, i looked into the code and that pretty much extends the expiration time on the cookie, which does not seem to be happening, i will have play around a little longer, but i am a bit stumped.  
+</p>
+<pre class="block php"><code>public function login(){
+	fAuthorization::setUserAuthLevel($this-&gt;getRole());
+	fAuthorization::setUserToken($this-&gt;getEmail());
+
+	return $this;
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="8/17/10 11:51pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-871">
+				<div class="body" id="body-871">
+					
+<p>
+Im not sure if this is a mistake but when I restructure my code to work like below. It works fine, in the documentation it is the other way around, 
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fSession.html#KeepingUsersLoggedIn">http://flourishlib.com/docs/fSession#KeepingUsersLoggedIn</a>
+</p>
+
+<p>
+am I arrogant to think the documentation is wrong, or am I doing something wrong?
+</p>
+<pre class="block php"><code>
+if(fRequest::get('remember_me', 'boolean')){
+	fSession::enablePersistence();
+}
+					
+$user-&gt;setActiveAt(fTimestamp('now'))-&gt;store()-&gt;login();
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="8/17/10 11:58pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-872">
+				<div class="body" id="body-872">
+					
+<p>
+I think you are onto something here. Can you try changing the code to what you had originally, but add a call to <code>session_regenerate_id();</code> on line 219 of <a href="../flourishlib.com/docs/fSession.html">fSession</a>? If this works then I can change <a href="../flourishlib.com/docs/fSession.html">fSession</a> so it doesn't matter when you call <code>::enablePersistence()</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/18/10 12:35am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-876">
+				<div class="body" id="body-876">
+					
+<p>
+Awesome will, it worked!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="8/18/10 9:22pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-881">
+				<div class="body" id="body-881">
+					
+<p>
+This is fixed in r892
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/21/10 4:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

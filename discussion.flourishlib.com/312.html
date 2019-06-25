@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fTemplating - some trouble &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fTemplating - some trouble</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					h4mzt3r			</span>
+	<span class="date_posted" title="10/27/10 9:27am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, 
+</p>
+
+<p>
+i'm using <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> and i have some trouble with him.  So I've two files : <em>index.php</em> and <em>tpl/tpl.index.php</em>. With <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> class, i call in <em>index.php</em> the <em>tpl.index.php</em> file with :
+</p>
+<pre class="block php"><code>$template-&gt;inject('_tpl/tpl.'.$page.'.php');</code></pre>
+
+<p>
+ and this &quot;works&quot;, BUT this PHP code in tpl.index.php isn't executed :
+</p>
+<pre class="block php"><code>$result = $sql-&gt;query(&quot;SELECT * FROM page WHERE nom='&quot;.$page.&quot;'&quot;);
+$val = $result-&gt;fetchRow();
+echo $val['title'];</code></pre>
+
+<p>
+ If i replace <em>$template-&gt;inject</em> by a simple <em>include()</em>, PHP code is executed.
+</p>
+
+<p>
+What's the trouble? Thanks for your help.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-982">
+				<div class="body" id="body-982">
+					
+<p>
+Are you using <a href="../flourishlib.com/api/fTemplating.html#buffer">fTemplating::buffer()</a>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/1/10 8:54am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Simple SSO (Single Sign On) the flourish way &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Simple SSO (Single Sign On) the flourish way</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="4/19/10 4:46am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I believe the flourish developers have great grasp on security issues and I feel safe using flourish on our sites.
+</p>
+
+<p>
+However searching for a simple cross site sign on solution, I've stumbled upon the 1x1 pixel image technique, where you from one of the sites loads an image of one of the other sites and in the same process sets a cookie with an ID used to retrieve the session, making sure all sites uses the same session.
+</p>
+
+<p>
+The flourish demo site and the getting started guide recommends setting a session dir to avoid session hijacking, making it impossible to use the above mentioned technique.
+</p>
+
+<p>
+Do you have any recommendations, ideas for a SSO solution that goes hand-in-hand with flourish's high standards? I've seen mentions of CAS (<a href="http://www.jasig.org/cas">http://www.jasig.org/cas</a>), any others?
+</p>
+
+<p>
+Note that we want to solve to things:
+</p>
+
+<ol>
+<li>Single Sign On</li>
+</ol>
+
+<ol>
+<li>Sharing a basket of products between sites (login not required)</li>
+</ol>
+
+<p>
+Thanks,
+</p>
+
+<p>
+I'm sorry if this post is out of topic.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-685">
+				<div class="body" id="body-685">
+					
+<p>
+No, this certainly isn't off topic. SSO is certainly a desirable thing to have for users, but it is definitely a complex subject. There are varying approaches to SSO, from just authenticating a user, to providing shared information about the user.
+</p>
+
+<p>
+I can't say I'm familiar with the details of the 1x1 pixel technique. If your research indicates it should be secure, I wouldn't see any issue with sharing a session directory among 3 different sites. If you are running on a shared server, it may not be possible to allow three of the sites to access it, but not the rest of the sites on the box. You could use a database to store the session files, which would prevent other sites from accessing it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/20/10 1:09pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-686">
+				<div class="body" id="body-686">
+					
+<p>
+1x1 pixel technique goes something like this.
+</p>
+
+<p>
+Site A, B, C.
+</p>
+
+<p>
+User arrives at site A.
+</p>
+
+<p>
+On site A you include, two images with a src from the two other sites B, C.
+</p>
+<pre><code>#!text/html
+&lt;img src='www.sitea.com/gfx/l.gif?id=ljfl3k4j2ds' /&gt;
+&lt;img src='www.sitea.com/gfx/l.gif?id=ljfl3k4j2ds' /&gt;</code></pre>
+
+<p>
+ The id refers to the database of id the stored session. The image will serve a transparent 1x1 pixel image. But before doing so it will set a cookie containing the id.
+</p>
+
+<p>
+If you get your hand on this id you can basically retrieve the session. Or are you saying that since the session is in db it should be safe enough since the session id can only be fetched of the local machine? (all sites have local access to the db)
+</p>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="4/21/10 2:39am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-729">
+				<div class="body" id="body-729">
+					
+<p>
+For one argument against this technique, consider that browsers, ISP servers, SOHO routers, corporate proxy, and other things between your visitor and your server, can all cache your l.gif, and thus your authentication cookies which rely upon l.gif may become stale, or perhaps the image is recognized and blocked by a filter (maybe adblock?) because a 1x1 gif pixel is a known tracking technique called, &quot;web bug&quot;.
+</p>
+
+<p>
+Also consider that this technique may appear to be a cross-site attack to certain heuristic filters (noscript?).
+</p>
+
+<p>
+The pixel will allow the &quot;sibling&quot; servers to access the cookie.  Does this not mean you will have to configure the original cookie to permit its usage on these sibling domains?  If you aren't careful, your cookie is vulnerable to real cross-site attack.  You may even need to consider defending l.gif, as well; but blocking loading of the image by referrer isn't perfect, because http referrer can be forged.
+</p>
+
+<p>
+I believe it would be safer and more reliable to use a system such as suggested by Aris, so the server at every domain is actually involved in authentication in its domain.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													whatrevolution											</span>
+					<span class="date_posted" title="5/21/10 3:07pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-730">
+				<div class="body" id="body-730">
+					
+<p>
+whatrevolution, thanks for your feedback.
+</p>
+
+<p>
+You make very strong arguments, and I will certainly look more into a solution like the one Aris suggested. The fact that some entity between my visitor and I can cache or block the image, hindering the cookie setting code from being invoked, makes this technique unreliable to the useless, the moment image loading and ad blocking (and the likes) are enabled.
+</p>
+
+<p>
+Regarding the cross scripting issues, please consider that the session id is encrypted using salt known by all &quot;siblings&quot; as well as tiny bit context encoded by a algorithm known by all &quot;siblings&quot;. 
+</p>
+
+<p>
+I guess it comes down to the sensitivity of your data. If you are interested building a user-centric site, highly customized and/or private data. This approach is probably not the way to go. But if you implementing a feature that does little more than adding to the usability and the experience of a coherent universe, storing simple state data, that is not required to run the site, then this solution might be okay. It is simple and easy to implement.
+</p>
+
+<p>
+Any thoughts?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/24/10 12:44am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-733">
+				<div class="body" id="body-733">
+					
+<p>
+Effectiveness of salt depends upon the chosen algorithm(s), available entropy, an attacker's ability to discover and possibly control the entropy, and so on.  Supposing that we know and then account for these things, by choice of appropriate implementation of the method you're asking about, it's ok to do this.  However, I would posit that Aris' SAML suggestion fulfills your requirement just the same, and in a rather similar fashion (read the specs for Open ID), without using the cross-site/domain image technique.  The cross-site/domain activity occurs in Open ID and related systems during the authentication cycle, and includes a server-to-server dialog that is more secure than what I am imagining the image technique to imploy.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													whatrevolution											</span>
+					<span class="date_posted" title="5/24/10 1:29pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-711">
+				<div class="body" id="body-711">
+					
+<p>
+Well, for all SSO and related issues (federation and so on) I think the better solution would always be to rely on an external provider. (The application I am currently working on relies on <a href="http://rnd.feide.no/simplesamlphp/">SimpleSAMLphp</a>). 
+</p>
+
+<p>
+As for Flourish, surely there would be no problem writing a simple login page based on SimpleSAMLphp API, given that all it should do is -basically- to check the user authentication status and redirect to the identity provider. 
+</p>
+
+<p>
+My own approach is similar although a bit different, however: instead of a login page the application controller includes an authentication module which deal with all these tasks. On success, I use <a href="../flourishlib.com/api/fAuthorization.html#setUserToken">fAuthorization::setUserToken()</a> to set an unique identifier for that user.
+</p>
+
+<p>
+By the way, as far as <a href="../flourishlib.com/api/fAuthorization.html#setUserToken">fAuthorization::setUserToken()</a> uses <a href="../flourishlib.com/docs/fSession.html">fSession</a>, do I need to start <a href="../flourishlib.com/api/fSession.html#open">fSession::open()</a> by myself or could I rely it is really started somewhere?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/7/10 6:21am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-712">
+				<div class="body" id="body-712">
+					
+<p>
+Hi Aris, thanks for the input. I will definitely check it out.
+</p>
+
+<p>
+With regards to <a href="../flourishlib.com/api/fAuthorization.html#setUserToken">fAuthorization::setUserToken()</a>. It will automatically open the session if you have not already done so yourself.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/7/10 6:27am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-727">
+				<div class="body" id="body-727">
+					
+<p>
+I keep digging into Flourish and I have to say that deeper I go on, more astounded I am by their features. :-)
+</p>
+
+<p>
+As I told in the previous post, I'm using SimpleSAMLphp for SSO and federation support. I have modified my original design, however, to benefit from Flourish authorization features. 
+</p>
+
+<p>
+I'm using a front-controller approach for my application. This front controller is in charge to load, among others, initialization, authorization checks, business rules controllers and views. Current setup, albeit very simplified, is as follows:
+</p>
+
+<ul>
+<li>In initialization, the login page is defined with fAuthorization::setLoginPage('/login');</li>
+</ul>
+
+<ul>
+<li>In authorization, we do the following check:</li>
+</ul>
+<pre class="block php"><code>If user is not authenticated
+  a basic ACL is set to allow access to public pages only (this includes login)
+Else
+  the user ACL is set
+  the user environment is set (language...) according to user attributes received from IdP (see later).
+Finally, requireACL() checks whether or not the user is authorized to get the requested page.</code></pre>
+
+<ul>
+<li>The login page, on its side, deals only with SimpleSAMLphp API:</li>
+</ul>
+<pre class="block php"><code>Instantiates the SSp object
+If user is not IdP authenticated, 
+  go to IdP for authentication
+Else, 
+  retrieve user attributes returned from IdP, 
+  set user token 
+  redirect to requested page.</code></pre>
+
+<p>
+ (To be precise, actually it also checks for autoregistration, based in a permission flag returned by the SP side of SSp).
+</p>
+
+<p>
+With this approach the application keeps neatly separated authentication (delegated in SSp through the login page) and authorization, for which the application relies in Flourish <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> class.
+</p>
+
+<p>
+As far as I know, <a href="../flourishlib.com/api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a> redirects the user to login page in case he doesn't have the required permissions. However, it seems this behaviour would meet us in a vicious circle in the case a user is actually authenticated but he is looking for some unauthorized page, going from the requested page to login and back again to the page... I'm wondering if I would do better with a logic such as:
+</p>
+<pre class="block php"><code>If not authorized by ACL:
+   If not logged in:
+     Go to login page for authentication
+   else:
+     Display some error message</code></pre>
+
+<p>
+ Or maybe requireACL() could be modified somehow to deal with such a case (a flag to indicate whether or not it should go to login or just to return a FALSE result...).
+</p>
+
+<p>
+Regards, A. .
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/20/10 2:37am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-728">
+				<div class="body" id="body-728">
+					
+<p>
+It seems like your app should require the user is logged in, which will redirect them to the login page, but if they are logged in and don't have enough privileges, do something else.
+</p>
+<pre class="block php"><code>fAuthorization::requireLoggedIn();
+if (!fAuthorization::checkACL('read')) {
+    // Handle this error some other way
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/20/10 9:07am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-731">
+				<div class="body" id="body-731">
+					
+<p>
+Hi Aris
+</p>
+
+<p>
+I'm really interested to learn my about your approach. Could I ask you some questions by email?
+</p>
+
+<p>
+mblarsen at gmail dot com.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/24/10 12:50am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

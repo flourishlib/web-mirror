@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Call to undefined method fTimestamp::getTimezone() in fORMDate.php on line 469 &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Call to undefined method fTimestamp::getTimezone() in fORMDate.php on line 469</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="11/1/09 1:45am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Getting this error when pulling a datetime from one <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object's datetime column and assigning it to another <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object's datetime column, both in a single MySQL database.
+</p>
+
+<p>
+<code>Fatal error: Call to undefined method fTimestamp::getTimezone() in xxx/flourish/fORMDate.php on line 469</code>
+</p>
+
+<p>
+the second object DOES have a time zone column configured, the former DOES NOT.
+</p>
+
+<p>
+i looked through <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>, and indeed, no method named getTimezone exists, but <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a> does try to call it if it's encountered an <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> object - i assume it's inherited from somewhere or magic?  regardless, MySQL's datetime columns don't store time zone information anyway, do they?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-506">
+				<div class="body" id="body-506">
+					
+<p>
+This appears to actually be a bug that's been around a while. I guess not many people use timezones.
+</p>
+
+<p>
+I fixed it in r727.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/3/09 2:17pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-507">
+				<div class="body" id="body-507">
+					
+<p>
+if there are bugs in working with timezones, i'll probably find them.  i'm using flourish on contesting sites and they're obsessed with date of entry but don't understand UTC for the life of 'em :)
+</p>
+
+<p>
+Thanks once again!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="11/3/09 4:42pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

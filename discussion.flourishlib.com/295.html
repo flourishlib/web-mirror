@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Problem with a one-to-many relationship &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Problem with a one-to-many relationship</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ben			</span>
+	<span class="date_posted" title="9/18/10 2:49am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi!
+</p>
+
+<p>
+First of all...thank you for this wonderful un-framework! :-) It's very usable for me.
+</p>
+
+<p>
+I have a problem with a one-to-many relationship. I'm no sure if i just don't understand how it works or if it's another problem. I have 2 tables (simplified):
+</p>
+<pre class="block sql"><code>CREATE TABLE `basic_img_profiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;</code></pre>
+<pre class="block sql"><code>CREATE TABLE `basic_images` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `fk_basic_images_basic_img_profiles_id` (`basic_img_profiles_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+ALTER TABLE `basic_images`
+  ADD CONSTRAINT `fk_basic_images_basic_img_profiles_id` FOREIGN KEY (`basic_img_profiles_id`) REFERENCES `basic_img_profiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;</code></pre>
+
+<p>
+ and i have the classes with the override-tag:
+</p>
+<pre class="block php"><code>fORM::mapClassToTable('ImageProfile', 'basic_img_profiles');
+class ImageProfile extends fActiveRecord {}
+
+fORM::mapClassToTable('Image', 'basic_images');
+class Image extends fActiveRecord {}</code></pre>
+
+<p>
+ If i'm loading images over a profile, everything works fine:
+</p>
+<pre class="block php"><code>$p = new ImageProfile (1);		
+$p-&gt;buildImages ();</code></pre>
+
+<p>
+ But if i try to associate an image to a profile, flourish says 'The table basic_img_profiles is not in a *-to-manyrelationship with the table basic_images':
+</p>
+<pre class="block php"><code>$p = new ImageProfile (1);
+$i = new Image ();
+$i-&gt;setName (&quot;BlaBla&quot;);
+$p-&gt;associateImage ($img);</code></pre>
+
+<p>
+ Is it wrong what i'm trying to do? I'm a little bit confused at the moment.
+</p>
+
+<p>
+Thanks for your help! Ben
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-923">
+				<div class="body" id="body-923">
+					
+<p>
+Well, it doesn't appear to me that your two tables are related to each other. You are setting the <code>basic_images</code> table to have a foreign key on the <code>basic_img_profiles_id</code> column to <code>basic_img_profiles(id)</code>, but that the column <code>basic_img_profiles_id</code> does not exist in the <code>basic_images</code> table.
+</p>
+
+<p>
+Also, your tables should be set up as UTF-8 instead of Latin-1, otherwise many different extended characters from your users will be converted into <code>?</code>s. The UTF-8 page has some more details about why using UTF-8 is a good idea and how to make sure everything is using the same character encoding.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/18/10 11:15pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-924">
+				<div class="body" id="body-924">
+					
+<p>
+I'm sorry, i just deleted too much from my table. Of course, the column exists. Here is the complete table:
+</p>
+<pre class="block sql"><code>CREATE TABLE `basic_images` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `image_type` int(1) unsigned NOT NULL DEFAULT '0',
+  `width` int(10) unsigned NOT NULL DEFAULT '0',
+  `height` int(10) unsigned NOT NULL DEFAULT '0',
+  `has_thumbnail` tinyint(1) NOT NULL DEFAULT '0',
+  `basic_img_profiles_id` int(11) DEFAULT NULL,
+  `tn_width` int(10) DEFAULT NULL,
+  `tn_height` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_basic_images_basic_img_profiles_id` (`basic_img_profiles_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+ALTER TABLE `basic_images`
+  ADD CONSTRAINT `fk_basic_images_basic_img_profiles_id` FOREIGN KEY (`basic_img_profiles_id`) REFERENCES `basic_img_profiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;</code></pre>
+
+<p>
+ Thanks for your hint with UTF-8, i will change it. But that can't be the solution for my problem, can it?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ben											</span>
+					<span class="date_posted" title="9/19/10 6:41am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-947">
+				<div class="body" id="body-947">
+					
+<p>
+Sorry it took so long to get back to you - work has been crazy busy recently.
+</p>
+
+<p>
+I think the issue is just that you are calling <code>associateImage()</code> and not <code>associateImages()</code>. Since more than one <code>Images</code> can have the same <code>ImageProfile</code>, you need to use the plural form.
+</p>
+
+<p>
+Let me know if this doesn't fix it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/10/10 4:12pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-960">
+				<div class="body" id="body-960">
+					
+<p>
+Yeah, it works! What a small issue... :-)
+</p>
+
+<p>
+Thank you for your help!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/15/10 6:01pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Demo Application wont run &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Demo Application wont run</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					frank			</span>
+	<span class="date_posted" title="3/20/09 7:32pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi! Unfortunatly I have problems right at the beginning. I tried to use the demo application with xampp. So the only line I changed was in the init.php at line 8:
+</p>
+<pre class="block php"><code>$db = new fDatabase('mysql', 'test', 'test', 'test', 'localhost');</code></pre>
+
+<p>
+ I inserted the table meetups in phpMyAdmin. When I call index.php in the browser I get following error message:
+</p>
+<pre><code>Uncaught Exception
+------------------
+C:\\xampp\\htdocs\\index.php(5): Meetup::findCurrent()
+C:\\xampp\\htdocs\\inc\\classes\\Meetup.php(50): fRecordSet::build('Meetup', Array, Array)
+C:\\xampp\\htdocs\\inc\\flourish\\fRecordSet.php(135): fActiveRecord::forceConfigure('Meetup')
+C:\\xampp\\htdocs\\inc\\flourish\\fActiveRecord.php(132): fActiveRecord-&gt;__construct()
+C:\\xampp\\htdocs\\inc\\flourish\\fActiveRecord.php(441): Meetup-&gt;configure()
+C:\\xampp\\htdocs\\inc\\classes\\Meetup.php(84): fORMColumn::configureLinkColumn(Object(Meetup), venue_website')
+C:\\xampp\\htdocs\\inc\\flourish\\fORMColumn.php(142): fSchema-&gt;getColumnInfo('meetups', 'venue_website', type')
+The column specified, venue_website, does not exist in the table meetups</code></pre>
+
+<p>
+ it is strange because the column in that table acutally exists. Does anybody know what can be wrong? Thx
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-127">
+				<div class="body" id="body-127">
+					
+<p>
+There may be an issue with Flourish parsing your database structure. The <code>flourish_demo_site.zip</code> had a fairly old revision of Flourish in it, and there have been some MySQL bugs fixed since then. I updated the zip file to the most recent revision, so you can download it again, or grab the latest copy of Flourish from the <a href="../flourishlib.com/docs/Download">download page</a>.
+</p>
+
+<p>
+Beyond that, can you paste here the output of the query <code>SHOW CREATE TABLE meetups</code> from your MySQL database?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/21/09 4:07pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-137">
+				<div class="body" id="body-137">
+					
+<p>
+I will try that. Thanks. Here is my output:
+</p>
+<pre class="block sql"><code>SQL-Abfrageergebnis
+
+Host: localhost
+Datenbank: test
+Erstellungszeit: 22. Mrz 2009 um 10:38
+Erstellt von: phpMyAdmin 2.11.9.2 / MySQL 5.0.67-community
+SQL-Befehl: SHOW CREATE TABLE meetups;
+Zeilen: 1
+Table 	Create Table
+meetups 	CREATE TABLE `meetups` (
+ `date` date NOT NULL,
+ `venue` varchar(255) collate utf8_bin NOT NULL,
+ `venue_website` varchar(255) collate utf8_bin NOT NULL default '',
+ `city` varchar(255) collate utf8_bin NOT NULL,
+ `state` char(2) collate utf8_bin NOT NULL,
+ `start_time` time NOT NULL,
+ `end_time` time NOT NULL,
+ `description` text collate utf8_bin NOT NULL,
+ `yahoo_upcoming_url` varchar(255) collate utf8_bin NOT NULL default '',
+ `google_maps_html` text collate utf8_bin NOT NULL,
+ `date_posted` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+ PRIMARY KEY  (`date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													frank											</span>
+					<span class="date_posted" title="3/22/09 5:48am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-145">
+				<div class="body" id="body-145">
+					
+<p>
+Ok, I think the collate specifications in the column definitions are probably messing up the column detection. I'll push out an updated <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> soon with fixes for that. In the mean time, if you recreate the table and leave out the <code>collate utf8_bin</code> sections, everything should work fine.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/24/09 12:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-156">
+				<div class="body" id="body-156">
+					
+<p>
+If you grab Flourish r546 your database schema should run no problem now.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 10:03pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>help: simple question - Best practice? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">help: simple question - Best practice?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					johnstontrav			</span>
+	<span class="date_posted" title="11/1/10 9:24am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+Multi db connections, is this correct/best practice??
+</p>
+
+<p>
+define db connections in init.php<hr />
+
+</p>
+<pre class="block php"><code>$prod = new fDatabase('mssql', 'production', 'produser', 'password');
+$stage = new fDatabase('mssql', 'stage', 'stageuser', 'password');</code></pre>
+
+<p>
+ Then how do i access these db connections in all classes?
+</p>
+
+<p>
+eg: 
+</p>
+<pre class="block php"><code>class User {
+
+function qryProd() {
+
+  return $prod-&gt;query('select * from users');
+}
+
+function qryStage() {
+
+  return $stage-&gt;query('select * from users');
+}
+
+}</code></pre>
+
+<p>
+ Cheers, Trav
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-987">
+				<div class="body" id="body-987">
+					
+<p>
+Trav,
+</p>
+
+<p>
+I don't know if there is a Flourish-y way to do this, I will give you a way that I handle this that works for me, if it works for you feel free to use it.
+</p>
+
+<p>
+When I make a project I create a configuration directory structure like this.
+</p>
+<pre><code>project/
+  `-config/
+      `-environment.config.php
+      `-environments/
+          `-development.config.php
+          `-qa.config.php
+          `-production.config.php
+  `-the rest of the project...</code></pre>
+
+<p>
+ My deployment script never deploys environment.config.php, that's a special file that I put into each environment, it normally just contains the following lines.
+</p>
+<pre class="block php"><code>&lt;?php
+  define('ENVIRONMENT', 'development');  //Replace development which whatever environment it is.
+?&gt;</code></pre>
+
+<p>
+ Then in init.php or if you are using a front-controller you can do something like this
+</p>
+<pre class="block php"><code>&lt;?php
+  require_once CONFIG_DIR . 'environment.config.php';
+  require_once CONFIG_DIR . 'environments/' . ENVIRONMENT . '.config.php';
+
+  //More init stuff below.
+
+?&gt;</code></pre>
+
+<p>
+ Then you are free to put in your production configuration something like
+</p>
+<pre class="block php"><code>  $database = new fDatabase('mssql', 'production', 'produser', 'password');</code></pre>
+
+<p>
+ And in your development configuration put
+</p>
+<pre class="block php"><code>  $database = new fDatabase('mssql', 'stage', 'stageuser', 'password');</code></pre>
+
+<p>
+ Then in your user class you can just put 
+</p>
+<pre class="block php"><code>class User {
+  function list() {
+    return $database-&gt;query('select * from users');
+  }
+}</code></pre>
+
+<p>
+ This way you only have to write one function for the class and your code automatically selects the correct database based off of what you have in ENVIRONMENT.config.php.
+</p>
+
+<p>
+It's also nice because if you have other settings that differ between certain environments, test API endpoints versus real API endpoints, stuff like that, you can cleanly separate your environment configurations.
+</p>
+
+<p>
+This has worked for me in the past, I hope you find it useful.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="11/2/10 11:15am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-988">
+				<div class="body" id="body-988">
+					
+<p>
+thanks ihumanable, but when i implement your code i get undefined error in my class when calling db
+</p>
+
+<p>
+return $database-&gt;query('select * from users');
+</p>
+
+<p>
+Error: Undefined variable: database
+</p>
+
+<p>
+What am i missing?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													johnstontrav											</span>
+					<span class="date_posted" title="11/2/10 8:06pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-997">
+				<div class="body" id="body-997">
+					
+<p>
+Well it depends on how you are including things, more than likely $database is out of scope.  You could handle this a number of ways.  In PHP you can access something in the global scope by using the global keyword like so.
+</p>
+<pre class="block php"><code>class User {
+  function list() {
+    global $database;
+    return $database-&gt;query('select * from users');
+  }
+}</code></pre>
+
+<p>
+ This of course is not a very nice solution since it introduces global state which is not a very good practice.  Flourish has a fairly robust ORM that is really nice to use, check out <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.  In your init script you can attach the database by using the <a href="../flourishlib.com/api/fORMDatabase.html#attach">fORMDatabase::attach()</a> function.  In your configuration file you would change
+</p>
+<pre class="block php"><code>  $database = new fDatabase(...);</code></pre>
+
+<p>
+ to 
+</p>
+<pre class="block php"><code>  fORMDatabase::attach(new fDatabase(...));</code></pre>
+
+<p>
+ Now you can access the database connection by using the <a href="../flourishlib.com/api/fORMDatabase.html#retrieve">fORMDatabase::retrieve()</a> method like so
+</p>
+<pre class="block php"><code>class User {
+  function list() {
+    return fORMDatabase::retrieve()-&gt;query('select * from users');
+  }
+}</code></pre>
+
+<p>
+ If you are doing basic CRUD operations I would highly suggest reading up on the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> classes (as well as <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a>) as they will save you a ton of time.  If you do then you can make a class like so
+</p>
+<pre class="block php"><code>class User extends fActiveRecord {
+  static function list() {
+    return fRecordSet::build('User');
+  }
+}</code></pre>
+
+<p>
+ Since User is an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> you can then use the whole array of awesome functionality like:
+</p>
+<pre class="block php"><code>$newUser = new User();
+$newUser-&gt;setFirstName('New');
+$newUser-&gt;setLastName(&quot;O'User&quot;);  //Look ma, no SQL Injection attacks because of fActiveRecord
+$newUser-&gt;store();
+
+$allUsers = User::list();
+foreach($allUsers as $user) {
+  //fActiveRecord encode means that &quot;Timmy &lt;strong&gt;Beefcake&lt;/strong&gt;&quot; won't inject html into your markup
+  echo $user-&gt;encodeFirstName() . ' ' . $user-&gt;encodeLastName() . '&lt;br /&gt;';
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="11/4/10 5:05pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-998">
+				<div class="body" id="body-998">
+					
+<p>
+Thanks ihumanable, your post has helped me alot!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													johnstontrav											</span>
+					<span class="date_posted" title="11/4/10 8:00pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

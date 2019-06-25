@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>BLOB/TEXT handling &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">BLOB/TEXT handling</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					j. alexander			</span>
+	<span class="date_posted" title="6/6/09 5:02pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Inserting a large TEXT block in mysql creates a fatal error in php that results in no returned data from the server. Obviously it does not generate an exception object.  (only on the store() method)
+</p>
+
+<p>
+I was testing with about 168KB of data
+</p>
+
+<p>
+Retrieving the same data results in a valid retrieval (no errors), but the TEXT field is truncated to 396 bytes, and those bytes are empty. 
+</p>
+<pre><code>object(Site)#19 (4) {
+  [&quot;cache:protected&quot;]=&gt;
+  array(0) {
+  }
+  [&quot;old_values:protected&quot;]=&gt;
+  array(0) {
+  }
+  [&quot;related_records:protected&quot;]=&gt;
+  array(0) {
+  }
+  [&quot;values:protected&quot;]=&gt;
+  array(4) {
+    [&quot;site_id&quot;]=&gt;
+    string(1) &quot;2&quot;
+    [&quot;url&quot;]=&gt;
+    string(20) &quot;http://haaretz.co.il&quot;
+    [&quot;content&quot;]=&gt;
+    string(396) &quot; </code></pre>
+<pre class="block sql"><code>CREATE TABLE `sites` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `url` varchar(1024) default NULL,
+  `content` longtext,
+  `fetched` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`site_id`),
+  UNIQUE KEY `url_2` (`url`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-264">
+				<div class="body" id="body-264">
+					
+<p>
+The retrieve issue was fixed by htmlencode()/decode, but large inserts are still failing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													j. alexander											</span>
+					<span class="date_posted" title="6/6/09 6:21pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-265">
+				<div class="body" id="body-265">
+					
+<p>
+Can you paste the output of the fatal error?
+</p>
+
+<p>
+My guess is that part of the process of handling the SQL for such a large block of text is not working so well. It's been on the back of my mind that I need to add prepared statement support to handle big blocks of text or binary data.
+</p>
+
+<p>
+Let me know about the fatal error, that may give me enough info to fix it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/6/09 10:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

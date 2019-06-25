@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Deleting many records &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Deleting many records</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ralph			</span>
+	<span class="date_posted" title="4/16/11 1:30pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi there I have been working with flourish 5 days ago. I'm creating a User Module for the Admin where I have one table with same number of users and checkboxes. My goal its to create a bulk action in order to delete several number of users. All works fine but I want to increase the performance of my code.
+</p>
+<pre class="block php"><code>foreach( $checkboxes as $id ) {
+    $db-&gt;execute(&quot;Delete from users WHERE user_id = %i&quot;, $id);
+}</code></pre>
+
+<p>
+ Theer is a query generator in flourish?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1250">
+				<div class="body" id="body-1250">
+					
+<p>
+If you want to delete a bunch of records, I would recommend using one of the following:
+</p>
+<pre class="block php"><code>// fDatabase placeholders can handle arrays of value when not using prepared statements
+$db-&gt;execute(&quot;DELETE FROM users WHERE user_id IN (%i)&quot;, $checkboxes);</code></pre>
+
+<p>
+ or
+</p>
+<pre class="block php"><code>// Here we use a prepared statement to reduce the amount of work done for each call
+$statement = $db-&gt;prepare(&quot;DELETE FROM users WHERE user_id = %i&quot;);
+foreach ($checkboxes as $id) {
+    $db-&gt;execute($statement, $id);
+}</code></pre>
+
+<p>
+ I'm not sure which would be faster, but using <code>$db-&gt;enableDebugging(TRUE);</code> it would be pretty easy to tell.
+</p>
+
+<p>
+<hr />
+ There is no query generator for Flourish. If you use the ORM there is <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, which provides some simplified querying of rows, but it relies on you using the ORM, which provides knowledge of the structure of your database.
+</p>
+
+<p>
+Many of the cross-database libraries implement a query builder since different databases use slightly different constructs. Flourish instead provides the ability to run homogenized SQL that is then translated to the SQL dialect of the database you have connected to. You can see FlourishSql for the features that are supported.
+</p>
+
+<p>
+Here's an example from Yii:
+</p>
+<pre class="block php"><code>$user = Yii::app()-&gt;db-&gt;createCommand()
+    -&gt;select('id, username, profile')
+    -&gt;from('tbl_user u')
+    -&gt;join('tbl_profile p', 'u.id=p.user_id')
+    -&gt;where('id=:id', array(':id'=&gt;$id))
+    -&gt;queryRow();</code></pre>
+
+<p>
+ As compared to Flourish:
+</p>
+<pre class="block php"><code>$user = $db-&gt;translatedQuery(
+    &quot;SELECT
+        id, username, profile
+    FROM
+        tbl_user u INNER JOIN
+        tbl_profile p ON u.id = p.user_id
+    WHERE
+        id = %i&quot;,
+    $id
+)-&gt;fetchRow();</code></pre>
+
+<p>
+ As you can see, they are pretty similar. I think the real maintainability wins come from then you can automatically infer the <code>FROM</code> clause based on the database structure. - this is what <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> does. You can reference columns in related tables without having to do any <code>JOIN</code>s, which is especially useful when you <code>WHERE</code> conditions are built via if/else statements.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/16/11 2:13pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1254">
+				<div class="body" id="body-1254">
+					
+<p>
+This is maybe one of the best things about Flourish you always respond our questions and you explain it very well.
+</p>
+
+<p>
+Yes I think this feature its like kill bugs with a cannon.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/18/11 2:08am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

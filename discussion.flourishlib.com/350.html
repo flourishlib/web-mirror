@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCache with APC: Entries with same key continuously created &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCache with APC: Entries with same key continuously created</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="12/28/10 2:13am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm using APC cache as the cache of <a href="../flourishlib.com/docs/fCache.html">fCache</a>. I have enabled ORM caching using this cache.
+</p>
+
+<p>
+I've noticed that on a clean cache the same keys are inserted several times like this: 
+</p>
+<pre><code>            [0] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::keys
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 12968
+                )
+
+            [1] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::tables
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 1704
+                )
+
+            [2] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 12456
+                )
+
+            [3] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 10408
+                )
+
+            [4] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 9384
+                )
+
+            [5] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 7336
+                )
+
+            [6] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 5800
+                )
+
+            [7] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 4776
+                )
+
+            [8] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::relationships
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 20648
+                )
+
+            [9] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_keys
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 12968
+                )
+
+            [10] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 23720
+                )
+
+            [11] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 22184
+                )
+
+            [12] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 20136
+                )
+
+            [13] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 13480
+                )
+
+            [14] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 4776
+                )
+
+            [15] =&gt; Array
+                (
+                    [info] =&gt; fSchema::mysql::fORM::default::/Users/mbl/Documents/Projects/mcs_ibob/core/trunk/public_html/::::merged_column_info
+                    [ttl] =&gt; 0
+                    [type] =&gt; user
+                    [num_hits] =&gt; 0
+                    [mtime] =&gt; 1293519640
+                    [creation_time] =&gt; 1293519640
+                    [deletion_time] =&gt; 0
+                    [access_time] =&gt; 1293519640
+                    [ref_count] =&gt; 0
+                    [mem_size] =&gt; 2216
+                )
+</code></pre>
+
+<p>
+ It appears to be mainly the merged_column_info key.
+</p>
+
+<p>
+As refresh the page every time at least two 'inserts' occur. And many of these merged_column_info cache entries is created with 0 hits of course. The other ORM cache entries seems to hit quite good.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> are using apc_store and not apc_add is there a reason for this. Also the ttl of cache values appears to be all set to zero.
+</p>
+
+<p>
+These are my APC cache settings:
+</p>
+<pre><code>apc.slam_defense=0
+apc.write_lock=0
+apc.gc_ttl=0
+apc.ttl = 3000
+apc.user_ttl = 3600</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1072">
+				<div class="body" id="body-1072">
+					
+<p>
+I'll have to do some debugging to see why exactly multiple calls are being made.
+</p>
+
+<p>
+Looking at the code, it appears that when column info is requested from <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>, the database it inspected just for the table requested. Then any overrides are laid over the real schema, and the result is saved to the merged column info, which is stored in APC. So theoretically <a href="../flourishlib.com/api/fCache.html#set">fCache::set()</a> would be called once for every table that has any customization. It seems I made <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to not load the merged column info from the database if overridden table schemas exist, however I should probably add the same check before bothering with storing it in the cache.
+</p>
+
+<p>
+I believe <code>apc_store()</code> is used to ensure that the value is stored, even if it already exists with a different value. For the schema information, a TTL doesn't really seem to make sense. The schema info doesn't decay, it is perfectly valid until it changes.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/2/11 7:06pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1077">
+				<div class="body" id="body-1077">
+					
+<p>
+APC is somewhat hard to figure out sometime.  I recently had a clash with it - also check my answer <a href="http://stackoverflow.com/questions/4468805">http://stackoverflow.com/questions/4468805</a>
+</p>
+
+<p>
+I think you are right to use apc_store() - if you hit the cache to often/fast or the apc settings are not just right (no documentation) you will see that cache starting to fill up.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="1/3/11 4:08am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

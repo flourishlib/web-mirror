@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>table is not in a *-to-one relationship...? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">table is not in a *-to-one relationship...?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					allen			</span>
+	<span class="date_posted" title="10/21/10 12:40pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm trying out flourish, so far I love it, but I'm running into some difficulty with <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>.  My database is four tables in postgresql, full RI with primary and foreign keys, etc.  The tables are:
+</p>
+
+<ul>
+<li>states (state_id, short_name, long_name)</li>
+<li>cities (city_id, state_id, name)</li>
+<li>zipcodes (zipcode_id, city_id, zipcode)</li>
+<li>locations (location_id, zipcode_id, name)</li>
+</ul>
+
+<p>
+There are other fields, but those are the ones related to the relations.
+</p>
+
+<ul>
+<li>Multiple cities belong to a single state; cities.state_id -FK&gt; states.state_id</li>
+<li>Multiple zipcodes belong to a single city: zipcode.city_id -FK&gt; cities.city_id</li>
+<li>Multiple locations belong to a single zipcode: locations.zipcode_id -FK&gt; zipcodes.zipcode_id</li>
+</ul>
+
+<p>
+<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> based classes exist for each table and are named appropriately, e.g.
+</p>
+<pre class="block php"><code>  class city extends fActiveRecord
+  {
+    protected function configure()
+    {
+    }
+  }</code></pre>
+
+<p>
+ Given cities.name and state.short_name, I'm trying to find the locations that are in that city and state.  The raw SQL would be:
+</p>
+<pre class="block sql"><code>SELECT *
+  FROM locations lo, zipcodes zi, cities ci, states st
+ WHERE lo.zipcode_id = zi.zipcode_id
+   AND zi.city_id = ci.city_id
+   AND ci.state_id = st.state_id
+   AND ci.name = 'Dover'
+   AND st.short_name = 'NH'</code></pre>
+
+<p>
+ This raw SQL works as expected.
+</p>
+
+<p>
+I'm having a bit of trouble coming up with the most efficient way to retrieve this data using the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes (which are defined for all the tables), and/or <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> class.  Rather than go over all the obviously wrong things I've tried, can someone suggest what they would do in order to get this result?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-964">
+				<div class="body" id="body-964">
+					
+<p>
+Just to cover the 'most promising' attempt I've made:
+</p>
+<pre class="block php"><code>$state = new State(array('short_name' =&gt; strtoupper($path[1])));
+$city = new City(array('name' =&gt; $path[2], 'state_id' =&gt; $state-&gt;getStateId()));
+$zips = $city-&gt;buildZipcodes();
+$locations = $zips-&gt;buildLocations();</code></pre>
+
+<p>
+ The exception is thrown on the last line, where it says that &quot;the table zipcodes is not in a *-to-one relationship with the table locations&quot;.  The error statement is true; zipcodes is in a 1-to-many relationship with locations
+</p>
+
+<p>
+If I replace the last line with this block, it works, but seems &quot;ugly&quot; and I imagine there's a better/simpler way to do what I'm trying to do:
+</p>
+<pre class="block php"><code>$locations = array();
+foreach ($zips as $zip)
+{
+  $locations[] = $zip-&gt;buildLocations();
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													allen											</span>
+					<span class="date_posted" title="10/21/10 12:54pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-965">
+				<div class="body" id="body-965">
+					
+<p>
+You should be able to get the record set with the following code. Unfortunately it isn't currently possible to join three tables away using the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> syntax, so you'll either need to pre-select the state, or build from SQL.
+</p>
+<pre class="block php"><code>// If you short name is unique, you can do this
+$state = new State(array('short_name' =&gt; 'NH'));
+
+$set = fRecordSet::build(
+    'Location',
+    array(
+        'zipcodes=&gt;cities.name='     =&gt; 'Dover',
+        'zipcodes=&gt;cities.state_id=' =&gt; $state-&gt;getStateId()
+    )
+);
+
+// Or you can do a build from SQL
+$set = fRecordSet::buildFromSQL(
+    'Location',
+    fORMDatabase::retrieve()-&gt;escape(
+        '
+        SELECT lo.*
+        FROM locations lo, zipcodes zi, cities ci, states st
+        WHERE lo.zipcode_id = zi.zipcode_id
+            AND zi.city_id = ci.city_id
+            AND ci.state_id = st.state_id
+            AND ci.name = %s
+            AND st.short_name = %s
+        ',
+        'Dover',
+        'NH'
+    )
+);</code></pre>
+
+<p>
+ It seems to me that neither of these are optimal from a syntax perspective.
+</p>
+
+<p>
+The thing that is stopping me from implementing the possibility of more tables distance between tables is just the syntax. Ideally there would be slightly different syntax so that I can reliably parse it. Perhaps an additional <code>=</code> such as <code>==&gt;</code> or an additional <code>&gt;</code> such as <code>=&gt;&gt;</code>?
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> could probably benefit from a method to escape values without having to explicitly retrieve an <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> issue.
+</p>
+
+<p>
+Ideally both of these issues should be solved through enhancements.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/21/10 12:57pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-966">
+				<div class="body" id="body-966">
+					
+<p>
+Thanks for the quick response!
+</p>
+
+<p>
+I'm trying to wrap my head around this in a way that allows <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> to be built to support 'n' distance, rather than 2 or 3 or 8..
+</p>
+
+<p>
+In my specific case, I'm obviously doing something 'odd', but the schema and access method isn't all that uncommon in the general case.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													allen											</span>
+					<span class="date_posted" title="10/21/10 1:49pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

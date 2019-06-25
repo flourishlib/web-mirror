@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Unknown column &#039;orders{order_id}.id&#039; in &#039;where clause&#039; &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Unknown column &#039;orders{order_id}.id&#039; in &#039;where clause&#039;</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="5/9/11 1:09pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When doing something like
+</p>
+<pre class="block php"><code>$order = new Order(1);
+$products = $order-&gt;buildProducts();</code></pre>
+
+<p>
+ I get an error like the following:
+</p>
+
+<p>
+MySQL error (Unknown column 'orders{order_id}.id' in 'where clause') in SELECT <code>order_products</code>.* FROM <code>order_products</code> WHERE <code>orders{order_id}</code>.<code>id</code> = 1  ORDER BY <code>order_products</code>.<code>id</code> ASC
+</p>
+
+<p>
+My order_products table has the following definition in MySQL:
+</p>
+<pre class="block sql"><code>CREATE TABLE `order_products` (
+ `id` int(11) NOT NULL auto_increment,
+ `order_id` int(11) NOT NULL,
+ `product_id` int(11) NOT NULL,
+ `quantity` int(11) NOT NULL,
+ PRIMARY KEY  (`id`),
+ KEY `order_id` (`order_id`),
+ KEY `product_id` (`product_id`),
+ CONSTRAINT `order_products_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+ CONSTRAINT `order_products_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</code></pre>
+
+<p>
+ Thanks.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1320">
+				<div class="body" id="body-1320">
+					
+<p>
+Can you provide the following information?
+</p>
+
+<ul>
+<li>What version of Flourish you are running (there should be a <code>flourish.rev</code> file in your Flourish directory)</li>
+<li>Any calls to <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a></li>
+<li>The SQL definition of the <code>orders</code> table</li>
+</ul>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/9/11 1:53pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1321">
+				<div class="body" id="body-1321">
+					
+<p>
+I'm on r983 and there are no calls to <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>.
+</p>
+
+<p>
+Here's the definition of orders:
+</p>
+<pre class="block sql"><code>CREATE TABLE `orders` (
+ `id` int(11) NOT NULL auto_increment,
+ `user_id` int(11) NOT NULL,
+ `status` enum('Pending','Back-Order','Sent') NOT NULL,
+ `date` datetime NOT NULL,
+ PRIMARY KEY  (`id`),
+ KEY `user_id` (`user_id`),
+ CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8}}}
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="5/9/11 2:13pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1322">
+				<div class="body" id="body-1322">
+					
+<p>
+If there are no mappings, you should probably be calling:
+</p>
+<pre class="block php"><code>$order = new Order(1);
+$products = $order-&gt;buildOrderProducts();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/9/11 2:16pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1323">
+				<div class="body" id="body-1323">
+					
+<p>
+Sorry, I made a typo when writing my original post. That is exactly what I'm doing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="5/9/11 2:19pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1324">
+				<div class="body" id="body-1324">
+					
+<p>
+The error happens when I try to delete an order, as well (regardless of whether or not ON DELETE CASCADE is set).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="5/9/11 3:21pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1328">
+				<div class="body" id="body-1328">
+					
+<p>
+I apologize I haven't had the time to debug this yet, things have been super-busy at work. I'll definitely try to get to it this weekend though.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/13/11 9:42am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fUTF8::upper() &quot;dots&quot; uppercase i&#039;s? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fUTF8::upper() &quot;dots&quot; uppercase i&#039;s?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					peranme			</span>
+	<span class="date_posted" title="10/29/10 2:53am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi!
+</p>
+
+<p>
+Maybe I'm doing something weird here, but when I pass a string containing lower-case &quot;i&quot; letters, it outputs upper-case &quot;I&quot; letters, but with a dot above. The PHP file is saved as UTF-8, and other international letters upper-case correctly.
+</p>
+
+<p>
+Am I missing a setting or something?
+</p>
+
+<p>
+Per.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-972">
+				<div class="body" id="body-972">
+					
+<p>
+Change a font in CSS
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/29/10 4:51am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-973">
+				<div class="body" id="body-973">
+					
+<p>
+That was needlessly wordy, and didn't really give me a clue, but sure.
+</p>
+
+<p>
+I did a little bit of fast testing, but in my test, it works, just not in the actual page I need it on... but something just dawned on me. It *could* be that the CSS text-transform is part of the problem. Altho that sounds really weird. Will do more testing, just wanted to post to see if I had been missing something not-altogether-obvious with regards to <a href="../flourishlib.com/docs/fUTF8.html">fUTF8</a> and/or the upper() method.
+</p>
+
+<p>
+Per.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="10/29/10 1:35pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-975">
+				<div class="body" id="body-975">
+					
+<p>
+Latin alphabet capitalization rules have an exception in the Turkish language. This exception has been the bane of many programs. There is no universal fix and has to be dealt by case-by-case basis.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/30/10 5:38am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-976">
+				<div class="body" id="body-976">
+					<blockquote>
+<p>
+ Latin alphabet capitalization rules have an exception in the Turkish language. This exception has been the bane of many programs. There is no universal fix and has to be dealt by case-by-case basis.
+</p>
+</blockquote>
+<p>
+Interesting, but I'm in Sweden, and everything in my app is set to UTF8.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="10/30/10 5:42am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-983">
+				<div class="body" id="body-983">
+					
+<p>
+This should be fixed in r923
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/1/10 11:20am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-984">
+				<div class="body" id="body-984">
+					<blockquote>
+<p>
+ This should be fixed in r923
+</p>
+</blockquote>
+<p>
+Ah, excellent, then I'll be sure to take the time to upgrade my testserver to r923.
+</p>
+
+<p>
+Thanks so much for your help in particular, and Flourish in general, it's making my life a lot easier!
+</p>
+
+<p>
+Per.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="11/1/10 11:23am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

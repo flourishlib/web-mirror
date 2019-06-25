@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>file upload &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">file upload</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="8/18/09 5:31pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+my form 
+</p>
+<pre><code>#!text/html
+&lt;form enctype=&quot;multipart/form-data&quot; method=&quot;POST&quot; action=&quot;files.php&quot; id=&quot;form_new_record&quot;&gt;
+&lt;label&gt;Titlu:&lt;/label&gt;&lt;br /&gt;&lt;input name=&quot;titlu&quot; type=&quot;text&quot;  id=&quot;required&quot; accept=&quot;true&quot; mask=&quot;email&quot; value=&quot;'.$News-&gt;prepareTitlu().'&quot; class=&quot;text&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;label&gt;Descriere:&lt;/label&gt;&lt;br /&gt;&lt;textarea name=&quot;descriere_old&quot; accept=&quot;true&quot; style=&quot;width:100%&quot; id=&quot;descriere_new&quot;&gt;'.fHTML::decode($News-&gt;prepareDescriere()).'&lt;/textarea&gt;&lt;br /&gt;
+&lt;label&gt;Data:&lt;/label&gt;&lt;br /&gt;&lt;input name=&quot;data&quot; id=&quot;required&quot; accept=&quot;true&quot; type=&quot;text&quot; class=&quot;datepicker&quot; value=&quot;'.$News-&gt;prepareData().'&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;label&gt;Eticheta:&lt;/label&gt;&lt;br /&gt;&lt;input name=&quot;media&quot; type=&quot;file&quot; /&gt;
+&lt;input name=&quot;id&quot; type=&quot;hidden&quot; value=&quot;'.$News-&gt;prepareIdArticol().'&quot; /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;input name=&quot;token&quot; type=&quot;hidden&quot; value=&quot;'.fRequest::generateCSRFToken().'&quot; /&gt;
+
+&lt;input type=&quot;submit&quot; value=&quot;Submit&quot;  id=&quot;new_record&quot; /&gt;
+&lt;/form&gt;</code></pre>
+
+<p>
+ my php :
+</p>
+<pre class="block php"><code>try {
+	$uploader = new fUpload();
+	$uploader-&gt;setMaxFileSize('2MB');
+	$file = $uploader-&gt;move('../../_media/galerie/', 'media');
+		
+	$News-&gt;setActiv(1);
+	$News-&gt;populate();
+	$News-&gt;store();
+		
+} catch (fExpectedException $e) {
+	echo $e-&gt;getMessage();	
+}	</code></pre>
+
+<p>
+ must mentioned that this form is created on the fly but have that multipart in form tag.
+</p>
+
+<p>
+firebug response: 
+</p>
+<pre><code>{doc_root}/admin/news/server.php(389): fUpload-&gt;move('../../_media/ga...', 'media')
+{doc_root}/admin/inc/flourish/fUpload.php(211): fUpload::check('media')
+{doc_root}/admin/inc/flourish/fUpload.php(42)
+Missing enctype=&quot;multipart/form-data&quot; attribute in form tag</code></pre>
+
+<p>
+ i use jquery for post data( this plugin can handle file uploads ). So.. other field goes right for data base input, but for file upload i get this problem, have someone an idea what happening?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-359">
+				<div class="body" id="body-359">
+					
+<p>
+for now pls don't bother to find some error i think i know where is the problem, if i don't succes i will comeback to tell.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/18/09 6:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-360">
+				<div class="body" id="body-360">
+					
+<p>
+Noop, still wrong, can you check please, for that error maybe you make changes lately..
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/18/09 8:58pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-361">
+				<div class="body" id="body-361">
+					
+<p>
+My guess is that the jQuery plugin is not properly submitting the file upload. You can test this theory by changing the form to do a normal submit without jQuery and see if the same error occurs.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/19/09 12:46pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-362">
+				<div class="body" id="body-362">
+					
+<p>
+Ok, i will try this way,I know that javascript can handle file upload only with some flash or iframe in the back, but the form() plugin from jquery have this, i see it myself on two blogs. i will see whats happening with normal form subm.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/19/09 1:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-363">
+				<div class="body" id="body-363">
+					
+<p>
+so, yes was something wrong or with post jq plugin or wirh the form cretaed on the fly. i was trying to be a little to fancy.
+</p>
+
+<p>
+Now i have another problem.
+</p>
+<pre><code>#!text/html
+&lt;form method=&quot;POST&quot; id=&quot;form_new_record&quot; action=&quot;actions.php?action=new&quot; enctype=&quot;multipart/form-data&quot;&gt;
+&lt;label&gt;Titlu:&lt;/label&gt;&lt;br /&gt;&lt;input name=&quot;titlu&quot; type=&quot;text&quot; mask=&quot;email&quot; value=&quot;&quot; class=&quot;text&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;label&gt;Descriere:&lt;/label&gt;&lt;br /&gt;&lt;textarea name=&quot;descriere&quot;  style=&quot;width:100%&quot; id=&quot;descriere&quot; class=&quot;text&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;
+&lt;label&gt;Data:&lt;/label&gt;&lt;br /&gt;&lt;input name=&quot;data&quot; type=&quot;text&quot; class=&quot;datepicker&quot; value=&quot;&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;label&gt;Eticheta:&lt;/label&gt;&lt;br /&gt;&lt;input name=&quot;poza_1&quot; type=&quot;file&quot; value=&quot;&quot; /&gt;
+&lt;input name=&quot;new_record&quot; type=&quot;submit&quot; value=&quot;Introdu inregistrarea&quot;  id=&quot;new_record&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+<pre class="block php"><code>if (isset($_POST['new_record'])) {
+
+	$poza = fRequest::get('poza_1');
+	echo '---&gt;'.$poza;
+	
+	$News = new News();
+
+	try {
+		$News-&gt;setActiv(1);
+		$News-&gt;populate();
+		$News-&gt;store();
+		/*
+		$uploader = new fUpload();
+		$uploader-&gt;setMaxFileSize('2MB');
+		$file = $uploader-&gt;move('../../_media/galerie/', 'poza_1');
+		*/
+						
+	} catch (fExpectedException $e) {
+		echo $e-&gt;getMessage();	
+	}		
+}</code></pre>
+
+<p>
+ file upload works fine, but the 'poza_1' don't send the value, for insert into database. what i do wrong?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="8/19/09 4:09pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-364">
+				<div class="body" id="body-364">
+					
+<p>
+What is <code>fRequest::get('poza_1');</code> returning in this case? If it is returning a value, then the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> won't see it as a file upload. File uploads always come in through the <code>$_FILES</code> superglobal.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/20/09 1:10pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

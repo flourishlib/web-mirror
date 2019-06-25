@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>I see several things which I don&#039;t like &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">I see several things which I don&#039;t like</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					jay			</span>
+	<span class="date_posted" title="5/28/09 10:08am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I never liked have to use mvc to use a php framework, this is why I tried flourish and not much, I that the following thigs are wrong:
+</p>
+
+<p>
+There are many functions with one line like the xml wich doesn't do almost anything, others don't even do absolutely nothing. The documentation in my opinion is very bad (in the other hand the code is VERY well commented) Sessions should be easier, why would I use a framework if I can do the same with almost the same speed than if I use php without framework and I also have to learn them. Classes should use a prefix, this is personal like the files have. Working with forms is harder than doing by yourself.
+</p>
+
+<p>
+I enjoy yout work, I really like it but I think that you should fix these things (in a few months I will check your work again) and the xml function should let you parse xml, not generating because it's very easy to generate it.
+</p>
+
+<p>
+Jay :)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-239">
+				<div class="body" id="body-239">
+					
+<p>
+PHP already has a fully featured <a href="http://www.php.net/xml">XML parser</a> extension in the base package, installed by default, and it's pretty powerful as-is given that XML is a very simple data format.  Where compiled, built-in functions exist, I feel like flourish should refrain from recreating them in PHP, a slower interpreted language.  This is different than collecting common use scenarios into single classes of course, and I wouldn't put it past Will to come up with some way of making PHP's XML parser even easier/better inside <a href="../flourishlib.com/docs/fXML.html">fXML</a>.
+</p>
+
+<p>
+As for documentation, Will seems pretty good about expanding documentation if you start a ticket for those areas you feel are unclear.  Without anything specific, there's not much to do.  Is this a style critique? :)
+</p>
+
+<p>
+You're right, <a href="../flourishlib.com/docs/fSession.html">fSession</a> is pretty simple and one probably could write it oneself if one were at all competent in PHP, but it solves important code separation and reuse issues for the flourish library.  There are other flourish classes which use sessions in order to provide their respective functions (<a href="../flourishlib.com/docs/fMessaging.html">fMessaging</a>, for instance), and without <a href="../flourishlib.com/docs/fSession.html">fSession</a> they'd be repeating code needlessly and messily all over the place.
+</p>
+
+<p>
+As for classes using a prefix, I'm not sure if you mean flourish should expand on the lowercase &quot;f&quot; or if they should have a prefix that identifies them as classes. In the case of the latter, I'd wonder if that would be overkill as flourish is entirely class-based.
+</p>
+
+<p>
+The best thing about flourish is that for everything it does, you can still easily augment it with other libraries and classes.  I've grown quite fond of using flourish with a few of the micro-frameworks that have appeared lately, for example.  But simply looking at the backwards compatibility breaks will tell you flourish is very much beta, and growing quite fast :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="5/28/09 12:33pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-241">
+				<div class="body" id="body-241">
+					
+<p>
+Php provides xml parsing functions, but, most of what this framework does (and frameworks in general) is also avaible in php it only makes easier, just look the <a href="../flourishlib.com/docs/fDate.html">fDate</a> or <a href="../flourishlib.com/docs/fHTML.html">fHTML</a> almost everything could be done without framework but it makes easier.
+</p>
+
+<p>
+The documentation, well, when I downloaded flourish a few days ago I read the getting started site wich is nice, then the how do I? and there's where I see a mess and starting using it is a bit hard think that the getting started should be better, when you start is when you need the best documentation and a first steps, flourish fails there, the api reference is good. Anyway, the code is very clear and well commented. Maybe very bad is too much.
+</p>
+
+<p>
+I meant that the prefix should be f_ or something similar (I dind't explain, sorry) because some start with f and it has very logical names, f and the name anybody would put, you have <a href="../flourishlib.com/docs/fORM.html">fORM</a> , oh, how was that? <a href="../flourishlib.com/docs/fORM.html">fORM</a>? <a href="../flourishlib.com/docs/fForm.html">fForm</a>? well there's one called <a href="../flourishlib.com/docs/fFile.html">fFile</a>, why <a href="../flourishlib.com/docs/fFile.html">fFile</a> and <a href="../flourishlib.com/docs/fORM.html">fORM</a>? i think they should use the same logic y naming, of course it's only the first three days  and my opinion, but, if I think that there's a better method, why not tell it? if more people like everybody it better for everybody.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jay											</span>
+					<span class="date_posted" title="5/28/09 2:09pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-249">
+				<div class="body" id="body-249">
+					
+<p>
+Yeah, the <a href="../flourishlib.com/docs/fORM.html">fORM</a> class is actually for the ORM (object relational mapping). I can see how this might be confusing if you are looking for a form library.
+</p>
+
+<p>
+I'll take a little time and see if I can improve the <a href="docs:HowDoI">How Do I?</a> page with some better organization and pointers.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/1/09 10:03am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-242">
+				<div class="body" id="body-242">
+					
+<p>
+Hi Jay, thanks for taking the time to look at Flourish.
+</p>
+
+<p>
+It is true that some of the code in Flourish is not focused on providing tons of functionality, but instead of creating readable code. I know off of the top of my head that there are some single line methods in <a href="../flourishlib.com/docs/fHTML.html">fHTML</a>, <a href="../flourishlib.com/docs/fXML.html">fXML</a> and <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>. These usually are much more clear when reading code as opposed to calling nested function calls or having to include 3 or more parameters to ensure that everything uses UTF-8.
+</p>
+
+<p>
+If you do have some specific feedback on documentation that isn't clear, or seems lacking, feel free to submit a ticket or start a forum post about it. I know that using third-party code is hard when there aren't enough examples or there is no documentation.
+</p>
+
+<p>
+Vena was correct in reference to <a href="../flourishlib.com/docs/fSession.html">fSession</a>. <a href="../flourishlib.com/docs/fSession.html">fSession</a> is primarily a consistent interface for other Flourish code, but also have the benefit of namespacing session values and allow for default values in a call to <a href="../flourishlib.com/api/fSession.html#get">fSession::get()</a> instead of having to use the ternary operator with <code>isset()</code>. It also happens to include some good security features when starting the session.
+</p>
+
+<p>
+I don't currently have plans to extends <a href="../flourishlib.com/docs/fXML.html">fXML</a> much since I find that <a href="http://php.net/simplexml">SimpleXML</a> does a pretty good job. That's not to say I love SimpleXML, but I also don't work with XML a ton. I prefer to use JSON where possible.
+</p>
+
+<p>
+In regards to forms, with Flourish I do try to stay away from generating HTML as much as possible. Many of the MVC frameworks provide lots of HTML helpers and stuff, but it is personally not a path I am interested in heading down. You will find that using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> as an ORM helps cut down on validation of forms since the record is validated against the database structure, with additional options provided by <a href="../flourishlib.com/docs/fORMValidation.html">fORMValidation</a>. For simple, non-database-backed form, <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> provides some simple tools.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/28/09 2:16pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-244">
+				<div class="body" id="body-244">
+					
+<p>
+If your main objective is making readable code you are on the right way.
+</p>
+
+<p>
+About the documentation it's something more general when you are reading the getting started, there are too many things and never know where should start from (of course once you start using it, it becames much easier) the problem is that .
+</p>
+
+<p>
+About the forms maybe I'm used to reuse my own code (wich is always easier to use and read) but really think that this way is harder than making your own.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jay											</span>
+					<span class="date_posted" title="5/28/09 5:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-248">
+				<div class="body" id="body-248">
+					
+<p>
+So it seems your main issue with the documentation is figuring out where to start, right? Granted, it is kind of a tough topic since different people have different needs and it is a rather modular library. When you've used other frameworks, what type of documentation do you tend to read first? Is it tutorials, or outlining majors topics? Did you ever see the <a href="docs:BlogFlourishDemoSite">Flourish Demo Site</a>? If not, maybe I need to draw a little more attention to it.
+</p>
+
+<p>
+If you've got some examples or some links to other form handling that you think works particularly well, I'd be interested to see it. There is obviously always room for improvement.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/1/09 10:00am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-391">
+				<div class="body" id="body-391">
+					
+<p>
+I just wanted to say that I think your tasked based documentation is great. I pretty much always read documentation with a task in mind and not a specific class and normal API documentations pretty much assume that you know exactly what you're after, otherwise you'll never find it.
+</p>
+
+<p>
+Now when I'm familiar with the library the API documentation is a great help but I think your task based documentation is the best way of approaching documentation for those who are new to the library.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="9/4/09 4:14am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-395">
+				<div class="body" id="body-395">
+					
+<p>
+Thanks for the feedback Marcus! Youve sparked some ideas about how I can improve the non-API documentation such as the <a href="docs:HowDoI">How Do I?</a> page. I also think the term Task Based Documentation would probably be a much better fit than the current Class Documentation. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/9/09 2:58am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-380">
+				<div class="body" id="body-380">
+					
+<p>
+I just wanted to follow up and let everyone know that there is new <a href="../flourishlib.com/docs/fXML.html">fXML</a> functionality for traversing XML files. Please feel free to give any feedback you have.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/1/09 1:51pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

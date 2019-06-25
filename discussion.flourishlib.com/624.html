@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SQL Azure &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SQL Azure</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bdavis			</span>
+	<span class="date_posted" title="6/9/12 12:06am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I was testing out some code on Microsoft's new SQL Azure platform that allows you to run PHP. Its pretty neat.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> will connect fine to SQL Azure database, which is awesome. Though it does look like SQL Azure removed support for &quot;sys.extended_properties&quot; which is used in <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a> and I think a couple of other areas.
+</p>
+<pre><code>{doc_root}\\system\\models\\Route.php(7): fRecordSet::build('Route', Array, Array)
+{doc_root}\\system\\vendors\\flourish\\classes\\fRecordSet.php(222): fORMDatabase::addWhereClause(Object(fDatabase), Object(fSchema), Array, 'routes', Array)
+{doc_root}\\system\\vendors\\flourish\\classes\\fORMDatabase.php(735): fORMDatabase::addColumnCondition(Object(fDatabase), Object(fSchema), Array, 'routes', 'subdomain', '=', Array)
+{doc_root}\\system\\vendors\\flourish\\classes\\fORMDatabase.php(159): fSchema-&gt;getColumnInfo('routes', 'subdomain', 'placeholder')
+{doc_root}\\system\\vendors\\flourish\\classes\\fSchema.php(2450): fSchema-&gt;fetchColumnInfo('routes')
+{doc_root}\\system\\vendors\\flourish\\classes\\fSchema.php(340): fSchema-&gt;fetchMSSQLColumnInfo('routes')
+{doc_root}\\system\\vendors\\flourish\\classes\\fSchema.php(827): fDatabase-&gt;query('SELECT???????LO...', 'routes', 'dbo')
+{doc_root}\\system\\vendors\\flourish\\classes\\fDatabase.php(2934): fDatabase-&gt;run('SELECT???????LO...', 'fResult')
+{doc_root}\\system\\vendors\\flourish\\classes\\fDatabase.php(3027): fDatabase-&gt;performQuery('SELECT???????LO...', Object(fResult), Array)
+{doc_root}\\system\\vendors\\flourish\\classes\\fDatabase.php(2564): fDatabase-&gt;checkForError(Object(fResult), false)
+{doc_root}\\system\\vendors\\flourish\\classes\\fDatabase.php(455)
+MSSQL error ([Microsoft][SQL Server Native Client 11.0][SQL Server]Invalid object name 'SYS.EXTENDED_PROPERTIES'.) in SELECT
+					LOWER(c.column_name)       AS 'column',
+					c.data_type                AS 'type',
+					c.is_nullable              AS nullable,
+					c.column_default           AS 'default',
+					c.character_maximum_length AS max_length,
+					c.numeric_precision        AS precision,
+					c.numeric_scale            AS decimal_places,
+					CASE
+						WHEN
+							COLUMNPROPERTY(OBJECT_ID(QUOTENAME(c.table_schema) + '.' + QUOTENAME(c.table_name)), c.column_name, 'IsIdentity') = 1 AND
+							OBJECTPROPERTY(OBJECT_ID(QUOTENAME(c.table_schema) + '.' + QUOTENAME(c.table_name)), 'IsMSShipped') = 0
+						THEN '1'
+						ELSE '0'
+					END AS auto_increment,
+					cc.check_clause AS 'constraint',
+					CAST(ex.value AS VARCHAR(7500)) AS 'comment'
+				FROM
+					INFORMATION_SCHEMA.COLUMNS AS c LEFT JOIN
+					INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS ccu ON
+						c.column_name = ccu.column_name AND
+						c.table_name = ccu.table_name AND
+						c.table_catalog = ccu.table_catalog LEFT JOIN
+					INFORMATION_SCHEMA.CHECK_CONSTRAINTS AS cc ON
+						ccu.constraint_name = cc.constraint_name AND
+						ccu.constraint_catalog = cc.constraint_catalog LEFT JOIN SYS.EXTENDED_PROPERTIES AS ex ON ex.major_id = OBJECT_ID(QUOTENAME(c.table_schema) + '.' + QUOTENAME(c.table_name)) AND ex.minor_id = COLUMNPROPERTY(OBJECT_ID(QUOTENAME(c.table_schema) + '.' + QUOTENAME(c.table_name)), c.column_name, 'ColumnId') AND ex.name = 'MS_Description' AND OBJECTPROPERTY(OBJECT_ID(QUOTENAME(c.table_schema) + '.' + QUOTENAME(c.table_name)), 'IsMsShipped') = 0 
+					WHERE
+						LOWER(c.table_name) = 'routes' AND
+						LOWER(c.table_schema) = 'dbo' AND
+						c.table_catalog = DB_NAME()</code></pre>
+
+<p>
+ I'm not sure if there is an equivalent call in SQL Azure for sys.extended_properties...
+</p>
+
+<p>
+What do you think about supporting SQL Azure?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

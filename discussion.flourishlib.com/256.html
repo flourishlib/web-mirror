@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Easy way to retrieve SQL debugging info &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Easy way to retrieve SQL debugging info</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					earth			</span>
+	<span class="date_posted" title="6/24/10 12:34pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'd like an easy way to retrieve SQL debugging information, such as the syntax of executed queries and their execution time. Currently, 
+</p>
+<pre class="block php"><code>$db-&gt;enableDebugging(true);</code></pre>
+
+<p>
+ only shows this info at the top and bottom of the page, which is impractical when in production mode.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-789">
+				<div class="body" id="body-789">
+					
+<p>
+You are going to want to use <a href="../flourishlib.com/api/fCore.html#registerDebugCallback">fCore::registerDebugCallback()</a>, which you can see in action at <a href="../flourishlib.com/docs/fCore.html">fCore</a>#Debugging.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/24/10 10:47pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-790">
+				<div class="body" id="body-790">
+					
+<p>
+Oh great. I missed that part in the code!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="6/25/10 5:05am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-791">
+				<div class="body" id="body-791">
+					
+<p>
+Is there no way to retrieve database query debugging info as an array or so? I'd like to use that info to create a custom logging feature and distinct it from other debugging messages.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													earth											</span>
+					<span class="date_posted" title="6/25/10 1:12pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-792">
+				<div class="body" id="body-792">
+					
+<p>
+No, there currently is not such a method. If you only want database messages I would recommend extending <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and adding your special logging needs to an overridden method.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/25/10 1:18pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-797">
+				<div class="body" id="body-797">
+					
+<p>
+Extending the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class won't be sufficient for what I'm trying to accomplish. I got used to ZFW's DB profiler because I am able to use the debugging info in any way I like while flourishlib just passes the messages which I can only log or display on the web page in an ugly way, and if I display it on the web page with a custom callback function then debugging messages from destructors aren't displayed.
+</p>
+
+<p>
+Any chance of having those features for flourish any time in the near future?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													earth											</span>
+					<span class="date_posted" title="6/25/10 1:40pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-798">
+				<div class="body" id="body-798">
+					
+<p>
+The only further plans I have is to add a hook or two to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to allow for modifying a SQL query before it is run. I suppose it would also be possible to add one after it is run that includes the sql and the time it took to run. I don't have a set date when I will get to it, it really depends on what other work I have on my plate.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/25/10 1:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-799">
+				<div class="body" id="body-799">
+					
+<p>
+I'll just use the DB module from ZFW then because it's the only thing that I'm missing in Flourishlib. It's quite against my will because it consequently includes a bunch of dependencies.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													earth											</span>
+					<span class="date_posted" title="6/25/10 2:20pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-858">
+				<div class="body" id="body-858">
+					
+<p>
+As of r885, there is now a nice clean hook available with <a href="../flourishlib.com/api/fDatabase.html#registerHookCallback">fDatabase::registerHookCallback()</a> that should allow for whatever logging you want to do for queries. In your case you probably want to use the <code>'run'</code> hook and access the second and third parameters.
+</p>
+<pre class="block php"><code>function log_sql($db, $statement, $query_time, $result) {
+    // This handles prepared statements since the statement and values are separate
+    if (is_array($statement)) {
+        $sql = '&quot;' . $statement[0]-&gt;getSQL() . '&quot; with the values: ' . join(&quot;, &quot;, array_map('fCore::dump', $values));
+    } else {
+        $sql = '&quot;' . $statement . '&quot;';
+    }
+    echo 'The following query took ' . $query_time . &quot; seconds: \\n&quot; . $sql;
+}
+$db-&gt;registerHookCallback('run', 'log_sql');</code></pre>
+
+<p>
+ I opted for this route because some other requests have come through looking to do similar things, but a lot of the internals of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is kind of messy due to all of the supported database extensions.
+</p>
+
+<p>
+I'll be adding some more in-depth documentation about this soon on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> page.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/10/10 3:02pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-859">
+				<div class="body" id="body-859">
+					
+<p>
+This looks interesting :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													earth											</span>
+					<span class="date_posted" title="8/11/10 10:35am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

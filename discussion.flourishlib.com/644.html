@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Removing unnecessary strict checks &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Removing unnecessary strict checks</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/rizqidjamaluddin">			rizqidjamaluddin		</a> 	</span>
+	<span class="date_posted" title="10/1/12 6:10am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<p>One issue I've come across quite a bit in Flourish is that a lot of fact-checking goes on behind the scenes. For example, fCache (which, by definition of a cache, should be fast) does a lot of is_writable and is_dir checks whenever it loads a directory cache, which is typically once per script execution. I've found that this adds up to quite a few unnecessary calls.</p>
+
+<p>In practice, there should be no need for Flourish to check this constantly.</p>
+
+<p>On one of my projects that bases itself on Flourish, I instead implement a "strict" setting that enables all of these checks, so a developer (or cron job) can check these when necessary, while leaving it out of normal execution.</p>
+
+<p>This problem is most prominent with the filesystem features, which are constantly doing checks - some justified, some unnecessary. It's also seen, for example, in setting a session storage path, which also checks the directory on every execution. And it's even more problematic on platforms with slower filesystem access, like the PagodaBox PaaS.</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

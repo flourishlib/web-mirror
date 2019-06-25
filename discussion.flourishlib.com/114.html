@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>New session file on every request &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">New session file on every request</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="7/18/09 5:43pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello again.
+</p>
+
+<p>
+I just noticed through firebug that <a href="../flourishlib.com/docs/fSession.html">fSession</a> regenerates the session id on every request thus creating a new session file every time.
+</p>
+
+<p>
+I don't know if this actually is an issue but wanted to ask about it just to be sure. My authorization routines checks for a user token in the session, tries to create a user object based on it and if it succeeds it runs <a href="../flourishlib.com/api/fAuthorization.html#setUserAuthLevel">fAuthorization::setUserAuthLevel()</a> with whatever level the user has.
+</p>
+
+<p>
+I do this on every request, is this the way it's meant to be used?
+</p>
+
+<p>
+Kindly, Marcus
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-332">
+				<div class="body" id="body-332">
+					
+<p>
+Right, setting the user auth level or ACLs or user token causes the session id to be regenerated to prevent issues with <a href="docs:Security#SessionFixation">session fixation</a>.
+</p>
+
+<p>
+You should only call <a href="../flourishlib.com/api/fAuthorization.html#setUserAuthLevel">fAuthorization::setUserAuthLevel()</a> when a user first logs in. Since it is in the session it will persist until they log out.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/20/09 10:22am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-335">
+				<div class="body" id="body-335">
+					
+<p>
+Yes I noticed that when I actually read the code. I was being stupid.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="7/20/09 1:27pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-646">
+				<div class="body" id="body-646">
+					
+<p>
+What would be the proper solution to manage a session cart while the user is not logged in.  Then in the session process they're given the chance to log in.  What is the proper way to get the cart (session) to transfer to the new session id after login and new credentials are picked up?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gabriel u.											</span>
+					<span class="date_posted" title="3/15/10 8:14pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-675">
+				<div class="body" id="body-675">
+					
+<p>
+To manage a cart when a user is not logged in, simply use <a href="../flourishlib.com/docs/fSession.html">fSession</a>. When you use <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> to log someone in, a new session id is generated, but all of the old data is automatically moved to the new session id.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/29/10 1:23pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

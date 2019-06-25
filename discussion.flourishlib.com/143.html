@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCryptography::randomString problem ? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCryptography::randomString problem ?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					o.			</span>
+	<span class="date_posted" title="10/3/09 1:43pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When im trying create a random hash with fCryptography::randomString it gives me same results everytime ? Whats wrong ? fRequest::GenerateCSRFToken having same problem..
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-437">
+				<div class="body" id="body-437">
+					
+<p>
+Hmm, I certainly have never seen that before. Can you give me some information about your environment?
+</p>
+
+<ol>
+<li>What OS is the site hosted on and what version?</li>
+<li>What version of PHP are you running?</li>
+<li>What web server are you running? Do you know if it is running as a module or through CGI?</li>
+<li>Are you calling mt_srand() or srand() in any of your code?</li>
+</ol>
+
+<p>
+This is a fairly serious security issue, I hope we can get to the bottom of it pretty quickly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/5/09 1:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-440">
+				<div class="body" id="body-440">
+					
+<p>
+Hi, Im working on Mac OS X 10.6.1 with MAMP. Apache/2.0.63 (Unix) PHP/5.2.10.
+</p>
+
+<p>
+randomString is not working correctly under this environment.
+</p>
+
+<p>
+But im using this function for randomString. This function working correctly.
+</p>
+<pre class="block php"><code>public static function randomString($type = 'alnum', $length = 16)
+{
+	$utf8 = FALSE;
+
+	switch ($type)
+	{
+		case 'alnum':
+			$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		break;
+		case 'alpha':
+			$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		break;
+		case 'hexdec':
+			$pool = '0123456789abcdef';
+		break;
+		case 'numeric':
+			$pool = '0123456789';
+		break;
+		case 'nozero':
+			$pool = '123456789';
+		break;
+		case 'distinct':
+			$pool = '2345679ACDEFHJKLMNPRSTUVWXYZ';
+		break;
+		default:
+			$pool = (string) $type;
+			$utf8 = ! utf8::is_ascii($pool);
+		break;
+	}
+
+	// Split the pool into an array of characters
+	$pool = ($utf8 === TRUE) ? utf8::str_split($pool, 1) : str_split($pool, 1);
+
+	// Largest pool key
+	$max = count($pool) - 1;
+
+	$str = '';
+	for ($i = 0; $i &lt; $length; $i++)
+	{
+		// Select a random character from the pool and add it to the string
+		$str .= $pool[mt_rand(0, $max)];
+	}
+
+	// Make sure alnum strings contain at least one letter and one digit
+	if ($type === 'alnum' AND $length &gt; 1)
+	{
+		if (ctype_alpha($str))
+		{
+			// Add a random digit
+			$str[mt_rand(0, $length - 1)] = chr(mt_rand(48, 57));
+		}
+		elseif (ctype_digit($str))
+		{
+			// Add a random letter
+			$str[mt_rand(0, $length - 1)] = chr(mt_rand(65, 90));
+		}
+	}
+
+	return $str;
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o.											</span>
+					<span class="date_posted" title="10/5/09 5:22pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-442">
+				<div class="body" id="body-442">
+					
+<p>
+Are you by chance running eAccelerator with MAMP? I know that another Flourish user has had a number of problems with code not running properly while eAccelerator is enabled on their MAMP setup.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/5/09 5:31pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-444">
+				<div class="body" id="body-444">
+					
+<p>
+I havent use any accelerator like APC or eAccelerator. XDebug enabled and Zend Optimizer is disabled.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o.											</span>
+					<span class="date_posted" title="10/5/09 5:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-443">
+				<div class="body" id="body-443">
+					
+<p>
+Another thing, can you email the output of <code>phpinfo();</code> to <a href="mailto:will@flourishlib.com">will@flourishlib.com</a>? I think that may help me track down the issue.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/5/09 5:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-445">
+				<div class="body" id="body-445">
+					
+<p>
+Can you add the following code to line 399 of <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> and paste the output?
+</p>
+<pre class="block php"><code>// Previous line should be: fclose($handle);
+fCore::expose('/dev/urandom output: ' . $bytes);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/5/09 5:40pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-446">
+				<div class="body" id="body-446">
+					
+<p>
+&lt;input type=&quot;hidden&quot; name=&quot;request_token&quot; value=&quot;&lt;pre class=&quot;exposed&quot;&gt;/dev/urandom output: 7
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o.											</span>
+					<span class="date_posted" title="10/5/09 5:50pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-447">
+				<div class="body" id="body-447">
+					
+<p>
+So the /dev/urandom output is consistently giving the above output?
+</p>
+
+<p>
+Can you try running this command in your terminal a few times to see if you get the same output each time?
+</p>
+<pre><code>&lt;/dev/urandom tr -dc A-Za-z0-9 | head -c8</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/6/09 8:35am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-448">
+				<div class="body" id="body-448">
+					
+<p>
+MacBook-13: osman$ &lt;/dev/urandom tr -dc A-Za-z0-9 | head -c8 tr: Illegal byte sequence
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="10/6/09 8:48am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

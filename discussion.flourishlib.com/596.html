@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fValidation Help &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fValidation Help</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					wayneman			</span>
+	<span class="date_posted" title="2/27/12 5:08pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi everyone,
+</p>
+
+<p>
+I am new to Flourish and have been encouraged to give it a go for my project.  Reading over the documentation I can see how it certainly speeds things up.  I am having some trouble understanding where some code should go tho.  I have this form...
+</p>
+<pre><code>#!text/html
+&lt;form action=&quot;register.php&quot; method=&quot;post&quot;&gt;
+	&lt;input type=&quot;text&quot; name=&quot;fullname&quot; size=&quot;40&quot; /&gt; : Name (full)&lt;br /&gt;&lt;br /&gt;
+	&lt;input type=&quot;email&quot; name=&quot;email&quot; size=&quot;40&quot; /&gt; : E-Mail Address&lt;br /&gt;&lt;br /&gt;
+	&lt;input type=&quot;text&quot; name=&quot;user&quot; size=&quot;40&quot; /&gt; : Choose a Username&lt;br /&gt;&lt;br /&gt;
+	&lt;input type=&quot;password&quot; name=&quot;pass&quot; size=&quot;40&quot; /&gt; : Choose a Password &lt;br /&gt;&lt;br /&gt;
+	
+	&lt;input type=&quot;submit&quot; name=&quot;register&quot; value=&quot;register&quot; /&gt; 
+	&lt;/form&gt;
+</code></pre>
+
+<p>
+ I want to use the <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> to validate this form before I move on to add its contents to a database.
+</p>
+
+<p>
+Do I need to add the fvalidation code on the same page as the form or on the start of the register.PHP page the form is sent to? 
+</p>
+
+<p>
+This is the flourish code I understand should perform the validation.
+</p>
+<pre class="block php"><code>$validator = new fValidation();
+    
+    $validator-&gt;addRequiredFields('fullname');
+    $validator-&gt;addRequiredFields('user');
+    $validator-&gt;addRequiredFields('pass'); 
+    $validator-&gt;addRequiredFields('email');
+    $validator-&gt;addEmailFields('email');
+   
+ 
+    $validator-&gt;validate();</code></pre>
+
+<p>
+ Thanks for any help and sorry if its a silly question I would just really like to get into this library.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1699">
+				<div class="body" id="body-1699">
+					
+<p>
+I was able to get it working correctly after inserting it first in the page the form was sent to 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wayneman											</span>
+					<span class="date_posted" title="2/28/12 9:15am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

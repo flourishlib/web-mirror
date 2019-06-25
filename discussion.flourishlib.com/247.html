@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fEmail and fSMTP with gmail fsockopen error &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fEmail and fSMTP with gmail fsockopen error</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="6/10/10 11:39am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm trying to use the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> class with the <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> class but I can't seem to get a sample message to work.  fsockopen is timing out inside <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a>, here is an XDebug stack trace (with personal information redacted)
+</p>
+<pre><code>( ! ) Fatal error: fsockopen() [function.fsockopen]: unable to connect to tls://smtp.google.com:465 (Operation timed out) in flourish/fSMTP.php  on line 409
+Call Stack
+#	Time	Function	Location
+1	0.0010	{main}( )	../route.php:0
+2	0.0545	include( 'sandbox.php' )	../route.php:115
+3	0.2995	EmailNotifier-&gt;notify( )	../sandbox.php:21
+4	0.3119	fEmail-&gt;send( )	../EmailNotifier.php:91
+5	0.3182	fSMTP-&gt;send( )	../fEmail.php:1178
+6	0.3182	fSMTP-&gt;connect( )	../fSMTP.php:494
+7	0.3182	fsockopen ( )	../fSMTP.php:223
+8	5.3186	fSMTP-&gt;handleError( )	../fSMTP.php:0
+9	5.3186	trigger_error ( )	../fSMTP.php:409</code></pre>
+
+<p>
+ I thought maybe there was an issue with OpenSSL but then I checked my phpinfo() and I have the following
+</p>
+
+<p>
+Configure Command has at the end '--with-openssl'
+</p>
+
+<p>
+And the OpenSSL section is as follows
+</p>
+
+<p>
+openssl OpenSSL support 	enabled OpenSSL Version 	OpenSSL 0.9.7i 14 Oct 2005 
+</p>
+
+<p>
+I'm at a loss of what to do next except to try a different Email class like swiftmailer or something, but I would much rather use flourish, the API is excellent and having just one library used consistently is easier to manage.
+</p>
+
+<p>
+Thanks for any help.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-777">
+				<div class="body" id="body-777">
+					
+<p>
+Try <code>smtp.gmail.com</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/10/10 11:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-778">
+				<div class="body" id="body-778">
+					
+<p>
+Boy do I feel foolish, thanks Will.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="6/11/10 9:50am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-779">
+				<div class="body" id="body-779">
+					
+<p>
+No worries, it took me a little bit of looking at it to figure out why it was failing, especially since I have tested with Gmail and knew that it worked. :-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/11/10 10:21am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

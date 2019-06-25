@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Exception Handling &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Exception Handling</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="5/5/09 4:44pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've always had a little trouble understanding exception handling in flourish.  I've finally come up with a good sample of something not working.
+</p>
+
+<p>
+In the code below, I've setup several exception handling mechanisms.  None of the catch the problem.  
+</p>
+<pre class="block php"><code>	public static function getOperators()
+	{
+		$response = array();
+		
+		try
+		{
+			$operators = fRecordSet::build('Operato');
+			
+			$operators-&gt;tossIfEmpty();
+		} catch ( fEmptySetException $e)
+			{
+				new cErrorManager();
+				return false;
+			} catch	( fUnexpectedException $e )
+				{
+					new cErrorManager();
+				} catch ( fException $e )
+					{
+					new cErrorManager();
+				}
+	}
+</code></pre>
+
+<p>
+ Here is the error output : 
+</p>
+<pre><code>Uncaught Exception
+------------------
+#0 [internal function]: __autoload('Operato')
+#1 /Users/JN/Dropbox/Work PC/app/cga/flourish/fRecordSet.php(403): class_exists('Operato')
+#2 /Users/JN/Dropbox/Work PC/app/cga/flourish/fRecordSet.php(134): fRecordSet::validateClass('Operato')
+#3 /Users/JN/Dropbox/Work PC/app/cga/models/Operator.php(25): fRecordSet::build('Operato')
+#4 /Users/JN/Dropbox/Work PC/app/cga/controllers/cOperators.php(63): Operator::getOperators()
+#5 /Users/JN/Dropbox/Work PC/app/cga/web/index.php(35): cOperators-&gt;getInfo()
+#6 {main}
+The class Operato could not be loaded</code></pre>
+
+<p>
+ Why is this an Uncaught Exception?  I tried to catch <a href="../flourishlib.com/docs/fUnexpectedException.html">fUnexpectedException</a> &amp; <a href="../flourishlib.com/docs/fException.html">fException</a>.  Does <a href="../flourishlib.com/docs/fException.html">fException</a> not capture all lesser exceptions?
+</p>
+
+<p>
+If I change the code to use the standard Exception, it catches the problem correctly.  Unfortunately, since it's not using <a href="../flourishlib.com/docs/fException.html">fException</a>, I get none of the trace of the problem.
+</p>
+<pre class="block php"><code>	public static function getOperators()
+	{
+		$response = array();
+		
+		try
+		{
+			$operators = fRecordSet::build('Operato');
+			
+			$operators-&gt;tossIfEmpty();
+		} catch ( fEmptySetException $e)
+			{
+				new cErrorManager();
+				return false;
+			} catch	( fUnexpectedException $e )
+				{
+					new cErrorManager();
+				} catch ( Exception $e )
+					{
+					new cErrorManager();
+				}
+	}</code></pre>
+
+<p>
+ Here is the resulting error:
+</p>
+
+<p>
+ Does anyone know how I can use <a href="../flourishlib.com/docs/fException.html">fException</a> properly in this instance?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-199">
+				<div class="body" id="body-199">
+					
+<p>
+An uncaught exception is an exception that was never handled by a <code>catch</code> statement. From looking at the backtrace, you'll see that the exception is coming from your <code>__autoload()</code> function.
+</p>
+
+<p>
+The example <code>__autoload()</code> function I provide with Flourish uses an <code>Exception</code> for when a class can't be loaded. This is because the Flourish exception classes, which are all descendants of <a href="../flourishlib.com/docs/fException.html">fException</a>, may be the class that couldn't be loaded, and thus there could be a recursive loading loop.
+</p>
+
+<p>
+Every thing in actual Flourish class use child classes of <a href="../flourishlib.com/docs/fException.html">fException</a> because of the added features and the ability to assign callbacks for when they are thrown.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/5/09 8:37pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Help with fUpload &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Help with fUpload</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					alex			</span>
+	<span class="date_posted" title="5/12/10 5:04pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello. I'm not very good with PHP, but need to make some stuff: uploaded file must be randomly renamed with saving of extension and then I need to get this new name in variable. 
+</p>
+
+<p>
+I try:
+</p>
+<pre class="block php"><code>$random = fCryptography::randomString(14, 'alphanumeric'); 
+$extension = fFile::getExtension($file); 
+$file = $uploader-&gt;move($dir, 'file')-&gt;rename($random . $extension, FALSE);</code></pre>
+
+<p>
+ But get: Fatal error: Using $this when not in object context in ***<br />
+inc<br />
+flourish<br />
+<a href="../flourishlib.com/docs/fFile.html">fFile</a>.php on line 787
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-725">
+				<div class="body" id="body-725">
+					
+<p>
+My guess is that it's because you're accessing the getExtension method the static way while you should initiate the class:
+</p>
+<pre class="block php"><code>$random    = fCryptography::randomString(14, 'alphanumeric'); 
+$fFile     = new fFile($file);
+$extension = $fFile-&gt;getExtension(); 
+$file = $uploader-&gt;move($dir, 'file')-&gt;rename($random . $extension, FALSE);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													earth											</span>
+					<span class="date_posted" title="5/18/10 11:19am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-748">
+				<div class="body" id="body-748">
+					
+<p>
+no, it doesn't work this way...
+</p>
+
+<p>
+move() function return <a href="../flourishlib.com/docs/fFile.html">fFile</a> object and I need to get it extension before rename(), but don't know how to...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													alex											</span>
+					<span class="date_posted" title="5/30/10 1:37pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-760">
+				<div class="body" id="body-760">
+					
+<p>
+Check out the code example in ticket #442
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/4/10 1:40pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-767">
+				<div class="body" id="body-767">
+					
+<p>
+Works like a charm :] Thanks
+</p>
+
+<p>
+But now I have another strange problem. I have this in config file:
+</p>
+<pre class="block php"><code>$uploader-&gt;setMIMETypes(
+    array(
+        'application/x-rar-compressed',
+        'application/zip',
+		'application/x-7z-compressed',
+     // 'application/exe',
+        'text/plain',
+        'application/x-bittorrent'
+    ),
+    'Uploaded file type is forbidden'
+);</code></pre>
+
+<p>
+ Everything (rar, zip, txt, 7z) is ok but .torrent file still doesnt recognized as &quot;application/x-bittorrent&quot; mime-type while I upload file. I check Apache config and application/x-bittorrent already linked with torrent file type, so I'm unsure if it's Flourish bug or Apache bug.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													alex											</span>
+					<span class="date_posted" title="6/8/10 1:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-768">
+				<div class="body" id="body-768">
+					
+<p>
+<a href="../flourishlib.com/docs/fFile.html">fFile</a> does custom mime-type detection and does not rely on any third party tools. I doubt I have any rules to check for <code>x-bittorrent</code>. I'd need to know information about the file format so that  it can be detected properly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/10 2:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

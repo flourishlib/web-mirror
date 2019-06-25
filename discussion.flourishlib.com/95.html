@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Composite fActiveRecords? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Composite fActiveRecords?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="6/9/09 2:03pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+I've been wondering for a couple of days if it's possible (and desirable) to build an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that's not just one row from one table but a result from a JOIN in MySQL or whatever.
+</p>
+
+<p>
+The reason I'm wondering about this is because I have a bunch of tables where one record has one from another table and the record from the other table belongs to many. Usually when I get the data I will select it from the first table and JOIN in the second table and treat that result as one entity, not two.
+</p>
+
+<p>
+Some sort of compromise to this could perhaps be to create an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class that always instantiates an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> from the other table and puts it in a public property in the class. Maybe that's the best solution if I want to do something like this?
+</p>
+
+<p>
+I was also wondering if there are any plans to make the setting of relationships between classes/tables optionally manual so I can do this myself? I have a database with only MyISAM tables that I probably won't be able to migrate over to !InnoDb. Being able to state that A has many B and B belongs to A would be great.
+</p>
+
+<p>
+Kindly, Marcus
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-285">
+				<div class="body" id="body-285">
+					
+<p>
+I think the best way to accomplish the composite <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> functionality you desire is through a database view, however I have not tested MySQL views with <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>, so I'm not positive that they will work.
+</p>
+
+<p>
+If you want to fake foreign keys with MyISAM, that can be done via <a href="../flourishlib.com/api/fSchema.html#setKeysOverride">fSchema::setKeysOverride()</a>. You will need to create an associative array containing the appropriate relationship information and then the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes will behave as though the foreign keys exist. The only danger in this is that, just like any operations on MyISAM tables, transactions will pretend to work, even though they don't do anything. The ORM uses transactions to rollback database operations if a related filesystem operation fails or if a related record is set to be associated via <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a>, but the query fails. Honestly, I haven't really ever had an operation fail after <a href="../flourishlib.com/api/fActiveRecord.html#validate">fActiveRecord::validate()</a> has successfully been executed, but it isn't impossible. Like I said, this is a risk whenever you run MyISAM tables though, and isn't specific to Flourish.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/9/09 8:22pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-286">
+				<div class="body" id="body-286">
+					
+<p>
+I've actually had to remove my views to use the ORM because of user privileges related to views. Everything I've read (although I only found old articles) about views in MySQL said the performance for views was atrocious so I've left them behind.
+</p>
+
+<p>
+I was wondering if I can hook in a build of a related table automatically when the class is constructed? I just realised I can put a constructor in the class that inherits <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, run parent::__construct(); and then build the related class, would that work as long I pass along any variables that get sent in through the constructor?
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/10/09 3:36am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-287">
+				<div class="body" id="body-287">
+					
+<p>
+Are there any plans to make a method called setRelationships? That seems like a more intuitive way of creating your own relationship schema instead of defining foreign keys on different tables to make the ORM behave the way you want.
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/10/09 3:54am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-288">
+				<div class="body" id="body-288">
+					
+<p>
+Ok I have been trying to set up a keyoverride like you suggested but it's failing because of the key type. In this case, the keys I'm turning into foreign keys are just indexes, they aren't primary and they aren't unique.
+</p>
+
+<p>
+Making them foreign keys in the database is no problem so I'm guessing it's a problem with the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> class, is this correct?
+</p>
+
+<p>
+I could create two unique keys in the table (I think) but I'm not sure if those unique keys really would make sense based on the actual data. I often use regular indexes as a starting point when making foreign keys, is that bad practice?
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/10/09 4:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-289">
+				<div class="body" id="body-289">
+					
+<p>
+Ok after some digging I found the method fetchMySQLKeys in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.
+</p>
+
+<p>
+If I add in the following
+</p>
+<pre class="block php"><code>// Index keys
+preg_match_all('/KEY\\s+&quot;([^&quot;]+)&quot;\\s+\\(&quot;(.*?)&quot;\\),?\\n/U', $row['Create Table'], $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+$keys[$table]['index'][] = explode('&quot;,&quot;', $match[2]);
+}</code></pre>
+
+<p>
+ and add a separate entry for the index keys called 
+</p>
+<pre class="block php"><code>$keys[$table]['index']  = array();</code></pre>
+
+<p>
+ I get the right keys back when I do an <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>-&gt;getKeys() dump.
+</p>
+
+<p>
+I bet there's loads of other stuff that needs to be done in order for this to work correctly but this looks like a start right?
+</p>
+
+<p>
+Kindly, Marcus. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="6/10/09 8:43am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-293">
+				<div class="body" id="body-293">
+					
+<p>
+The columns that you are trying to fake as foreign keys don't need to be anything specific. Flourish doesn't need to know anything about your indexed columns to function, but it does need to know about what columns reference what other columns for foreign keys.
+</p>
+
+<p>
+Lets say you have a <code>group_id</code> column in your <code>users</code> table that holds values from the <code>group_id</code> column in the <code>groups</code> table. To fake a foreign key here, you would write the following code:
+</p>
+<pre class="block php"><code>fORMSchema::retrieve()-&gt;setKeysOverride(
+	array(
+		array (
+			'column'         =&gt; 'group_id',
+			'foreign_table'  =&gt; 'groups',
+			'foreign_column' =&gt; 'group_id',
+			'on_delete' =&gt; 'set_null',
+			'on_update' =&gt; 'no_action'
+		)
+	),
+	'users',
+	'foreign'
+);</code></pre>
+
+<p>
+ You could add more foreign keys by adding more arrays like the inner array of the first parameter. Let me know if you have any questions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/12/09 8:59am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-292">
+				<div class="body" id="body-292">
+					
+<p>
+While I have considered making a simpler way to define relationships, it really only matters for MySQL MyISAM tables, and those don't support transactions anyway, which are a huge deal. I have made it possible to fake some of the foreign key functionality through <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>, but I don't think I am going to be trying to fully implement foreign key functionality in PHP due to things like cascading deletes and transactions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/12/09 8:53am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-291">
+				<div class="body" id="body-291">
+					
+<p>
+While I haven't done anything really with MySQL views myself, I would be more than happy to work through any privilege issues you may be having. In addition, I am tending to think that even if MySQL views aren't as fast as regular tables, they are probably faster than the equivalent done in PHP.
+</p>
+
+<p>
+In terms of the <code>__construct()</code> methods, yes, you can define your own, do whatever you need, and then just pass the <code>$primary_key</code> to <code>parent::__construct()</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/12/09 8:51am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Get old values from fActiveRecord &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Get old values from fActiveRecord</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/bense">			bense		</a> 	</span>
+	<span class="date_posted" title="1/22/12 11:46am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi everybody
+</p>
+
+<p>
+Before storing a record I need to know some old values (those which are in the database before saving). How can I achieve this? If I try to load the &quot;old&quot; record with 'new XY ($id)' I get the same one, because it is, let's say, a singleton.
+</p>
+
+<p>
+Of course this is a simple problem, but I can't find the solution at the documentation (maybe I'm looking at the wrong position)...
+</p>
+
+<p>
+Thanks for your help!
+</p>
+
+<p>
+Ben
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1661">
+				<div class="body" id="body-1661">
+					
+<p>
+Hi again
+</p>
+
+<p>
+Meanwhile, I found a solution for the problem. I wrote a function in my record-class (extending <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>) which calls retrieveOld().
+</p>
+
+<p>
+But if someone knows a &quot;direct&quot; solution without writing code...suggestions are still welcome. :-)
+</p>
+
+<p>
+Ben
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/24/12 2:21am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1672">
+				<div class="body" id="body-1672">
+					
+<p>
+bense, this should be done in an ORM hook.  Old values are passed as an argument to those callbacks see: 
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fORM.html#registerHookCallback">http://flourishlib.com/api/fORM#registerHookCallback</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/27/12 9:44pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1674">
+				<div class="body" id="body-1674">
+					
+<p>
+Hi msahagian
+</p>
+
+<p>
+I have something like a service oriented architecture. So storing an object is a service-method. In this case, I want to add a special processing before storing the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. If I need to register a callback-function...in my opinion the functionality is not really encapsulated. I may be wrong, but it seems that it would be a cleaner solution if I can implement the needed functionality in the service-method itself.
+</p>
+
+<p>
+Ben
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/31/12 3:54pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1675">
+				<div class="body" id="body-1675">
+					
+<p>
+Quite the contrary it is BETTER encapsulated.  Even if storing an object is a service method, the object itself should be self-contained.  All of it's validation and business logic should occur internally in the Model.  The fact that it's a callback, if registered properly, means that this logic will occur regardless of where it's stored from.
+</p>
+
+<p>
+I cannot think of a hypothetical situation where I would need to know the old values of a record for some sort of manipulation outside of the Models.  If you can make your particular case a bit clearer then I can give you a more detailed example.  What are the values on the Record?  What are the old values you need? What are you doing with the old values?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/31/12 4:09pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1676">
+				<div class="body" id="body-1676">
+					
+<p>
+Hmm, ok, let's say I have a service called 'AddressChanger'. In this service, i change the object 'Address'. Basically I get the changed address-object and I will call store(). In addition, I want to send a message to the old address 'Goodbye' and a message to the new address 'Hello!'. For this I need the old address-values. I don't want the model to execute this message-functionality. &lt;-- Sorry, it's a little bit a strange example. :-)
+</p>
+
+<p>
+You may say that i should only give the changed values to the service (instead of the already changed object), but I have a converter, which is able to build objects directly from user input (by a form, json, or whatever). I always work with &quot;complete&quot; objects and not single values.
+</p>
+
+<p>
+Hope my explanations are clear to you... :-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/31/12 4:35pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1677">
+				<div class="body" id="body-1677">
+					
+<p>
+I'm not sure what you mean by sending a message -- I'm assuming you mean something like e-mail addresseses.  If this is the case, I would agree that the sending of the message should not be in the model, it should be in the controller.  In this case though your controller is responsible for storing the old record.  My initial suggestion is simply to do something like the following:
+</p>
+<pre class="block php"><code>$old_record = $record-&gt;replicate();
+
+try {
+    $record-&gt;populate();
+    $record-&gt;store();
+    //
+    // send goodbye message using $old_record and hello message using $record
+    //
+} catch (fValidaitonException $e) {
+    //
+    // handle issues with new data
+    //
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/31/12 4:50pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1678">
+				<div class="body" id="body-1678">
+					
+<p>
+I see...thanks for your help, msahagian!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="2/1/12 1:25pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

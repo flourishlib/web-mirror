@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCryptography dependencies on win32 &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCryptography dependencies on win32</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					norman			</span>
+	<span class="date_posted" title="6/5/09 12:11pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i typically develop on a *nix box without a hitch but every now and then i work on a win32 box and in working with <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>, PHP tells me:
+</p>
+<pre><code>Fatal error: Uncaught exception 'com_exception' with message 'Failed to create COM object `CAPICOM.Utilities.1': Invalid syntax ' in O:\\myproject\\lib\\flourish\\fCryptography.php:399 Stack trace: #0 O:\\myproject\\lib\\flourish\\fCryptography.php(399): com-&gt;com('CAPICOM.Utiliti...') #1 O:\\myproject\\lib\\flourish\\fCryptography.php(317): fCryptography::seedRandom() #2 O:\\myproject\\lib\\flourish\\fCryptography.php(370): fCryptography::random(0, 61) #3 O:\\myproject\\lib\\flourish\\fCryptography.php(133): fCryptography::randomString(10) #4 O:\\myproject\\html\\register.php(39): fCryptography::hashPassword('mysupersecretpassword') #5 {main} thrown in O:\\myproject\\lib\\flourish\\fCryptography.php on line 399</code></pre>
+
+<p>
+ i installed the capicom_dc_sdk.msi from microsoft's website thinking i was missing a dependency but i still get the same error. what are the dependencies/conf for using <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> on win32?
+</p>
+
+<p>
+<a href="note:">i'm running xampp on the win32 box</a>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-257">
+				<div class="body" id="body-257">
+					
+<p>
+What version of Windows are you running? My limited testing (Windows XP) and the reading I did implied CAPICOM was available on 2000, XP and 2003.
+</p>
+
+<p>
+From some more reading, it looks like Vista may have limited support for CAPICOM, you can look at <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=CA930018-4A66-4DA6-A6C5-206DF13AF316&displaylang=en#Requirements">http://www.microsoft.com/downloads/details.aspx?FamilyId=CA930018-4A66-4DA6-A6C5-206DF13AF316&amp;displaylang=en#Requirements</a> for more details.
+</p>
+
+<p>
+It looks like I may need to find an alternative for getting random data from Vista/Server 2008 machines.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/5/09 12:31pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-258">
+				<div class="body" id="body-258">
+					
+<p>
+i'm actually running XP SP3.
+</p>
+
+<p>
+and my apologies. i intended to add this to the &quot;help&quot; and not &quot;suggestions&quot; forum. i had way too many tabs to flourishlib open.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													norman											</span>
+					<span class="date_posted" title="6/5/09 12:41pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-259">
+				<div class="body" id="body-259">
+					
+<p>
+No problem about which forum it is in.
+</p>
+
+<p>
+What version of PHP are you running? Is there any info in the output of <code>phpinfo()</code> about the COM support for your server?
+</p>
+
+<p>
+I haven't been able to find any information yet about why instantiating a COM object would cause an invalid syntax error.
+</p>
+
+<p>
+I also have yet to find another option on Windows to generate random data to seed the rendom number generator with.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/5/09 12:53pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-260">
+				<div class="body" id="body-260">
+					
+<p>
+i'm running xampplite 1.7.1 PHP 5.2.9
+</p>
+
+<p>
+from phpinfo()
+</p>
+<pre><code>com_dotnet
+
+COM support	enabled
+DCOM support	enabled
+.Net support	enabled
+
+Directive	Local Value	Master Value
+com.allow_dcom	1	1
+com.autoregister_casesensitive	1	1
+com.autoregister_typelib	0	0
+com.autoregister_verbose	0	0
+com.code_page	no value	no value
+com.typelib_file	no value	no value</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													norman											</span>
+					<span class="date_posted" title="6/5/09 1:08pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-263">
+				<div class="body" id="body-263">
+					
+<p>
+i've tried a number of things here on my box here at work. i'll try it on another XP box when i get home. maybe it's some weird config on this box i use here at work. 
+</p>
+
+<p>
+for now i'll just add a 'false &amp;&amp;' to the conditional so it'll use the else{} block so i could keep working on it.
+</p>
+
+<p>
+thanks for the quick replies. so far in my little test drive of flourish, i'm liking it. thanks for the good work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													norman											</span>
+					<span class="date_posted" title="6/5/09 2:35pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-261">
+				<div class="body" id="body-261">
+					
+<p>
+For a temporary fix, you can comment out lines 398-401 of <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>. I'll fix the class to handling the exception and fall back to the <code>else</code> option.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/5/09 2:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-282">
+				<div class="body" id="body-282">
+					
+<p>
+As of r599 I've committed a fix to handle situations where PHP is refusing to create a COM object for <code>CAPICOM.Utilities.1</code>. I've submitted a bug report at <a href="http://bugs.php.net/bug.php?id=48498,">http://bugs.php.net/bug.php?id=48498,</a> hopefully we can figure out the cause and fix that at a later date.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/9/09 1:59pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Truly simple question &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Truly simple question</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					getkristan			</span>
+	<span class="date_posted" title="3/19/12 10:32pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi there!
+</p>
+
+<p>
+I am attempting to add a PHP mail parsing feature to a site of mine and it looks like I will try to implement your <a href="../flourishlib.com/docs/fMailer.html">fMailer</a> class.
+</p>
+
+<p>
+First off... THANKS!
+</p>
+
+<p>
+My PHP is only &quot;intermediate level&quot; and I havent worked with email before.  So one question..
+</p>
+
+<p>
+Do I not have to include a path to individual mailboxes on my server somewhere?  I have 3 separate mail accounts attached to my domain. I am just surprised that there is no &quot;/path/to/admin/mail/inbox&quot; or anything like that, like I have seen in the other email parsers I have just been examining.  I'm sure this just demonstrates my ignorance of how mail systems work behind the scenes.  Will I have access to all the mail in all accounts?  Or is there something I am not getting?  
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1708">
+				<div class="body" id="body-1708">
+					
+<p>
+<a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> is designed to read from IMAP or POP3 connections.  That being said, some of the methods can easily be used to parse and read Maildir type mailboxes, but this is very dependent on how the mail is stored on your system.  If your mailserver is configured to use Maildir, then you should be able to write a few lines to read the files in the directory and pass them to <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> parse functions.
+</p>
+
+<p>
+I use this for bounce scripts as well as unsubscription mailboxes.  Maildir, however, will also have separate mail directories for each user.  You could probably use <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> to make this a bit simpler in terms of reading the mail from the Maildir.
+</p>
+
+<p>
+Other mailbox formats wouldn't work so well, for example, mbox, which stores a collection of messages in a single file.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="3/20/12 3:03am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

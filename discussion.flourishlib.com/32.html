@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Escaping Data in fRecordSet &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Escaping Data in fRecordSet</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/12/09 12:27pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Could you please explain how to escape user provided data when using <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>?
+</p>
+
+<p>
+I attempted to use fDatabase::escape.  However, since that is not a static function, I got a warning and an error.
+</p>
+
+<p>
+So, it would seem that to escape an input and then build a recordset, I would have to do something like this:
+</p>
+<pre class="block php"><code>fORMDatabase::attach(
+	$myDb = new fDatabase('mysql', DB, DB_USER, DB_PASS, DB_HOST, DB_PORT)
+); 
+
+
+$stp = fRequest::get('stp');
+return Stp::confirmStp($stp);
+
+class Stp extends fActiveRecord
+{
+
+    /**
+     *
+     */
+    protected function configure()
+    {
+        //TODO Auto generated method stub
+    }
+	
+	
+	/**
+	 * Determine if stp exists in table stps
+	 * 
+	 * @return BOOL 
+	 * @param object $clli
+	 */
+	static function confirmStp($clli)
+	{
+		global $myDb;
+		
+		$clli = $myDb-&gt;escape('string',$clli);
+
+		try
+		{
+			$stp = fRecordSet::build(
+				__CLASS__,
+				array('clli='=&gt;$clli)
+			);	
+			
+			$stp-&gt;tossIfEmpty('');
+			return true;
+			
+		} catch	(fEmptySetException $e)
+			{
+				return false;
+			}
+	}
+}
+
+</code></pre>
+
+<p>
+ Having to use &quot;global $myDB&quot; seems really ugly.  So, I'm quite certain I'm missing something here.  Is there some better way to escape user data in order to build a recordset?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-107">
+				<div class="body" id="body-107">
+					
+<p>
+Database escaping happens automatically based on the schema of the table you are creating a record set of. Simply pass raw PHP values in with the where clauses array and <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a> goes through and escapes them all for you automatically.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 12:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-110">
+				<div class="body" id="body-110">
+					
+<p>
+Great that's a nice feature.
+</p>
+
+<p>
+Unfortunately, I THINK there is a problem with that.  When using <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> for complex joins, things go haywire.  <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> tries to escape and unescape the data and generally falls flat.  It also seems to not understand the mysql &quot;using ()&quot; construct.  
+</p>
+
+<p>
+Is there any way to turn off escaping /unescaping and just let it execute the query when using buildFromSql?  Or, do I just need to execute raw SQL with <code>$mydb-&gt;query($sql)</code> and skip the ORM stuff?
+</p>
+<pre><code>exception 'fProgrammerException' with message 'Unknown data type, {null}, specified. Must be one of: blob, %l, boolean, %b, date, %d, float, %f, integer, %i, string, %s, time, %t, timestamp, %p.' in /mnt/san3/ss7auto_web/flourish/fDatabase.php:1784 Stack trace: #0 /mnt/san3/ss7auto_web/flourish/fActiveRecord.php(1139): fDatabase-&gt;unescape(NULL, '1')</code></pre>
+
+<p>
+ I've checked all my data types for the database.  They are fall within those defined in fetchMySQLColumnInfo
+</p>
+
+<p>
+If you need an example of all this, please let me know.  I can try to email you everything.  I don't want to post it here publicly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/12/09 4:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-111">
+				<div class="body" id="body-111">
+					
+<p>
+Actually, <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> does not escape anything, it simply accepts a SQL statement and creates a record set from it. The SQL statement should return all columns in a single table and will create <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects out of it. If you want to query only a few columns out of a table, a standard query would be the only way to go.
+</p>
+
+<p>
+That said, to escape a query to put into <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, use code such as the following:
+</p>
+<pre class="block php"><code>$db      = fORMDatabase::retrieve();
+$sql     = $db-&gt;escape(&quot;SELECT * FROM users WHERE first_name LIKE %s&quot;, 'john%');
+$records = fRecordSet::buildFromSQL($sql);</code></pre>
+
+<p>
+ If you want to send me code at <a href="mailto:will@flourishlib.com">will@flourishlib.com</a> I can check it out and give some advice. There might just be a slightly different way to accomplish what you want.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 4:57pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

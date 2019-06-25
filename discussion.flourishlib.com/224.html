@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Delayed closing of db connection &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Delayed closing of db connection</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="5/2/10 9:34pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi
+</p>
+
+<p>
+For my project I've replaced session handling by a custom class that writes the sessions to the database.
+</p>
+
+<p>
+I'm using <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> for the database connection.
+</p>
+
+<p>
+The system calls session write after <code>__destruct()</code> has been evoked on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object, thus connection is lost.
+</p>
+
+<p>
+Do you have any suggestions for resolving this issue?
+</p>
+
+<p>
+I added a method to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to set a flag to (not) automatically close the connection in <code>__destruct()</code>. Consequently I have to close the connection myself using the &quot;private&quot; <code>__destruct()</code> method when the system invokes close on the session.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-691">
+				<div class="body" id="body-691">
+					
+<p>
+So it seems like the session is being closed after the objects have been destroyed. What about passing <a href="../flourishlib.com/api/fSession.html#close">fSession::close()</a> to <a href="http://php.net/register_shutdown_function"><code>register_shutdown_function()</code></a>? I think this will force the session to close before the objects are destroyed.
+</p>
+<pre class="block php"><code>register_shutdown_function(array('fSession', 'close'));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/4/10 8:44am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-699">
+				<div class="body" id="body-699">
+					
+<p>
+Did this end up working for you, or did you find another solution?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/5/10 9:16pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-702">
+				<div class="body" id="body-702">
+					
+<p>
+No it did work for me unfortunately. I've added some logging to get a view of the order of things.
+</p>
+
+<p>
+But the main problem is that I use the <code>__destruct()</code> method of a few classes to persist them to session. So to keep state across each request (states like, shopping basket, discounts, etc.).
+</p>
+
+<p>
+Here is the output.
+</p>
+<pre><code>SessionManager::open
+SessionManager::read
+fSession::set(active_shop_id =&gt; 2)
+Page loaded
+fDatabase::__destruct()
+Application::__destruct()
+fSession::set(Application =&gt; O%3A11%3A%22Application%22%3A2%3A%7Bs%3A19%3A%22%00Application%00config%22%3Ba%3A0%3A%7B%7Ds%3A8%3A%22universe%22%3Bs%3A10%3A%22multiverse%22%3B%7D)
+SessionManager::write</code></pre>
+
+<p>
+ Note that SessionManager::close is never called, because the db connection has been closed, causing an error.
+</p>
+
+<p>
+The following log is with this piece of code enabled (the code you suggested):
+</p>
+<pre class="block php"><code>register_shutdown_function(array('fSession', 'close'));</code></pre>
+
+<p>
+ This is the output
+</p>
+<pre><code>SessionManager::open
+SessionManager::read
+fSession::set(active_shop_id =&gt; 2)
+Page loaded
+SessionManager::write
+SessionManager::close
+fDatabase::__destruct()
+Application::__destruct()
+fSession::set(Application =&gt; O%3A11%3A%22Application%22%3A2%3A%7Bs%3A19%3A%22%00Application%00config%22%3Ba%3A0%3A%7B%7Ds%3A8%3A%22universe%22%3Bs%3A10%3A%22multiverse%22%3B%7D)
+SessionManager::open
+SessionManager::read</code></pre>
+
+<p>
+ In this situation the SessionManager::close method is invoked as it should, but upon destruction (and attempt to persisit objects to session) the code is once again trying to open the session. This time without a db connection.
+</p>
+
+<p>
+The race is on ...
+</p>
+
+<p>
+Any suggestions?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/6/10 4:51am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-704">
+				<div class="body" id="body-704">
+					
+<p>
+You can actually control the order of when the <code>__destruct()</code> methods are called. They are called in the reverse order of the <code>__construct()</code> methods.
+</p>
+
+<p>
+So, the first object you should construct is <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. After creating that, I would create your !SessionManager object. Then after that, create all of your other objects. This should cause your other objects to be destructed first, then the !SessionManager, which should write the session data to the database, and then <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> should close the connection.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/6/10 8:48am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-709">
+				<div class="body" id="body-709">
+					
+<p>
+This won't work either. I would have to use the 'register_shutdown_function' you suggested. Which is fine. But when I use the <span class="underline">destruct to serialize my state objects, they will upon destruction try to reopen the session. Then we have the problem again.</span>
+</p>
+
+<p>
+<span class="underline"> I guess the only solution would be to note use </span>destruct for this.
+</p>
+
+<p>
+For these objects I could register a shutdown function as well. This would most likely solve the problem.
+</p>
+
+<p>
+(mixed feelings :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/6/10 11:31pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-703">
+				<div class="body" id="body-703">
+					
+<p>
+I guess that since you cannot control / determine the order of <code>__destruct()</code> invokes it would not make sence to implement a hook in <a href="../flourishlib.com/api/fDatabase.html#close">fDatabase::close()</a>.
+</p>
+
+<p>
+Any suggestions? or think I will vote for something like:
+</p>
+<pre class="block php"><code>fDatabase::disableAutoClose();</code></pre>
+
+<p>
+ And the corresponding small change to <a href="../flourishlib.com/api/fDatabase.html#__destruct">fDatabase::__destruct()</a>
+</p>
+<pre class="block php"><code>	public function __destruct()
+	{
+		if (!$this-&gt;connection) { return; }
+		if ($this-&gt;auto_close !== TRUE) { return; }</code></pre>
+
+<p>
+ From the SessionManager::close() I would invoke a <a href="../flourishlib.com/api/fDatabase.html#close">fDatabase::close()</a> method.
+</p>
+
+<p>
+But this still leaves the problem that at this point the db object, not the connection, has been destructed.
+</p>
+
+<p>
+<strong>Update</strong>:
+</p>
+
+<p>
+The latter seems not to be a problem. Actually the !SessionManager is the first to be destructed on this setup. Any insight to this? Using objects after their destruction? (plain evil?)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/6/10 5:02am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-720">
+				<div class="body" id="body-720">
+					
+<p>
+For anyone interested, I ended up doing something like this.
+</p>
+
+<p>
+Code left out to keep it simple.
+</p>
+
+<p>
+First a base class with a persist method. It could just as well be an interface. The important element is the persist() method invoked from the SessionManager below.
+</p>
+<pre class="block php"><code>class PersistentObject
+{
+	public function persist()
+	{
+		fSession::set(get_class($this), urlencode(serialize($this)));
+		return TRUE;
+	}
+}</code></pre>
+
+<p>
+ The SessionManager that registers objects for persistens and serializes them before writing the session to storage:
+</p>
+<pre class="block php"><code>class SessionManager
+{
+	private static $singleton;
+
+	private $db;
+	private $objects_to_persist = array();
+	
+	public static function &amp;get()
+	{
+		if (self::$singleton == NULL) {
+			self::$singleton = new SessionManager();
+		}
+		return self::$singleton;
+	}
+	
+	function registerPersistentObject($object)
+	{
+		$this-&gt;objects_to_persist[] = $object;
+	}
+	
+	public static function persistObjects()
+	{
+		foreach (self::$singleton-&gt;objects_to_persist as $object) {
+			call_user_func_array(array(&amp;$object, 'persist'), array());
+		}
+	}
+	
+	public static function getPersistedObject($className)
+	{
+		$serialized_object = fSession::get($className);
+		if (isset($serialized_object) === TRUE) { 
+			return unserialize(urldecode(fSession::get($serialized_object)));	
+		}
+		return FALSE;
+	}
+	
+	function __construct()
+	{
+		session_set_save_handler( 
+			array( &amp;$this, &quot;open&quot; ), 
+			array( &amp;$this, &quot;close&quot; ),
+			array( &amp;$this, &quot;read&quot; ),
+			array( &amp;$this, &quot;write&quot;),
+			array( &amp;$this, &quot;destroy&quot;),
+			array( &amp;$this, &quot;gc&quot; )
+			);
+	}
+	
+	function setStorage(&amp;$storage)
+		{
+			if ($storage instanceof fDatabase) {
+				$this-&gt;db = $storage; 
+			} else if (is_string($storage)) {
+				fSession::setPath($storage);
+			}
+		}
+	
+	function open($session_path, $session_name)	{ ... }
+
+	function close() { ... } // $db is automatically closed
+
+	function read($id) { ... }
+
+	function write($id, $data) { ... }
+
+	function destroy($id) { ... }
+	
+	function gc() { ... }
+}</code></pre>
+
+<p>
+ A class extending PersistentObject:
+</p>
+<pre class="block php"><code>class Application extends PersistentObject
+{
+        private static $singleton;
+
+	public $universe;
+
+	public static function &amp;get()
+	{
+		if(!isset(self::$singleton)) {
+			self::$singleton = SessionManager::getPersistedObject(__CLASS__);
+			if(self::$singleton === FALSE) {
+				self::$singleton = new Application();
+			}
+		}
+		return self::$singleton;
+	}
+	
+	public function __construct()
+	{
+		SessionManager::get()-&gt;registerPersistentObject($this);
+	}
+
+	public function __sleep()
+	{
+		return array('universe');
+	}
+	
+	public function __wakeup()
+	{
+		SessionManager::get()-&gt;registerPersistentObject($this);
+	}
+        
+        ...
+}
+</code></pre>
+
+<p>
+ And last, your init file:
+</p>
+<pre class="block php"><code>// First SessionManager::persistObjects is registered to that is called before the session is closed.
+register_shutdown_function(array('SessionManager', 'persistObjects'));
+// Second fSession::close is registed to ensure that the session is written to database before the connection is closed in fDatabase::__destruct().
+register_shutdown_function(array('fSession', 'close'));
+$session_db = new fDatabase( ... );
+SessionManager::get()-&gt;setStorage($session_db);
+fSession::open();
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/12/10 1:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-801">
+				<div class="body" id="body-801">
+					
+<p>
+Hey Will - would something like this be possible to work into <a href="../flourishlib.com/docs/fSession.html">fSession</a> directly?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="6/29/10 12:16pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

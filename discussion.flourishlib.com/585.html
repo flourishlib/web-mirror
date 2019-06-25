@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Flourish Gentoo ebuild &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Flourish Gentoo ebuild</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="1/18/12 11:33am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Gentoo ebuild available on my overlay. <a href="https://github.com/tatsh/tatsh-overlay">https://github.com/tatsh/tatsh-overlay</a>
+</p>
+
+<p>
+Once you get the overlay (you may need to unmask):
+</p>
+<pre><code>emerge dev-php/flourish</code></pre>
+
+<p>
+ Make sure php.ini has /usr/share/php in include_path. Make sure all your php.ini files do (that means CLI and apache2 if you use that, php-fpm (what I use), and cgi).
+</p>
+
+<p>
+To test with CLI (php -a):
+</p>
+<pre><code>php &gt; require 'flourish/fLoader.php'; fLoader::best();
+php &gt; print fGrammar::underscorize('IInstalledFlourish');
+i_installed_flourish
+php &gt; </code></pre>
+
+<p>
+ USE=&quot;sutra-patches&quot; will give you 3 useful patches:<br />
+
+</p>
+
+<ul>
+<li>Allow attributes with dashes in <a href="../flourishlib.com/api/fHTML.html#prepare">fHTML::prepare()</a> (think HTML 5 data-* attributes) http://flourishlib.com/ticket/723<br />
+</li>
+<li>Ignore warning about array changing in place (using @) in <a href="../flourishlib.com/api/fRecordSet.html#sortByCallback">fRecordSet::sortByCallback()</a> <br />
+</li>
+<li>Make <a href="../flourishlib.com/api/fImage.html#determineProcessor">fImage::determineProcessor()</a> protected so that it can be used in extension classes http://flourishlib.com/ticket/715</li>
+</ul>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1656">
+				<div class="body" id="body-1656">
+					
+<p>
+That's pretty cool.  Although I'd be kinda concerned with breakage (even thought backwards compatibility breaks are relatively uncommon).  Are you using flourish for shell scripts of various sorts?  Otherwise, I tend to keep Flourish on the project level.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/19/12 4:00pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1657">
+				<div class="body" id="body-1657">
+					
+<p>
+I have a number of shell scripts that use Flourish, but most are for use with a website, and as such, they are run within the site root so database details can be found, etc.
+</p>
+
+<p>
+The Sutra project (which is basically Flourish+addons+Moor) I am working on has a few scripts that come with it that are for command line use only (I know this kind of blows for Windows users, but I am not a Windows user and haven't been for years).
+</p>
+
+<p>
+<a href="https://github.com/tatsh/sutra/tree/master/site/scripts">https://github.com/tatsh/sutra/tree/master/site/scripts</a>
+</p>
+
+<p>
+I tend to find command line much easier than having to require a browser (which is why the Sutra project doesn't really yet have a complete /admin  browser interface as I do not find it necessary).
+</p>
+
+<p>
+One of the most important scripts is fsql.php which takes a file name for an argument, and runs the Flourish SQL contained in the file with <a href="../flourishlib.com/api/fDatabase.html#translatedExecute">fDatabase::translatedExecute()</a>. This is for installing new schemas.
+</p>
+
+<p>
+As far as backward compatibility, I do not plan on changing the version number on this ebuild file. With Portage, even if the ebuild changes, it is not considered an update unless the version number on the ebuild is greater than the current version installed. So there is no automatic update (when I run <code>emerge --sync &amp;&amp; emerge -uvDN world</code>, which updates everything). Also, like you said, backward compatibility breaks are uncommon, so I do not get too worried about it. The same rules apply for my Moor (which has not seen an update in a while) and CssMin (same story, hence my patches to fix things) ebuilds. I would have to force an update by manually doing <code>emerge dev-php/flourish</code>.
+</p>
+
+<p>
+Once Flourish starts having release version numbers, I will begin numbering the ebuilds as such, and with Gentoo I can mask a version away until all sites on that server using Flourish are ready to use it if there is a backward compatibility break. And if any immediately need the new version, I'm ready to simply change (what is in Sutra as <code>/site-root/global.php</code>):
+</p>
+<pre class="block php"><code>require 'flourish/fLoader.php';</code></pre>
+
+<p>
+ to:
+</p>
+<pre class="block php"><code>require '/somewhere-else/flourish-new-version/fLoader.php';</code></pre>
+
+<p>
+ temporarily. The Sutra project loads its classes much the same way <a href="https://github.com/tatsh/sutra/blob/master/classes/sLoader.php">https://github.com/tatsh/sutra/blob/master/classes/sLoader.php</a> (however it has router and model classes to load as well).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="1/19/12 4:38pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1658">
+				<div class="body" id="body-1658">
+					
+<p>
+Although it takes a bit more work (and certianly requires testing) -- it is possible to do PHP shell scripts in windows.  Only requirement is generally that PHP is in the path, which I think most installers will do.
+</p>
+
+<p>
+inKWell (also based on Flourish and Moor) uses wrapper scripts for the console:
+</p>
+
+<p>
+On *nix systems:
+</p>
+<pre><code>./iw.console</code></pre>
+
+<p>
+ On windows:
+</p>
+<pre><code>./iw.console.bat</code></pre>
+
+<p>
+ The wrapper scripts call PHP with various options and pass the actual arguments to the wrapper to the hidden .console PHP script.  The console itself does all the bootstrapping for the framework, and basically allows the location of a script to include be passed as the argument.
+</p>
+
+<p>
+The wrappers also allow, for example, for rlwrap (readline wrap) to be used, for command history on systems that don't have readline support in PHP -- although the console itself does not yet support readline, basically because every install I have doesn't provide it for licensing reasons.  I expect to do readline support based on the php extension at some point.
+</p>
+
+<p>
+Windows console (amazingly) doesn't require anything additional for such things, it basically &quot;rlwraps&quot; all programs and scripts internally.
+</p>
+
+<p>
+You can see the wrappers here:
+</p>
+
+<p>
+<a href="https://github.com/dotink/inKWell/blob/master/iw.console">https://github.com/dotink/inKWell/blob/master/iw.console</a> <a href="https://github.com/dotink/inKWell/blob/master/iw.console.bat">https://github.com/dotink/inKWell/blob/master/iw.console.bat</a>
+</p>
+
+<p>
+And the console itself is here:
+</p>
+
+<p>
+<a href="https://github.com/dotink/inKWell/blob/master/.console">https://github.com/dotink/inKWell/blob/master/.console</a>
+</p>
+
+<p>
+Rather than independently bootstrapping the framework in external jobs or shell scripts that need to run, you can just do something like the following:
+</p>
+<pre><code>/location/to/inkwell/iw.console /location/to/script.php</code></pre>
+
+<p>
+ Instead of going into interactive mode, the console will include the script and exit right after the bootstrap process, so similarly the script can use all the classes, database connections, etc, available in inKWell.
+</p>
+
+<p>
+On Moor and Flourish updates:
+</p>
+
+<p>
+You may be interested in the .inK fork of both.  Each are independently maintained with bug fixes and feature improvements which are not upstream yet (although may be).  They remain API compatible with upstream and generally the differences are minor.  If you don't mind, I may include your change for supporting HTML5 attributes with dashes into it as well.
+</p>
+
+<p>
+Whenever Will updates Flourish on github I do merge, so they stay up to date as well.
+</p>
+
+<p>
+The .inK fork of Moor is a bit more robust.  It provides a new MoorBaseController -- which is purely for static controllers if you use them.  The default MoorAbstractController has some <span class="underline">construct() logic which I'm not too fond of.  I've kept it the way it was though to remain closer to upstream -- but realistically I think Moor could throw away a lot of the Reflection requirements, instantiate controllers directly, and call the action methods directly.</span>
+</p>
+
+<p>
+<span class="underline"> The .inK fork also has a fix for the default Not Found page throwing a ContinueException, and, perhaps most importantly, Moor::run() actually will return, in static instances, the return value of the action, in the event of object instances, the instantiated controller.</span>
+</p>
+
+<p>
+<span class="underline"> This allows, for example for you to handle view rendering at a lower level rather than having to call it in each action on it's own.  Granted you could use &quot;before&quot; and &quot;after&quot; methods on the ActionController to do something similar... but I think the return value is nice.</span>
+</p>
+
+<p>
+<span class="underline"> It's not yet in inKWell, but at some point it will take that return value and attempt to render it dependent on what is returned.  inKWell uses late-instantiated controllers, so the actions themselves tend to return the view directly... but it would be nice to be able to return other values, especially simple ones such as a string, and have those logically &quot;rendered&quot; the same.</span>
+</p>
+
+<p>
+<span class="underline"> Also want to be able to return <a href="../flourishlib.com/docs/fFiles.html">fFiles</a>, for images and similar.</span>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/20/12 3:53am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1659">
+				<div class="body" id="body-1659">
+					
+<p>
+Feel free to use any patches I make for Flourish.
+</p>
+
+<p>
+Sutra has a patch for Moor as well (it's also with my Moor ebuild).
+</p>
+
+<p>
+<a href="https://github.com/tatsh/sutra/blob/master/patches/moor-1.0.0b4-exit-after-dispatch-except-for-post.patch">https://github.com/tatsh/sutra/blob/master/patches/moor-1.0.0b4-exit-after-dispatch-except-for-post.patch</a>
+</p>
+
+<p>
+The reason is because of how a request goes through sCore::main() (where if POST, sRouter::handle() will never be called since a redirect or exit happens in sPostRequest::handle()) <a href="https://github.com/tatsh/sutra/blob/master/classes/sCore.php">https://github.com/tatsh/sutra/blob/master/classes/sCore.php</a>
+</p>
+
+<p>
+The reason for the Moor patch: I guess I am incredibly annoyed with that message that browsers will give about re-submitting POST data if you press the back button and last request was via POST. It is unclear, 99% of people have no clue what it means, and worst yet, they might hit OK on a message like that.
+</p>
+
+<p>
+So what I have always done in PHP is a 301 redirect after a POST request because the back button in most browsers (all the ones I care about) won't try to re-submit a POST request if immediately redirected.
+</p>
+
+<p>
+Moor in its current form won't allow for this as it exits immediately after the dispatch.
+</p>
+
+<p>
+<a href="https://github.com/tatsh/sutra/blob/master/classes/sPostRequest.php">https://github.com/tatsh/sutra/blob/master/classes/sPostRequest.php</a>
+</p>
+
+<p>
+The sPostRequest::handle() method (called from sCore::main()) expects Moor::run() to return when complete so that the 301 redirect if necessary (if not AJAX really) can be completed. Old values are stored in session and can be optionally restored in the next page request if an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> is caught by sPostRequest. For a GET request, no return is necessary (so it exits) as all routers handle the data printed back to the client, which can be anything from HTML to JSON, CSS, etc.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="1/20/12 4:54am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>again pagination &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">again pagination</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="5/1/09 5:47pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i have code: 
+</p>
+
+<p>
+$xtpl-&gt;assign_file ( &quot;FILE_RIGHT&quot;, 'templates/grid.html' );
+</p>
+
+<p>
+class Customer extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> {
+</p>
+
+<p>
+			public static function findActive($sort_column, $sort_dir) { 							 				 $rows = fRecordSet::buildFromSQL(<span class="underline">CLASS</span>,&quot;SELECT * FROM customers&quot;);	
+</p>
+
+<p>
+$page = fRequest::get('page');					 $limit = 10;		 $total_items = $rows-&gt;count(); //echo $total_items; if( !isset($page) || (is_numeric($page) == false) ) $page = 1; if ($page == 0) $page = 1;                     $prev = $page - 1;                             $next = $page + 1;   $lastpage = ceil($total_items/$limit);  $lpm1 = $lastpage - 1;                         if($page) $set_limit = ($page - 1) * $limit; else $set_limit = 0;  <code> afisare paginare $pagina = &quot;&quot;; $txt_prev = &quot;previous&quot;; $txt_next = &quot;next&quot;; $alamat_pag = &quot;index.php?&quot;; $adjacents = 1; </code>
+</p>
+
+<p>
+<code> require('paginare.php'); 			</code>
+</p>
+
+<p>
+<code> 						if (!in_array($sort_column, array('zip', 'city'))) { $sort_column = 'zip'; }  		 						if (!in_array($sort_dir, array('asc', 'desc'))) { $sort_dir = 'desc'; }</code>
+</p>
+
+<p>
+<code> 		return  		 		fRecordSet::buildFromSQL(<span class="underline">CLASS</span>, &quot;SELECT * FROM customers ORDER BY $sort_column $sort_dir LIMIT $set_limit, $limit&quot;);			</code>
+</p>
+
+<p>
+<code> 			} 			 		}</code>
+</p>
+
+<p>
+<code> //$pagination = Customer::pagination; //$xtpl-&gt;assign ( 'PAGINARE', $pagination);</code>
+</p>
+
+<p>
+<code> // Set the users to be sortable by name or email, defaulting to name $sort = fCRUD::getSortColumn ( array ('zip', 'city') ); // Set the sorting to default to ascending $dir = fCRUD::getSortDirection ( 'asc' );</code>
+</p>
+
+<p>
+<code> $xtpl-&gt;assign ('city_sort', fCRUD::printSortableColumn('city', 'Oras'));</code>
+</p>
+
+<p>
+<code> fCRUD::getColumnClass('zip');</code>
+</p>
+
+<p>
+<code> $customers = Customer::findActive($sort, $dir);</code>
+</p>
+
+<p>
+<code> foreach ( $customers as $customer ) {</code>
+</p>
+
+<p>
+<code> 	$customer_id = fRequest::get('id'); 	 	$xtpl-&gt;assign ( 'rows', fCRUD::getRowClass($customer-&gt;getId(), $customer_id) ); 	$xtpl-&gt;assign ( 'nume', $customer-&gt;prepareFirstname () ); 	$xtpl-&gt;assign ( 'prenume', $customer-&gt;prepareLastname () ); 	$xtpl-&gt;assign ( 'strada', $customer-&gt;prepareStreet () ); 	$xtpl-&gt;assign ( 'zip_class', fCRUD::getColumnClass('zip')); 	$xtpl-&gt;assign ( 'zip', $customer-&gt;prepareZip () ); 	$xtpl-&gt;assign ( 'city_class', fCRUD::getColumnClass('city')); 	$xtpl-&gt;assign ( 'oras', $customer-&gt;prepareCity () ); 	$xtpl-&gt;assign ( 'id_tara', $customer-&gt;prepareCountryid () ); 	$xtpl-&gt;assign ( 'activ',fCRUD::showChecked($customer-&gt;prepareActiv (), 1) ); 	$xtpl-&gt;parse ( 'main.right.row' ); }</code>
+</p>
+
+<p>
+<code> how can print variable $pagination outside the class? i use xtemplate and i want to parse: $xtpl-&gt;assign ( 'PAGINARE', $pagination); </code>
+</p>
+
+<p>
+<code> pls somebody help me</code>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-200">
+				<div class="body" id="body-200">
+					
+<p>
+hey man.... here is a little pagination class i wrote:
+</p>
+<pre class="block php"><code>
+&lt;?php
+
+class Pagination {
+
+	private function checkPageSet($page_number){
+
+		// Check the page number
+		if(!isset($page_number) || $page_number == 0 || $page_number &gt; $last_page ) {
+			$page_number = 1;
+		}
+	
+	}
+
+	public function currentlyDisplayed($records){
+		// Get the requested page number
+		$page_number = fRequest::get('page_number','integer');
+		
+		// Check the page number, not set or 0 then set to 1
+		if(!isset($page_number) || $page_number == 0 ) {
+			$page_number = 1;
+		}
+		
+		// Get current #records, and the total # in the table
+		$record_count = $records-&gt;count();
+		$record_total = $records-&gt;count(TRUE);
+		
+		// Showing results $record_start to $record_end
+		$record_end = ($page_number * PER_PAGE);
+		
+		// Correct the math on $record_end, it will be greater than the total # in db on the last page
+		if ($record_end &gt; $record_total) {
+			$record_end = $record_total;
+		}
+		
+		// Start record number based off PER_PAGE constant
+		if($page_number &gt; 1) {
+			$record_start = (($page_number * PER_PAGE) + 1) - PER_PAGE;
+		} else {
+			$record_start = 1;
+		}
+		
+		echo &quot;&lt;p&gt;Showing results $record_start to $record_end of $record_total&lt;/p&gt;&quot;;
+		
+	}
+
+	public function create($page,$records) {
+
+		$record_count = $records-&gt;count();
+		$record_total = $records-&gt;count(TRUE);
+
+		// Get the requested page number
+		$page_number = fRequest::get('page_number','integer');
+
+		// Last Page
+		$last_page = ceil($record_total/PER_PAGE);
+
+		// Check the page number
+		if(!isset($page_number) || $page_number == 0 || $page_number &gt; $last_page ) {
+			$page_number = 1;
+		}
+
+		// Prev/Next pages
+		$next_page = $page_number+1;
+		$prev_page = $page_number-1;
+
+		// Build the pages out
+		echo &quot;&lt;div class='pages'&gt;\\n&quot;;
+
+		// Previous Page
+		if($page_number &gt; 1){
+			echo &quot;&lt;a href=\\&quot;/$page/&quot;.$prev_page.&quot;\\&quot; class=\\&quot;nextprev\\&quot;&gt;&amp;#171; Previous&lt;/a&gt;\\n&quot;;
+		} else {
+			echo &quot;&lt;span class='nextprev'&gt;&amp;#171; Previous&lt;/span&gt;\\n&quot;;
+		}
+		
+		// Loop
+		for($i = 1;$i &lt;= $last_page;$i++){
+			if($i &lt; 11) {
+				if($page_number == $i) {
+					echo &quot;&lt;span class=\\&quot;current\\&quot;&gt;&quot;.$page_number.&quot;&lt;/span&gt;\\n&quot;;
+				} else {
+					echo &quot;&lt;a href=\\&quot;/$page/&quot;.$i.&quot;\\&quot;&gt;&quot;.$i.&quot;&lt;/a&gt;\\n&quot;;
+				}
+			}
+		}
+		
+		// More than 10 pages
+		if($last_page &gt; 10) {
+			echo &quot;&lt;span&gt;&amp;#0133;&lt;/span&gt;\\n&quot;;
+			echo &quot;&lt;a href=\\&quot;/$page/&quot;.($last_page-1).&quot;\\&quot;&gt;&quot;.($last_page-1).&quot;&lt;/a&gt;\\n&quot;;
+			echo &quot;&lt;a href=\\&quot;/$page/&quot;.$last_page.&quot;\\&quot;&gt;&quot;.$last_page.&quot;&lt;/a&gt;\\n&quot;;
+		}
+		
+		// Next Page
+		if($last_page == $page_number){
+			echo &quot;&lt;span class='nextprev'&gt;Next &amp;#187;&lt;/span&gt;\\n&quot;;
+		} else {
+			echo &quot;&lt;a href=\\&quot;/$page/&quot;.$next_page.&quot;\\&quot; class=\\&quot;nextprev\\&quot;&gt;Next &amp;#187;&lt;/a&gt;\\n&quot;;
+		}
+		
+		// End it
+		echo &quot;&lt;/div&gt;\\n&quot;;
+	
+	}
+
+}
+
+?&gt;
+</code></pre>
+
+<p>
+ Say inside my Order.php class, I have this function:
+</p>
+<pre class="block php"><code>
+	public static function getPage() {
+		$page_number = fRequest::get('page_number','integer');
+		return fRecordSet::build('Order',array(),array('order_id' =&gt; 'desc'),PER_PAGE,$page_number);
+	}
+</code></pre>
+
+<p>
+ On the page I want to create the pagination, I call this stuff:
+</p>
+<pre class="block php"><code>
+// Pull in the records
+$orders = Order::getPage();
+
+// Call the pagination class
+$pagination = new Pagination();
+// Create 'Showing results $record_start to $record_end of $record_total'
+$pagination-&gt;currentlyDisplayed($orders);
+
+foreach($orders as $order){
+     // display your records
+}
+
+// Create the page links
+$pagination-&gt;create($page,$orders);</code></pre>
+
+<p>
+ PER_PAGE is just an int constant for how many records you would like to display on a page.
+</p>
+
+<p>
+Hope that helps
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bdavis											</span>
+					<span class="date_posted" title="5/5/09 9:25pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-206">
+				<div class="body" id="body-206">
+					
+<p>
+tank u my friend with a little modification it was very useful for me.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="5/7/09 5:48pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-492">
+				<div class="body" id="body-492">
+					
+<p>
+out of curiosity, what changes did you make?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													cake_and_bacon											</span>
+					<span class="date_posted" title="10/17/09 1:55pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

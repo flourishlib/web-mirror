@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fEmail not working &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fEmail not working</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					monster			</span>
+	<span class="date_posted" title="9/2/10 7:50am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi All,
+</p>
+
+<p>
+I get this error on a windows server when using <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>
+</p>
+
+<p>
+Warning: shell_exec() function.shell-exec: Unable to execute 'ipconfig /all' in C:<br />
+BLAH<br />
+flourish<br />
+<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php on line 417
+</p>
+
+<p>
+Any help would be appreciated.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-907">
+				<div class="body" id="body-907">
+					
+<p>
+What that means is that the user the web server is running as does not have permissions to execute <code>ipconfig</code>. For right now you can edit the permissions on <code>C:\\Windows\\System32\\ipconfig.exe</code> and add the web server user with execute permissions. Or if you just want to wait a little bit, I'll make a fix to <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> at lunch time.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/2/10 7:55am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-908">
+				<div class="body" id="body-908">
+					
+<p>
+thanks wbond happy to wait for the fix as they wont allow me to edit the user permissions :(
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													monster											</span>
+					<span class="date_posted" title="9/2/10 8:09am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-909">
+				<div class="body" id="body-909">
+					
+<p>
+This should be fixed in r899
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/2/10 3:50pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-910">
+				<div class="body" id="body-910">
+					
+<p>
+Notice: Undefined index: WINDIR in C:<br />
+BLAH<br />
+flourish<br />
+<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php on line 418
+</p>
+
+<p>
+doesnt recognise the server variable :(
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													monster											</span>
+					<span class="date_posted" title="9/2/10 7:49pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-911">
+				<div class="body" id="body-911">
+					
+<p>
+might have to use $_ENV['windir']; ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													monster											</span>
+					<span class="date_posted" title="9/2/10 7:53pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-912">
+				<div class="body" id="body-912">
+					
+<p>
+All three of my Windows environments had <code>$_SERVER['WINDIR']</code>, but only two had <code>$_ENV['windir']</code>. Either way, with r900 I've re-written the code to get the fully-qualified domain and it not longer requires executing a command-line program, so you should be all set. Let me know if you have any trouble.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/7/10 1:02am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>grab insert_id after raw SQL via query() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">grab insert_id after raw SQL via query()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					codehooligans			</span>
+	<span class="date_posted" title="11/3/10 12:54pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Greetings all. I've only been using Flourish about a week. Most of the backend database use is for a database management tool. So chose not to use the Flourish ORM parts. I'm mostly using the direct query() calls with my own SQL statements. 
+</p>
+
+<p>
+So my question that I've spent most of the morning trying to figure out is. How or where is the insert_id returned on an INSERT? The query does execute successfully I can see the new row in my table. I can print_r on the return $result. I see the insert_id field is set but cannot figure out how to access it. 
+</p>
+
+<p>
+Help. 
+</p>
+
+<p>
+(Apologies if this is a simple answer. I did search the site for 'insert_id' and found very little information.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-991">
+				<div class="body" id="body-991">
+					
+<p>
+Check out <a href="../flourishlib.com/api/fResult.html#getAutoIncrementedValue">fResult::getAutoIncrementedValue()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/4/10 1:24pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-992">
+				<div class="body" id="body-992">
+					
+<p>
+Thanks. Yeah forgot to mention I tried the call to getAutoIncrementedValue(). It returns 0. But I know the table has at least 50 row. So the insert_id should be 51. 
+</p>
+
+<p>
+I did figure out a work around on accessing the insert_id.
+</p>
+
+<p>
+$connection = $db-&gt;getConnection(); if ($connection) { 	return $connection-&gt;insert_id; }		
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													codehooligans											</span>
+					<span class="date_posted" title="11/4/10 1:33pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-993">
+				<div class="body" id="body-993">
+					
+<p>
+Can you tell me what database and extension you are running and what the SQL query you called was?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/4/10 1:37pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-994">
+				<div class="body" id="body-994">
+					
+<p>
+Sure. The extension is mysql. 
+</p>
+
+<p>
+$sql_str = &quot;INSERT companies (<code>active</code>, <code>name</code>, <code>contact_user_id</code>, <code>user_type_id</code>) VALUES('1', 'Paul<br />
+'s Sound Place', '0', '2');&quot;; $result = $hts_settings<a href="http://discussion.flourishlib.com/'db'">'db'</a>-&gt;query($sql_str); if ($result) { 	$connection = $hts_settings<a href="http://discussion.flourishlib.com/'db'">'db'</a>-&gt;getConnection(); 	if ($connection) 	{ 		return $connection-&gt;insert_id; 	}		 }
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													codehooligans											</span>
+					<span class="date_posted" title="11/4/10 1:53pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-995">
+				<div class="body" id="body-995">
+					
+<p>
+This ended up being a bug in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> where it would only look for <code>INSERT INTO</code>, whereas MySQL allows the <code>INTO</code> keyword to be omitted. r925 includes an updated version of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> that should fix this.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/4/10 2:21pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-996">
+				<div class="body" id="body-996">
+					
+<p>
+Ah. Well I guess I did leave out the INTO. Thanks for the note up the issue tracking. I'll make sure to upgrade. Or better correct my SQL statement. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													codehooligans											</span>
+					<span class="date_posted" title="11/4/10 4:49pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

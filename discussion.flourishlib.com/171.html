@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>diacritics &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">diacritics</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dao27			</span>
+	<span class="date_posted" title="11/13/09 8:48am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+why, if i input in the database a text with some script, and i output with flowrish don't have discritic shows corectly? i must mentioned theat i make a site with flowrish but admin part with another scripts, ina dmin shhows discritics but when i optup in site don;t show, thea header is sent corectly adn the charsset is utf and mysql is set to romanian.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-514">
+				<div class="body" id="body-514">
+					
+<p>
+You are probably running into issues because of mixing character sets. You mentioned the MySQL database is using a Romanian encoding, and you are calling <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a> for the Flourish stuff?
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> automatically sets the connection between the MySQL database and Flourish to use UTF-8 encoding, and MySQL should be able to properly convert the encoding from Romanian to UTF-8. My guess is that the admin interface that you built with something else is not really putting Romanian-encoded text into the database, but something else.
+</p>
+
+<p>
+The easiest way to help prevent such encoding issues is to make sure everything uses UTF-8, especially since it is such a universal character encoding. If you can't do that, you need to figure out what encoding the admin area is using and then make sure you set the MySQL connection to that encoding.
+</p>
+
+<p>
+To figure out what encoding the admin area is using, try looking at the HTTP headers and see if an encoding is specified after the mime type in the Content-Type header. If there is no charset specified, the browser will default to ISO-8859-1, which MySQL calls <code>latin1</code>. Depending on what characters are used, however, some browsers may actually send the content as UTF-8 because ISO-8859-1 can only represent 256 different characters. As you can see, the most fool-proof option is to use UTF-8.
+</p>
+
+<p>
+Once you have figured out the encoding that your admin area is using, see <a href="http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html">http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html</a> to learn how to set the character encoding for your MySQL connection. MySQL should then be able to convert from that encoding into the Romanian that it is using internally.
+</p>
+
+<p>
+Good luck!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/13/09 8:59am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-516">
+				<div class="body" id="body-516">
+					
+<p>
+so, i think right. so in the header HTTP Status Code: HTTP/1.1 200 OK Date:	Sun, 15 Nov 2009 21:53:42 GMT	 Server:	Apache/2.2.11 (Win32) PHP/5.3.0	 X-Powered-By:	PHP/5.3.0	 Set-Cookie:	PHPSESSID=ufsqqc6cf2eiuq1raot3r9d9p2; path=/	 Expires:	Thu, 19 Nov 1981 08:52:00 GMT	 Cache-Control:	no-store, no-cache, must-revalidate, post-check=0, pre-check=0	 Pragma:	no-cache	 Content-Encoding:	gzip	 Vary:	Accept-Encoding	 Content-Length:	2522	 Connection:	close	 Content-Type:	text/html
+</p>
+
+<p>
+so as you say i think is latin. i look into phpmyadmin and even there don't show corectly, only in admin. i don't sure i understood what you sugest. is to make the table utf8_bin? that did't work, i cannot understand why only in admin show that diactitics.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dao27											</span>
+					<span class="date_posted" title="11/15/09 4:57pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

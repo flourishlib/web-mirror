@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>password validation &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">password validation</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bdavis			</span>
+	<span class="date_posted" title="1/31/09 2:39pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I took the code you posted for validating password and password_confirmation and tried it out, I keep getting a &quot;array_key_exists(): The first argument should be either a string or an integer&quot;
+</p>
+
+<p>
+I guess the only real advantage to using this is to add the error to the $validation_messages[] array. Just seems a little complicated with using the $values, $old_values... etc.
+</p>
+
+<p>
+<hr />
+
+</p>
+<pre class="block php"><code>class Customer extends fActiveRecord {
+
+	protected function configure() {
+		fORM::registerHookCallback($this, 'post::validate()', 'Customer::validatePassword');
+	}
+
+	static public function validatePassword($object, &amp;$values, &amp;$old_values, &amp;$related_records, &amp;$cache, &amp;$validation_messages)
+	{
+		// If a new password was set, it came through the request and does not match the field password confirmation, add an error message
+		if (fActiveRecord::hasOld($old_values, 'password' &amp;&amp; fRequest::get('password') &amp;&amp; fRequest::get('password') != fRequest::get('password_confirmation'))) {
+		    $validation_messages[] = 'Password: The value entered does not match Password Confirmation';
+		}
+	}
+}</code></pre>
+
+<p>
+<hr />
+
+</p>
+<pre><code>Error
+-----
+{doc_root}/createuser.php(22): fActiveRecord-&gt; validate()
+{doc_root}/inc/flourish/fActiveRecord.php(1787): fActiveRecord-&gt;validate()
+{doc_root}/inc/flourish/fActiveRecord.php(1949): fORM::callHookCallbacks(Object(Customer), 'post::validate()', Array, Array, Array, Array, Array)
+{doc_root}/inc/flourish/fORM.php(184): call_user_func_array(Array, Array)
+[internal function]: Customer::validatePassword(Object(Customer), Array, Array, Array, Array, Array)
+{doc_root}/inc/classes/Customer.php(18): fActiveRecord::hasOld(Array, false)
+{doc_root}/inc/flourish/fActiveRecord.php(147): array_key_exists(false, Array)
+[internal function]: fCore::handleError(2, 'array_key_exist...', '/var/www/vhosts...', 147, Array)
+array_key_exists(): The first argument should be either a string or an integer
+
+Error
+-----
+{doc_root}/createuser.php(22): fActiveRecord-&gt;store()
+{doc_root}/inc/flourish/fActiveRecord.php(1787): fActiveRecord-&gt;validate()
+{doc_root}/inc/flourish/fActiveRecord.php(1949): fORM::callHookCallbacks(Object(Customer), 'post::validate()', Array, Array, Array, Array, Array)
+{doc_root}/inc/flourish/fORM.php(184): call_user_func_array(Array, Array)
+[internal function]: Customer::validatePassword(Object(Customer), Array, Array, Array, Array, Array)
+{doc_root}/inc/classes/Customer.php(18): fActiveRecord::hasOld(Array, false)
+{doc_root}/inc/flourish/fActiveRecord.php(147): array_key_exists(false, Array)
+[internal function]: fCore::handleError(2, 'array_key_exist...', '/var/www/vhosts...', 147, Array)
+array_key_exists(): The first argument should be either a string or an integer</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-22">
+				<div class="body" id="body-22">
+					
+<p>
+I believe the error you are running into is that you aren't closing a parenthesis properly. I believe the code should be:
+</p>
+<pre class="block php"><code>class Customer extends fActiveRecord {
+ 
+    protected function configure() {
+        fORM::registerHookCallback($this, 'post::validate()', 'Customer::validatePassword');
+    }
+ 
+    static public function validatePassword($object, &amp;$values, &amp;$old_values, &amp;$related_records, &amp;$cache, &amp;$validation_messages)
+    {
+        // If a new password was set, it came through the request and does not match the field password confirmation, add an error message
+        if (fActiveRecord::hasOld($old_values, 'password') &amp;&amp; fRequest::get('password') &amp;&amp; fRequest::get('password') != fRequest::get('password_confirmation')) {
+            $validation_messages[] = 'Password: The value entered does not match Password Confirmation';
+        }
+    }
+}</code></pre>
+
+<p>
+ The difference is that I put a <code>)</code> after <code>'password'</code> instead of at the end of the line.
+</p>
+
+<p>
+This code is somewhat complex, however it shows off the power of creating reusable plugins for the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class. This callback can actually be placed in any class to extend <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. This is what almost all of the <a href="../flourishlib.com/docs/fORM.html">fORM</a>* classes are doing.
+</p>
+
+<p>
+In the past I've thought about adding a method to <a href="../flourishlib.com/docs/fORMColumn.html">fORMColumn</a> to handle password fields. I'll probably look into that a little more in an effort to make things a bit simpler for such a common use case.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/1/09 3:47pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

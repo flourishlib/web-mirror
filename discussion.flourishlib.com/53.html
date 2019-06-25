@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Invalid method, __toString() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Invalid method, __toString()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/25/09 1:30am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is this a bug or just something I'm doing wrong?  I haven't come across this issue with any other record activity using active record.
+</p>
+
+<p>
+Version : r541
+</p>
+
+<p>
+Expection:
+</p>
+<pre><code>Exception in insertCommand :  exception 'fProgrammerException' with message 'Invalid method, __toString(), called' in /mnt/san3/ss7auto_web/flourish/fORM.php:546
+Stack trace:
+#0 /mnt/san3/ss7auto_web/flourish/fORM.php(346): fORM::parseMethod('__toString')
+#1 /mnt/san3/ss7auto_web/flourish/fActiveRecord.php(243): fORM::getActiveRecordMethod(Object(Cmd), '__toString')
+#2 [internal function]: fActiveRecord-&gt;__call('__toString', Array)
+#3 /mnt/san3/ss7auto_web/flourish/fORM.php(881): Cmd-&gt;__toString()
+#4 /mnt/san3/ss7auto_web/flourish/fORMValidation.php(875): fORM::scalarize('Cmd', 'cmd', Object(Cmd))
+#5 /mnt/san3/ss7auto_web/flourish/fActiveRecord.php(1944): fORMValidation::validate(Object(Cmd), Array, Array)
+#6 /mnt/san3/ss7auto_web/flourish/fActiveRecord.php(1795): fActiveRecord-&gt;validate()
+#7 /mnt/san3/ss7auto_web/db_models/Cmd.php(376): fActiveRecord-&gt;store()
+#8 /mnt/san3/ss7auto_web/models/buildOrder.php(315): Cmd::insertCommand('rept-stat-user', 4, 8, 'N', 1, 1)
+#9 /mnt/san3/ss7auto_web/models/buildOrder.php(61): buildOrder-&gt;addCmd()
+#10 /mnt/san3/ss7auto_web/web/index.php(34): buildOrder-&gt;__construct()
+#11 {main}</code></pre>
+
+<p>
+ ActiveRecord Code:
+</p>
+<pre class="block php"><code>/**
+ * Insert a command into table commands for a given command group.
+ * 
+ * @return Integer|BOOL				: $cmds_id if succeeded, false if failed 
+ * @param String $cmd
+ * @param Integer $cmd_groups_id
+ * @param Integer $statuses_id
+ * @param String $replaceable
+ * @param Integer $user_id
+ * @param Integer $sequence
+ */
+public static function insertCommand($cmd,$cmd_groups_id,$statuses_id,$replaceable,$user_id,$sequence)
+{
+	try
+	{
+		$cmd = new Cmd();
+		$cmd-&gt;setCmd($cmd);
+		$cmd-&gt;setCmdGroupsId($cmd_groups_id);
+		$cmd-&gt;setStatusesId($statuses_id);
+		$cmd-&gt;setReplaceable($replaceable);
+		$cmd-&gt;setUserId($user_id);
+		$cmd-&gt;setSequence($sequence);
+		$cmd-&gt;setCreated( date('Y-m-d H:i:s') );
+		$cmd-&gt;store();
+
+		return $cmd-&gt;getCmdsId();
+
+	} catch( fValidationException $e)
+		{
+			// Failed to create the cmd
+			//TODO : Manage this exception
+			echo &quot;Exception in insertCommand :  $e&quot;;
+			return false;
+		} catch ( fException $e )
+			{
+				//TODO : Manage this exception
+				echo &quot;Exception in insertCommand :  $e&quot;;
+				exit;
+			}
+}</code></pre>
+
+<p>
+ Create for the &quot;cmds&quot; table:
+</p>
+<pre class="block sql"><code>CREATE TABLE `cmds` (                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  `cmds_id` int(10) unsigned NOT NULL AUTO_INCREMENT,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  `cmd_groups_id` int(10) unsigned NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+  `user_id` int(11) unsigned NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  `statuses_id` tinyint(3) unsigned NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  `processed_methods_id` int(10) unsigned NOT NULL DEFAULT '1',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  `cmd` varchar(255) NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  `replaceable` char(1) NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  `sequence` float unsigned NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  `created` datetime NOT NULL,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  PRIMARY KEY (`cmds_id`),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  KEY `fk_cmds_statuses` (`statuses_id`),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  KEY `fk_cmds_processed_methods` (`processed_methods_id`),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  KEY `user_id` (`user_id`),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+  KEY `fk_cmds_cmd_groups` (`cmd_groups_id`),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  CONSTRAINT `fk_cmds_cmd_groups` FOREIGN KEY (`cmd_groups_id`) REFERENCES `cmd_groups` (`cmd_groups_id`) ON DELETE CASCADE ON UPDATE NO ACTION,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  CONSTRAINT `fk_cmds_processed_methods` FOREIGN KEY (`processed_methods_id`) REFERENCES `processed_methods` (`processed_methods_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  CONSTRAINT `fk_cmds_statuses` FOREIGN KEY (`statuses_id`) REFERENCES `statuses` (`statuses_id`) ON UPDATE NO ACTION                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 </code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-160">
+				<div class="body" id="body-160">
+					
+<p>
+There does appear to be a slight bug in Flourish where it is calling a <code>__toString()</code> method because <code>is_callable()</code> is returning <code>TRUE</code> when I should really be calling <code>method_exists()</code>.
+</p>
+
+<p>
+The bug in your code is these two lines. You are overwriting the value of <code>$cmd</code> with the new object and then setting it to itself.
+</p>
+<pre class="block php"><code>$cmd = new Cmd();
+$cmd-&gt;setCmd($cmd);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 10:43pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-169">
+				<div class="body" id="body-169">
+					
+<p>
+Oh duh!  Man, I can't tell you how many times I tried this different ways and kept doing that same thing.  These little things make me feel like such an idiot some times.
+</p>
+
+<p>
+Thanks for spotting it for me.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/29/09 9:41am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

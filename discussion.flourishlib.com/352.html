@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>License database &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">License database</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					frank			</span>
+	<span class="date_posted" title="1/7/11 3:40am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello all,
+</p>
+
+<p>
+My problem :
+</p>
+
+<p>
+What i'm trying to do is the following. Two databases, 1 gets the information of the other. So in my first database i want to make sure some company still has an valid license record.
+</p>
+
+<p>
+If there is an valid record in the first database it will return a record with the database credentials of the production database of this company. The databases aren't on the same server for security reasons.
+</p>
+
+<p>
+Normally you can create two databases with this awesome lib like this :<br />
+  $db_license = new <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>('mysql', $dbname, $dbuser, $dbpass, $dbhost, $dbport);<br />
+ $db_production = new <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>('mysql', $dbname2, $dbuser2, $dbpass2, $dbhost2, $dbport2);
+</p>
+
+<p>
+// Attach the db_production db as the default<br />
+ fORMDatabase::attach($db_production);<br />
+ fORMDatabase::attach($db_license, 'db_license');<br />
+
+</p>
+
+<p>
+But how can i make this work as described earlier? By using the db_license db the fill the database credentials of the other?
+</p>
+
+<p>
+With kind regards,
+</p>
+
+<p>
+Frank van der Geld Uni-Coder BV  
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1080">
+				<div class="body" id="body-1080">
+					
+<p>
+Here is the general concept:
+</p>
+<pre class="block php"><code>$license_db      = new fDatabase('mysql', $dbname, $dbuser, $dbpass, $dbhost, $dbport);
+$company_license = $license_db-&gt;query(&quot;SELECT * FROM licenses WHERE company_name = %s&quot;, $company_name)-&gt;fetchRow();
+$real_db         = new fDatabase('mysql', $company_license['db'], $company_license['user'], $company_license['password'], $company_license['host'], $company_license['port']);
+fORMDatabase::attach($real_db);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/9/11 8:58pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1086">
+				<div class="body" id="body-1086">
+					
+<p>
+Thanx for your fast answer.<br />
+ The problem still remains because the <a href="http://discussion.flourishlib.com/company_name">company_name</a> determines wich record to fetch.<br />
+ But this value isn't available untill the user is logging in :<br />
+<br />
+ And untill this point no database action is needed. In the config.php I well set the login page :<br />
+ fAuthorization::setLoginPage(SITE_URL .'login.php');<br />
+<br />
+ My login screen uses the following values :<br />
+
+</p>
+
+<p>
+company: <a href="http://discussion.flourishlib.com/company_name">company_name</a><br />
+ username: Frank	<br />
+ password: something<br />
+
+</p>
+
+<p>
+So i wanted to use the value <a href="http://discussion.flourishlib.com/company_name">company_name</a> of the login form to attach the final production database for this company. Else it won't be a generic approach to the license database and i will still have to hardcode the <a href="http://discussion.flourishlib.com/company_name">company_name</a> value in the init!?.<br />
+<br />
+ 	 Is this even possible? To make the a ORM attachment of the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object after i know the login values?<br />
+<br />
+ With kind regards,<br />
+ Frank 	
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													frank											</span>
+					<span class="date_posted" title="1/11/11 6:36am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

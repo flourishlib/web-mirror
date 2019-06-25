@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Autoload and Loading other Classes &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Autoload and Loading other Classes</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ecropolis			</span>
+	<span class="date_posted" title="4/6/11 1:29pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Specifically I'm trying to load Amazon Web Services PHP-SDK <a href="http://aws.amazon.com/sdkforphp/">http://aws.amazon.com/sdkforphp/</a> Seems the autoload() tries to load the call for the class even though I've already loaded it. Thus my application dies. I tried adding the logic if (!class_exists($class_name)) { ... that doesn't work. I tried adding some logic to the autoloader function to just go ahead and filter it out path it right and autoload but it doesn't work; I think because I'm not loading a class file but rather another initialization type of file because it has its own string of dependencies.
+</p>
+
+<p>
+I know this isn't really a Flourish issue but any direction you could give on the topic of loading up other classes would be very appreciated.
+</p>
+
+<p>
+Warren
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1218">
+				<div class="body" id="body-1218">
+					
+<p>
+I had a similar problem with the CssMin library. It kept loading up a twitter-async (EpiTwitter) file because of it's own autoloader that was registered with spl_autoload_register(). So I commented this out and that stopped the problem since my own <span class="underline">autoload() had no need for its own (I put CssMin all into one file CssMin.php and I only call for class CssMin anyway).</span>
+</p>
+
+<p>
+<span class="underline"> In production, you should consider not auto-loading anything and get your includes ready.</span>
+</p>
+
+<p>
+<span class="underline"> Are you on PHP 5.3? If you are, spl_autoload_register() works a little bit differently (but nicer as in namespaces).</span>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/7/11 6:31am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

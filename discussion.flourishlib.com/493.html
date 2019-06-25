@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>$record-&gt;exists() in post::commit() callback... &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">$record-&gt;exists() in post::commit() callback...</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/mattsah">			mattsah		</a> 	</span>
+	<span class="date_posted" title="7/26/11 2:17am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+This is part support, part ticket, and part suggestion.  But it appears that $record-&gt;exists() inside a post::commit() callback is FALSE.  It kinda feels like I just commited the data... so at that point shouldn't the record exist?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1460">
+				<div class="body" id="body-1460">
+					
+<p>
+The behavior you are seeing is intended. It is very often necessary to be able to detect that a record was just added to the database after the commit operation. If <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> returned <code>TRUE</code> in this situation, there would be no way to know when you've just inserted a record into the database for the first time.
+</p>
+
+<p>
+From an implementation perspective, <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> basically just returns <code>TRUE</code> when there are no <code>$old_values</code> entries for the primary key of the record, but there are primary key entries in the <code>$values</code> array. It is actually the very last step of <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a> to reset the <code>$old_values</code> array to a clean state, which causes <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> to now return <code>TRUE</code>.
+</p>
+
+<p>
+I use this functionality pretty extensively in plugins and in my own code, so I would be hesitant to change it. Perhaps there could be a better way to handle this situation? I'd be open to discussing changing how this situation is detected, but it is definitely functionality that would need to remain available.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/11 12:45pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1462">
+				<div class="body" id="body-1462">
+					
+<p>
+If this is the case, perhaps another callback could be added, of what name I do not know.  The confusion for me here was that it was 'post::store()' -- 'post-commit::store()' I think is another one, which I possibly wouldn't presume it to be true for... but I feel 'post::store()' should be almost equivalent to running something right after the -&gt;store() call.  Obviously the benefit of a hook callback is that if you store the record in multiple places you can just add the callback rather than repeating whatever the code is after that needs to be done.
+</p>
+
+<p>
+I don't know if there is a clean way to &quot;fix&quot; it without breaking backwards compatibility, but at the very least I feel it should be clearly documented somewhere that the exists() method will return FALSE during all ORMCallbacks and does not return true until store() returns.  The code which raised this issue is fixed otherwise, so it's not some huge deal... it was just sorta confusing and/or non-intuitive.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="7/26/11 1:04pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1465">
+				<div class="body" id="body-1465">
+					
+<p>
+Yeah, I am thinking some more documentation and an additional hook named something like <code>follow::store()</code> might be the best solution. Do you mind opening a ticket?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/11 2:27pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

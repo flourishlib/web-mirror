@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Result object eats lots of memory that I can&#039;t seem to get back &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Result object eats lots of memory that I can&#039;t seem to get back</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					peranme			</span>
+	<span class="date_posted" title="8/25/10 2:48am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi!
+</p>
+
+<p>
+I'm fairly new at both PHP and Flourish, so hopefully my question is an easy one :-)
+</p>
+
+<p>
+Here's my code:
+</p>
+<pre class="block php"><code>$dbThis=new fDatabase('mysql',$globDatabaseName,$globDbUsername,$globDbPassword,$globDbServer);
+$strSql=&quot;SELECT l.LanguageId, Text &quot;.
+  &quot;FROM entLanguages AS l, entTexts AS t WHERE TextNum=LanguageDescTextNum AND t.LanguageId=1 &quot;.
+  &quot;ORDER BY l.LanguageId ASC&quot;;
+$stmtThis=$dbThis-&gt;prepare($strSql);
+$rsThis=$dbThis-&gt;query($stmtThis);
+foreach ($rsThis as $row){
+  $strLanguages.=HtmlFix($row[&quot;Text&quot;]).&quot;||&quot;;
+  $strLanguageIds.=$row[&quot;LanguageId&quot;].&quot;||&quot;;
+}</code></pre>
+
+<p>
+ If I add in lines to display memory_get_usage() after every time I create a new instance, I notice that $rsThis eats up about 50MB of RAM, which seems a lot, given that sure, the Text column is a MySQL MEDIUMTEXT field, but it currently never holds anything above 200 chars (UTF-8).
+</p>
+
+<p>
+The real problem is, I can't seem to get that memory back.
+</p>
+
+<p>
+I've tried:
+</p>
+<pre class="block php"><code>unset($rsThis);
+$rsThis-&gt;destruct();
+$rsThis=null;</code></pre>
+
+<p>
+ ...none of which make any difference, alone or in different combinations.
+</p>
+
+<p>
+Any help would be greatly appreciated!
+</p>
+
+<p>
+Thanks in advance,
+</p>
+
+<p>
+Per.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-887">
+				<div class="body" id="body-887">
+					
+<p>
+Well, you are using a prepared statement where you don't need one, and I bet the database extension being selected stores the results related to the prepared statement object.
+</p>
+
+<p>
+You really only want to use a prepared statement if the query requires it (32+ KB strings for DB2 or Oracle), or if you are going to execute the query multiple times. Otherwise the separate prepare and query will most likely take longer than a query.
+</p>
+
+<p>
+Try this instead:
+</p>
+<pre class="block php"><code>$dbThis=new fDatabase('mysql',$globDatabaseName,$globDbUsername,$globDbPassword,$globDbServer);
+$strSql=&quot;SELECT l.LanguageId, Text &quot;.
+  &quot;FROM entLanguages AS l, entTexts AS t WHERE TextNum=LanguageDescTextNum AND t.LanguageId=1 &quot;.
+  &quot;ORDER BY l.LanguageId ASC&quot;;
+$rsThis=$dbThis-&gt;query($strSql);
+foreach ($rsThis as $row){
+  $strLanguages.=HtmlFix($row[&quot;Text&quot;]).&quot;||&quot;;
+  $strLanguageIds.=$row[&quot;LanguageId&quot;].&quot;||&quot;;
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/26/10 11:26pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-889">
+				<div class="body" id="body-889">
+					
+<p>
+Thanks for the reply!
+</p>
+
+<p>
+Yup, doing it without a statement certainly works well, memory gets released nicely.
+</p>
+
+<p>
+As you say, in this case, doing a prepared statement is pointless, I just use them all the time to make sure I don't forget to when I *do* need them. And there does seem to be a memory leak or release problem with fResult:
+</p>
+<pre class="block php"><code>if ($boolShowMem) DbugMem(&quot;before languages&quot;);
+
+$dbThis=new fDatabase('mysql',$globDatabaseName,$globDbUsername,$globDbPassword,$globDbServer);
+if ($boolShowMem) DbugMem(&quot;having just created dbThis&quot;);
+$strSql=&quot;SELECT l.LanguageId, Text &quot;.
+  &quot;FROM entLanguages AS l, entTexts AS t WHERE TextNum=LanguageDescTextNum AND t.LanguageId=1 &quot;.
+  &quot;ORDER BY l.LanguageId ASC&quot;;
+$stmtThis=$dbThis-&gt;prepare($strSql);
+if ($boolShowMem) DbugMem(&quot;having just created stmtThis&quot;);
+if ($boolShowMem) DbugMem(&quot;before creating rsThis&quot;);
+$rsThis=$dbThis-&gt;query($stmtThis);
+if ($boolShowMem) DbugMem(&quot;having just created rsThis&quot;);
+foreach ($rsThis as $row){
+  $strLanguages.=HtmlFix($row[&quot;Text&quot;]).&quot;||&quot;;
+  $strLanguageIds.=$row[&quot;LanguageId&quot;].&quot;||&quot;;
+}
+
+if ($boolShowMem) DbugMem(&quot;after languages&quot;);
+unset($row);
+if ($boolShowMem) DbugMem(&quot;after unset(&quot;.chr(36).&quot;row)&quot;);
+unset($rsThis);
+if ($boolShowMem) DbugMem(&quot;after unset(&quot;.chr(36).&quot;rsThis)&quot;);
+unset($dbThis);
+if ($boolShowMem) DbugMem(&quot;after unset(&quot;.chr(36).&quot;dbThis)&quot;);</code></pre>
+
+<p>
+ (the value returned by DbugMem() is just what memory_get_usage() returns)
+</p>
+
+<p>
+And the output is:
+</p>
+
+<p>
+Memory before languages: 494kB (506832 bytes)
+</p>
+
+<p>
+Memory having just created dbThis: 1055kB (1080716 bytes)
+</p>
+
+<p>
+Memory having just created stmtThis: 1395kB (1428916 bytes)
+</p>
+
+<p>
+Memory before creating rsThis: 1395kB (1428900 bytes)
+</p>
+
+<p>
+Memory having just created rsThis: 50646kB (51861876 bytes)
+</p>
+
+<p>
+Memory after languages: 50646kB (51862048 bytes)
+</p>
+
+<p>
+Memory after unset($row): 50646kB (51861988 bytes)
+</p>
+
+<p>
+Memory after unset($rsThis): 50643kB (51858596 bytes)
+</p>
+
+<p>
+Memory after unset($dbThis): 50643kB (51858528 bytes)
+</p>
+
+<p>
+...I simply don't get the memory back, and if I do nested queries, PHP runs out of its default 128MB of allocated RAM.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="8/27/10 2:15am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-891">
+				<div class="body" id="body-891">
+					
+<p>
+Sorry, forgot to unset the statement object in that last snippet, but unsetting it doesn't make a difference, new output:
+</p>
+
+<p>
+Memory before languages: 495kB (507804 bytes)
+</p>
+
+<p>
+Memory having just created dbThis: 1056kB (1081684 bytes)
+</p>
+
+<p>
+Memory having just created stmtThis: 1396kB (1429884 bytes)
+</p>
+
+<p>
+Memory before creating rsThis: 1396kB (1429868 bytes)
+</p>
+
+<p>
+Memory having just created rsThis: 50647kB (51862856 bytes)
+</p>
+
+<p>
+Memory after languages: 50647kB (51863028 bytes)
+</p>
+
+<p>
+Memory after unset($row): 50647kB (51862968 bytes)
+</p>
+
+<p>
+Memory after unset($rsThis): 50644kB (51859576 bytes)
+</p>
+
+<p>
+Memory after unset($stmtThis): 50644kB (51859508 bytes)
+</p>
+
+<p>
+Memory after unset($dbThis): 50643kB (51859440 bytes)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="8/27/10 2:25am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-901">
+				<div class="body" id="body-901">
+					
+<p>
+So this seems to be somewhat of an issue with the mysqli extension. When grabbing values in a non-buffered manner, it allocates enough ram to work with the maximum data that can fit in a column. This gets big for MEDIUMTEXT, MEDIUMBLOB, LONGTEXT and LONGBLOB.
+</p>
+
+<p>
+In r895 I've committed a fix that will cause it to only allocate what is needed to the fit the content for normal <code>query()</code> calls, but then <code>unbufferedQuery()</code> will continue to use the current non-stored functionality. Another option is to explicitly call <a href="../flourishlib.com/api/fStatement.html#__destruct">fStatement::__destruct()</a>. This will free the memory.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/28/10 12:08am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-893">
+				<div class="body" id="body-893">
+					
+<p>
+Thanks for taking the time to dive into this. Can you tell me the output of the following PHP?
+</p>
+<pre class="block php"><code>fCore::expose($dbThis-&gt;getExtension());</code></pre>
+
+<p>
+ With this info I should be able to get to the bottom of it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/27/10 9:18am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-894">
+				<div class="body" id="body-894">
+					
+<p>
+That returns &quot;mysqli&quot;.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="8/27/10 9:25am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-902">
+				<div class="body" id="body-902">
+					
+<p>
+I can confirm that if I do
+</p>
+<pre class="block php"><code>$stmtThis-&gt;__destruct();</code></pre>
+
+<p>
+ before doing unset($stmtThis) - all RAM is returned, so that's a feasible workaround.
+</p>
+
+<p>
+But it seems to my noob mind unset() should be enough?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="8/28/10 1:37am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-903">
+				<div class="body" id="body-903">
+					
+<p>
+As I mentioned in my previous content, you don't need to do anything as of r895. If you are using an older version, or <code>-&gt;unbufferedQuery()</code> and want to free memory before the end of the script, call <code>-&gt;__destruct()</code>.
+</p>
+
+<p>
+<code>unset()</code> removes a variable reference to a value, but <code>__destruct()</code> will only be called when all references have been destroyed. It seems that PHP thinks there is still some references to your <a href="../flourishlib.com/docs/fStatement.html">fStatement</a> object.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/30/10 9:21am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-904">
+				<div class="body" id="body-904">
+					
+<p>
+Sorry for being so stubborn :-)
+</p>
+
+<p>
+Yes, it *might* be a bug in PHP that makes the following page eat all this RAM:
+</p>
+<pre class="block php"><code>&lt;?php
+
+require_once($_SERVER['DOCUMENT_ROOT'].'/../inc/flourish/init.php');
+
+$globDbServer=&quot;*****************&quot;;
+$globDbUsername=&quot;*****************&quot;;
+$globDbPassword=&quot;*****************&quot;;
+$globDatabaseName=&quot;*****************&quot;;
+
+$boolCallDestructor=true;
+
+function Dbug($strOut){
+  echo &quot;&lt;p class=\\&quot;Dbug\\&quot;&gt;&quot;.$strOut.&quot;&lt;/p&gt;\\n&quot;;
+}
+
+function DbugMem(){
+  $strText=&quot;&quot;;
+  if (func_num_args()==1){
+    $strText=&quot; &quot;.trim(func_get_arg(0),&quot; &quot;); // Get first argument from list
+  }
+  $numBytes=memory_get_usage();
+  $numKbytes=intval($numBytes/1024);
+  Dbug(&quot;Memory&quot;.$strText.&quot;: &lt;b&gt;&quot;.$numKbytes.&quot;kB&lt;/b&gt; (&quot;.$numBytes.&quot; bytes)&quot;);
+}
+DbugMem(&quot;before languages&quot;);
+
+$dbThis=new fDatabase('mysql',$globDatabaseName,$globDbUsername,$globDbPassword,$globDbServer);
+DbugMem(&quot;having just created dbThis&quot;);
+$strSql=&quot;SELECT l.LanguageId, Text &quot;.
+  &quot;FROM entLanguages AS l, entTexts AS t WHERE TextNum=LanguageDescTextNum AND t.LanguageId=1 &quot;.
+  &quot;ORDER BY l.LanguageId ASC&quot;;
+$stmtThis=$dbThis-&gt;prepare($strSql);
+DbugMem(&quot;having just created stmtThis&quot;);
+$rsThis=$dbThis-&gt;query($stmtThis);
+DbugMem(&quot;having just created rsThis&quot;);
+foreach ($rsThis as $row){
+}
+
+DbugMem(&quot;after languages&quot;);
+unset($row);
+DbugMem(&quot;after unset(&quot;.chr(36).&quot;row)&quot;);
+unset($rsThis);
+DbugMem(&quot;after unset(&quot;.chr(36).&quot;rsThis)&quot;);
+if ($boolCallDestructor){
+  $stmtThis-&gt;__destruct();
+  DbugMem(&quot;after &quot;.chr(36).&quot;stmtThis-&gt;_destruct()&quot;);
+}
+unset($stmtThis);
+DbugMem(&quot;after unset(&quot;.chr(36).&quot;stmtThis)&quot;);
+unset($dbThis);
+DbugMem(&quot;after unset(&quot;.chr(36).&quot;dbThis)&quot;);
+
+?&gt;</code></pre>
+
+<p>
+ (this is the complete page, no other includes, all I've done before posting it here was removing database credentials)
+</p>
+
+<p>
+(set $boolCallDestructor to false to see the memory not being released)
+</p>
+
+<p>
+I fail to see what other references to these objects PHP can see, isn't it possible that this is indeed a bug in Flourish, potentially related to MEDIUMTEXT fields?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="8/31/10 3:27am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-905">
+				<div class="body" id="body-905">
+					
+<p>
+Did you upgraded Flourish to r896 yet?
+</p>
+
+<p>
+My results are:
+</p>
+
+<p>
+Without explicit <code>__destruct()</code> call:
+</p>
+<pre><code>Memory before languages: &lt;b&gt;6802kB&lt;/b&gt; (6965652 bytes)
+Memory having just created stmtThis: &lt;b&gt;6804kB&lt;/b&gt; (6967364 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6981748 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6981748 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6981748 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6979628 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6815kB&lt;/b&gt; (6979560 bytes)</code></pre>
+
+<p>
+ With explicit <code>__destruct()</code> call:
+</p>
+<pre><code>Memory before languages: &lt;b&gt;6802kB&lt;/b&gt; (6965652 bytes)
+Memory having just created stmtThis: &lt;b&gt;6804kB&lt;/b&gt; (6967364 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6981748 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6981748 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6981748 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6979628 bytes)
+Memory after $stmtThis-&gt;_destruct(): &lt;b&gt;6815kB&lt;/b&gt; (6978936 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6815kB&lt;/b&gt; (6978868 bytes)</code></pre>
+
+<p>
+ With five iterations of creating a statement and then :
+</p>
+<pre><code>Memory before languages: &lt;b&gt;6803kB&lt;/b&gt; (6966964 bytes)
+Memory having just created stmtThis: &lt;b&gt;6805kB&lt;/b&gt; (6969004 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6982464 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6982464 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6982464 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6980344 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6816kB&lt;/b&gt; (6980276 bytes)
+Memory having just created stmtThis: &lt;b&gt;6817kB&lt;/b&gt; (6980700 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6982480 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6982480 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6982480 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6980360 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6816kB&lt;/b&gt; (6980292 bytes)
+Memory having just created stmtThis: &lt;b&gt;6816kB&lt;/b&gt; (6980556 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6982460 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6982500 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6982500 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6980352 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6816kB&lt;/b&gt; (6980284 bytes)
+Memory having just created stmtThis: &lt;b&gt;6817kB&lt;/b&gt; (6980700 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6982460 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6982548 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6982548 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6980348 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6816kB&lt;/b&gt; (6980280 bytes)
+Memory having just created stmtThis: &lt;b&gt;6817kB&lt;/b&gt; (6980704 bytes)
+Memory having just created rsThis: &lt;b&gt;6818kB&lt;/b&gt; (6982476 bytes)
+Memory after languages: &lt;b&gt;6818kB&lt;/b&gt; (6982476 bytes)
+Memory after unset($row): &lt;b&gt;6818kB&lt;/b&gt; (6982476 bytes)
+Memory after unset($rsThis): &lt;b&gt;6816kB&lt;/b&gt; (6980360 bytes)
+Memory after unset($stmtThis): &lt;b&gt;6816kB&lt;/b&gt; (6980292 bytes)</code></pre>
+
+<p>
+ I'm not seeing a memory leak. If there was one, the memory usage should go up with each iteration. Also, if you change your profiling code to use <code>get_memory_usage(TRUE)</code> I see no changes whatsoever.
+</p>
+
+<p>
+In terms of the slight changes in emalloced memory, this is normal for PHP. Try the following code to see an example:
+</p>
+<pre class="block php"><code>
+echo memory_get_usage() . ' bytes&lt;br /&gt;';
+
+$vals = array();
+for ($i=0; $i &lt; 100; $i++) {
+	$vals[] = new stdClass;
+}
+
+echo memory_get_usage() . ' bytes&lt;br /&gt;';
+
+unset($vals);
+
+echo memory_get_usage() . ' bytes&lt;br /&gt;';</code></pre>
+
+<p>
+ I'm fairly sure I'm properly freeing the the result resources associated with mysqli.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/31/10 2:50pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-906">
+				<div class="body" id="body-906">
+					
+<p>
+Hi again!
+</p>
+
+<p>
+<br />
+o/ Just upgraded from r891 to r898, and now it's not only releasing the memory, it's hoggin 1300K instead of 50M! :-)
+</p>
+
+<p>
+Thanks so much, we'll now be using Flourish at work, and we'll be saving lots of time. I'm as happy as a pig on xmas eve.
+</p>
+
+<p>
+Cheers,
+</p>
+
+<p>
+Per.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="8/31/10 3:04pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

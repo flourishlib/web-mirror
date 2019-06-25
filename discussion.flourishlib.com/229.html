@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSchema visualization (NOT A PROBLEM) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSchema visualization (NOT A PROBLEM)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="5/18/10 6:53am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I wrote this piece of code to visualize the database schema as a UML diagram using http:://yuml.me/
+</p>
+
+<p>
+It doesn't produce 100% correct UML, but it is close enough for myself. Please leave feedback if you make improvements.
+</p>
+<pre class="block php"><code>&lt;?php
+	// example usage http://127.0.0.1/schema_to_yuml.php?style=boring&amp;direction=right&amp;scale=80
+
+        $db     = .. setup your database ..;
+	$schema = new fSchema($db);
+	
+	$direction_options = array(
+		'left' =&gt; 'LR',
+		'right' =&gt; 'RL',
+		'top' =&gt; 'TB');
+		
+	$style_options = array(
+		'scruffy' =&gt; 'scruffy', 
+		'boring'  =&gt; 'nofunky', 
+		'plain'   =&gt; 'plain');
+	
+	$style 	   = fRequest::getValid('style', array_keys($style_options));
+	$direction = fRequest::getValid('direction', array_keys($direction_options));
+	$scale	   = fRequest::get('scale', 'integer', 100);
+		
+	$yuml_url  = 'http://yuml.me/diagram/' . $style_options[$style] . ';dir:' . $direction_options[$direction] . ';scale:' . $scale . '/class/';
+	$yuml_code = '';
+	
+	$tables = $schema-&gt;getTables();
+	
+	$relationship_syntax = array(
+		'one-to-one'   =&gt; '1&lt;--&gt;1',
+		'many-to-one'  =&gt; '*--&lt;&gt;',
+		'one-to-many'  =&gt; '&lt;&gt;--*',
+		'many-to-many' =&gt; '*--*',
+		);
+	$relations_to_skip = array('many-to-one');
+	
+	$tables_to_skip = array();
+	
+        // Skip join tables
+	foreach ($tables as $table) {
+		$many_to_many_relationships = $schema-&gt;getRelationships($table, 'many-to-many');
+		foreach ($many_to_many_relationships as $relationship) {
+			$tables_to_skip[] = $relationship['join_table'];
+		}
+	}
+
+	// Build classes and their properties
+	foreach ($tables as $table) {
+		if (in_array($table, $tables_to_skip)) { continue; }
+		$yuml_code .= '[' . fGrammar::camelize(fGrammar::singularize($table), TRUE);
+		$columns = array_keys($schema-&gt;getColumnInfo($table));
+		$yuml_code .= '|' . implode(';', array_map('fGrammar::camelize', $columns, array(FALSE)));
+		$yuml_code .= '], ';
+	}
+	
+	$relationship_history = array(); // this ensures that reverse relation ships are not represented twice;
+	
+	foreach ($tables as $table) {
+		if (in_array($table, $tables_to_skip)) { continue; }
+		$relationship_types = $schema-&gt;getRelationships($table);
+		foreach ($relationship_types as $relationship_type =&gt; $relationships) {
+			if (is_array($relationships) &amp;&amp; count($relationships) &gt; 0 &amp;&amp; !in_array($relationship_type, $relations_to_skip)) {
+				$syntax = $relationship_syntax[$relationship_type];
+				foreach ($relationships as $relationship) {
+					$related_table = $relationship['related_table'];
+					$relationship_key = $relationship_type . (strcmp($table, $related_table) &lt; 1 ? $table . $related_table : $related_table . $table);
+					if (in_array($relationship_key, $relationship_history) === FALSE) {
+						$yuml_code .= '[' . fGrammar::camelize(fGrammar::singularize($table), TRUE)                         . ']';
+						$yuml_code .= $syntax;
+						$yuml_code .= '[' . fGrammar::camelize(fGrammar::singularize($related_table), TRUE) . ']';
+						$yuml_code .= ', ';	
+						$relationship_history[] = $relationship_key;					
+					}
+				}
+			}
+		}
+	}
+	
+	$yuml_code = fUTF8::sub($yuml_code, 0, -2);			
+	
+	echo '&lt;pre&gt;' . $yuml_url . $yuml_code . '&lt;/pre&gt;';
+	
+	echo '&lt;img src=&quot;' . $yuml_url . $yuml_code . '&quot; /&gt;';</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-724">
+				<div class="body" id="body-724">
+					
+<p>
+Here is the second version. Can hide attributes. And it is possible to define a subset of tables to view. Attributes of related classes are left out.
+</p>
+
+<p>
+Example usage:
+</p>
+<pre><code>http://127.0.0.1/schema_to_yuml.php?direction=right&amp;style=plain&amp;table[]=offerings&amp;table[]=shops&amp;table[]=products&amp;attributes=0</code></pre>
+<pre class="block php"><code>&lt;?php
+
+	
+	$schema = new fSchema($db);
+	
+	$direction_options = array(
+		'left'  =&gt; 'LR',
+		'right' =&gt; 'RL',
+		'top'   =&gt; 'TB');
+		
+	$style_options = array(
+		'scruffy' =&gt; 'scruffy', 
+		'boring'  =&gt; 'nofunky', 
+		'plain'   =&gt; 'plain');
+	
+	$style 	    = fRequest::getValid('style', array_keys($style_options));
+	$direction  = fRequest::getValid('direction', array_keys($direction_options));
+	$scale	    = fRequest::get('scale', 'integer', 100);
+	$attributes = fRequest::get('attributes', 'boolean', TRUE);
+	$tables     = fRequest::get('table', 'array', array());
+
+		
+	$yuml_url  = 'http://yuml.me/diagram/' . $style_options[$style] . ';dir:' . $direction_options[$direction] . ';scale:' . $scale . '/class/';
+	$yuml_code = '';
+	
+	$did_select_tables = FALSE;
+	
+	if (empty($tables)) {
+		$tables = $schema-&gt;getTables();	
+	} else {
+		$did_select_tables = TRUE;
+		$yuml_code .= '[note: partial diagram.{bg:cornsilk}]';
+	}
+	
+	$relationship_syntax = array(
+		'one-to-one'   =&gt; '1&lt;--&gt;1',
+		'many-to-one'  =&gt; '*--&lt;&gt;',
+		'one-to-many'  =&gt; '&lt;&gt;--*',
+		'many-to-many' =&gt; '*--*',
+		);
+	
+	$tables_to_skip = array();
+	
+	foreach ($tables as $table) {
+		$many_to_many_relationships = $schema-&gt;getRelationships($table, 'many-to-many');
+		foreach ($many_to_many_relationships as $relationship) {
+			$tables_to_skip[] = $relationship['join_table'];
+		}
+	}
+	
+	foreach ($tables as $table) {
+		if (in_array($table, $tables_to_skip)) { continue; }
+		
+		$yuml_code .= '[' . fGrammar::camelize(fGrammar::singularize($table), TRUE);
+		
+		$columns = array_keys($schema-&gt;getColumnInfo($table));
+		if ($attributes === TRUE) {
+			$yuml_code .= '|' . implode(';', array_map('fGrammar::camelize', $columns, array(FALSE)));
+		}
+		if ($did_select_tables) {
+			$yuml_code .= '{bg:green}';
+		}
+		$yuml_code .= '], ';
+	}
+	
+	$relationship_history = array();
+	
+	foreach ($tables as $table) {
+		if (in_array($table, $tables_to_skip)) { continue; }
+		$relationship_types = $schema-&gt;getRelationships($table);
+		foreach ($relationship_types as $relationship_type =&gt; $relationships) {
+			if (is_array($relationships) &amp;&amp; count($relationships) &gt; 0) {
+				$syntax = $relationship_syntax[$relationship_type];
+				foreach ($relationships as $relationship) {
+					$related_table = $relationship['related_table'];
+					$relationship_key = ($relationship_type === 'many-to-one' ? 'one-to-many' : $relationship_type) . (strcmp($table, $related_table) &lt; 1 ? $table . $related_table : $related_table . $table);
+					if (in_array($relationship_key, $relationship_history) === FALSE) {
+						$yuml_code .= '[' . fGrammar::camelize(fGrammar::singularize($table), TRUE)                         . ']';
+						$yuml_code .= $syntax;
+						$yuml_code .= '[' . fGrammar::camelize(fGrammar::singularize($related_table), TRUE) . ']';
+						$yuml_code .= ', ';	
+						$relationship_history[] = $relationship_key;					
+					}
+				}
+			}
+		}
+	}
+	
+	$yuml_code = fUTF8::sub($yuml_code, 0, -2);			
+	
+	echo '&lt;pre&gt;' . $yuml_url . $yuml_code . '&lt;/pre&gt;';
+	
+	echo '&lt;img src=&quot;' . $yuml_url . $yuml_code . '&quot; /&gt;';</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/18/10 7:22am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-726">
+				<div class="body" id="body-726">
+					
+<p>
+This is awesome!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jeffturcotte											</span>
+					<span class="date_posted" title="5/18/10 2:05pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

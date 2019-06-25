@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord-&gt;populate() using an array. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord-&gt;populate() using an array.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/mattsah">			mattsah		</a> 	</span>
+	<span class="date_posted" title="10/27/11 2:49am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+So there is this: <a href="439.html">http://flourishlib.com/discussion/1/439/1370</a> -- which although would be useful... I would actually prefer if the primary argument to populate() were a custom data array.
+</p>
+
+<p>
+In short, rather than using standard request super globals via <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>, if the parameter is provided it looks for those keys on the provided array making something like the following possible:
+</p>
+
+<p>
+$user-&gt;populate(array( 'first_name' =&gt; 'Matt', 'last_name'  =&gt; 'Sahagian', 'column...'  =&gt; 'Value...' ));
+</p>
+
+<p>
+This is extremely useful for populating records internally after various forms of processing.  It also adds for a nice clean way to add nicely namespaced request parameters that do not fall into the normal populateRelatedRecord() relationship conventions.
+</p>
+
+<p>
+$user-&gt;populate(fRequest::get('user', 'array'));
+</p>
+
+<p>
+Would allow for form inputs with name=&quot;user<a href="http://discussion.flourishlib.com/first_name">first_name</a>&quot; for example...  This is a nice simple way to override convention easily.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1599">
+				<div class="body" id="body-1599">
+					
+<p>
+also might be cool to allow for nested arrays in populateRelatedRecords() as well - as first parameter would be nice for consistency but it would break backwards compatibility with routes unless maybe you check types (array vs. String)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="10/27/11 3:02am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1643">
+				<div class="body" id="body-1643">
+					
+<p>
+I agree that it should be added. I think it is on the todo list. In the meantime I have a snippet that will allow you to do this if you are interested.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													unstoppablecarl											</span>
+					<span class="date_posted" title="12/13/11 8:40am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1644">
+				<div class="body" id="body-1644">
+					
+<p>
+@unstoppablecarl
+</p>
+
+<p>
+For a short time inKWell used an alternative form which had the convention being name=&quot;table<a href="http://discussion.flourishlib.com/column'">column'</a>.  Depending on how your snippet works, the issue I ran into was that file uploads and images were pretty dependent on the original convention, so they would break.
+</p>
+
+<p>
+There are &quot;hacks&quot; around this, but they're not very clean and require storing the original $_GET, modifying it temporarily during the populate, and then restoring it.  This is not the kind of solution I'm looking for.  But I'm more than willing to take a look at your solution if it avoids this.  Can you pastebin it and post a link?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="12/15/11 8:38pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1647">
+				<div class="body" id="body-1647">
+					
+<p>
+Unfortunately my snippet doesn't come close to your requirements. It doesn't handle file uploads at all.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													unstoppablecarl											</span>
+					<span class="date_posted" title="12/17/11 2:21pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

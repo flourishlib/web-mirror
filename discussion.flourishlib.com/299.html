@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fFile &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fFile</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="9/29/10 8:28am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Please help, i use <a href="../flourishlib.com/docs/fFile.html">fFile</a> to remembered upload file in case of validation error, but i can't succes. How i cand aranje the code to work?
+</p>
+
+<p>
+This is the sample of code.
+</p>
+<pre class="block php"><code>$item = new $tabela($id);
+					if (fRequest::isPost())
+					{
+						try
+						{
+
+							$item-&gt;populate();
+							echo &quot;-&gt;&quot;.fSession::get(&quot;pdf&quot;);
+
+							//fCore::expose($item);
+							fCore::expose($_POST);
+							if (isset($column_info['parola']) &amp;&amp; fRequest::get('parola') != null)
+							{
+								$item-&gt;setParola(fCryptography::hashPassword(fRequest::get('parola')));
+							}
+
+							/*if (isset($column_info['pdf']))
+							{
+								if ($item-&gt;getPdf())
+								{
+									fSession::set(&quot;pdf&quot;, '
+					&lt;input type=&quot;hidden&quot; name=&quot;existing-pdf&quot; value=&quot;' . $item-&gt;encodePdf() . '&quot; /&gt;
+					&lt;input type=&quot;hidden&quot; name=&quot;delete-pdf&quot; value=&quot;0&quot; /&gt;
+					Fisier existent: &lt;a href=&quot;' . $item-&gt;preparePdf(TRUE) . '&quot;&gt;' . $item-&gt;preparePdf() . '&lt;/a&gt;
+					&lt;label for=&quot;item-delete-pdf&quot;&gt;Delete existing pdf&lt;/label&gt;
+					&lt;input type=&quot;checkbox&quot; id=&quot;item-delete-pdf&quot; name=&quot;delete-pdf&quot; value=&quot;1&quot; /&gt;');
+								}
+								else
+								{
+
+									// fSession::delete(&quot;pdf&quot;);
+
+								}
+							}
+
+							if (isset($column_info['media']))
+							{
+								if ($item-&gt;getMedia())
+								{
+									fSession::set(&quot;media&quot;, '
+					&lt;input type=&quot;hidden&quot; name=&quot;existing-media&quot; value=&quot;' . $item-&gt;encodeMedia() . '&quot; /&gt;
+					&lt;input type=&quot;hidden&quot; name=&quot;delete-media&quot; value=&quot;0&quot; /&gt;
+					Fisier existent: &lt;a href=&quot;' . $item-&gt;prepareMedia(TRUE) . '&quot;&gt;' . $item-&gt;prepareMedia() . '&lt;/a&gt;
+					&lt;label for=&quot;item-delete-media&quot;&gt;Delete existing uploads&lt;/label&gt;
+					&lt;input type=&quot;checkbox&quot; id=&quot;item-delete-media&quot; name=&quot;delete-media&quot; value=&quot;1&quot; /&gt;');
+								}
+								else
+								{
+
+									// fSession::delete(&quot;media&quot;);
+
+								}
+							}*/
+
+							if ($action == &quot;sterge&quot;)
+							{
+								if ($item-&gt;delete())
+								{
+									echo &quot;&lt;div class='validation_succes success'&gt;Succes Delete.&lt;/div&gt;&quot;;
+									//fSession::delete(&quot;pdf&quot;);
+									//fSession::delete(&quot;media&quot;);
+									fURL::redirect(&quot;?pagina=texte&quot;);
+								}
+							}
+							else
+							{
+								if ($item-&gt;store())
+								{
+									echo &quot;&lt;div class='validation_succes success'&gt;Succes.&lt;/div&gt;&quot;;
+									//fSession::delete(&quot;pdf&quot;);
+									//fSession::delete(&quot;media&quot;);
+								}
+							}
+						}
+
+						catch(fValidationException $e)
+						{
+							echo $e-&gt;printMessage();
+						}
+					}
+
+					// Setare form
+
+					$form = new fForm();
+					if ($id != null)
+					{
+						$form-&gt;loadData($item-&gt;pullAllValues());
+						$form_title = &quot;Editeaza&quot;;
+					}
+					else
+					{
+						$form_title = &quot;Adauga&quot;;
+					}
+
+					$i = 0;
+					$ajax = self::array_filter_ajax($column_info, &quot;ajax&quot;);
+
+					// fCore::expose($categorii);
+
+					$form-&gt;set(&quot;title&quot;, &quot;$form_title $tabela&quot;);
+					$form-&gt;set(&quot;name&quot;, &quot;form_example&quot;);
+					$form-&gt;set(&quot;showDebug&quot;, true);
+					$form-&gt;set(&quot;divs&quot;, true);
+					$form-&gt;set(&quot;cleanAfterSuccess&quot;, false);
+					$form-&gt;set(&quot;submitMessage&quot;, null);
+					$form-&gt;set(&quot;showAfterSuccess&quot;, true);
+					$tabela123 = explode(&quot;_&quot;, $tabela);
+					if (count($tabela123) == 1) $tabela123 = &quot;Categorii_&quot; . strtolower($tabela);
+					else $tabela123 = $tabela;
+					foreach($column_info as $column =&gt; $detalii)
+					{ //echo fCore::expose($detalii);
+						if (isset($detalii[&quot;comment&quot;]) &amp;&amp; $detalii[&quot;comment&quot;] == &quot;ajax&quot;)
+						{ //## aici trebe facut pentru categorii
+							if ($i === 0)
+							{
+								$categorii = call_user_func(array(
+									$tabela123,
+									&quot;getAllParentId&quot;
+								) , &quot;Top&quot;);
+								$categorii1 = $categorii-&gt;call(&quot;pullValues&quot;, &quot;categorie&quot;);
+								$categorii2 = $categorii-&gt;call(&quot;pullValues&quot;, &quot;categorie&quot;);
+								$categorii = array_combine($categorii1, $categorii2);
+								array_unshift($categorii, &quot;Selecteaza&quot;);
+							}
+							else
+							{
+								$categorii = array(
+									&quot;Selecteaza&quot;,
+									$item-&gt;pullValues($column)
+								);
+							}
+						}
+
+						if (isset($detalii[&quot;comment&quot;]) &amp;&amp; $detalii[&quot;comment&quot;] == &quot;select_no_default_values&quot;)
+						{
+							$categorii = call_user_func(array(
+								$tabela123,
+								&quot;get_categs_tree&quot;
+							));
+
+							// $categorii1 = $categorii-&gt;call(&quot;pullValues&quot;, &quot;categorie&quot;);
+							// $categorii2 = $categorii-&gt;call(&quot;pullValues&quot;, &quot;categorie&quot;);
+							// $categorii = array_combine($categorii1, $categorii2);
+							// array_unshift($categorii, &quot;Top ...&quot;);
+
+							array_unshift($categorii, &quot;Selecteaza&quot;);
+						}
+
+						$i++;
+						switch ($detalii[&quot;comment&quot;])
+						{
+						case text:
+							$form-&gt;addField(&quot;text&quot;, $column, ucfirst($column) , false, null);
+							break;
+
+						case readonly:
+							$form-&gt;addField(&quot;text&quot;, $column, ucfirst($column) , false, null, &quot;readonly='true'&quot;);
+							break;
+
+						case &quot;date&quot;:
+							$form-&gt;addField(&quot;text&quot;, $column, ucfirst($column) , false, null, &quot; class='show-weeks dateformat-d-ds-m-ds-Y statusformat-l-cc-sp-d-sp-F-sp-Y'&quot;);
+							break;
+
+						case &quot;checkbox&quot;:
+							$form-&gt;addText(&quot;&lt;input type='hidden' name='&quot; . $column . &quot;' value='0'&quot;);
+							$form-&gt;addField(&quot;checkbox&quot;, $column, ucfirst($column) , false, null);
+							break;
+
+						case &quot;ajax&quot;:
+							$form-&gt;addField(&quot;select&quot;, $column, ucfirst($column) , false, null, $categorii, &quot;onChange='javascript:Ajax.Request(\\&quot;../getagents.php?method=getXML&amp;param=\\&quot;,this.value, \\&quot;&amp;tabela=categorii_&quot; . strtolower($tabela) . &quot;&amp;field=&quot; . $ajax[$i] . &quot;\\&quot;, Ajax.Response)';&quot;);
+							break;
+
+						case &quot;select_no_default_values&quot;:
+							$form-&gt;addField(&quot;select&quot;, $column, ucfirst($column) , false, null, $categorii);
+							break;
+
+						case &quot;select&quot;:
+							$form-&gt;addField(&quot;select&quot;, $column, ucfirst($column) , false, null, $detalii['valid_values']);
+							break;
+
+						case &quot;pdf&quot;:
+							$form-&gt;addField(&quot;file&quot;, $column, ucfirst($column) , false, null);
+							//$form-&gt;addText(fSession::get(&quot;pdf&quot;));
+							if ($item-&gt;getPdf()) {
+							
+							
+							$form-&gt;addText(&quot;&lt;input type='hidden' name='existing-&quot; . $column . &quot;' value='&quot; . $item-&gt;preparePdf() . &quot;'&quot;);
+							
+							$form-&gt;addText('&lt;input type=&quot;hidden&quot; name=&quot;delete-pdf&quot; value=&quot;0&quot; /&gt;
+');
+							
+							$form-&gt;addText('Existing pdf: &lt;a href=&quot;' . $item-&gt;preparePdf(TRUE) . '&quot;&gt; ' . $item-&gt;preparePdf() . '&lt;/a&gt;
+                &lt;label for=&quot;item-delete-pdf&quot;&gt;Delete existing pdf&lt;/label&gt;
+                &lt;input type=&quot;checkbox&quot; id=&quot;item-delete-pdf&quot; name=&quot;delete-pdf&quot; value=&quot;1&quot; /&gt;
+');
+
+
+
+
+												}</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-936">
+				<div class="body" id="body-936">
+					
+<p>
+I would recommend trying to post a smaller section of code. You have included a lot of code, but no real explanation of what isn't working properly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/3/10 11:55pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-963">
+				<div class="body" id="body-963">
+					
+<p>
+Ok, i will try to make smaller and explain what i want to do because kepps me down with my project an it's urgent to resolve this. I start to make a crud with flourish and a class who render form, make it automatic by database schema and field comment.
+</p>
+<pre class="block php"><code>$item = new $tabela($id);
+            //fCore::expose($item);
+            if (fRequest::isPost()) {
+                try {
+
+                    fCore::expose($item-&gt;populate());
+
+
+
+
+                    if ($action == &quot;sterge&quot;) {
+                        if ($item-&gt;delete()) {
+                            echo &quot;&lt;div class='validation_succes success'&gt;Succes Delete.&lt;/div&gt;&quot;;
+
+                            fURL::redirect(&quot;?pagina=&quot; . ucfirst($tabela) . &quot;&quot;);
+                        }
+                    } else {
+                        if ($item-&gt;store()) {
+                            echo &quot;&lt;div class='validation_succes success'&gt;Succes.&lt;/div&gt;&quot;;
+                        }
+                    }
+                } catch (fValidationException $e) {
+                    echo $e-&gt;printMessage();
+                }
+            }
+
+
+... some code ...
+
+                switch ($detalii[&quot;comment&quot;]) {
+
+
+
+
+                    case &quot;file&quot;:
+                        $form-&gt;addField(&quot;file&quot;, $column, ucfirst($column), false, null);
+                        //$form-&gt;addText(fSession::get(&quot;media&quot;));
+                        if ($item-&gt;getMedia()) {
+
+
+
+
+                            $form-&gt;addText(&quot;&lt;input type='hidden' name='existing-&quot; . $column . &quot;' value='&quot; . $item-&gt;encodeMedia() . &quot;'&quot;);
+
+                            $form-&gt;addText(&quot;&lt;input type='hidden' name='delete-&quot; . $column . &quot;' value='0' /&gt;&quot;);
+
+                            $form-&gt;addText('Existing file: &lt;a href=&quot;' . $item-&gt;prepareMedia(TRUE) . '&quot;&gt; ' . $item-&gt;prepareMedia() . '&lt;/a&gt;
+                &lt;label for=&quot;item-delete-media&quot;&gt;Delete existing file&lt;/label&gt;
+                &lt;input type=&quot;checkbox&quot; name=&quot;delete-' . $column . '&quot; value=&quot;1&quot; /&gt;
+');
+                        }
+                        break;
+
+
+
+            }
+
+            echo $form-&gt;display(ucfirst($action), &quot;btn&quot;);
+        }</code></pre>
+
+<p>
+ now it's come the problem. for table bannere fo example i configure:  fORMFile::configureFileUploadColumn($this, 'media', DOC_ROOT . '/uploads/bannere/');
+</p>
+
+<p>
+first when i upload something it's ok that part woth existing file and delete option it's ok even apear a validate issue, but when i push post again file field it empty even post echo existing-media =&gt; <span class="underline">flourish_temp/sample_copy2.swf
+delete-media =&gt; 0</span>
+</p>
+
+<p>
+<span class="underline"> so every time a row is updated i lost what is in the file field. what should be done. if need other explanation, sk. pls help. tanks</span>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/18/10 10:05pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-971">
+				<div class="body" id="body-971">
+					<pre><code>#!text/html&lt;form action='' method='post'  name='form_example' id='form_example'  enctype='multipart/form-data'/&gt;
+&lt;fieldset&gt;&lt;legend&gt;Adauga Tabela&lt;/legend&gt;&lt;div&gt;&lt;label for='denumire'&gt;Denumire: &lt;/label&gt;
+&lt;input type='text' id='denumire' name='denumire' value=''  /&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;div&gt;&lt;label for='media'&gt;Media: &lt;/label&gt;
+
+&lt;input type='file' id='media' name='media'  /&gt;&lt;br /&gt;
+&lt;/div&gt;&lt;div&gt;&lt;input type='hidden' name='existing-media' value='__flourish_temp/99f631e199a0a6d9acbeb1a021f5cb67-d30bhnl_copy2.jpg'&lt;/div&gt;&lt;div&gt;&lt;input type='hidden' name='delete-media' value='0' /&gt;&lt;/div&gt;&lt;div&gt;Existing file: &lt;a href=&quot;/proiecte/cd/uploads/tabela/__flourish_temp/99f631e199a0a6d9acbeb1a021f5cb67-d30bhnl_copy2.jpg&quot;&gt; 99f631e199a0a6d9acbeb1a021f5cb67-d30bhnl_copy2.jpg&lt;/a&gt;
+                &lt;label for=&quot;item-delete-media&quot;&gt;Delete existing file&lt;/label&gt;
+                &lt;input type=&quot;checkbox&quot; name=&quot;delete-media&quot; value=&quot;1&quot; /&gt;
+&lt;/div&gt;&lt;input type='submit' name='btn' value='Adauga' &gt;&lt;/input&gt;
+&lt;/fieldset&gt;&lt;/form&gt;
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/26/10 12:40pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

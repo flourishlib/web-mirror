@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRequest foreign characters problem &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRequest foreign characters problem</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					o			</span>
+	<span class="date_posted" title="10/13/09 7:50am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, 
+</p>
+
+<p>
+I'm giving some values from POST like ', , ' etc.. This values modified from <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> and converted to ?
+</p>
+
+<p>
+Probably <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>.php Line 247 makes this issue. edit : problem not in Line 247
+</p>
+
+<p>
+How can i solve this ?
+</p>
+<pre class="block php"><code>$name = '';
+$name = fRequest::get('name', 'string');
+
+// $name = '??'</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-474">
+				<div class="body" id="body-474">
+					
+<p>
+Every part of Flourish is set to use UTF-8 for character encoding. Part of <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> is to clean UTF-8 data to prevent invalidly encoded data from getting into your app. During this process if the character data is not recognized, it is converted to a <code>?</code>.
+</p>
+
+<p>
+The proper fix is to send HTML headers specifying UTF-8 as the encoing. This will cause browsers to send all data back as UTF-8 also. This can be done by calling <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a> before outputting any HTML. If you want to see how it is done, check out fHTML.php.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/13/09 8:43am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-475">
+				<div class="body" id="body-475">
+					
+<p>
+Im also using <a href="../flourishlib.com/api/fHtml.html#sendHeader">fHtml::sendHeader()</a>; in config.php. But same problem is continued. I'd edited characters from db. Everything is ok. But when i submit this form, this problem occurs again.
+</p>
+
+<p>
+My all files encoded with UTF8 and im using utf8_general_ci in my db. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="10/13/09 9:10am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-476">
+				<div class="body" id="body-476">
+					
+<p>
+Are you posting the data, or entering it through the querystring?
+</p>
+
+<p>
+Can you give an example URL so I can check the headers?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/13/09 9:19am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-477">
+				<div class="body" id="body-477">
+					
+<p>
+I'd uploaded to server all files. Error tell me ; Fatal error: Class '<a href="../flourishlib.com/docs/fHtml.html">fHtml</a>' not found in /home/XXX/public_html/lib/config.php on line 41 But file in FTP ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="10/13/09 9:52am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-478">
+				<div class="body" id="body-478">
+					
+<p>
+Im posting the data to profile.php?action=update and not working correctly under my mac. But working perfectly under my CentOS server. 
+</p>
+
+<p>
+Problem ; <a href="../flourishlib.com/docs/fHtml.html">fHtml</a> cant load with config.php, it tells me &quot;Class '<a href="../flourishlib.com/docs/fHtml.html">fHtml</a>' not found in /config.php on line 41&quot; 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="10/13/09 10:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-479">
+				<div class="body" id="body-479">
+					
+<p>
+Most likely it is a capitalization issue. It looks like you are calling <code>fHtml</code>, so it is looking for <code>fHtml.php</code> instead of <code>fHTML.php</code>. Try adjusting the code to <code>fHTML</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/13/09 12:56pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

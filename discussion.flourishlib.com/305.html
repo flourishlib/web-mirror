@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Namespaced ActiveRecords &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Namespaced ActiveRecords</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="10/12/10 6:56am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi I've using namespaces for my model. For example:
+</p>
+<pre class="block php"><code>namespace My\\Namespace;
+
+class Shop extends \\fActiveRecord {}</code></pre>
+
+<p>
+ This seems to be a problem for tablzation of the class - as the class name is <code>My\\Namespace\\Shop</code>. So I added:
+</p>
+<pre class="block php"><code>	fORM::mapClassToTable('My\\Namespace\\Shop', 'shops');</code></pre>
+
+<p>
+ This works except for that I would have to add this for all my model classes.
+</p>
+
+<p>
+So I tried changing the <a href="../flourishlib.com/api/fORM.html#tablize">fORM::tablize()</a> method instead, like this (uses only the last part of the class name):
+</p>
+<pre class="block php"><code>	static public function tablize($class)
+	{
+		if (!isset(self::$class_table_map[$class])) {
+			$stripped_class = $class;
+			$slash_position = strrpos($class, '\\\\');
+			if ($slash_position &gt;=0) {
+				$stripped_class = substr($class, $slash_position + 1);
+			}
+			self::$class_table_map[$class] = fGrammar::underscorize(fGrammar::pluralize($stripped_class));
+		}
+		return self::$class_table_map[$class];
+	}</code></pre>
+
+<p>
+ This will work as well, but naturally this will not do well with multiple models of the same name in different namespaces. 
+</p>
+
+<p>
+Is there a way of setting a default namespace or any other way of getting around this problem?
+</p>
+
+<p>
+Any ideas are appreciated :)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-952">
+				<div class="body" id="body-952">
+					
+<p>
+Hmm, I overlooked this part, not good.
+</p>
+
+<p>
+Both Layout and Page are in the namespace My<br />
+Namespace. As you can see Flourish cannot reason from relation name to class name. It seems that 
+</p>
+<pre class="block php"><code>\\fORM::mapClassToTable('My\\Namespace\\Layout', 'layouts');</code></pre>
+
+<p>
+ is not used in determining the class?
+</p>
+<pre><code>[internal function]: fActiveRecord-&gt;__call('createLayout', Array)
+/.../libs/flourish/fActiveRecord.php(925): fORMRelated::createRecord('My\\Namespace\\Page', Array, Array, 'Layout')
+/.../libs/flourish/fORMRelated.php(365): fActiveRecord::validateClass('Layout')
+/.../libs/flourish/fActiveRecord.php(739): fActiveRecord::checkClass('Layout')
+/.../libs/flourish/fActiveRecord.php(224): class_exists('Layout')
+[internal function]: spl_autoload_call('Layout')
+[internal function]: autoload('Layout')
+/.../src/config.php(100): autoload()
+/.../src/config.php(100)
+require_once(/.../src/Layout.php): failed to open stream: No such file or directory</code></pre>
+
+<p>
+ Shouldn't fORM:mapClassToTable be used in the case of relations as well? Or really the reverse should be used. Which table is registered with which class. But that naturally gives a problem with single table inheritance (implicit or explicit) . Hmm.
+</p>
+
+<p>
+<strong>UPDATE</strong> : Adding this piece of code to should will enable namespaced support, but it does not solve any single table inheritance issues.
+</p>
+<pre class="block php"><code>		if (!isset(self::$method_name_cache[$method_name])) {
+			list ($action, $subject) = fORM::parseMethod($method_name);
+			if (in_array($action, array('get', 'encode', 'prepare', 'inspect', 'set'))) {
+				$subject = fGrammar::underscorize($subject);
+			} elseif (in_array($action, array('build', 'count', 'inject', 'link', 'list', 'tally'))) {
+				$subject = fGrammar::singularize($subject);
+			}
+   // ==== THIS PART IS NEW ========
+			if (in_array($action, array('create', 'build'))) {
+				$reflector = new ReflectionClass($this);
+				$subject = $reflector-&gt;getNamespaceName() . '\\\\' . $subject;
+			}
+  // ==== END OF NEW STUFF =======
+			self::$method_name_cache[$method_name] = array(
+				'action'  =&gt; $action,
+				'subject' =&gt; $subject
+			);	
+		} else {
+			$action  = self::$method_name_cache[$method_name]['action'];
+			$subject = self::$method_name_cache[$method_name]['subject'];	
+		}
+</code></pre>
+
+<p>
+ This 'fix' only handles <code>create</code> and <code>build</code>. I guess it should handle <code>count</code>, <code>link</code> and others as well. Which ones?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="10/12/10 11:03am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-955">
+				<div class="body" id="body-955">
+					
+<p>
+Currently there is not a way to alias classes or provide a default namespace. In your case you are telling it to load the <code>Layout</code> class since the second part of <code>createLayout()</code> is the class name. For 5.2-style namespaces, you can just put the <code>_</code>s in the method, such as <code>createMy_Namespace_Layout()</code>. Unfortunately the 5.3 namespace <code>\\</code> can't be part of a method name.
+</p>
+
+<p>
+Now, for people who use both PHP 5.2 and 5.3 namespaces, I've thought about adding a way to specify a default namespace, however with 5.2, the code end up being a weird mix of prefixed and unprefixed.
+</p>
+<pre class="block php"><code>// Image a method such as this to set a default prefix
+fORM::setDefaultNamespace('Model_');
+
+$user  = Model_User(1);
+$group = Model_Group(1);
+
+// It would be weird to have a default prefix here since you have
+// to explicitly specify it above when creating an individual record
+$users = $group-&gt;buildUsers();</code></pre>
+
+<p>
+ For PHP 5.3, this isn't so much of an issue since PHP allows aliasing via the <code>as</code> keyword.
+</p>
+
+<p>
+What would your opinion be of adding two methods, <code>fORM::addDefaultNamespace()</code> for general usage and <code>fORM::mapClassToNamespace()</code> for special situations?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/12/10 1:38pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-956">
+				<div class="body" id="body-956">
+					
+<p>
+You could also use namespace by default, then you would have to override if you for instance had two or more User models.
+</p>
+
+<p>
+You do this by assuming that all related models are of the same namespace. If this is not the case a method like fORM:mapeTableToClass($table, $class_name, $class_column_value=NULL); would be handy.
+</p>
+<pre class="block php"><code>$reflector = new ReflectionClass($this);
+$subject = $reflector-&gt;getNamespaceName() . '\\\\' . $subject;</code></pre>
+
+<p>
+ What would the input to <a href="../flourishlib.com/api/fORM.html#mapClassToNamespace">fORM::mapClassToNamespace()</a>'s $class value look like? Or more importantly where would this be called. If you call it out of a specific class context, you would not solve the problem of several models by the same name. But if you put it in configure() it may work.
+</p>
+
+<p>
+(I know very little of 5.2 namespacing)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="10/12/10 1:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1007">
+				<div class="body" id="body-1007">
+					
+<p>
+Just a follow up for anyone reading this thread:
+</p>
+
+<p>
+In r928 (ticket #524), support for namespaced <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes was added. By default the namespaced <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes will ignore their namespace when automatically mapping to a database table. This can obviously be overridden with <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>.
+</p>
+<pre class="block php"><code>// This will work with the table &quot;users&quot; and not &quot;models_users&quot; or &quot;models.users&quot;
+namespace Models;
+
+class User extends \\fActiveRecord { }</code></pre>
+
+<p>
+ All methods that accept a related class name as part of the method name will automatically prepend the namespace of the current class to the related class. This means all related <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes should be in the same namespace.
+</p>
+<pre class="block php"><code>namespace Models;
+
+class User extends \\fActiveRecord { }
+class Group extends \\fActiveRecord { }
+
+$user = new User(1);
+// This will load the related Models\\Group objects, not
+// Group objects since User is in the Models namespace
+$groups = $user-&gt;buildGroups();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/11/10 10:41pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

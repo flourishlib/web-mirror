@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Field has Value? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Field has Value?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					brewho			</span>
+	<span class="date_posted" title="3/26/09 3:05am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have several tables in a sqlite database. I created all tables using translatedQuery(). Most tables are similar to:
+</p>
+<pre class="block sql"><code>CREATE TABLE conditions(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name VARCHAR(15) UNIQUE NOT NULL,
+	notes TEXT
+	);</code></pre>
+
+<p>
+ I have a separate table I'm using to link records in the other tables. When someone views a particular condition, I want to list all the exercises, therapies, foods, etc that reference that condition. When someone views a particular food, I want to list all the exercises, conditions, therapies etc. that reference that food. etcetera... 
+</p>
+<pre class="block sql"><code>CREATE TABLE links(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    exercise INTEGER REFERENCES exercises(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    condition INTEGER REFERENCES conditions(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    food INTEGER REFERENCES foods(id) ON DELETE CASCADE ON UPDATE CASCADE
+-- etc ...
+);</code></pre>
+
+<p>
+ Records in the Links table look like:
+</p>
+<pre><code>exercise=&gt;1, condition=&gt;3,    food=&gt;null, therapy=&gt;null
+exercise=&gt;1, condition=&gt;10,   food=&gt;null, therapy=&gt;null
+exercise=&gt;1, condition=&gt;null, food=&gt;5,    therapy=&gt;null
+exercise=&gt;1, condition=&gt;null, food=&gt;7,    therapy=&gt;null
+exercise=&gt;1, condition=&gt;null, food=&gt;null, therapy=&gt;17</code></pre>
+
+<p>
+ I don't know if this is the best way to go about what I'm trying to do, but its what I have at the moment.
+</p>
+
+<p>
+To view all the related records for a particular food(for example), I have:
+</p>
+<pre class="block php"><code>$links = fRecordSet::build('Link',array(&quot;food=&quot; =&gt; 1));
+$links-&gt;precreateConditions('condition');
+$links-&gt;precreateTherapys('therapy');
+// etc...
+
+foreach($links as $link){
+    $conditions[] = $link-&gt;createCondition('condition')-&gt;getName();
+    $therapies[] = $link-&gt;createTherapy('therapy')-&gt;getName();
+    // etc...
+}</code></pre>
+
+<p>
+ I think this is creating an object for each field in each record, but I only need to create objects for fields that have a value other than null.
+</p>
+
+<p>
+I want to do something like:
+</p>
+<pre class="block php"><code>foreach($records as $record){
+    if(!empty($record[$field])){
+        $array[] = $record-&gt;createObject($field)-&gt;getName();
+    }
+}</code></pre>
+
+<p>
+ Is there any way to do that? Or is there a better way to show these relationships?
+</p>
+
+<p>
+Thanks.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-162">
+				<div class="body" id="body-162">
+					
+<p>
+If the relationships are only ever between any two given entries, the most efficient way to store them in the database, and the easiest way to use Flourish to work with them is to create what I call a <a href="http://discussion.flourishlib.com/OrmConventions#JoiningTables">joining table</a> (some people refer to them as link tables) between each combination of two tables. Depending on how many tables you have, this may end up creating quite a number of new tables, but the code to interact with them will be much simpler.
+</p>
+
+<p>
+So, your SQL would end up looking like this:
+</p>
+<pre class="block sql"><code>CREATE TABLE exercises_conditions (
+    exercise_id INTEGER NOT NULL REFERENCES exercises(exercise_id) ON DELETE CASCASE,
+    condition_id INTEGER NOT NULL REFERENCES conditions(condition_id) ON DELETE CASCASE,
+    PRIMARY KEY (exercise_id, condition_id)
+);
+CREATE TABLE exercises_foods (
+    exercise_id INTEGER NOT NULL REFERENCES exercises(exercise_id) ON DELETE CASCASE,
+    food_id INTEGER NOT NULL REFERENCES foods(food_id) ON DELETE CASCASE,
+    PRIMARY KEY (exercise_id, food_id)
+);
+CREATE TABLE exercises_therapies (
+    exercise_id INTEGER NOT NULL REFERENCES exercises(exercise_id) ON DELETE CASCASE,
+    therapy_id INTEGER NOT NULL REFERENCES therapies(therapy_id) ON DELETE CASCASE,
+    PRIMARY KEY (exercise_id, therapy_id)
+);
+CREATE TABLE foods_conditions (
+    food_id INTEGER NOT NULL REFERENCES foods(food_id) ON DELETE CASCASE,
+    condition_id INTEGER NOT NULL REFERENCES conditions(condition_id) ON DELETE CASCASE,
+    PRIMARY KEY (food_id, condition_id)
+);
+CREATE TABLE foods_therapies (
+    food_id INTEGER NOT NULL REFERENCES foods(food_id) ON DELETE CASCASE,
+    therapy_id INTEGER NOT NULL REFERENCES therapies(therapy_id) ON DELETE CASCASE,
+    PRIMARY KEY (food_id, therapy_id)
+);
+CREATE TABLE therapies_conditions (
+    therapy_id INTEGER NOT NULL REFERENCES therapies(therapy_id) ON DELETE CASCASE,
+    condition_id INTEGER NOT NULL REFERENCES conditions(condition_id) ON DELETE CASCASE,
+    PRIMARY KEY (therapy_id, condition_id)
+);</code></pre>
+
+<p>
+ Now, in your code you can retrieve related records using the following code:
+</p>
+<pre class="block php"><code>$conditions = $exercise-&gt;buildConditions();
+$foods      = $exercise-&gt;buildFoods();
+// ...
+$exercises = $food-&gt;buildExercises();
+$therapies = $food-&gt;buildTherapies();</code></pre>
+
+<p>
+ You can then use the resulting <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> objects to iterate through and do whatever else you need. If you just want the name for the related records, you can use <a href="../flourishlib.com/api/fRecordSet.html#call">fRecordSet::call()</a>:
+</p>
+<pre class="block php"><code>$food_names = $exercise-&gt;buildFoods()-&gt;call('getName');</code></pre>
+
+<p>
+ To create the relationships between the records, do the following:
+</p>
+<pre class="block php"><code>// Build a set of the exercises 1, 2 and 3
+$exercises = fRecordSet::build(
+    'Exercise',
+    array('id=' =&gt; array(1,2,3))
+);
+
+$food-&gt;associateExercises($exercises);
+$therapy-&gt;associateExercises($exercises);</code></pre>
+
+<p>
+ Upon looking at this example, it seems obvious I should add the ability to not only pass in an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, but an array of primary keys for a type of record.
+</p>
+
+<p>
+Moving on, if you want to use an HTML form to specify the records to be associated, the form inputs should be named <code>related_table::related_primary_key[]</code>. Then you would call <code>$record-&gt;linkRelatedRecords()</code>. You can see some more details at <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#Associating.
+</p>
+
+<p>
+I hope this helps. I know it's helped me to identify another parameter type I should accept for the <code>associate</code> methods!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 11:14pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-168">
+				<div class="body" id="body-168">
+					
+<p>
+Thank you. That was very helpful. I really enjoy working with Flourish. I love the fact that Flourish automatically builds the triggers for a sqlite database when you run the queries through queryTranslated(). There is one thing I noticed. If my sqlite database doesn't yet exist, Flourish will connect(create) it just fine, but I cannot run query() or translatedQuery() to create the tables right away because I get an error that the database is not a valid sqlite database. However, once I open the database in SQLite Manager and add a simple dummy table, Flourish will let me run queries to add the rest of the tables. Then I can delete the dummy table and everything is fine. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													brewho											</span>
+					<span class="date_posted" title="3/29/09 2:41am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

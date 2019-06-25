@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Adding a word separator to fURL::makeFriendly &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Adding a word separator to fURL::makeFriendly</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/mattsah">			mattsah		</a> 	</span>
+	<span class="date_posted" title="1/24/11 3:18pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm wondering if anyone else here would find it useful to have an optional word separator for <a href="../flourishlib.com/api/fURL.html#makeFriendly">fURL::makeFriendly()</a> as a third parameter, with the default remaining underscore.  While I prefer underscore, some people seem to prefer dashes as word separators.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1153">
+				<div class="body" id="body-1153">
+					
+<p>
+I think this would be a great addition, I've taken the easy way out and done the following a few times:
+</p>
+<pre class="block php"><code>str_replace('_', '-', fURL::makeFriendly($uglyUrl));</code></pre>
+
+<p>
+ I think it would be a great addition, one I would personally use, here is a patch
+</p>
+<pre class="block php"><code>@@ -92,21 +92,22 @@
+ 	 * 
+ 	 * @param  string   $string      The string to convert
+ 	 * @param  interger $max_length  The maximum length of the friendly URL
++	 * @param  string   $separator   Character to use between words in URL, defaults to '_'
+ 	 * @return string  The URL-friendly version of the string
+ 	 */
+-	static public function makeFriendly($string, $max_length=NULL)
++	static public function makeFriendly($string, $max_length=NULL, $separator='_')
+ 	{
++	    $regexSeparator = preg_quote($separator);
+ 		$string = fHTML::decode(fUTF8::ascii($string));
+ 		$string = strtolower(trim($string));
+ 		$string = str_replace(&quot;'&quot;, '', $string);
+-		$string = preg_replace('#[^a-z0-9\\-]+#', '_', $string);
+-		$string = preg_replace('#_{2,}#', '_', $string);
+-		$string = preg_replace('#_-_#', '-', $string);
+-		$string = preg_replace('#(^_+|_+$)#D', '', $string);
++		$string = preg_replace('#[^a-z0-9\\-]+#', $separator, $string);
++		$string = preg_replace('#' . $regexSeparator . '{2,}#', $separator, $string);
++		$string = preg_replace('#(^' . $regexSeparator . '+|' . $regexSeparator . '+$)#D', '', $string);
+ 		
+ 		$length = strlen($string);
+ 		if ($max_length &amp;&amp; $length &gt; $max_length) {
+-			$last_pos = strrpos($string, '_', ($length - $max_length - 1) * -1);
++			$last_pos = strrpos($string, $separator, ($length - $max_length - (strlen($separator)) * -1);
+ 			if ($last_pos &lt; ceil($max_length / 2)) {
+ 				$last_pos = $max_length;
+ 			}
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													matt nowack											</span>
+					<span class="date_posted" title="3/15/11 5:14pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1155">
+				<div class="body" id="body-1155">
+					
+<p>
+Your patch is pretty much exactly what I did on my fork where I kinda &quot;needed&quot; the functionality.  <a href="https://github.com/dotink/flourish/commit/922930d1e7568b5dfbc37ddec7d4dd1b2d170113">https://github.com/dotink/flourish/commit/922930d1e7568b5dfbc37ddec7d4dd1b2d170113</a> -- Although there is one thing I am a bit confused about and that is namely the use of preg_quote.  I would understand it for certain characters, and obviously it's good to have in there in the event the user does put something that need to be escaped for some reason (although I can't imagine this going behind _ and -, but despite it being listed in preg_quote man page, it doesn't seem to be required for a dash.  As you can see from my above link, I don't use it in mine and this seems to work fine:
+</p>
+<pre><code>[/home/gent/Projects/inkwell.dotink.org/includes][01]# echo fURL::makeFriendly('This is a test of the separator', NULL, '-');
+this-is-a-test-of-the-separator
+[/home/gent/Projects/inkwell.dotink.org/includes][01]# </code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="3/16/11 4:19pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1178">
+				<div class="body" id="body-1178">
+					
+<p>
+Yea, didn't need it for the dash, I just put it in there in case someone were to pass something to the function that did require regex escaping.  Not being able to control the caller of the function, it was just a bit of future proofing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="3/21/11 3:04pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1180">
+				<div class="body" id="body-1180">
+					
+<p>
+Yeah, I've gone ahead an added that in, although it's probably not very SEO friendly I personally like a '.'
+</p>
+<pre><code>[/home/gent/Projects/inkwell.dotink.org/includes][01]# echo fURL::makeFriendly('This is a test of the separator', NULL, '.');
+this.is.a.test.of.the.separator
+[/home/gent/Projects/inkwell.dotink.org/includes][01]# </code></pre>
+
+<p>
+ Obviously that would have some issue without it!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/22/11 3:24am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1372">
+				<div class="body" id="body-1372">
+					
+<p>
+As of r1004 there is now a <code>$delimiter</code> parameter for <a href="../flourishlib.com/api/fURL.html#makeFriendly">fURL::makeFriendly()</a> that should theoretically accept any non-empty string, although I imagine it will normally be set to <code>-</code>.
+</p>
+<pre class="block php"><code>fURL::makeFriendly('This is a test of the separator', '-');
+// With length
+fURL::makeFriendly('This is a test of the separater', 10, '-');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/3/11 3:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

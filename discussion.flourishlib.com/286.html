@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Error trying to get column information with fSchema &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Error trying to get column information with fSchema</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					tomasberglund			</span>
+	<span class="date_posted" title="8/23/10 5:30pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+I have a database with &gt;70 tables and I want to get column information from all tables. This works fine until it comes to a table called 'keys' then I get the following error message;
+</p>
+
+<p>
+&quot;{doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.php(2198): <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>-&gt;fetchColumnInfo('keys') {doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.php(269): <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>-&gt;fetchMySQLColumnInfo('keys') {doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.php(977): <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query('SHOW CREATE TAB...') {doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php(2586): <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;run('SHOW CREATE TAB...', '<a href="../flourishlib.com/docs/fResult.html">fResult</a>') {doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php(2678): <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;performQuery('SHOW CREATE TAB...', Object(<a href="../flourishlib.com/docs/fResult.html">fResult</a>), Array) {doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php(2197): <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;checkForError(Object(<a href="../flourishlib.com/docs/fResult.html">fResult</a>), NULL) {doc_root}/inc/flourishlib/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php(420) MySQL error (You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'keys' at line 1) in SHOW CREATE TABLE keys&quot;
+</p>
+
+<p>
+If I rename this table to 'mykeys' everything works fine.
+</p>
+
+<p>
+Any feedback is appreciated.
+</p>
+
+<p>
+Last but not least, great unframework!
+</p>
+
+<p>
+Best regards, Tomas
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-884">
+				<div class="body" id="body-884">
+					
+<p>
+This should be fixed in r893.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/24/10 11:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-886">
+				<div class="body" id="body-886">
+					
+<p>
+Thank you, it now works great!
+</p>
+
+<p>
+Best regards, Tomas
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													tomasberglund											</span>
+					<span class="date_posted" title="8/25/10 1:54am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

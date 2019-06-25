@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>acces file name &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">acces file name</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="8/2/10 5:21pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+how can i acces file name something like this.
+</p>
+<pre class="block php"><code>foreach($banner_doi as $banner) {
+						$xtpl-&gt;assign(&quot;link_banner_doi&quot;, $banner-&gt;getMedia()-&gt;getName());
+}</code></pre>
+<pre class="block php"><code>Bannere Object
+(
+    [cache:protected] =&gt; Array
+        (
+        )
+
+    [old_values:protected] =&gt; Array
+        (
+        )
+
+    [related_records:protected] =&gt; Array
+        (
+        )
+
+    [values:protected] =&gt; Array
+        (
+            [id_bannere] =&gt; 1
+            [titlu] =&gt; Primul banner
+            [media] =&gt; fFile Object
+                (
+                    [current_line:fFile:private] =&gt; 
+                    [current_line_number:fFile:private] =&gt; 
+                    [deleted:protected] =&gt; 
+                    [file:protected] =&gt; G:\\xampp\\htdocs\\cd\\uploads\\bannere\\structura_site_c_d-1_copy1.docx
+                    [file_handle:fFile:private] =&gt; 
+                )
+
+            [este_activ] =&gt; on
+            [limba] =&gt; romana
+            [data] =&gt; fDate Object
+                (
+                    [date:fDate:private] =&gt; 1280178000
+                )
+
+        )
+
+)
+</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-854">
+				<div class="body" id="body-854">
+					
+<p>
+i figure out working like this but when the filedoesn't exist on the server it not return an object and get error. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="8/2/10 5:27pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-855">
+				<div class="body" id="body-855">
+					
+<p>
+How can i do to not receive an error, maybe trwing an catchable error if the file not existing on the server.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="8/3/10 10:55am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-857">
+				<div class="body" id="body-857">
+					
+<p>
+I would probably write a custom method to do what you describe. I used to have Flourish do that internally, but it caused exceptions to be thrown when a record was being loaded from the session. The following code should work for your situation.
+</p>
+<pre class="block php"><code>class NoFileException extends fExpectedException { }
+
+class Banner extends fActiveRecord
+{
+    public function getMedia()
+    {
+        // You have to make a call to __call() in order for the fORMFile plugin
+        // to be able to intercept the method call
+        $media = $this-&gt;__call('getMedia', array());
+        if ($media instanceof fFile) {
+            return $media;
+        }
+        throw new NoFileException('The file, %s, could not be found on the filesystem', $media);
+    }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/5/10 7:58pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

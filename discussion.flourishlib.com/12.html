@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Stable release? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Stable release?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					martin santangelo			</span>
+	<span class="date_posted" title="2/6/09 7:10pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Flourish seems very prommising Congratulations and thank you for sharing it. Im planing to use it on my new proyect.
+</p>
+
+<p>
+When we will spect an stable release?
+</p>
+
+<p>
+Regards
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-23">
+				<div class="body" id="body-23">
+					
+<p>
+I don't have a set date for reaching stable state, but I can elaborate on what I've been thinking for making Flourish stable.
+</p>
+
+<p>
+Right now as being in beta, I'm committed to making the absolute minimum number of <a href="../flourishlib.com/docs/BackwardsCompatibilityBreak.html">backwards compatibility breaks</a> as possible. Since Flourish became beta in November there have been around 100 new revision and only 2 were backwards incompatible. For the most part the Flourish API is stable.
+</p>
+
+<p>
+However, the project being stable is not just the API but also how buggy it is. Flourish is in beta to try and flush out bugs through real-world usage. So far I've gotten a good number of tickets about MySQL functionality, which isn't a surprise since I primarily use PostgreSQL at work and on personal projects.
+</p>
+
+<p>
+Beyond that, I would like to get to a point where there is test coverage on the majority of code/functionality in the library. As it stands I've been adding new tests as I fix bugs and writing others to try and reinforce things.
+</p>
+
+<p>
+The real-world usage of Flourish has definitely been beneficial. It has been in production use since even before it became beta and has been used on over twenty sites by myself and co-workers. One last thing to note is that I try to make sure all bugs are fixed within 24-48 hours so that end-user development is not held up.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/6/09 11:00pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-25">
+				<div class="body" id="body-25">
+					
+<p>
+Thanks for the reply.
+</p>
+
+<p>
+I will start my proyect then and post any issue that i have.
+</p>
+
+<p>
+Regards.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													martin santangelo											</span>
+					<span class="date_posted" title="2/7/09 5:23pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-26">
+				<div class="body" id="body-26">
+					
+<p>
+Sounds like a plan. Also, please feel free to file tickets for issues such as documentation being sparse or confusing.
+</p>
+
+<p>
+Good luck with your project, I hope using Flourish is beneficial!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/7/09 11:02pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

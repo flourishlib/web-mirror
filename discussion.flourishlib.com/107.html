@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Disable Excessive Validation? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Disable Excessive Validation?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="7/2/09 5:35pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is there anyway to reduce the amount of hand holding flourish does when used <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>?  When processing large datasets, the amount of checks flourish does for data consistency seriously slows a script down.
+</p>
+
+<p>
+For example, I have a table &quot;daily_tt_23&quot; that has a foreign key to the field &quot;stps_id&quot; in table &quot;stps&quot;.  Each time, I try to insert a record in &quot;daily_tt_23&quot;, flourish first confirms the value of &quot;stps_id&quot; actually exists in table &quot;stps&quot;.  It also encapsulates each insert into a transaction.  So now, to process a single SQL command, I'm executing 4 SQL commands.
+</p>
+
+<p>
+What I'd really like to see is some way to globally disable all of this consistency checking in advance.  That way, depending on the project, you could allow flourish to help you out for low volume stuff or get out of the way for high volume stuff.  
+</p>
+
+<p>
+Unfortunately, all of this is slowing my scripts down too much.  Unless there is a workaround, I won't be able to use flourish for command line processing.  I still love flourish and will use it for web sites, but will have to go back to my old techniques for batch processing.
+</p>
+
+<p>
+Here is an example of the query log : 
+</p>
+<pre><code>090702 17:10:21    1 Query      truncate table daily_tt_23
+                    1 Query     SHOW CREATE TABLE daily_tt_23
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 3
+                    1 Query     INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (3, 1201200, 12012, 7, 1201200, 12012, 'DPCNGT', '226-012-000', 'GT', 0, 10, '2009-07-02 17:10:21')
+090702 17:10:22    1 Query      COMMIT
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 3
+                    1 Query     INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (3, 1705341, 17053, 7, 1705341, 17053, 'DPCNGT', '226-012-000', 'GT', 0, 10, '2009-07-02 17:10:22')
+                    1 Query     COMMIT
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 3
+                    1 Query     INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (3, 1705927, 17059, 7, 1705931, 17059, 'DPCNGT', '213-001-001', 'GT', 0, 10, '2009-07-02 17:10:22')
+                    1 Query     COMMIT
+                    1 Query     BEGIN
+090702 17:10:23    1 Query      SELECT stps_id FROM stps WHERE stps_id = 3
+                    1 Query     INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (3, 14165644400, 14165, 11, 14165644499, 14165, 'DPCNGT', '226-012-000', 'GT', 0, 10, '2009-07-02 17:10:22')
+                    1 Query     COMMIT
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 4
+090702 17:10:24    1 Query      INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (4, 1201200, 12012, 7, 1201200, 12012, 'DPCNGT', '226-012-000', 'GT', 0, 10, '2009-07-02 17:10:23') 
+                    1 Query     COMMIT
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 4
+                    1 Query     INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (4, 1705341, 17053, 7, 1705341, 17053, 'DPCNGT', '226-012-000', 'GT', 0, 10, '2009-07-02 17:10:24')
+                    1 Query     COMMIT
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 4
+                    1 Query     INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (4, 1705927, 17059, 7, 1705931, 17059, 'DPCNGT', '213-001-001', 'GT', 0, 10, '2009-07-02 17:10:24')
+                    1 Query     COMMIT
+                    1 Query     BEGIN
+                    1 Query     SELECT stps_id FROM stps WHERE stps_id = 4
+090702 17:10:25    1 Query      INSERT INTO daily_tt_23 (stps_id, gta, gta_15, gta_len, egta, egta_15, xlat, dpc, ri, ssn, ngt, created) VALUES (4, 14165644400, 14165, 11, 14165644499, 14165, 'DPC', '226-012-000', 'GT', 0, 0, '2009-07-02 17:10:24')
+                    1 Query     COMMIT</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-317">
+				<div class="body" id="body-317">
+					
+<p>
+I've sort of found the solution to this problem.  The answer is to use simple SQL instead of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.  Doing this on a very small dataset(18,000 records) reduced my script execution time from an average of 6 seconds down to an average of 3.2 seconds.  
+</p>
+
+<p>
+I know that doesn't seem like a lot.  However, this was just a small subset of my records.  Normally, this script will process &gt;250K records multiple times.  Other scripts I'm converting will process millions of records.  All those seconds will add up.
+</p>
+
+<p>
+I also think I can improve the speeds even more by getting rid of the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> usage as well.  
+</p>
+
+<p>
+So, now I still get to use all the other flourish goodness, but I'll do the queries the old fashioned way.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="7/2/09 6:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-318">
+				<div class="body" id="body-318">
+					
+<p>
+From the SQL you posted, it seems to me you are using the ORM, not just <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. The ORM does automatic data escaping, unescaping, validation with nice messages and more, but obviously not without a cost.
+</p>
+
+<p>
+The simplest way to improve your SQL would be to start a transaction manually before you process all of your records:
+</p>
+<pre class="block php"><code>fORMDatabase::retrieve()-&gt;query('BEGIN');
+foreach ($records as $record) {
+    $record-&gt;store();
+}
+fORMDatabase::retrieve()-&gt;query('COMMIT');</code></pre>
+
+<p>
+ However, you are going to find that for massive data sets, pure <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> calls will be much more efficient:
+</p>
+<pre class="block php"><code>$db-&gt;query(&quot;INSERT INTO table(column, second_column) VALUES (%s, %i)&quot;, $column, $second_column);</code></pre>
+
+<p>
+ One of the things on my todo list for <a href="../flourishlib.com/docs/fResult.html">fResult</a> is batch unescaping, so instead of calling escape for each column of each row, you will be able to escape a result set with one method call:
+</p>
+<pre class="block php"><code>$res-&gt;unescape('column:datatype', 'second_column:datatype');
+foreach ($res as $row) {
+    // ...
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/2/09 6:26pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

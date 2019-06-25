@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Flourish using call-time pass-by-reference and PHP 5.4. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Flourish using call-time pass-by-reference and PHP 5.4.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/cnicodeme">			cnicodeme		</a> 	</span>
+	<span class="date_posted" title="11/6/12 11:01am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<p>Hi!</p>
+
+<p>Since PHP 5.3 deprecating call-time pass-by-reference, and 5.4 throws a fatal error (source: http://www.php.net/manual/en/language.references.pass.php), I was wondering if it was planned to remove all those "&amp;" in Flourish.</p>
+
+<p>If not, why? Is there a particular reason?</p>
+
+<p>Thanks for your reply.</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1804">
+				<div class="body" id="body-1804">
+					<p>Flourish does not use call time pass by reference, but rather normal pass by reference that is defined in method signatures. References are used to keep multiple copies of data structures intact, such as the identity map, so that if you load user 1 in two different scopes, you still are referencing the same mutated state of the data. Additionally references are used for in the JSON parsing, because it is the best way to handle the data traversal.</p>
+
+<p>Flourish is tested on PHP 5.1, 5.2, 5.3 and 5.4. http://flourishlib.com/Tests shows the most recent results for all of the different environments.</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/6/12 11:06am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1805">
+				<div class="body" id="body-1805">
+					<p>Thanks for the fast reply.</p>
+
+<p>Something is bothering me though, as read on this page : http://www.php.net/manual/en/language.references.pass.php :</p>
+
+<blockquote>
+  <p>As of PHP 5.3.0, you will get a warning saying that "call-time pass-by-reference" is deprecated when you use &amp; in foo(&amp;$a);. And as of PHP 5.4.0, call-time pass-by-reference was removed, so using it will raise a fatal error.</p>
+</blockquote>
+
+<p>If understood correctly, that means a function like foo(&amp;$a) won't be accepted.
+Now, if I look at https://github.com/flourishlib/flourish-classes/blob/master/fStatement.php#L410 (for example), I see that exact same behavior :</p>
+
+<pre><code>public function executeQuery($result, $params, &amp;$extra, $different) {}
+</code></pre>
+
+<p>So I expect a E_DEPRECATED in 5.3 and E_STRICT in 5.4.</p>
+
+<p>But now, you send me the http://flourishlib.com/Tests link, which seems to indicate that there is no error for PHP 5.4 nor PHP 5.3 (in vm-arch.wbond.net).
+(note: I can't see vm-arch.wbond.net in https://github.com/flourishlib/flourish-tests-results/blob/master/results/01512d2a544a277d7b264b45a2c82a6b31a5701b.json ?).</p>
+
+<p>So now I'm confused ...</p>
+
+<p>Is there something I'm missing? between what PHP consider call-time pass-by-reference and what you do, like in the fStatement.php lib ?</p>
+
+<p>Thanks for your help.</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/cnicodeme">							cnicodeme						</a> 					</span>
+					<span class="date_posted" title="11/6/12 11:56am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1806">
+				<div class="body" id="body-1806">
+					<p>Right, so there are two kinds of pass by reference, those defined when the function or method is defined, or those that are defined when you call the function.</p>
+
+<p>The example you linked to in the Flourish source is defining a method as having a argument passed by reference, meaning it won't make a copy of it if changes are made, but instead the original variable from the calling scope will be affected.</p>
+
+<pre class="block php"><code>&lt;?php
+// This is ok!
+function foo($var1, &amp;$var2) {
+    $var1 += 1;
+    $var2 += $var1;
+    return $var2;
+}
+</code></pre>
+
+<p>Call-time pass-by-reference is when you force a function or method to accept a variable by reference even if it is not expecting it. This is generally bad, because the function may not know it has a reference and may do terrible things to your variable. However, usually if you are doing it, it is for a reason. It looks like:</p>
+
+<pre class="block php"><code>$my_var = 3;
+$my_var2 = 0;
+
+// Normal call
+foo($my_var, $my_var2);
+print $my_var; // still 3!
+print $my_var2; // 4
+
+// Call-time pass by reference, notice the &amp; symbol for the first var, when calling the function
+foo(&amp;$my_var1, $my_var2);
+print $my_var; // Uh oh, now 4!
+print $my_var2; // 8
+</code></pre>
+
+<p>I hope this helps some.</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/6/12 12:06pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1807">
+				<div class="body" id="body-1807">
+					<p>Yep! It make more sense now. I wasn't aware of that difference. I thought it was either allowed to use reference or not. Not in a granular way like this.</p>
+
+<p>Thanks for pointing this out :)</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/cnicodeme">							cnicodeme						</a> 					</span>
+					<span class="date_posted" title="11/7/12 2:45am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

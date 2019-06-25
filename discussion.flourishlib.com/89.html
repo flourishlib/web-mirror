@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>question &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">question</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					 mungiu			</span>
+	<span class="date_posted" title="6/6/09 6:14pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i have this code:
+</p>
+<pre class="block php"><code>	for($j=1; $j&lt;=1; $j++){
+		if(!empty($row[&quot;poza&quot;.$j])) {
+
+			$picx_mic= $thumb.&quot;?src=../media/foto_news/&quot;.$row[&quot;poza&quot;.$j].&quot;&amp;w=80&quot;;
+			$picx= &quot;../media/foto_news/&quot;.$row[&quot;poza&quot;.$j].&quot;&amp;w=500&quot;;
+			${&quot;x2_&quot;.$j} = &quot;&lt;img src='&quot;.$picx_mic.&quot;' onclick='open_view(\\&quot;&quot;.$picx.&quot;\\&quot;,\\&quot;&quot;.$row[&quot;titlu&quot;].&quot;\\&quot;)' style='cursor:pointer;' title='&quot;.$row[&quot;titlu&quot;].&quot;' /&gt;&quot;;
+			${&quot;POZA_&quot;.$j} = ${&quot;x2_&quot;.$j};
+			
+		}else {
+			${&quot;POZA_&quot;.$j} = '&lt;img src=&quot;&quot; width=&quot;80&quot; /&gt;';
+		}
+		$xtpl-&gt;assign(&quot;POZA$j&quot;, ${&quot;POZA_&quot;.$j});	
+	}
+	</code></pre>
+
+<p>
+ how can i transform this in flourish stye to be like
+</p>
+<pre class="block php"><code>foreach ( $details as $detail ) {
+	
+	
+	
+	for($j=1; $j&lt;=1; $j++){
+		if(!empty($detail-&gt;getIdNews().......$j)) {</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-272">
+				<div class="body" id="body-272">
+					
+<p>
+I think I would need to know a little bit more about your database schema to give any insight. From what I can tell, there are a number of columns in your table that hold image filenames and you need to create HTML from those and assign it to a template.
+</p>
+
+<p>
+I am guessing you want to know how to do with with the ORM? Your current code should work just fine using a plain <a href="../flourishlib.com/api/fDatabase.html#query">fDatabase::query()</a> call.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/09 1:19pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-273">
+				<div class="body" id="body-273">
+					
+<p>
+Yes, you right, if i have 2 or more columns like picture1, picture2, etc, to loop trought amoungh this not to verify every columnt if contain picture, and i asked if it is posible to do with orm, but i guess is't possible, so if i will need this i use a regular mysql statement, tank you for response.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/8/09 1:49pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-274">
+				<div class="body" id="body-274">
+					
+<p>
+It certainly is possible with the ORM. Here is how I would do it with your current setup:
+</p>
+<pre class="block php"><code>foreach ($details as $detail) {
+	for($j=1; $j&lt;=1; $j++){
+		
+		$value  = $detail-&gt;{'getPoza' . $j}();
+		
+		if ($value) {
+			$html_picx_mic = fHTML::encode($thumb . &quot;?src=../media/foto_news/&quot; . $value . &quot;&amp;w=80&quot;);
+			$js_picx       = fJSON::encode(&quot;../media/foto_news/&quot; . $value . &quot;&amp;w=500&quot;);
+			$js_titlu      = fJSON::encode($detail-&gt;getTitlu());
+			// This is the same as fHTML::encode($detail-&gt;getTitlu())
+			$html_titlu    = $detail-&gt;encodeTitlu();
+			$html          = '&lt;img src=&quot;' . $html_picx_mic . '&quot; onclick=&quot;open_view(' . $picx . ',' . $js_titlu . ')&quot; style=&quot;cursor:pointer;&quot; title=&quot;' . $html_titlu . '&quot; /&gt;';
+			
+		} else {
+			$html = '&lt;img src=&quot;&quot; width=&quot;80&quot; /&gt;';
+		}
+		
+		$xtpl-&gt;assign(&quot;POZA&quot; . $j, $html);    
+	} 
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/09 2:21pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-275">
+				<div class="body" id="body-275">
+					
+<p>
+tank yo for this, i don't know php perfectly and for this  $value  = $detail-&gt;{'getPoza' . $j}(); i lookin' for. on the other hand, to not open another topic, i would like to ask u if you know if the showChecked function work fine in new releases, i updated today to last relase and now it not workin' corectly. i have something like this 
+</p>
+<pre class="block php"><code>$xtpl-&gt;assign ( 'checked', fHTML::showChecked($customer-&gt;prepareActiv(), 1) );</code></pre>
+
+<p>
+ whith change into flourish function to return not to print.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/8/09 2:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-276">
+				<div class="body" id="body-276">
+					
+<p>
+<a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> follows the MethodNaming conventions of Flourish, with the <code>show</code> part meaning that it will conditionally print something. It also returns a boolean indicating if it printed or not. My recommendation would be to write your own method if you just want to see if a value is equal or in an array instead of also printing <code> checked=&quot;checked&quot;</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/09 10:02pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-279">
+				<div class="body" id="body-279">
+					
+<p>
+but why before this method work for me and now isn't? i have column 'activ' with 0 and 1 values, i want the 1 value to get checked atribute
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/9/09 9:03am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-280">
+				<div class="body" id="body-280">
+					
+<p>
+<a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> (which used to be <a href="../flourishlib.com/api/fCRUD.html#showChecked">fCRUD::showChecked()</a>) has always printed something and returned a boolean.  The only changes that have been made recently are at <a href="http://flourishlib.com/changeset/588/fHTML.php">http://flourishlib.com/changeset/588/fHTML.php</a>. This change requires that comparing to a <code>NULL</code> value requires a strict equality (i.e. both must be <code>NULL</code>) where the old code equated <code>0</code> and <code>NULL</code>. This change was made because databases tend to allow for <code>NULL</code>, <code>FALSE</code> and <code>TRUE</code> values in boolean columns and I wanted to reflect this distinction.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/9/09 1:10pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-284">
+				<div class="body" id="body-284">
+					
+<p>
+ok, i think i find where is the problem , i use prepareActiv method, 'activ' been a column whit tinyint value 0 and 1, and prepare transform into yes and no, now i put getActiv, and when i printed, print only value equal whith 1. why? this didn't happend 'till i upgrade to 598, i think u make some change till then on the prepare method
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/9/09 4:06pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-294">
+				<div class="body" id="body-294">
+					
+<p>
+I haven't changed the prepare method in quite a while. You can see what happened at each revision by browsing around at <a href="http://flourishlib.com/changeset/598">http://flourishlib.com/changeset/598</a>. Like I said, I don't see how that code would ever have worked correctly since <a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> has always printed <code> checked=&quot;checked&quot;</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/12/09 9:04am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

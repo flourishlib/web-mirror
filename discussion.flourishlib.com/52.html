@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Defaults for POST/GET Suggestion &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Defaults for POST/GET Suggestion</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/25/09 12:50am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+This suggestion may be wasted on some, but it might help others.
+</p>
+
+<p>
+When getting user input from $_POST or $_GET with <a href="../flourishlib.com/api/fRequest.html#get">fRequest::get()</a>, you can use the default value to return false if the user did not provide a parameter.  
+</p>
+
+<p>
+My failure to do this was resulting in an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> check against a null value.  It could also cause different issues in your code.
+</p>
+
+<p>
+Now, I do this:
+</p>
+<pre class="block php"><code>
+// Set default value to false in case user did not provide this parameter
+$app_name = fRequest::get('app_name','string',false);
+$cmd_groups_id = frequest::get('cmd_groups_id','integer',false);
+$cmd = fRequest::get('cmd','string',false);
+$replaceable = fRequest::get('replaceable','string',false);
+$login = frequest::get('login','string',false);
+
+// One simple if statement to ensure a value was provided for all required parameters.
+if(!$app_name || !$cmd_groups_id || !$cmd || !$replaceable || !$login)
+{
+	$this-&gt;response = &quot;Failed~~Not all parameters provided.&quot;;
+	return;
+}
+</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Problem with buildFromSQL() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Problem with buildFromSQL()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="5/11/10 7:22am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm trying to use buildFromSQL to get a paginated record set. The test code is as follows:
+</p>
+<pre class="block php"><code>...
+$sql = &quot;SELECT * FROM groups g 
+        JOIN user_groups u ON u.id_group = g.id
+        WHERE u.id_user = $id
+        ORDER BY $col $dir LIMIT &quot; . PAGE_LINES . &quot; OFFSET $offset&quot;;
+$groups = fRecordSet::buildFromSQL('Group', $sql);
+...</code></pre>
+
+<p>
+ This code results in a SQL query such as:
+</p>
+<pre class="block sql"><code>SELECT * FROM groups g JOIN user_groups u ON u.id_group = g.id WHERE u.id_user = 1 ORDER BY groupname asc LIMIT 25 OFFSET 0;</code></pre>
+
+<p>
+ The query runs fine on console. However, running the test script I get the following error:
+</p>
+<pre><code>Fatal error: Uncaught exception 'fProgrammerException' with message 'The column specified, id_user, does not exist in the table groups' in /usr/local/share/php/flourish/fSchema.php:2201
+Stack trace:
+#0 /usr/local/share/php/flourish/fORM.php(647): fSchema-&gt;getColumnInfo('groups', 'id_user', 'type')
+#1 /usr/local/share/php/flourish/fActiveRecord.php(1942): fORM::objectify('Group', 'id_user', '1')
+#2 /usr/local/share/php/flourish/fActiveRecord.php(1125): fActiveRecord-&gt;loadFromResult(Object(fResult)) 
+#3 /usr/local/share/php/flourish/fRecordSet.php(492): fActiveRecord-&gt;__construct(Object(fResult))
+#4 /usr/local/share/php/flourish/fRecordSet.php(349): fRecordSet-&gt;__construct('Group', Object(fResult), NULL) </code></pre>
+
+<p>
+ I don't know why it's looking for 'id_user' column in the 'groups' table. Am I missing some specific Flourish syntax for SQL queries?
+</p>
+
+<p>
+Thanks in advance, A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-719">
+				<div class="body" id="body-719">
+					
+<p>
+Well, I keep trying to get the data of 'groups' and 'user_groups' joined tables. 
+</p>
+
+<p>
+I have no problem getting the groups of a user with a build such as:
+</p>
+<pre class="block php"><code>$groups = fRecordSet::build(
+    'Group',
+    array (
+        'user_groups.id_user=' =&gt; $id,
+        'active='              =&gt; TRUE
+    ),
+    array(
+        $col                   =&gt; $dir
+    ),
+    PAGE_LINES,
+    $page_number
+);</code></pre>
+
+<p>
+ However, the resulting recordset lacks the group information related to user role (stored in user_groups table).
+</p>
+
+<p>
+Using a double build such as:
+</p>
+<pre class="block php"><code>$groups = $user-&gt;buildUserGroups()-&gt;buildGroups();</code></pre>
+
+<p>
+ I get the same result, that is, the groups recordset related to the user_groups recordset, but without user_group data at all.
+</p>
+
+<p>
+So, the SQL way looks as the route to follow. However, the <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> method seems to fail on getting the data of two tables, as well, as shown above. Actually, using a syntax such as:
+</p>
+<pre class="block sql"><code>SELECT g.*, u.* FROM groups g, user_groups u WHERE u.id_group = g.id AND u.id_user = 1</code></pre>
+
+<p>
+ it fails with the message:
+</p>
+
+<p>
+Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>' with message 'The SQL statement specified, SELECT g.*, u.* FROM groups g, user_groups u WHERE u.id_group = g.id AND u.id_user = 1, does not appear to be in the form SELECT * FROM table'
+</p>
+
+<p>
+This message seems to indicate that it is unable to recognize the reference to two tables in the query.
+</p>
+
+<p>
+Then, what the best method would be to get a recordset with the result of the fields in both of the joining tables?
+</p>
+
+<p>
+TIA,
+</p>
+
+<p>
+A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/11/10 2:05pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-721">
+				<div class="body" id="body-721">
+					
+<p>
+Well, I've seen that the documentation on <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> says &quot;the SQL statement should select all columns from a single table&quot;, so this route seems closed. Finally, this is the way I have got to get the data from the two tables:
+</p>
+
+<p>
+In the controller part:
+</p>
+<pre class="block php"><code>$usergroups = fRecordSet::build(
+    'UserGroup',
+    array (
+        'id_user=' =&gt; $id,
+        'active='  =&gt; TRUE,
+    ),
+    array(),
+    PAGE_LINES,
+    $page_number
+);
+        
+$usergroups-&gt;precreateGroups('id_group');
+</code></pre>
+
+<p>
+ And in the template:
+</p>
+<pre class="block php"><code>...
+foreach ($this-&gt;usergroups as $ug) {
+    // Get group data related to this usergroup
+    $group = $ug-&gt;createGroup('id_group');
+
+    ?&gt;
+    &lt;tr class=&quot;&lt;?php echo fCRUD::getRowClass($ug-&gt;getId, $affected) ?&gt;&quot;&gt;
+        &lt;td&gt;
+             &lt;?php echo $group-&gt;prepareGroupid() ?&gt;
+        &lt;/td&gt;
+        &lt;td&gt;
+            &lt;?php echo $group-&gt;prepareGroupname() ?&gt;
+        &lt;/td&gt;
+        &lt;td&gt;
+            &lt;?php echo $group-&gt;prepareType() ?&gt;
+        &lt;/td&gt;
+        &lt;td&gt;
+            &lt;?php echo $ug-&gt;getRole() ?&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+}
+...
+</code></pre>
+
+<p>
+ The odd thing is that I get the most of the data from the $groups recordset. However, I can't do the other way around (build the groups recordset first and creating the usergroups recordset later) because groups -&gt; usergroups is a one-to-many relation.
+</p>
+
+<p>
+If there is a simpler way to get the same result, while keeping pagination and sorting, I'll be glad to hear from it.
+</p>
+
+<p>
+A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/12/10 7:44am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-722">
+				<div class="body" id="body-722">
+					
+<p>
+An <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object models a single row in a single table in the database. The database schema is introspected and the class is configured based on the columns in a table. This introspection means that if you need to pull in data from multiple tables that multiple objects will need to be created.
+</p>
+
+<p>
+In your first post, you are selecting data from two tables, <code>groups</code> and <code>user_groups</code>. When the Group class is looping over the column to unescape them it runs into a column that doesn't exist in the <code>groups</code> table and appropriately throws an exception. As a side note, for security purposes you are going to want to use <a href="../flourishlib.com/docs/fDatabase.html#EscapingDataSecurity">fDatabase placeholders</a> for placing user input into your SQL strings since raw embedding opens you up to SQL injection.
+</p>
+
+<p>
+In your third example, it appears to me that you've reached the correct algorithm to get the data you need. And yes, you can only <code>create</code> a record in a many-to-one or one-to-one relationship since there is a single record on the other end of the relationship. For many-to-many and one-to-many you need to perform a <code>build</code> since there can be multiple and you will get an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> back.
+</p>
+
+<p>
+One other thing to note is that you don't need to pass <code>id_group</code> to <code>precreateGroups</code> or <code>createGroup</code> unless there are multiple associations between the <code>groups</code> and <code>user_groups</code> table.
+</p>
+
+<p>
+I hope this helps some.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/12/10 8:47am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Naming relations in self referential table &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Naming relations in self referential table</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="7/19/10 1:46am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Could someone point out to me how to properly name the relations in the situation when an ActiveRecord is self-referential. Like this:
+</p>
+
+<p>
+A Category can have many sub categories:
+</p>
+<pre class="block sql"><code>CREATE TABLE `categories` (
+  `category_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `ordinal` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`category_id`),
+  KEY `parent_id` (`parent_id`),
+  CONSTRAINT `categories_ibfk_2` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;</code></pre>
+
+<p>
+ Buy default you would use the ActiveRecord like this to get parent:
+</p>
+<pre class="block php"><code>$category-&gt;createCategory();</code></pre>
+
+<p>
+ and to get children:
+</p>
+<pre class="block php"><code>$category-&gt;buildCategories();</code></pre>
+
+<p>
+ I want to use parent and children instead, so I have set up the configure() method like this:
+</p>
+<pre class="block php"><code>fGrammar::addHumanizeRule('Child', 'children');
+fORMRelated::overrideRelatedRecordName($this, 'Category', 'Child', 'categories');
+fORMRelated::overrideRelatedRecordName($this, 'Category', 'Parent', 'category');</code></pre>
+
+<p>
+ But that seems to have no positive effect. The second line produces this exception:
+</p>
+<pre><code>The route specified, categories, is not a valid route between categories and categories. Must be one of: parent_id.</code></pre>
+
+<p>
+ I set the humanize rule because I'm unsure that flourish will correctly humanize the relation Child using pluralization.
+</p>
+
+<p>
+How do I figure out the correct route?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-832">
+				<div class="body" id="body-832">
+					
+<p>
+<a href="../flourishlib.com/api/fORMRelated.html#overrideRelatedRecordName">fORMRelated::overrideRelatedRecordName()</a> only changes the name of the related record when referring to them in validation messages. In this case, if you took a category and called <code>$category-&gt;populateCategories()</code> and then <code>$category-&gt;validate()</code>, the overridden record name would be used when referring to validation error in the children.
+</p>
+
+<p>
+It sounds to me like you want to change the method names you are using. In this case you just want to manually override them:
+</p>
+<pre class="block php"><code>class Category extends fActiveRecord
+{
+    public function createParent()
+    {
+        $this-&gt;createCategory();
+    }
+
+    public function buildChildren()
+    {
+        $this-&gt;buildCategories();
+    }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/21/10 7:43am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

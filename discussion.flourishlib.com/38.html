@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORM::addCustomTableClassMapping() Problem &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORM::addCustomTableClassMapping() Problem</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					pixel-boutique.de			</span>
+	<span class="date_posted" title="3/19/09 11:34am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, first of all - great work, found already some classes very very helpful, thanks!!!
+</p>
+
+<p>
+No I run in a litle problem. I am trying to integrate flourish-ORM in an oscommerce. I have already an existing class called <code>customers</code>, so for trying it out, I wanted to bring a !<a href="../flourishlib.com/docs/fCustomer.html">fCustomer</a> class to live with
+</p>
+<pre class="block php"><code>  fORMDatabase::attach(new fDatabase('mysql',DB_DATABASE,$db_link,DB_SERVER_USERNAME,DB_SERVER_PASSWORD,DB_SERVER));
+  class fCustomer extends fActiveRecord
+  {
+	protected function configure()
+	{
+	  fORM::addCustomTableClassMapping('customers',$this);
+	}
+  }
+
+  $fcustomer = new fCustomer(1);
+  print_r($fcustomer); </code></pre>
+
+<p>
+ I already mentioned the little mistake in the documentation of addCustomTableClassMapping but I get an Error:
+</p>
+<pre><code>Fatal error: Uncaught exception 'fProgrammerException' with message 'The table specified, f_customers, does not exist in the database' in /homepages/20/d141750234/htdocs/shop/includes/classes/flourish/fSchema.php:1483
+Stack trace:
+#0 /homepages/20/d141750234/htdocs/shop/includes/classes/flourish/fActiveRecord.php(475): fSchema-&gt;getKeys('f_customers', 'primary')
+#1 /homepages/20/d141750234/htdocs/shop/admin/includes/application_top.php(97): fActiveRecord-&gt;__construct(1)
+#2 /homepages/20/d141750234/htdocs/shop/admin/orders.php(7): require('/homepages/20/d...')
+#3 {main} thrown in /homepages/20/d141750234/htdocs/shop/includes/classes/flourish/fSchema.php on line 1483</code></pre>
+
+<p>
+ of course the f_customers table does not exist. Thats why I wanted to route the table-mapping to 'customers' with the addCustomTableClassMapping.
+</p>
+
+<p>
+Is there any need to invoke the function configure() or what am I doing wrong?
+</p>
+
+<p>
+Big thanks for any help, yours Christoph
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-117">
+				<div class="body" id="body-117">
+					
+<p>
+What version of Flourish are you running? There was a change in r499 that renamed <code>fORM::addCustomTableClassMapping()</code> to <a href="../flourishlib.com/api/fORM.html#addCustomClassTableMapping">fORM::addCustomClassTableMapping()</a>. Try updating your code to use the new method name and see if that works.
+</p>
+
+<p>
+The <code>configure()</code> method is called automatically the first time an !<a href="../flourishlib.com/docs/fCustomer.html">fCustomer</a> is created, or the first time you execute an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> for the !<a href="../flourishlib.com/docs/fCustomer.html">fCustomer</a> class.
+</p>
+
+<p>
+If you are still having issues, let me know and I'll try to replicate it on my end.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/19/09 11:45am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-118">
+				<div class="body" id="body-118">
+					
+<p>
+hi wbond, updated to r532, still having this issue.
+</p>
+<pre><code>Fatal error: Uncaught exception 'fProgrammerException' with message 'The table specified, f_customers, does not exist in the database' in /homepages/20/d141750234/htdocs/shop/includes/classes/flourish/r532/fSchema.php:1561
+Stack trace:
+#0 /homepages/20/d141750234/htdocs/shop/includes/classes/flourish/r532/fActiveRecord.php(475): fSchema-&gt;getKeys('f_customers', 'primary')
+#1 /homepages/20/d141750234/htdocs/shop/includes/application_top.php(231): fActiveRecord-&gt;__construct(1)
+#2 /homepages/20/d141750234/htdocs/shop/index.php(3): require('/homepages/20/d...')
+#3 {main} thrown in /homepages/20/d141750234/htdocs/shop/includes/classes/flourish/r532/fSchema.php on line 1561</code></pre>
+<pre class="block php"><code>  fORMDatabase::attach(new fDatabase('mysql',DB_DATABASE,$db_link,DB_SERVER_USERNAME,DB_SERVER_PASSWORD,DB_SERVER));
+  class fCustomer extends fActiveRecord
+  {
+	protected function configure()
+	{
+	  fORM::addCustomClassTableMapping('customers',$this);
+	}
+  }
+
+  $fcustomer = new fCustomer(1);
+  print_r($fcustomer); </code></pre>
+
+<p>
+ Do you have any idea to resolve it? Greetz Chris
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													pixel-boutique.de											</span>
+					<span class="date_posted" title="3/19/09 12:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-119">
+				<div class="body" id="body-119">
+					
+<p>
+pls let me note, that on different database tables (where there is no need to derive a unique class) the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> works without any problems on a table, without using the
+</p>
+<pre class="block php"><code>fORM::addCustomClassTableMapping('my_own_table',$this);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													pixel-boutique.de											</span>
+					<span class="date_posted" title="3/19/09 12:28pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-121">
+				<div class="body" id="body-121">
+					
+<p>
+yes, you are right, now its working fine. big thanks, cheers chris
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													pixel-boutique.de											</span>
+					<span class="date_posted" title="3/19/09 12:35pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-120">
+				<div class="body" id="body-120">
+					
+<p>
+The parameter order changed in addition to the method name changing, I should have noted that too in this thread. Your class should be:
+</p>
+<pre class="block php"><code>class fCustomer extends fActiveRecord
+{
+  protected function configure()
+  {
+    fORM::addCustomClassTableMapping($this, 'customers');
+  }
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/19/09 12:32pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

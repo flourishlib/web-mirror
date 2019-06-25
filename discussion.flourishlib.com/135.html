@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>white spaces &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">white spaces</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="9/15/09 9:14am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+from last releases the florish code print somer spaces at the begining o html like this:
+</p>
+<pre><code>#!text/html
+{this is the place where appear 2 emty line.}
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+</code></pre>
+
+<p>
+ and from who have set the browser ancodingt other than utf, looks bad.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-400">
+				<div class="body" id="body-400">
+					
+<p>
+You should check your code to see if the line breaks are being introduced by something you wrote. It is actually one of the Flourish code standards to not include closing PHP tags <code>?&gt;</code> to prevent exactly this issue. I checked the latest code base and confirmed that none exist.
+</p>
+
+<p>
+In terms of encodings, yes, Flourish only works with UTF-8. You'll need to make sure you include the appropriate content-type headers to ensure that users see the correct output. The methods <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a>, <a href="../flourishlib.com/api/fXML.html#sendHeader">fXML::sendHeader()</a> and <a href="../flourishlib.com/api/fJSON.html#sendHeader">fJSON::sendHeader()</a> can help. The UTF-8 page has some more information about how to make sure all the data you deal with is encoded with UTF-8.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/15/09 1:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-401">
+				<div class="body" id="body-401">
+					
+<p>
+I properly encoded utf, this not happend till latest some releases, is the second site make with florish have same probleme:  this is the carcater who appear. it's not my fault, i checked every line. this happend when i included flowrish on init.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="9/15/09 2:36pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-402">
+				<div class="body" id="body-402">
+					
+<p>
+One of your source files has a byte order mark (BOM) for UTF-8 in it. See <a href="http://unicode.org/faq/utf_bom.html#bom5">http://unicode.org/faq/utf_bom.html#bom5</a> for some more info about BOMs.
+</p>
+
+<p>
+Be sure to check your editor to make sure it doesn't insert the BOM. I will looks to make sure I don't have a BOM in any of the Flourish files, however I'm fairly sure my editor does not use the BOM.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/15/09 2:58pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-403">
+				<div class="body" id="body-403">
+					
+<p>
+i used dreamweaver since i start to programming in php 2 years ago, i will look in edtitor setting , but till now i did't meet this problem. i don't understand fine this bom, but i will study carefuly. the best way to make test is to use a old version of flowrish to see if this persist i think.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="9/15/09 3:27pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

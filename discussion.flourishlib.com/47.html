@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fUpload on root directory &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fUpload on root directory</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					antonio			</span>
+	<span class="date_posted" title="3/23/09 3:56pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi all!
+</p>
+
+<p>
+I'm trying to use the <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> class to upload an image on  /my_products directory but seems that flourish ignore my destination directory request and uploads the file to the root .
+</p>
+
+<p>
+This is the simple operation I'm trying to achieve the behavior I described above:
+</p>
+<pre class="block php"><code>$dir = new fDirectory(PRODUCTS_IMAGES);	
+$file = $uploader-&gt;move($dir, 'image');</code></pre>
+
+<p>
+ where PRODUCTS_IMAGES is set to /my_products The image is still uploaded on the root! Any ideas?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-147">
+				<div class="body" id="body-147">
+					
+<p>
+It is a little hard for me to tell what is happening here. Can you add the following code after what you've included?
+</p>
+<pre class="block php"><code>fCore::expose($dir);
+fCore::expose($file);</code></pre>
+
+<p>
+ The output of that should help me figure out what is going on.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/24/09 12:30am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-149">
+				<div class="body" id="body-149">
+					
+<p>
+Thank you wbond for your answer, I figured out my problem. It was not responsible the *move* functiont but the *rename* (I was calling after the code pasted on the first post)
+</p>
+
+<p>
+I was trying to rename the newly uploaded files giving as first argument the $path + $filename and as the second argument the $filename without the $path as I was convinced it was implicit for the function.
+</p>
+
+<p>
+So I solved this problem which was only my misuse of the $uploader-&gt;rename() operation. Thnak you!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													antonio											</span>
+					<span class="date_posted" title="3/24/09 6:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

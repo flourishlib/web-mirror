@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Help with ORM and Relationships &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Help with ORM and Relationships</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anand			</span>
+	<span class="date_posted" title="2/13/10 11:31pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm having some trouble figuring out how to make these foreign key relationships work with <a href="../flourishlib.com/docs/fORM.html">fORM</a>. Here is what I want to accomplish. I've got a users table with some basic columns, an item1price column, and an item2price column. I have tables called item1prices and item2prices. I want each user to be assigned to one of the price levels I've defined in the item1price, item2price, etc... tables. (These prices levels will be shared amongst the users, so I can't use a one-to-one relationship since the price ID in the users table won't be unique). How do I access the pricing for say item1 on a user? I can't seem to figure it out. Everything I've tried has resulted in an error telling me the relationship isn't one-to-one.
+</p>
+<pre class="block sql"><code>CREATE  TABLE IF NOT EXISTS `users` (
+  `user_id` VARCHAR(50) NOT NULL ,
+  `email` VARCHAR(255) NOT NULL ,
+  `password` VARCHAR(255) NOT NULL ,
+  `item1price` INT NULL ,
+  `item2price` INT NULL ,
+  PRIMARY KEY (`user_id`) ,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+  CONSTRAINT `user_item1price`
+    FOREIGN KEY (`item1price` )
+    REFERENCES `item1prices` (`price_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_item2price`
+    FOREIGN KEY (`item2price` )
+    REFERENCES `item1prices` (`price_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-617">
+				<div class="body" id="body-617">
+					
+<p>
+Ok, so I changed it so that the tables that hold the pricing contain a user_id column with a unique key (and i've removed the column that holds the id from my users table). I can now use if $user-&gt;has and then if I do an fCore::expose I can see that it has retrieved all the prices from the table. What function do I use to access those prices it has retrieved?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anand											</span>
+					<span class="date_posted" title="2/14/10 2:15pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-621">
+				<div class="body" id="body-621">
+					
+<p>
+I would recommend reading <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations. That section will teach you all of the related record functionality available when using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to model a row in a table.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/17/10 2:37pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

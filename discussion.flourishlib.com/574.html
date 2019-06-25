@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Flourish JavaScript ports &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Flourish JavaScript ports</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="12/6/11 8:03pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Thinking about starting a project. Global Flourish object, just useful static methods.
+</p>
+
+<p>
+Here is humanize() and underscorize() as close as possible to PHP implementation:
+</p>
+<pre class="block js"><code>Flourish = {};
+
+Flourish.humanizeCache = {};
+Flourish.underscorizeCache = {};
+
+/**
+ * Port of fGrammar::underscorize from Flourish.
+ *
+ * @param {string} str
+ * @return {string}
+ */
+Flourish.underscorize = function (str) {
+  if (Flourish.underscorizeCache[str]) {
+    return Flourish.underscorizeCache[str];
+  }
+
+  var original = str;
+  str = str.charAt(0).toLowerCase() + str.substr(1);
+
+  if (str.indexOf('_') !== -1 &amp;&amp; str.toLowerCase() === str) {
+  }
+  else {
+    var old;
+    do {
+      old = str;
+      str = str.replace(/([a-zA-Z])([0-9])/, '$1_$2');
+      str = str.replace(/([a-z0-9A-Z])([A-Z])/, '$1_$2');
+    } while (old !== str);
+
+    str = str.toLowerCase(str);
+  }
+
+  Flourish.underscorizeCache[original] = str;
+
+  return str;
+};
+
+/**
+ * Port of fGrammar::humanize() from Flourish.
+ *
+ * @param {string} str
+ * @return {string}
+ */
+Flourish.humanize = function (str) {
+  if (Flourish.humanizeCache[str]) {
+    return Flourish.humanizeCache[str];
+  }
+
+  var original = str;
+
+  if (str.indexOf(' ') === -1) {
+    if (str.indexOf('_') !== -1) {
+      str = Flourish.underscorize(str);
+    }
+  }
+
+  var regex = /(\\b(api|css|gif|html|id|jpg|js|mp3|pdf|php|png|sql|swf|url|xhtml|xml)\\b|\\b\\w)/;
+  str = str.replace(/_/g, ' ').replace(regex, function (str, p1) {
+    return p1.charAt(0).toUpperCase();
+  });
+
+  Flourish.humanizeCache[original] = str;
+
+  return str;
+};</code></pre>
+
+<p>
+ Just for fun here's what Closure Compiler spits out pretty-printed:
+</p>
+<pre class="block js"><code>Flourish = {b: {},d: {}};
+Flourish.i = function(a) {
+    if (Flourish.d[a])
+        return Flourish.d[a];
+    var b = a, a = a.charAt(0).toLowerCase() + a.substr(1);
+    if (!(a.indexOf(&quot;_&quot;) !== -1 &amp;&amp; a.toLowerCase() === a)) {
+        var c;
+        do
+            c = a, a = a.replace(/([a-zA-Z])([0-9])/, &quot;$1_$2&quot;), a = a.replace(/([a-z0-9A-Z])([A-Z])/, &quot;$1_$2&quot;);
+        while (c !== a);
+        a = a.toLowerCase(a)
+    }
+    return Flourish.d[b] = a
+};
+Flourish.h = function(a) {
+    if (Flourish.b[a])
+        return Flourish.b[a];
+    var b = a;
+    a.indexOf(&quot; &quot;) === -1 &amp;&amp; a.indexOf(&quot;_&quot;) !== -1 &amp;&amp; (a = Flourish.i(a));
+    a = a.replace(/_/g, &quot; &quot;).replace(/(\\b(api|css|gif|html|id|jpg|js|mp3|pdf|php|png|sql|swf|url|xhtml|xml)\\b|\\b\\w)/, function(a, b) {
+        return b.charAt(0).toUpperCase()
+    });
+    return Flourish.b[b] = a
+};</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1640">
+				<div class="body" id="body-1640">
+					
+<p>
+The Flourish for JavaScript is called: underscore.js
+</p>
+
+<p>
+<a href="http://documentcloud.github.com/underscore/">http://documentcloud.github.com/underscore/</a>
+</p>
+
+<p>
+Really awesome set of functions for JavaScript, just like Flourish is for php.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="12/9/11 12:11pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1641">
+				<div class="body" id="body-1641">
+					
+<p>
+I'll have to disagree. While underscore.js provides useful functionality it parallels with the many other libraries that bring concepts like Collections to JavaScript. I am really leaning more towards what is in the <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> class and a few others that make sense to have available in JavaScript.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="12/9/11 1:33pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1642">
+				<div class="body" id="body-1642">
+					
+<p>
+I see your point. I mentioned underscore, because it's similar character/philosophy of bridging or leveraging the programmers tool belt. More tool-set than framework.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> does provide some very useful functionality, that I would love to see on the client-side. See please keep posting ;)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="12/9/11 3:12pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-1654">
+				<div class="body" id="body-1654">
+					
+<p>
+Some <a href="../flourishlib.com/docs/fURL.html">fURL</a> and <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>. <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>.get() only supports 'number' and 'float' at this time. 'number' is the equivalent to 'int' or 'integer' in JavaScript.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fRequest.html">fRequest</a>.get() will NOT return NaN.
+</p>
+<pre class="block js"><code>var fURL = {
+  /**
+   * @access public
+   * @return {string}
+   */
+  getQueryString: function () {
+    return location.search ? location.search.substr(1) : '';
+  },
+  /**
+   * @access public
+   * @return {string}
+   */
+  get: function () {
+    var url = location.href;
+    var qs = fURL.getQueryString();
+    if (qs) {
+      url = url.replace(location.search, '').replace(/^https?\\:\\/\\//, '').replace(/\\/$/, '');
+    }
+    return url;
+  }
+};
+
+var fRequest = {
+  _REQUEST: null,
+  /**
+   * @access private
+   */
+  _cast: function (value, to) {
+    switch (to) {
+      case 'number':
+        return parseInt(value, 10);
+
+      case 'float':
+        return parseFloat(value);
+    }
+
+    return value;
+  },
+  /**
+   * @access private
+   */
+  _initialize: function () {
+    if (fRequest._REQUEST === null) {
+      var qs = fURL.getQueryString();
+      var items = qs.split('&amp;');
+      var itemsAsObject = {}, current;
+      
+      for (var i = 0; i &lt; items.length; i++) {
+        current = items[i].split('=');
+        itemsAsObject[current[0]] = current[1];
+      }
+      
+      fRequest._REQUEST = itemsAsObject;
+    }
+  },
+  /**
+   * @access public
+   */
+  get: function (name, castTo, defaultValue) {
+    fRequest._initialize();
+    
+    if (!fURL.getQueryString()) {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      }
+      else {
+        return null;
+      }
+    }
+
+    if (fRequest._REQUEST[name]) {
+      if (castTo !== undefined) {
+        var ret = fRequest._cast(fRequest._REQUEST[name], castTo);
+
+        // To be more like PHP
+        if (isNaN(ret) &amp;&amp; (castTo === 'number')) {
+          ret = 0;
+        }
+      }
+
+      return fRequest._REQUEST[name];
+    }
+    else if (defaultValue !== undefined) {
+      return defaultValue;
+    }
+
+    return null;
+  }
+};</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="1/11/12 4:57pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1655">
+				<div class="body" id="body-1655">
+					<pre class="block js"><code>/**
+ * @const {object}
+ */
+var fCore = {
+  /**
+   * @const {boolean}
+   */
+  debuggingEnabled: false,
+  /**
+   * @param {boolean} true or false.
+   * @return {object}
+   */
+  enableDebugging: function (bool) {
+    if (!bool) {
+      bool = false;
+    }
+    
+    fCore.debuggingEnabled = bool;
+    return fCore;
+  },
+  /**
+   * @param {string} message The debug message.
+   * @param {force} If debugging should be forced even when global debugging is
+   *   off.
+   */
+  debug: function (message, force) {
+    if (!fCore.debuggingEnabled) {
+      return;
+    }
+
+    if (window.console) {
+      console.log(message);
+    }
+    else if (window.Debug) { // IE 7 and lower, need VS and debugging to be enabled
+      Debug.writeln(message);
+    }
+  }
+};</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="1/17/12 5:26am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1690">
+				<div class="body" id="body-1690">
+					
+<p>
+<a href="http://demos.tatsh.net/fGrammar.js">http://demos.tatsh.net/fGrammar.js</a>
+</p>
+
+<p>
+<a href="http://demos.tatsh.net/fGrammar.min.js">http://demos.tatsh.net/fGrammar.min.js</a> (minified)
+</p>
+
+<p>
+Version of <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> with the following methods:
+</p>
+<pre><code>camelize() -- same as Flourish
+underscorize() -- same as Flourish
+inflectOnQuantity() -- same as Flourish
+camelize(str, upper, delimiter) -- delimiter argument is by default '_' (like Flourish); I use '-' at times</code></pre>
+
+<p>
+ Also has the sGrammar 'class' which has the same methods copied from <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> but adds dashize():
+</p>
+<pre><code>dashize() -- this is the same as underscorize() but instead uses dashes to transform a string (example: ABC -&gt; a-b-c)</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="2/22/12 9:04pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1696">
+				<div class="body" id="body-1696">
+					
+<p>
+Nice work audvare.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="2/26/12 10:48am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1697">
+				<div class="body" id="body-1697">
+					
+<p>
+Maintaining all my ports here <a href="https://github.com/tatsh/flourish-js">https://github.com/tatsh/flourish-js</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="2/26/12 4:29pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1726">
+				<div class="body" id="body-1726">
+					
+<p>
+Just a general idea on how to implement <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> on the client side. Ultimately the goal would be to have the store() method call upon the server-side in a documented way (where the server-side may need to return data in exact specific ways, <a href="../flourishlib.com/docs/fORMJSON.html">fORMJSON</a> could be involved and make this process easy). This is somewhat similar to backbone's modelling technique.
+</p>
+
+<p>
+For now though, the only difficulty is making this compile with Closure Compiler. I haven't found a way where the names of the objects can be 'destroyed' in the advanced optimisations mode. It's not a big deal, but I would prefer it.
+</p>
+
+<p>
+<a href="https://gist.github.com/2425947">https://gist.github.com/2425947</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/20/12 1:34am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

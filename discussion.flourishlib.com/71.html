@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SQLException Objec &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SQLException Objec</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="5/15/09 12:28pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I don't understand why I'm getting this error.  It seems flourish is not building the SQL query correctly in <a href="../flourishlib.com/docs/fRecordset.html">fRecordset</a>.  Issue exists in r545(I think it was that. I just overwrote it!) and also r572.  Why does the SQL statement have &quot;ORDER BY&quot; with no parameter?  In fact, why is it including &quot;ORDER BY&quot; at all?
+</p>
+
+<p>
+Here is the table def:
+</p>
+<pre class="block sql"><code>Table   Create Table                                                                                                                
+------  ----------------------------------------------------------------------------------------------------------------------------
+lerg1   CREATE TABLE `lerg1` (                                                                                                      
+          `ocn_num` char(4) NOT NULL,                                                                                               
+          `ocn_name` varchar(5) NOT NULL                                                                                            
+        ) ENGINE=MyISAM DEFAULT CHARSET=latin1                                                                                      </code></pre>
+<pre class="block php"><code>&lt;?php
+
+
+class Lerg1 extends fActiveRecord
+{
+
+    /**
+     * Require configure method for flourish library
+     * @return 
+     */
+	protected function configure()
+    {
+    	fORM::addCustomClassTableMapping($this, 'lerg1');
+    }
+	
+	/**
+	 * Get info from LERG1 for an OCN.
+	 * 
+	 * @return Array | BOOL
+	 * @param Integer $ocn
+	 */
+	public static function fetchLergOCN($ocn)
+	{
+		try
+		{
+			$lerg_ocn = fRecordset::build(
+				'Lerg1',
+				array('ocn_num='=&gt;$ocn)
+			);
+
+			$lerg_ocn-&gt;tossIfEmpty();
+			
+			foreach($lerg_ocn as $row)
+			{
+				$lerg_ocn_info = array('ocn'=&gt;$row-&gt;getOcnNum(),'ocn_name'=&gt;$row-&gt;getOcnName());
+			}
+
+			return $lerg_ocn_info;
+
+		} catch ( fEmptySetException $e)
+	        {
+	            return false;
+	        } catch ( fException $e)
+		        { 
+				print_r($e);exit;
+				
+					echo &quot;Exception : $e&quot;;
+		        }
+	}
+	
+	
+} // End of class Lerg1
+?&gt;</code></pre>
+<pre><code>[message:protected] =&gt; MySQL error (You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1) in SELECT lerg1.* FROM lerg1 WHERE lerg1.ocn_num = 'G'  ORDER BY
+</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-223">
+				<div class="body" id="body-223">
+					
+<p>
+It seems the problem is with the lack of a unique index in the table &quot;lerg1&quot;.  I added an auto increment primary key for now and the problem is resolved.
+</p>
+
+<p>
+However,  will this always be the case?  Unfortunately, in some cases I can't modify the tables.  In those case, will I be forced to use the regular SQL instead of <a href="../flourishlib.com/docs/fRecordset.html">fRecordset</a>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="5/15/09 12:38pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-228">
+				<div class="body" id="body-228">
+					
+<p>
+Yes, the ORM does require that all tables have primary keys. I add a mention of it to the ObjectRelationalMapping page so that it will hopefully help future users.
+</p>
+
+<p>
+When no <code>$order_bys</code> are specified with <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, the record will be ordered by the primary key. Since you don't have a primary key, that is why it was breaking. I'll check the documentation on that method too.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/15/09 4:31pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord update question &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord update question</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="6/30/10 9:07pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I just noticed some odd behavior from <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.  I created a test table to see what was up, here is a simple user table I put into MySQL
+</p>
+<pre class="block sql"><code>CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(100) NOT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;</code></pre>
+
+<p>
+ I created a test user, then I ran the following code
+</p>
+<pre class="block php"><code>$user = new User(1);
+$user-&gt;setEmail('test@test.net');
+$user-&gt;store();</code></pre>
+
+<p>
+ It produces the following update statement
+</p>
+<pre class="block sql"><code>UPDATE &quot;users&quot; SET 
+&quot;email&quot; = 'test@test.com', 
+&quot;password_hash&quot; = 'fCryptography::password_hash#PSIL2YtbUS#4c7f51458e232997d16f6775fa9dfda75a8cab63', &quot;first_name&quot; = NULL, 
+&quot;last_name&quot; = NULL, 
+&quot;active&quot; = FALSE, 
+&quot;created_at&quot; = '2010-06-29 23:29:29', 
+&quot;updated_at&quot; = '2010-06-29 23:29:29' 
+WHERE &quot;users&quot;.&quot;user_id&quot; = 1</code></pre>
+
+<p>
+ I was surprised to see this.  I had pulled a record out of the database and changed a single field, even though the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> implementation tracks the old_values and the current values it still decides to update every column.  This is causing an issue because none of my records ever set their timestamp past the created_at timestamp.
+</p>
+
+<p>
+I was expecting to see a query that looked more like this
+</p>
+<pre class="block sql"><code>UPDATE &quot;users&quot; SET
+&quot;email&quot; = 'test@test.net'
+WHERE &quot;users&quot;.&quot;user_id&quot; = 1</code></pre>
+
+<p>
+ I guess my question is the following.  Is there a defect in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> or is my thinking about this all wrong.
+</p>
+
+<p>
+Thank you for your time.  
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-808">
+				<div class="body" id="body-808">
+					
+<p>
+Well, the MySQL <code>timestamp</code> column seems like the real culprit here. There is <a href="../flourishlib.com/api/fORMDate.html#configureDateUpdatedColumn">fORMDate::configureDateUpdatedColumn()</a> which provides the same functionality, but works across all databases, and has the benefit of the update timestamp being available to your PHP without having to reselect data from the table. I believe you could use the MySQL <code>timestamp</code> data type with <a href="../flourishlib.com/api/fORM.html#configureDateUpdatedColumn">fORM::configureDateUpdatedColumn()</a> to provide functionality that works from Flourish in an optimal way, but also for raw queries run against the database.
+</p>
+
+<p>
+The issues I could see with changing the update statement to only include columns that have changed would be what would happen when no columns have changed? Would the store action do nothing? That could have the potential of not triggering database triggers, and probably some other things. Let say we just re-set the primary key values to their current value. This could be confusing since only some values were being re-set and not all.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/3/10 1:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-817">
+				<div class="body" id="body-817">
+					
+<p>
+Thanks for the nudge in the right direction <a href="../flourishlib.com/api/fORMDate.html#configureDateCreatedColumn">fORMDate::configureDateCreatedColumn()</a> and <a href="../flourishlib.com/api/fORMDate.html#configureDateUpdatedColumn">fORMDate::configureDateUpdatedColumn()</a> were exactly what I was looking for, I just didn't realize they existed.
+</p>
+
+<p>
+Once again the solution to some issue I'm having with Flourish has already been solved and is neatly packed up in Flourish, I just need to take more time to read the docs.
+</p>
+
+<p>
+Thanks again Will.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="7/6/10 2:19pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

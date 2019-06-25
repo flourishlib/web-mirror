@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SQL Injection in Non-Value Field &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SQL Injection in Non-Value Field</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="2/3/11 12:35am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've got a problem where I need to &quot;escape&quot; user input for a part of a query that is NOT a value.  Here's the scenario:
+</p>
+
+<p>
+I'm using jqGrid to display many tables with dozens of different column names.  If a user sorts or filters and column, I get the request via AJAX.  I then know what columns to order on.  
+</p>
+
+<p>
+I've developed one master query that will query the appropriate table, the right columns, group, order by, limit etc.  This way, I don't need a query for each table. 
+</p>
+
+<p>
+However, the problem is with the risk of SQL injection on the order by or group by clause as the column names are provided by the user.  I searched a bit and found a few discussions on this, but they all seem to say the same thing : use white lists of column names to compare against.  That is probably my only solution, but it is not very friendly to future changes.
+</p>
+
+<p>
+Do you have any suggestions for this within flourish?  Of course, you can't escape these because that would put quotes around them and produce invalid SQL.  Ideas?
+</p>
+
+<p>
+FYI : <a href="http://josephkeeler.com/2009/05/php-security-sql-injection-in-order-by/">http://josephkeeler.com/2009/05/php-security-sql-injection-in-order-by/</a>
+</p>
+
+<p>
+Also, I am using raw SQL queries.  I can imagine that <a href="../flourishlib.com/docs/fORM.html">fORM</a> could prevent this as it knows what all columns are actually in the db.  However, I've got some pretty complex queries that are easiest to do directly with SQL.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1108">
+				<div class="body" id="body-1108">
+					
+<p>
+I've got a not so wonderful solution.  Basically, I check if the sort field is in the list of fields requested in the SQL.  If it is not, I throw an exception.
+</p>
+
+<p>
+It works but I'm sure there is a better solution out there.
+</p>
+<pre class="block php"><code>
+function modifyQueryForGrid($sql)
+{
+	$sort_order = fRequest::get('sord','string?','asc');
+	$sort_field = fRequest::get('sidx','string?',null);
+	
+	if($sort_field == null)
+	{
+		return $sql;
+	}
+
+	if( $sort_order != 'asc' &amp;&amp; $sort_order != 'desc' )
+	{
+		throw new Exception(&quot;Invalid Sort order($sort_order)&quot;);
+	}
+	
+	
+	// Get the list of requested fields from the sql statement
+	$select_end = strpos($sql, 'select') + 7;
+	$from_begin = strpos($sql, ' from');
+	$length = $from_begin - $select_end;
+	$fields = preg_replace('/\\s+/', '', substr($sql, $select_end, $length));
+	$fields = explode(',', $fields);
+	
+	// The sort_field must match a field in the sql statement.
+	if (! in_array($sort_field, $fields) ) 
+	{
+		throw new Exception(&quot;Invalid Sort on Column ($sort_field)&quot;);
+	}
+	
+	$sql = $sql . &quot; order by $sort_field $sort_order&quot;;
+	
+	return $sql;
+}
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="2/3/11 1:21am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1109">
+				<div class="body" id="body-1109">
+					
+<p>
+You can use the identifier <code>%r</code> placeholder with <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to escape table and column names.
+</p>
+<pre class="block php"><code>$column    = fRequest::get('column');
+$direction = fRequest::getValid('direction', array('asc', 'desc'));
+
+$result = $db-&gt;query(&quot;SELECT * FROM users ORDER BY %r &quot; . $direction, $column);</code></pre>
+
+<p>
+ The downside to this type of approach, versus white-listing, is that you can easily get an <a href="../flourishlib.com/docs/fSQLException.html">fSQLException</a> if a user enters a column that does not exist. You could always use <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to get a list of columns to create a white-list.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/3/11 10:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1110">
+				<div class="body" id="body-1110">
+					
+<p>
+Argh... Thanks for the answer.  I'm sorry to have wasted your time.  I just didn't see that in the docs.  I stopped at 'Escaping Data'. 
+</p>
+
+<p>
+RTFM!
+</p>
+
+<p>
+In the end, I did not use my example above.  I ended up creating a function and passing in a whitelist of valid column names in.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="2/4/11 2:16am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1111">
+				<div class="body" id="body-1111">
+					
+<p>
+It certainly wasn't a waste of time. Discussions like this are a good resource for other people.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/4/11 1:37pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

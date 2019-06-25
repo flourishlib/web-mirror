@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRecordSet with SQL functions &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRecordSet with SQL functions</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bonecandy			</span>
+	<span class="date_posted" title="9/23/10 8:19pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Looking at the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> API it looks like I can use SQL functions. Specifically, I'm doing:
+</p>
+<pre class="block php"><code>$posts = fRecordSet::build('Post',array(
+	'DAY(FROM_UNIXTIME(created))='=&gt;$day,
+	'MONTH(FROM_UNIXTIME(created))='=&gt;$month,
+	'YEAR(FROM_UNIXTIME(created))='=&gt;$year),array('id'=&gt;'desc'),$this-&gt;postsPerPage,0);</code></pre>
+
+<p>
+ But I'm always getting this error:
+</p>
+<pre><code>Uncaught exception 'fProgrammerException' with message 'The column specified, DAY(FROM_UNIXTIME(created)), does not exist in the table posts'</code></pre>
+
+<p>
+ And I still get the error even if I don't nest the functions.
+</p>
+
+<p>
+Is there something wrong with my syntax? I'm pretty sure I have everything else set up correctly.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-929">
+				<div class="body" id="body-929">
+					
+<p>
+Currently only aggregate functions are supported by the where conditions array in <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>. If you need other method calls, you'll need to use <a href="../flourishlib.com/api/fRecordSet.html#buildFromSql">fRecordSet::buildFromSql()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/23/10 11:16pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

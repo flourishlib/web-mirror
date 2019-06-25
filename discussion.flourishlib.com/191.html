@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>related records &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">related records</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="12/24/09 11:07am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+How this related records work?
+</p>
+<pre class="block sql"><code>-- phpMyAdmin SQL Dump
+-- version 3.2.0.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Dec 24, 2009 at 03:53 PM
+-- Server version: 5.1.36
+-- PHP Version: 5.3.0
+
+SET SQL_MODE=&quot;NO_AUTO_VALUE_ON_ZERO&quot;;
+
+--
+-- Database: `turism`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE IF NOT EXISTS `booking` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `produs` varchar(100) DEFAULT NULL,
+  `status` int(1) DEFAULT NULL,
+  `agent` varchar(100) DEFAULT NULL,
+  `pret` int(11) DEFAULT NULL,
+  `moneda` varchar(20) DEFAULT NULL,
+  `inregistrare` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `booking`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `camere_hotel`
+--
+
+CREATE TABLE IF NOT EXISTS `camere_hotel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_hotel` int(11) DEFAULT NULL,
+  `id_camera` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tip_camera` (`id_camera`),
+  KEY `tip_hotel` (`id_hotel`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `camere_hotel`
+--
+
+INSERT INTO `camere_hotel` (`id`, `id_hotel`, `id_camera`) VALUES
+(3, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `croaziere`
+--
+
+CREATE TABLE IF NOT EXISTS `croaziere` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nume_client` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `destinatie` varchar(100) DEFAULT NULL,
+  `plecare` date DEFAULT NULL,
+  `adulti` int(11) DEFAULT NULL,
+  `copii` int(11) DEFAULT NULL,
+  `denumire` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `croaziere`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hoteluri`
+--
+
+CREATE TABLE IF NOT EXISTS `hoteluri` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tara` varchar(100) NOT NULL,
+  `denumire` varchar(100) NOT NULL,
+  `descriere` text,
+  `stele` tinyint(5) NOT NULL,
+  `available` tinyint(1) NOT NULL,
+  `adresa` varchar(100) NOT NULL,
+  `poster` varchar(20) DEFAULT NULL,
+  `media` text NOT NULL,
+  `telefon` int(10) NOT NULL,
+  `fax` int(10) NOT NULL,
+  `locatie` varchar(300) NOT NULL,
+  `detalii_locatie` varchar(300) NOT NULL,
+  `camere` int(11) NOT NULL,
+  `facilitati_hotel` varchar(300) NOT NULL,
+  `facilitati_camere` varchar(300) NOT NULL,
+  `restaurant` varchar(300) DEFAULT NULL,
+  `exterior` varchar(300) NOT NULL,
+  `review` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `hoteluri`
+--
+
+INSERT INTO `hoteluri` (`id`, `tara`, `denumire`, `descriere`, `stele`, `available`, `adresa`, `poster`, `media`, `telefon`, `fax`, `locatie`, `detalii_locatie`, `camere`, `facilitati_hotel`, `facilitati_camere`, `restaurant`, `exterior`, `review`) VALUES
+(1, 'Londra', 'HOTEL RUSSELL', '', 4, 1, '', NULL, 'fereastra.jpg,masina.jpg,fereastra.jpg,masina.jpg,fereastra.jpg,masina.jpg', 0, 0, '', '', 120, '', '', '', '', 0),
+(2, 'Paris', 'HOTEL CONCORDE LA FAYETTE', 'Beneficiind de o loca?ie minunat? n centrul municipiului Bucure?ti, hotelul Central a fost renovat n aprilie 2009 ?i promovat la 4 stele, oferind servicii personalizate, ntr-o ambian?? pl?cut?.\\r\\n\\r\\nFiind aproape de zona financiar?, cultural? ?i comercial? a ora?ului ?i la distan?? de mers pe jos de principalele atrac?ii turistice, cum ar fi Palatul Parlamentului sau Gr?dina Cismigiu, hotelul este ideal att pentru c?l?torii de afaceri ct ?i pentru cei de pl?cere. Hotelul este u?or accesibil prin intermediul a diverse mijloace de transport.\\r\\n\\r\\nPentru confortul dvs., ntregul hotel Central ofer? acces gratuit la internet wireless ?i un centru de afaceri, permi?ndu-v? s? p?stra?i leg?tura.', 5, 1, '', NULL, '', 0, 0, '', '', 0, '', '', '', '', 0),
+(3, 'Paris', 'Banke Hotel', 'Acest impresionant hotel de 15.000 mp din centrul Bucure?tiului este situat la 10 minute de aeroportul interna?ional B?neasa ?i la 25 minute de centrul expozi?ional Romexpo.\\r\\n\\r\\nMobilate luxos, camere spa?ioase v? a?teapt? pentru o noapte de odihn? lini?tit? ?i preparate delicioase din toat? lumea pot fi savurate n cele 3 restaurante din incinta complexului. 10 camere de conferin?? complet echipate sunt disponibile pentru oaspe?ii care folosesc hotelul n scop de afaceri ?i 2 baruri, cafeneaua oriental ?i clubul de noapte, un cazino ?i un centru spa v? invit? s? v? relaxa?i dup? o zi plin? de satisfac?ii n capitala Romniei. Pute?i ajunge la Casa Presei Libere n 15 minute, la B?neasa Business Centre n 10 minute ?i la aeroportul interna?ional Otopeni n 25 minute.', 3, 1, '', NULL, '', 0, 0, '', '', 0, '', '', '', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tip_camera`
+--
+
+CREATE TABLE IF NOT EXISTS `tip_camera` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tip` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `tip_camera`
+--
+
+INSERT INTO `tip_camera` (`id`, `tip`) VALUES
+(1, 'standard');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `denumire` int(11) DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `parola` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `users`
+--
+
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `booking`
+--
+ALTER TABLE `booking`
+  ADD CONSTRAINT `users` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `camere_hotel`
+--
+ALTER TABLE `camere_hotel`
+  ADD CONSTRAINT `tip_hotel` FOREIGN KEY (`id_hotel`) REFERENCES `hoteluri` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `tip_camera` FOREIGN KEY (`id_camera`) REFERENCES `tip_camera` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+</code></pre>
+
+<p>
+ this is database. when i select a hotel should not give me related records from 'camere_hotel'?
+</p>
+<pre><code>fRecordSet Object
+(
+    [&quot;class&quot;:&quot;fRecordSet&quot;:private] =&gt; Hoteluri
+    [&quot;non_limited_count&quot;:&quot;fRecordSet&quot;:private] =&gt; {null}
+    [&quot;non_limited_count_sql&quot;:&quot;fRecordSet&quot;:private] =&gt; {null}
+    [&quot;pointer&quot;:&quot;fRecordSet&quot;:private] =&gt; 0
+    [&quot;records&quot;:&quot;fRecordSet&quot;:private] =&gt; Array
+        (
+            [0] =&gt; Hoteluri Object
+                (
+                    [&quot;cache&quot;:protected] =&gt; Array
+                        (
+                        )
+              
+                    [&quot;old_values&quot;:protected] =&gt; Array
+                        (
+                        )
+              
+                    [&quot;related_records&quot;:protected] =&gt; Array
+                        (
+                        )
+              
+                    [&quot;values&quot;:protected] =&gt; Array
+                        (
+                            [id] =&gt; 1
+                            [tara] =&gt; Londra
+                            [denumire] =&gt; HOTEL RUSSELL
+                            [descriere] =&gt; {empty_string}
+                            [stele] =&gt; 4
+                            [available] =&gt; {true}
+                            [adresa] =&gt; {empty_string}
+                            [poster] =&gt; {null}
+                            [media] =&gt; fereastra.jpg,masina.jpg,fereastra.jpg,masina.jpg,fereastra.jpg,masina.jpg
+                            [telefon] =&gt; 0
+                            [fax] =&gt; 0
+                            [locatie] =&gt; {empty_string}
+                            [detalii_locatie] =&gt; {empty_string}
+                            [camere] =&gt; 120
+                            [facilitati_hotel] =&gt; {empty_string}
+                            [facilitati_camere] =&gt; {empty_string}
+                            [restaurant] =&gt; {empty_string}
+                            [exterior] =&gt; {empty_string}
+                            [review] =&gt; 0
+                        )
+              
+                )
+        
+        )
+  
+)</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-555">
+				<div class="body" id="body-555">
+					
+<p>
+i figure out till now i think how this is set but i can escape from plurize the table. i'm frustrating beacause i must renaming tables in english words to plurize and sigularize when flowrish request. ca u give me a concrate example of how to set overrideRelatedRecordName to not bother me tha<br />
+t plurize?
+</p>
+<pre class="block php"><code>class Hoteluri extends fActiveRecord {
+			protected function configure()
+			{
+				fORM::addCustomClassTableMapping($this, 'hoteluri');
+				fORMRelated::overrideRelatedRecordName($this,camere_hotel','camere_hotel');
+				
+			}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="12/24/09 10:32pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-556">
+				<div class="body" id="body-556">
+					
+<p>
+And how can i listed related records? i see there is count, list for primary key, but how can i list those records?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="12/24/09 11:39pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-557">
+				<div class="body" id="body-557">
+					
+<p>
+what i'm doing wrong here. 
+</p>
+<pre class="block php"><code>if(isset($adauga_hotel)) {
+	try
+		{
+			$hotel_nou = new Hoteluri();
+			$rooms = $hotel_nou-&gt;buildRooms();
+			//fCore::expose($hotel_nou);
+			//fCore::expose($hotel_nou);
+			$hotel_nou-&gt;populate();
+			$hotel_nou-&gt;populateRooms();
+			fCore::expose($hotel_nou-&gt;populateRooms());
+			$hotel_nou-&gt;store();
+			
+			
+		} catch(fValidationException $e)
+		{
+			$xtpl-&gt;assign('ERROR_HOTEL_NOU', $e-&gt;printMessage());
+		}
+			
+	}
+
+
+i named the child input like you say in tutorial. rooms::camera[]. rooms been table with foreign key, and camera beeing a column from that table.
+</code></pre>
+
+<p>
+ when i expose fCore::expose($hotel_nou-&gt;populateRooms()); this print null.  what i miss?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="12/25/09 9:49pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-568">
+				<div class="body" id="body-568">
+					
+<p>
+Populate creates the records from the request, but currently does not return anything. Calling <code>buildRooms()</code> will get you what you are looking for.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/29/09 3:18pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-567">
+				<div class="body" id="body-567">
+					
+<p>
+You will want to use the <code>build</code> action. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations has a full description of all of the related record operations for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/29/09 3:17pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-566">
+				<div class="body" id="body-566">
+					
+<p>
+<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> allows for customizing pluralization and singularization rules for systems that don't use English or have words that are irregular. The ORM uses <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> for all pluralization, singularization and notation conversion.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/29/09 3:16pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-571">
+				<div class="body" id="body-571">
+					
+<p>
+i know that pluralization and singularization think but, with my database populate related record didn't work and when i change flowrish coude at the last version appers the message that the hoteluri table don't have a one to one relationship withcamere_hotel. so populate did't work both of cases.  can you say if my table is seted corected  hoteluri and camere_hotel beeing in one to many relatshion ship and what code i must use to populate camere_hotel related record? a try three days along i read carefully documentation and example but did't work. i must erase foreign key and doing manually inserted child for hoteluri
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="12/29/09 3:27pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-575">
+				<div class="body" id="body-575">
+					
+<p>
+It sounds to me like there is a bug with populating a related table that has the same plural and singular forms. If you can open a ticket with the database schema for 2 tables that cause the issue and the shortest possible PHP to replicate the issue I will fix it. I apologize it has taken so long to get this resolved.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/31/09 9:39am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>pagination &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">pagination</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="3/24/09 7:20am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+How should be this code to work:
+</p>
+<pre class="block php"><code>$xtpl-&gt;assign_file(&quot;FILE_RIGHT&quot;, 'templates/grid.html');
+
+class Customer extends fActiveRecord
+{
+	/* functia doi*/
+	public static function findActiveNumber()
+	{
+		return fRecordSet::buildFromSQL(
+			__CLASS__,
+			&quot;SELECT * FROM customers&quot;
+		);	
+	}
+
+	public static function pagination()
+	{
+		$limit = 9;		
+		$rows = Customer::findActiveNumber();
+		$total_items = $rows-&gt;count();
+		if( !isset($page) || (is_numeric($page) == false) ) $page = 1;
+		if ($page == 0) $page = 1;                    
+		$prev = $page - 1;                            
+		$next = $page + 1;  
+		$lastpage = ceil($total_items/$limit); 
+		$lpm1 = $lastpage - 1;                        
+		if($page) $set_limit = ($page - 1) * $limit; else $set_limit = 0; 
+		## afisare paginare
+		$pagina = &quot;&quot;;
+		$txt_prev = &quot;previous&quot;;
+		$txt_next = &quot;next&quot;;
+		$alamat_pag = &quot;index.php?&quot;;
+		$adjacents = 1; 
+
+		require('paginare.php');
+
+		return $pagination;
+	}		
+		
+	/* functia doi*/
+	public static function findActive($sort_column, $sort_dir)
+	{
+		echo $limit;
+
+		if (!in_array($sort_column, array('zip', 'city'))) { $sort_column = 'zip'; } 
+		if (!in_array($sort_dir, array('asc', 'desc'))) { $sort_dir = 'desc'; }
+
+		return fRecordSet::buildFromSQL(__CLASS__, &quot;SELECT * FROM customers ORDER BY $sort_column $sort_dir LIMIT $set_limit, $limit&quot;);
+	}
+	
+}
+
+Customer::pagination();
+
+// Set the users to be sortable by name or email, defaulting to name
+$sort = fCRUD::getSortColumn(array('zip', 'city'));
+// Set the sorting to default to ascending
+$dir = fCRUD::getSortDirection('asc');
+
+$xtpl-&gt;assign('city_sort', fCRUD::printSortableColumn('city', 'Oras'));
+
+fCRUD::getColumnClass('zip');
+
+$customers = Customer::findActive($sort, $dir);
+
+foreach ($customers as $customer) {
+
+	$customer_id = fRequest::get('id');
+	
+	$xtpl-&gt;assign('rows', fCRUD::getRowClass($customer-&gt;getId(), $customer_id));
+	$xtpl-&gt;assign('nume', $customer-&gt;prepareFirstname());
+	$xtpl-&gt;assign('prenume', $customer-&gt;prepareLastname());
+	$xtpl-&gt;assign('strada', $customer-&gt;prepareStreet());
+	$xtpl-&gt;assign('zip_class', fCRUD::getColumnClass('zip'));
+	$xtpl-&gt;assign('zip', $customer-&gt;prepareZip());
+	$xtpl-&gt;assign('city_class', fCRUD::getColumnClass('city'));
+	$xtpl-&gt;assign('oras', $customer-&gt;prepareCity());
+	$xtpl-&gt;assign('id_tara', $customer-&gt;prepareCountryid());
+	$xtpl-&gt;assign('activ',fCRUD::showChecked($customer-&gt;prepareActiv(), 1));
+	$xtpl-&gt;parse('main.right.row');
+}
+
+$xtpl-&gt;parse('main.right');</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-159">
+				<div class="body" id="body-159">
+					
+<p>
+I'm not really sure what you are looking for feedback with here. I did respond to your other post about counting records related to pagination at <a href="41.html">/discussion/1/41</a>. Hopefully it will have some answers that can be of help.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 10:40pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

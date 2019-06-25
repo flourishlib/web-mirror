@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>anyone have a user management system? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">anyone have a user management system?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="4/12/11 7:28am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Does anyone have pre-rolled user management system using flourish? 
+</p>
+
+<p>
+I'd like to give it a shot for my next project... But coming from a codeigniter background, I'm used to using either tank_auth or ion_auth to give me access to the following functions:
+</p>
+
+<ul>
+<li>login()</li>
+<li>logout()</li>
+<li>register()</li>
+<li>send_again()</li>
+<li>activate()</li>
+<li>forgot_password()</li>
+<li>reset_password()</li>
+<li>change_password()</li>
+<li>change_email()</li>
+<li>reset_email()</li>
+<li>unregister()</li>
+</ul>
+
+<p>
+tia.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1240">
+				<div class="body" id="body-1240">
+					
+<p>
+Well, the downside to using Flourish is that is tends to be lower-level than most frameworks, so systems/plugins with this extensive an amount of functionality are less common. The kind of functionality you are talking about would need to know about:
+</p>
+
+<ul>
+<li>The routing system and URLs</li>
+<li>Email parameters and templates</li>
+<li>Database schema</li>
+<li>Session configuration</li>
+</ul>
+
+<p>
+There are some frameworks people are building on top of Flourish, but I can't say I know if any of them provide such functionality. You can see a partial list over at <a href="338.html">Discussion: MVC incorporating flourish</a>.
+</p>
+
+<p>
+At my company this sort of stuff is handled by our own ever-evolving &quot;framework&quot; that is built on top of Flourish. We have a scaffolder system that we evolve over time to spit out boilerplate code that is then customized to the exact requirements of the project.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/14/11 1:37pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1241">
+				<div class="body" id="body-1241">
+					
+<p>
+We woul love to see that framework :P
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/14/11 3:19pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1245">
+				<div class="body" id="body-1245">
+					
+<p>
+Unfortunately it relies pretty heavily on our standard server environment, administrative UI and other stuff so it would take quite a bit of work to pick apart and be useful for others.
+</p>
+
+<p>
+We build on top of Flourish along with <a href="https://github.com/jeffturcotte/moor">Moor</a> or <a href="https://github.com/jeffturcotte/anchor">Anchor</a> for routing. We also use libraries like <a href="http://tinymce.moxiecode.com/">TinyMCE</a>, <a href="http://htmlpurifier.org/">HTML Purifier</a>, <a href="http://www.uploadify.com/">Uploadify</a> and <a href="http://jquery.com">jQuery</a>, to name a few. We have a handful of jQuery plugins we've written, but many of them rely on the HTML conventions we use for our administrative sections.
+</p>
+
+<p>
+We have <a href="https://github.com/imarc/">open-sourced a couple of classes</a>, and I am hoping to get some more stuff up on our github repository in the future.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/15/11 8:29am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1249">
+				<div class="body" id="body-1249">
+					
+<p>
+Flourish its so cool anyway.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/16/11 1:12pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1256">
+				<div class="body" id="body-1256">
+					
+<p>
+Thanks for the links! Moor looks awesome, and HTML Purifier is going to solve a problem for me next week in a big way.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													titus											</span>
+					<span class="date_posted" title="4/21/11 4:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

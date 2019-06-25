@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>2 insert related &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">2 insert related</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					eu			</span>
+	<span class="date_posted" title="12/28/09 5:50am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have to store() if($x-&gt;store() || $y-&gt;store()) but what i want is, if for one of them appear a error from validation none of them to be executed. what shoul i do?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-559">
+				<div class="body" id="body-559">
+					
+<p>
+i need to catch somehow the validation part of store.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="12/29/09 3:20am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-560">
+				<div class="body" id="body-560">
+					
+<p>
+You can validate both models before storing:
+</p>
+<pre class="block php"><code>try {
+    $x-&gt;validate();
+    $y-&gt;validate();
+
+    # Everything is ok, so store the models
+    $x-&gt;store();
+    $y-&gt;store();
+}
+catch ( fValidationException $e )
+{
+    // Handle Exception
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													michfrm											</span>
+					<span class="date_posted" title="12/29/09 3:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-561">
+				<div class="body" id="body-561">
+					
+<p>
+store method contain built in validate method. so store came after populate, so what is the point of your x and y validation?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="12/29/09 4:56am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-562">
+				<div class="body" id="body-562">
+					
+<p>
+validate() does the same than the validation of store(). If you call validate() of both models before storing them you can prevent the case that model $x could be saved but $y not.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													michfrm											</span>
+					<span class="date_posted" title="12/29/09 5:02am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-563">
+				<div class="body" id="body-563">
+					
+<p>
+i see now what your point you say to call validate twice once myself and after with store, i think it can work like this. now a i must to erase foreign key, first i try with foregn key but seems that florish have trouble with populate related and one to many relationship, you try this functionality?i want to know if it is work for someone. anyway tank you very much for your help and ideas.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="12/29/09 11:42am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-570">
+				<div class="body" id="body-570">
+					
+<p>
+If you pass <code>TRUE</code> to <a href="../flourishlib.com/api/fActiveRecord.html#validate">fActiveRecord::validate()</a>, you get an array of errors back. You can do that for both records, merge the arrays, and then use the custom <a href="../flourishlib.com/api/fValidationException.html#__construct">fValidationException::__construct()</a> method to create a standard validation exception from a short intro plus the array of validation messages.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/29/09 3:22pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-572">
+				<div class="body" id="body-572">
+					
+<p>
+i don't know very well how try catching work in this example, can you provide me a short example how to do that you say earlier?
+</p>
+
+<p>
+my cood looks like this:
+</p>
+<pre class="block php"><code>	if (isset($adauga_hotel))
+	{
+		try
+		{ 
+			$validare = array();
+			$hotel_nou = new Hoteluri();
+			$last_hotel_id = Hoteluri::ultimulHotelIntrodus(); // cauta ultimul id din hotel ptr asigna valoarea camerei urmatorului hotel itnrodus
+			foreach($last_hotel_id as $id)
+			{
+				$last_id = $id-&gt;getIdHotel();
+			}
+
+			$last_id = $last_id + 1;
+			$hotel_nou-&gt;populate();
+			$hotel_nou-&gt;setIdHotel($last_id);
+			$hotel_nou-&gt;setFacilitatiHotel((!empty($_POST['facilitati'])) ? &quot;&quot; . implode($_POST['facilitati'], ',') . &quot;&quot; : &quot;&quot;);
+			$hotel_nou-&gt;setServiciiHotel((!empty($_POST['servicii'])) ? &quot;&quot; . implode($_POST['servicii'], ',') . &quot;&quot; : &quot;&quot;);
+			$validare_hotel = $hotel_nou-&gt;validate(TRUE);
+			
+			foreach($_POST['camera'] as $k =&gt; $l) { // multiple rooms pentru acelasi hotel
+			
+				$rooms{$k} = new Room();
+				$rooms{$k}-&gt;populate();
+				$rooms{$k}-&gt;setCamera($_POST['camera'][$k]);
+				$rooms{$k}-&gt;setPret($_POST['pret'][$k]);
+				$rooms{$k}-&gt;setMoneda($_POST['moneda'][$k]);
+				$rooms{$k}-&gt;setIdHotel($last_id);
+				$validare_camera = $rooms{$k}-&gt;validate(TRUE);
+				$rooms{$k}-&gt;store();
+										}
+											
+								
+											if ($hotel_nou-&gt;store())
+											{
+												$xtpl-&gt;assign('SUCCES_HOTEL_NOU', '&lt;div class=&quot;validation_succes&quot;&gt;' . $translator-&gt;translate('Succes', '', $lg) . '&lt;/div&gt;');
+
+												// upload poster
+
+												$redenumire = fCryptography::randomString(10);
+												$handle = new Upload($_FILES['poster']);
+												if ($handle-&gt;uploaded)
+												{
+													$handle-&gt;file_new_name_body = $redenumire;
+													$handle-&gt;image_convert = 'jpg';
+													$handle-&gt;image_resize = true;
+													$handle-&gt;image_ratio_y = true;
+													$handle-&gt;image_x = 800;
+													$handle-&gt;Process($dir_h);
+													$handle-&gt;file_new_name_body = $redenumire;
+													$handle-&gt;image_convert = 'jpg';
+													$handle-&gt;image_resize = true;
+													$handle-&gt;image_ratio_crop = true;
+													$handle-&gt;image_y = 120;
+													$handle-&gt;image_x = 160;
+													$handle-&gt;image_resize = true;
+													$handle-&gt;process($dir_thumbs_h);
+													if ($handle-&gt;processed)
+													{
+
+														// $hotel_nou-&gt;setMedia(substr_replace($fisiere_uploadate ,&quot;&quot;,-1));
+
+														echo 'OK';
+													}
+													else
+													{
+														echo 'Error: ' . $handle-&gt;error;
+													}
+												}
+												else
+												{
+													echo 'Error: ' . $handle-&gt;error;
+												}
+
+												unset($handle);
+
+												// upload poze
+
+												$files = array();
+												foreach($_FILES['media'] as $k =&gt; $l)
+												{
+													foreach($l as $i =&gt; $v)
+													{
+														if (!array_key_exists($i, $files)) $files[$i] = array();
+														$files[$i][$k] = $v;
+													}
+												}
+
+												foreach($files as $file)
+												{
+													$redenumire = fCryptography::randomString(10);
+													$handle = new Upload($file);
+													if ($handle-&gt;uploaded)
+													{
+														$handle-&gt;file_new_name_body = $redenumire;
+														$handle-&gt;image_convert = 'jpg';
+														$handle-&gt;image_resize = true;
+														$handle-&gt;image_ratio_y = true;
+														$handle-&gt;image_x = 800;
+														$handle-&gt;Process($dir_h);
+														$handle-&gt;file_new_name_body = $redenumire;
+														$handle-&gt;image_convert = 'jpg';
+														$handle-&gt;image_resize = true;
+														$handle-&gt;image_ratio_crop = true;
+														$handle-&gt;image_y = 120;
+														$handle-&gt;image_x = 160;
+														$handle-&gt;image_resize = true;
+														$handle-&gt;process($dir_thumbs_h);
+														if ($handle-&gt;processed)
+														{
+
+															// $hotel_nou-&gt;setMedia(substr_replace($fisiere_uploadate ,&quot;&quot;,-1));
+
+															echo 'OK';
+														}
+														else
+														{
+															echo 'Error: ' . $handle-&gt;error;
+														}
+													}
+													else
+													{
+														echo 'Error: ' . $handle-&gt;error;
+													}
+
+													unset($handle);
+												}
+											}
+
+																		
+										}
+
+										catch(fValidationException $e)
+										{
+											
+																		
+											$validare = array_merge($validare_hotel,$validare_camera);
+											
+											
+											$xtpl-&gt;assign('ERROR_HOTEL_NOU', $e-&gt;printMessage());
+										}
+									}
+								}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="12/30/09 6:13am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

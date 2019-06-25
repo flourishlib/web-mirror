@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>demo on PORT 8888 ?? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">demo on PORT 8888 ??</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					rigagoogoo			</span>
+	<span class="date_posted" title="10/7/09 1:50pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Library looks very inviting to use so I've downloaded your demo site and I'm trying to run it on MAMP.  
+</p>
+
+<p>
+however it keeps falling over because the MAMP server uses port 8888 and for some reason <a href="../flourishlib.com/api/fURL.html#getdomain">fURL::getdomain()</a> is not capturing this?  I'm using a etc/hosts file to map the chosen domain name to localhost and I've setup an apache virtual host to give the project it's own DOCUMENT_ROOT
+</p>
+
+<p>
+I can *fix* this by *not* using virtual hosts or by configuring MAMP to use PORT 80 but given this is my dev environment I'd like to be able to run it on port 8888 on a virtual host. ( it strikes me I may have configured my virtual host incorrectly. but I followed instructions on the MAMP forum)
+</p>
+
+<p>
+I can partially fix the problem by changing
+</p>
+<pre><code>&lt;base href=&quot;&lt;?php echo fURL::getDomain() .URL_ROOT ?&gt;&quot; /&gt;</code></pre>
+
+<p>
+ to
+</p>
+<pre><code>&lt;base href=&quot;&lt;?php echo fURL::getDomain() . ':8888'.URL_ROOT ?&gt;&quot; /&gt;</code></pre>
+
+<p>
+ but then that doesn't fix the submit button link on the login form.  I expect it will break all links in forms used by <a href="../flourishlib.com/docs/fURL.html">fURL</a> but I didn;t think it worthwhile pursuing in case I'm missing something obvious.
+</p>
+
+<p>
+I'm a total Newb to this PHP stuff so not sure how to debug properly.  I had to forcible break the page to cause it to dump server array by commenting out //$action = fRequest::get('action'); from the login.php file (incidentally how do i do that at will, dump the server array to screen?) 
+</p>
+
+<p>
+This showed     
+</p>
+<pre><code> [HTTP_HOST] =&gt; dev.ircp:8888
+    [SERVER_NAME] =&gt; dev.ircp
+    [SERVER_ADDR] =&gt; 127.0.0.1
+    [SERVER_PORT] =&gt; 80</code></pre>
+
+<p>
+ looking at this I can guess that <a href="../flourishlib.com/api/fURL.html#getdomain">fURL::getdomain()</a> is using the SERVER_PORT variable whereas the port apache is actually using (or is it?) is defined in the HTTP_HOST
+</p>
+
+<p>
+Many thanks for your time and sorry for such a long post the full SERVER array is below :-)
+</p>
+
+<p>
+<br />
+ Riga <br />
+
+</p>
+
+<p>
+full output ------------------------------- $
+</p>
+<pre><code>_SERVER: Array
+(
+    [REDIRECT_STATUS] =&gt; 200
+    [HTTP_ACCEPT_LANGUAGE] =&gt; en
+    [HTTP_ACCEPT_ENCODING] =&gt; gzip, deflate
+    [HTTP_COOKIE] =&gt; PHPSESSID=4396118e9b0ed45dc6640dacd4310c59
+    [HTTP_REFERER] =&gt; http://dev.ircp:8888/
+    [HTTP_USER_AGENT] =&gt; Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_4_11; en) AppleWebKit/531.9 (KHTML, like Gecko) Version/4.0.3 Safari/531.9
+    [HTTP_CACHE_CONTROL] =&gt; max-age=0
+    [HTTP_ACCEPT] =&gt; application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+    [HTTP_CONNECTION] =&gt; keep-alive
+    [HTTP_HOST] =&gt; dev.ircp:8888
+    [PATH] =&gt; /usr/bin:/bin:/usr/sbin:/sbin
+    [SERVER_SIGNATURE] =&gt; &lt;address&gt;Apache/2.0.63 (Unix) PHP/5.2.10 DAV/2 Server at dev.ircp Port 80&lt;/address&gt;
+  
+    [SERVER_SOFTWARE] =&gt; Apache/2.0.63 (Unix) PHP/5.2.10 DAV/2
+    [SERVER_NAME] =&gt; dev.ircp
+    [SERVER_ADDR] =&gt; 127.0.0.1
+    [SERVER_PORT] =&gt; 80
+    [REMOTE_ADDR] =&gt; 127.0.0.1
+    [DOCUMENT_ROOT] =&gt; /Users/me/Sites/htdocs1
+    [SERVER_ADMIN] =&gt; you@example.com
+    [SCRIPT_FILENAME] =&gt; /Users/me/Sites/htdocs1/login.php
+    [REMOTE_PORT] =&gt; 54411
+    [REDIRECT_QUERY_STRING] =&gt; action=log_in
+    [REDIRECT_URL] =&gt; /log_in
+    [GATEWAY_INTERFACE] =&gt; CGI/1.1
+    [SERVER_PROTOCOL] =&gt; HTTP/1.1
+    [REQUEST_METHOD] =&gt; GET
+    [QUERY_STRING] =&gt; action=log_in
+    [REQUEST_URI] =&gt; /log_in
+    [SCRIPT_NAME] =&gt; /login.php
+    [PHP_SELF] =&gt; /login.php
+    [REQUEST_TIME] =&gt; 1254935067
+    [argv] =&gt; Array
+        (
+            [0] =&gt; action=log_in
+        )
+  
+    [argc] =&gt; 1
+)
+
+$_POST: Array
+(
+)
+
+$_GET: Array
+(
+    [action] =&gt; log_in
+)
+
+$_FILES: Array
+(
+)
+
+$_SESSION: Array
+(
+    [fCRUD::/manage::previous_sort_column] =&gt; date
+    [fCRUD::/manage::previous_sort_direction] =&gt; desc
+    [fAuthorization::user_token] =&gt; 1
+)
+
+$_COOKIE: Array
+(
+    [PHPSESSID] =&gt; 4396118e9b0ed45dc6640dacd4310c59
+)
+Notice
+------
+{doc_root}/login.php(8)
+Undefined variable: action
+Notice
+------
+{doc_root}/login.php(18)
+Undefined variable: action
+</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-451">
+				<div class="body" id="body-451">
+					
+<p>
+The demo zip file had quite an old version of Flourish in it (r536 I believe). The bug with not including the port number has since been fixed. I uploaded a new version of the demo zip that includes the latest version of Flourish (r718). You can download the new zip at <a href="http://static.flourishlib.com/flourish_demo_site_r718.zip">http://static.flourishlib.com/flourish_demo_site_r718.zip</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/7/09 2:25pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-452">
+				<div class="body" id="body-452">
+					
+<p>
+hmm I cloned from github just today and replaced the flourish files in the demo with them so it should be a latest revision should it not or are there actual changes to the demo as well?  i noticed the demo was not available on github which is a shame?  
+</p>
+
+<p>
+incidentally how can i tell which revision I have from the source files tehmselves?
+</p>
+
+<p>
+appreciate the help :-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rigagoogoo											</span>
+					<span class="date_posted" title="10/7/09 3:31pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-453">
+				<div class="body" id="body-453">
+					
+<p>
+err bow head in shame
+</p>
+
+<p>
+I've tried with both the zip and the github clone and they both work fine with port 8888  
+</p>
+
+<p>
+the zip does include a nice revision file though.
+</p>
+
+<p>
+now i have a problem with add and delete :-)  both urls just hang and throw no exception.  I'll have a little play then post another topic if I can;t figure it out :-)
+</p>
+
+<p>
+cheers for your help 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rigagoogoo											</span>
+					<span class="date_posted" title="10/7/09 4:06pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1273">
+				<div class="body" id="body-1273">
+					
+<p>
+I just discovered Flourish today (4/25/2011), and decided to download only the demo.
+</p>
+
+<p>
+My environment is Windows 7 64-bit, with XAMPP 1.7.3, running on port <strong>85</strong>.
+</p>
+
+<p>
+To get the demo to work (the stylesheet did not get picked up), I had to put a 'hack' in the config.php file that accompanied the demo as follows:
+</p>
+<pre class="block php"><code>// 2011.04.25
+// Revised original code in order to ensure that an installation with a non-standard port (85) works correctly
+// The hack below fails when attempting to enter administrative mode.
+
+/*
+Original Code:
+
+define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
+define('URL_ROOT', substr(DOC_ROOT, strlen(realpath($_SERVER['DOCUMENT_ROOT']))) . '/');
+*/
+
+define('DOC_ROOT', realpath(dirname(__FILE__) . '\\\\..\\\\'));
+define('URL_ROOT', ':85/' . substr(DOC_ROOT, strlen(realpath($_SERVER['DOCUMENT_ROOT'])) + 1) . '/');</code></pre>
+
+<p>
+ The user view of the blog seems to work fine now (the resulting URL is 
+</p>
+<pre><code>#!text/html
+http://localhost:85/flourish-demo/</code></pre>
+
+<p>
+ ). However, it's obvious that my 'hack' causes problems when I attempt to access the admin portion of the app (and probably messes up routing in general). The initial URL after authenticating is:
+</p>
+<pre><code>#!text/html
+http://localhost/flourish-demo/log_in:85/flourish-demo/manage</code></pre>
+
+<p>
+ What's the correct way to set up the demo when using a port other than 80? I've been eager to work with the demo in order to get a taste of Flourish before diving into the documentation (which accounts for this dumb question).
+</p>
+
+<p>
+Thanks!
+</p>
+
+<p>
+P.S. I tried searching for other entries related to the demo and non-standard ports; this thread seemed to be the most appropriate.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/25/11 4:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1274">
+				<div class="body" id="body-1274">
+					
+<p>
+Replying to my previous message...
+</p>
+
+<p>
+This time I downloaded a fresh copy of the demo and installed it, <strong>unchanged</strong>, on another machine. The second machine also runs Windows 7 (Pro, as opposed to Ultimate on the first machine). This time the blog displays correctly, with the expected stylesheet-controlled look and feel, however, when I log into the admin environment on the second machine, I get a bad URL:
+</p>
+<pre><code>#!text/html
+http://localhost:85/flourish-demo/log_in%5Cflourish-demo/manage</code></pre>
+
+<p>
+ The difference: the second machine has a <strong>newer</strong> version of XAMPP (1.7.4).
+</p>
+
+<p>
+I guess there are differences in the PHP versions (PHP 5.3.5 is in the 1.7.4 release of XAMPP; I think PHP PHP 5.3.1 is in the 1.7.3 release of XAMPP).
+</p>
+
+<p>
+Not sure how this should be resolved...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/25/11 6:31pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1277">
+				<div class="body" id="body-1277">
+					
+<p>
+Hmm, I haven't had issues with non-standard ports and Flourish before, but I also don't normally use the <code>&lt;base&gt;</code> tag. Can you check the generated HTML and see what the <code>&lt;base&gt;</code> tag in your <code>&lt;header&gt;</code> is set to? It should include the port number. If not, you may have stumbled upon a bug in Flourish with XAMMP. 
+</p>
+
+<p>
+I suppose it is also possible some browsers don't obey a port number in the <code>&lt;base&gt;</code> tag.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/26/11 3:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1292">
+				<div class="body" id="body-1292">
+					
+<p>
+The base tag on the default page that is displayed after submitting this URL, 
+</p>
+<pre><code>#!text/html
+http://localhost:85/flourish-demo/</code></pre>
+
+<p>
+ , is as follows:
+</p>
+<pre><code>#!text/html
+&lt;base href=&quot;http://localhost:85/flourish-demo/&quot; /&gt;</code></pre>
+
+<p>
+ The same tag value exists on the Login page.
+</p>
+
+<p>
+After I supply the correct credentials and click Login, I get an IIS error page (IIS is running on port 80 on this machine, while Apache is on port 85) that shows this URL:
+</p>
+<pre><code>#!text/html
+http://localhost/flourish-demo/log_in:85/flourish-demo/manage</code></pre>
+
+<p>
+ in the browser address area.
+</p>
+
+<p>
+The odd thing is that <strong>occasionally</strong>, after having logged in, I can return to the default page via my browser's back button, click the Manage hyperlink and get the expected display of blog entries to manage. At the moment, I'm unable to reproduce that behaviour, however.
+</p>
+
+<p>
+Thanks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/28/11 9:07am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

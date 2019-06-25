@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>demo site no errors &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">demo site no errors</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					rigagoogoo			</span>
+	<span class="date_posted" title="10/8/09 10:00pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm messing around with the demo site.   
+</p>
+
+<p>
+I can;t get it to throw any usefull errors  for instance if i add the line
+</p>
+<pre class="block php"><code>$calls = Call::findAll();</code></pre>
+
+<p>
+ to the index.php file after
+</p>
+<pre class="block php"><code>$meetups = Meetup::findCurrent();</code></pre>
+
+<p>
+ I havn't even created a call class but i just get blank screen no errors.
+</p>
+
+<p>
+any ideas I would really like to use flourish because I've not enjoyed codeigniter etc.
+</p>
+
+<p>
+is the demo site just to broken with the new release or is a flaw in flourish that it will not report these errors.  Maybe it's by design and I just don't understand.
+</p>
+
+<p>
+any help appreciated.  the app functions fine now i've removed some old functions and replaced with their new counterparts it threw no errors for this either?  cheers Riga
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-457">
+				<div class="body" id="body-457">
+					
+<p>
+This would be an issue with your PHP setup, you may want to check what you have set for 'display_errors' in your php.ini (it should be set to 1).
+</p>
+
+<p>
+Or, try placing this &quot;ini_set('display_errors', 1);&quot; right before the &quot;include './inc/init.php';&quot; on the demo site's index.php.
+</p>
+
+<p>
+If that displays errors, you are going to want to change your php settings or place that line of code in a config file, so you don't have to repetitively redefine it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													alexleeds											</span>
+					<span class="date_posted" title="10/8/09 10:41pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-463">
+				<div class="body" id="body-463">
+					
+<p>
+Cheers that's sorted it :-)
+</p>
+
+<p>
+I haven't looked at the php.ini file before.   It was set to off but was logging the errors instead to a php log file.
+</p>
+
+<p>
+thanks again.
+</p>
+
+<p>
+Riga
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rigagoogoo											</span>
+					<span class="date_posted" title="10/11/09 4:09pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>FlourishToo &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">FlourishToo</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/mattsah">			mattsah		</a> 	</span>
+	<span class="date_posted" title="8/7/12 11:06pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hey all.  I've started work in a pretty major rewrite of Flourish.  If anyone is interested in helping let me know, or if you just want to follow the progress checkout the GitHub page <a href="http://www.github.com/dotink/flourishToo">http://www.github.com/dotink/flourishToo</a>.
+</p>
+
+<p>
+Even though flourish 1.0 never got out of Beta, I think given the amount of time and the maturity of it we can take a lot of what we learned from it and start something pretty fresh.  Here's a few core ideas behind the project:
+</p>
+
+<p>
+1) Keep the API reminiscent of original Flourish 2) Make everything much more object oriented (see the README on the github site) 3) Make things more modular (split out various database support, add support for grammar translations) 4) Break ties to anything less than PHP 5.3
+</p>
+
+<p>
+A few examples of where these principles have already been put into place are on the Text class and URL classes.  Here's some examples:
+</p>
+<pre class="block php"><code>$url = new URL();                           // constructs a new URL object from the existing URL
+$url = $url-&gt;modify(['scheme' =&gt; 'https']); // Would replace current scheme with https
+
+$url-&gt;redirect('?q=test');                  // would redirect the user to the URL appended with ?q=test</code></pre>
+
+<p>
+ You can see that $url being object oriented acts more like a timestamp, where if you modify it you're returned a new object with the modifications.
+</p>
+
+<p>
+Text consumed Grammar, and can be extended to support grammars for different languages:
+</p>
+<pre class="block php"><code>$text = new Text('This is a long string that will be modified');
+$text = $text-&gt;underscorize()</code></pre>
+
+<p>
+ It also supports custom domains for compose() which can be used/passed to your callback and used with, say, gettext for easier modularization of translations.
+</p>
+<pre class="block php"><code>$translation = $text-&gt;compose('forums');</code></pre>
+
+<p>
+ You can work with multi-values...
+</p>
+<pre class="block php"><code>$text        = new Text($items);
+$joined_text = $text-&gt;pluralize()-&gt;join(',', 'or');
+
+$text = $text-&gt;inflectOnQuantity('item', '%d items');</code></pre>
+
+<p>
+ Anyway, there's some other ideas I had for objectification in the README.  There's probably a few classes I'll do away with and allow others to build as soemthing separate... there's also going to be some different exceptions as well as some likely removed... and more!  Follow on github and feel free to open issues there for general discussion.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1795">
+				<div class="body" id="body-1795">
+					
+<p>
+I like the idea. The fluency of the code examples are very appealing.
+</p>
+
+<p>
+Will definitely check it out.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="8/8/12 3:12am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1796">
+				<div class="body" id="body-1796">
+					
+<p>
+Great job! I'm using the old Flourish on production, and will use Flourish Too in my next project! 
+</p>
+
+<p>
+Thank's a lot!
+</p>
+
+<p>
+But... The original Flourish project are dead? Have anyone working on possible future version?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													lucas.snta											</span>
+					<span class="date_posted" title="8/16/12 2:05pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1797">
+				<div class="body" id="body-1797">
+					
+<p>
+Just to clarify, FlourishToo is a project by an engineer (Matt) who works at the company I was previously employed with. I don't currently have any involvement in the project.
+</p>
+
+<p>
+Flourish is not dead yet, however I have had less time to work on it in the past year due to getting myself involved with the Sublime Text community. The work that has been done recently was focused around getting the project moved to GitHub (<a href="https://github.com/flourishlib">https://github.com/flourishlib</a>) and revising the website (<a href="http://new.flourishlib.com">http://new.flourishlib.com</a>) in order to migrate off of the old hosting platform.
+</p>
+
+<p>
+The remaining pieces before the cut over involve me completing the automated test harness for GitHub commits, and migrating the current Trac-based forum content to a new forum written in PHP that integrates with GitHub.
+</p>
+
+<p>
+I am hoping to be able to spend some time on these soon, but I am still a little overloaded with lingering side-projects and the ever present Sublime Text work, so I don't have a firm date.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/16/12 9:39pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1798">
+				<div class="body" id="body-1798">
+					
+<p>
+I understand perfectly, including I think that Flourish need more support from community, and this project is very unknown to many PHP developers around the world!
+</p>
+
+<p>
+I love Flourish, I was searching for a &quot;little framework&quot; without MVC implementation and founded this excellent libraly, that is perfect for my projects.
+</p>
+
+<p>
+I will try to spread Brazilian PHP developers about this excellent Framework, and create some articles to get some possible's contributors.
+</p>
+
+<p>
+Thank's a lot! 
+</p>
+
+<p>
+Sorry for my bad english!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													lucas.snta											</span>
+					<span class="date_posted" title="8/16/12 10:32pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1799">
+				<div class="body" id="body-1799">
+					
+<p>
+Apologies if I was not clear that this is not something that is &quot;official&quot; to Flourish.  It's mostly to support my moving forward with my framework which has come to rely on Flourish as its core.  Although I have issues with PHP namespacing, wanting to keep up with the community, I decided it was time to embrace namespacing, but also I'm trying to remove static dependencies, which standard Flourish adds a lot of.
+</p>
+
+<p>
+That said, I do not suggest anyone use FlourishToo at the moment for their next project unless they wish to dedicate a large portion of their next project's time to developing FlourishToo itself  :P.
+</p>
+
+<p>
+Not all classes have been ported/refactored at the moment, and unless you're using Flourish for pretty basic stuff avoiding completely the ORM and ActiveRecord, it probably wouldn't be much use and would just cause confusion/problems.  Furthermore, although the API is reminiscent of normal Flourish, obviously the move away from static stuff changes the fundamental principles of the API.  Method names and arguments are often similar or exactly the same, but there is no API or even overall usage documentation on what I've written yet.
+</p>
+
+<p>
+That being said.  I encourage anyone interested in contributing to fork it on github and offer pull requests if they believe they understand the intentions of the project.  The work of &quot;modernizing&quot; and &quot;objectifying&quot; Flourish is not terribly demanding mentally, but it's tedious.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="9/1/12 5:58am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

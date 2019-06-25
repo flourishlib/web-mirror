@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>column info &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">column info</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="7/19/10 5:27am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+it's there a way to receive a column info comment or to hope in a future &quot;improvement&quot;? mi tgry to make automatic form like: 
+</p>
+<pre class="block php"><code>switch ($detalii[&quot;type&quot;])
+				{
+				case &quot;varchar&quot;:
+					$form-&gt;addField(&quot;text&quot;, $column, ucfirst($column) , false, null);
+					break;
+					
+				case &quot;date&quot;:
+					$form-&gt;addField(&quot;text&quot;, $column, ucfirst($column) , false, null);
+					break;
+
+				case &quot;text&quot;:
+					$form-&gt;addField(&quot;textarea&quot;, $column, ucfirst($column) , false, null, &quot;cols='40' rows='7'&quot;);
+					break;
+				}
+
+
+and because enum become varchar and other datatype changes i want to note in comment about what field to html.</code></pre>
+<pre><code> [titlu] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 100
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %s
+            [default] =&gt; {null}
+            [valid_values] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )</code></pre>
+
+<p>
+ so a comment = &quot;&quot; will be useful for me.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-833">
+				<div class="body" id="body-833">
+					
+<p>
+I've done a bunch of this kind of metaprogramming - that is why <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> was written. You can detect if a column is a enum by looking at the <code>valid_values</code> element.
+</p>
+
+<p>
+In terms of returning the comment, I don't know if that is possible using the technique I'm using in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>. I presume you are using MySQL?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/21/10 7:47am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-834">
+				<div class="body" id="body-834">
+					
+<p>
+Yes i use mysql and for now i change in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> like this:
+</p>
+<pre class="block php"><code>			// Comments
+			if (!empty($match[8])) {
+				$info['comment'] = substr($match[8], 10, -1);
+			}</code></pre>
+
+<p>
+ and i receive the comment . i need more than a enum like file, ajax, etc. and the comment is't perfect for this. now i can make a grid with CRUD for entire database only writing corect url. but must be careful when i update the version of flourish to not overwrite the file.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="7/21/10 12:57pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-835">
+				<div class="body" id="body-835">
+					
+<p>
+If you are going to do that, I recommend you:
+</p>
+
+<ol>
+<li>Create a github account and fork <a href="http://github.com/wbond/flourish">http://github.com/wbond/flourish</a></li>
+<li>Clone your flourish fork</li>
+<li>Make the code change</li>
+<li>Commit</li>
+<li>Push</li>
+<li>Every once in a while go to your github fork of Flourish and click on &quot;Fork Queue&quot; to pull in the changes from the main copy of Flourish</li>
+<li>Use the source of your fork for your project until I am able to add the functionality to <a href="../flourishlib.com/docs/fSchema.html">fSchema</a></li>
+</ol>
+
+<p>
+Also, be sure to add a ticket for this functionality to ensure I remember to do it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/21/10 1:07pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-836">
+				<div class="body" id="body-836">
+					
+<p>
+Just as a reference for anyone listed, the following database engines support column comments:
+</p>
+
+<ul>
+<li>MySQL</li>
+<li>PostgreSQL</li>
+<li>Oracle</li>
+<li>DB2</li>
+</ul>
+
+<p>
+SQLite and SQL Server do not appear to have comment functionality.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/21/10 1:09pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-837">
+				<div class="body" id="body-837">
+					
+<p>
+Tanks for advice and taking consideration for comment functionality.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="7/21/10 2:42pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1020">
+				<div class="body" id="body-1020">
+					
+<p>
+This functionality was added in r938.
+</p>
+
+<p>
+Also of note, all database types supported by Flourish have support for this functionality. In SQL Server, the <code>MS_Description</code> extended property is used (this is called the <code>Description</code> in SQL Server Management Studio). For SQLite, raw SQL comments are parsed for each line that defines a column in a <code>CREATE TABLE</code> statement.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/28/10 1:27am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Minor problem found on CRUD sorting (but solved) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Minor problem found on CRUD sorting (but solved)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="6/1/10 1:51pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm using <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a> for sorting table rows. All sortable columns were running fine, but one. This is a column reflecting a boolean value for a group status (active / not active), but I have other boolean values in the table and they were sorting fine. Moreover, the direction of the sorting was changing each time, but no real sort seemed being done in that column at all.
+</p>
+
+<p>
+Finally, it arises that the problem was related to column names. Actually, the column I was sorting on is the 'active' column in the groups table, but I also have an 'active' column in user_groups table. As far as I need to use a join of both tables for that page (a UserGroups recordset which calls precreateGroups()), it seems now clear that the sorting was being applied to that column in user_groups, not to the required one (in groups).
+</p>
+
+<p>
+The solution its easy: just specifying the full table.column in the <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a> call, did the trick:
+</p>
+<pre><code>#!text/html
+&lt;td class=&quot;&lt;?php echo fCRUD::getColumnClass('groups.active') ?&gt;&quot;&gt;</code></pre>
+
+<p>
+ Although it's logical after all,  maybe it's worth pointing that issue in the <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a> documentation page...
+</p>
+
+<p>
+Regards,
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-796">
+				<div class="body" id="body-796">
+					
+<p>
+Thanks for posting about this! I've added some documentation to the <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a> page that should help future users.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/25/10 1:35pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

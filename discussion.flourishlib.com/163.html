@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Swift Prevents Autoloading of Flourish Classes &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Swift Prevents Autoloading of Flourish Classes</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					o			</span>
+	<span class="date_posted" title="10/27/09 10:43am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<pre class="block php"><code>  include($_SERVER['DOCUMENT_ROOT'] . '/swift/swift_required.php'); 
+  include($_SERVER['DOCUMENT_ROOT'] . '/lib/config.php');</code></pre>
+
+<p>
+ Im writing this code when using Flourish and Swift  If swift added to first line Xdebug tell me ;
+</p>
+<pre class="block php"><code>Fatal error: Class 'fDatabase' not found in /Applications/MAMP/htdocs/lib/config.php on line 18
+line 18 // $db  = new fDatabase('mysql', 'odb', 'root', 'root', 'localhost');</code></pre>
+
+<p>
+ Swift prevents autoloading of Flourish Lib If i remove swift autoloading from first line, everything works perfectly in Flourish Lib
+</p>
+
+<p>
+swift_required.php 
+</p>
+<pre class="block php"><code>&lt;?php
+
+/*
+ * This file is part of SwiftMailer.
+ * (c) 2004-2009 Chris Corbyn
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/*
+ * Autoloader and dependency injection initialization for Swift Mailer.
+ */
+
+//Load Swift utility class
+require_once dirname(__FILE__) . '/classes/Swift.php';
+
+//Start the autoloader
+Swift::registerAutoload();
+
+//Load the init script to set up dependency injection
+require_once dirname(__FILE__) . '/swift_init.php';
+</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-501">
+				<div class="body" id="body-501">
+					
+<p>
+I'm thinking that Swiftmailing must be registering an autoload function via <a href="http://us3.php.net/manual/en/function.spl-autoload-register.php"><code>spl_autoload_register()</code></a>. This means that you'll need to change you current <code>__autoload()</code> function for Flourish into a normal named function, such as <code>flourish_autoload()</code> and register it via <code>spl_autoload_register()</code>.
+</p>
+
+<p>
+I haven't actually tested this code, but I believe something like this should work:
+</p>
+<pre class="block php"><code>function flourish_autoload($class) {
+    $path = '/path/to/flourish/' . $class . '.php';
+    if (file_exists($path)) {
+        return include $path;
+    }
+}
+spl_autoload_register('flourish_autoload');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/27/09 11:07am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-502">
+				<div class="body" id="body-502">
+					
+<p>
+Thanks Will its working perfectly
+</p>
+<pre class="block php"><code>// Autoloading of Flourish Classes
+function flourish_autoload($class) {
+    $path = $_SERVER['DOCUMENT_ROOT']. '/lib/' . $class . '.php';
+    if (file_exists($path)) {
+        return include $path;
+    }
+}
+spl_autoload_register('flourish_autoload');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													o											</span>
+					<span class="date_posted" title="10/27/09 11:31am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

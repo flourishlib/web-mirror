@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>active record date range &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">active record date range</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/netpork">			netpork		</a> 	</span>
+	<span class="date_posted" title="2/22/12 11:34am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a table with column bpr_datetime, and for example 20 records in it where date ranges from 2012-02-22 to 2012-07-04.
+</p>
+
+<p>
+i have tried:
+</p>
+<pre class="block php"><code>	$bp = fRecordSet::build(
+		'BloodPressure',
+		array(
+				'bpr_datetime&gt;=' =&gt; '2012-02-22',
+				'bpr_datetime&lt;=' =&gt; '2012-07-04',
+				'bpr_usr_id=' =&gt; 1
+			)
+	);</code></pre>
+
+<p>
+ But, I only get 19 records, instead of 20. Am I using lte and gte operators the right way?
+</p>
+
+<p>
+Thanx in advance.
+</p>
+
+<p>
+ps. flourish php lib is a goldmine! :)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1688">
+				<div class="body" id="body-1688">
+					
+<p>
+Yes, you are, although, if as your column name implies, I'd imagine you actually want something that takes hours, minutes, and seconds into account.  I don't think Flourish does much with string dates other than converting them to <a href="../flourishlib.com/docs/fDates.html">fDates</a> (although it should be possible to also check directly against an <a href="../flourishlib.com/docs/fDate.html">fDate</a>).
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fDate.html">fDate</a>, in it's most basic sense, uses strtotime() to make things easier.  That being said what you are looking for is probably actually resolving to the following:
+</p>
+<blockquote>
+<h1 id="two-oh-one-two-02-22000000">2012-02-22 00:00:00</h1>
+
+<p>
+&lt;= 2012-07-04 00:00:00
+</p>
+</blockquote>
+<p>
+This means anything which is schedule at any other time from 12:00 am on the 4th of July is being excluded.  Realistically what you want is the following:
+</p>
+<blockquote>
+<h1 id="two-oh-one-two-02-22000000">2012-02-22 00:00:00</h1>
+
+<p>
+&lt;= 2012-07-04 23:59:59
+</p>
+</blockquote>
+<p>
+Although I tend to find it just generally easier to bump the date and not care about that 1 second where there might be a false positive:
+</p>
+<blockquote>
+<h1 id="two-oh-one-two-02-22">2012-02-22</h1>
+
+<p>
+&lt;= 2012-07-05
+</p>
+</blockquote>				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/22/12 3:41pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1689">
+				<div class="body" id="body-1689">
+					
+<p>
+Or you could just do &lt; and not equal to th next day and leave off the time info which woul avoid the 1 second.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/22/12 3:47pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1692">
+				<div class="body" id="body-1692">
+					
+<p>
+thanks for clearing that out to me.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/netpork">							netpork						</a> 					</span>
+					<span class="date_posted" title="2/24/12 4:28pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

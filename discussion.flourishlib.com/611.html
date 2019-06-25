@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Zip file attachement &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Zip file attachement</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					abbas			</span>
+	<span class="date_posted" title="5/4/12 3:20am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When i try to send the email with the zip file attachment it does not work. Anybody can help me or give me the sample code through which i can send the zip file attachement in the email. with the <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> class?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1737">
+				<div class="body" id="body-1737">
+					
+<p>
+<a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> handles only the <a href="../flourishlib.com/api/fEmail.html#send">fEmail::send()</a> method if you passes an argument to it. For all the rest of features, check <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> documentation, and <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>#Attachments for your specific problem.
+</p>
+
+<p>
+<strong>Edit:</strong> If you are doing it in this way, maybe you need to check de server limitations, like accepted file types or maximum attachment size.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/xoan">							xoan						</a> 					</span>
+					<span class="date_posted" title="5/4/12 6:28am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1738">
+				<div class="body" id="body-1738">
+					
+<p>
+Yes, Thank you it was a issue in the email web service provider. it is resolved now.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													abbas											</span>
+					<span class="date_posted" title="5/5/12 7:44am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1739">
+				<div class="body" id="body-1739">
+									</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													abbas											</span>
+					<span class="date_posted" title="5/5/12 7:44am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

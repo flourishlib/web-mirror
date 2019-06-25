@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Code-based validation matching, instead of English strings &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Code-based validation matching, instead of English strings</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					rirez			</span>
+	<span class="date_posted" title="11/29/11 7:04am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+<a href="../flourishlib.com/docs/fValidate.html">fValidate</a> and other similar systems (like exceptions from ORM) currently all use English phrases like &quot;The value specified must be unique, however it already exists&quot;. This is great for rough and dirty error messages, but from a UX standpoint it's a terrible option. For example, on a theoretical membership system, if a user is trying to register an account with an email that already exists, the application should provide a helpful link to the &quot;forgot password&quot; page, instead.
+</p>
+
+<p>
+This severely limits the functionality of Flourish for UX purposes. One could simply do a string search (strpos) for that full string, but that's very tedious and not future-proof, if one day the phrasing were to change.
+</p>
+
+<p>
+I propose providing an option to output validation errors using codes (such as &quot;E_ORM_EXISTS: <a href="http://discussion.flourishlib.com/field">field</a>&quot;), which would make catching much easier.
+</p>
+
+<p>
+Ideally, <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> should have a method to output an associative array of fields and error codes. This provides maximal flexibility in displaying and managing errors. The previous, pre-formatted English version should stay, as the simplicity of using the humanized version is one of Flourish's big benefits. There should also be methods to modify this internal exception array; if a particular field is handled manually by the programmer, it shouldn't be displayed afterwards.
+</p>
+
+<p>
+Something such as:
+</p>
+<pre><code>array fValidationException::getErrors();
+returns Array({name: 'TOO_LONG', email: 'ALREADY_EXISTS'});
+
+array fValidationException::setErrors(array $errors)</code></pre>
+
+<p>
+ Basically that. This is a rough solution, though; there are probably more elegant methods, such as simply allowing array access to the error list.
+</p>
+
+<p>
+Edit: See Message #1636 for a more thought out syntax/format.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1635">
+				<div class="body" id="body-1635">
+					
+<p>
+I'm agree with you. This works nice... if I only want a list of the errors
+</p>
+<pre class="block php"><code>} catch (fValidationException $e) {
+    fMessaging::create('error', $e-&gt;getMessage());
+}</code></pre>
+
+<p>
+ but sometimes as you said I just want an array or object of the errors and the following code its too much to achive this 
+</p>
+<pre class="block php"><code>try {
+    // ...
+    
+    $errors       = $validator-&gt;validate(TRUE);
+    $field_errors = fValidationException::removeFieldNames($errors);
+    if ($errors) {
+        throw new fValidationException(
+            'The following problems were found:',
+            $errors
+        );
+    }
+    
+    // ...
+    
+} catch (fValidationException $e) {
+    // fMessaging allows for creating session-based one-time-use messages
+    fMessaging::create('error', $e-&gt;getMessage();
+    fMessaging::create('field_errors', $field_errors);
+}</code></pre>
+
+<p>
+ I would like to hace something like this
+</p>
+<pre class="block php"><code>$array = fValidationException::getErrors()
+$array (
+    'email' =&gt; array('At least 12 chars', 'Not allowed'),
+    'name' =&gt; 'Too short'
+)</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													juanitodelcielo											</span>
+					<span class="date_posted" title="12/2/11 1:21pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1636">
+				<div class="body" id="body-1636">
+					
+<p>
+Ideally, there would be an &quot;<a href="../flourishlib.com/docs/fFieldValidationException.html">fFieldValidationException</a>&quot; class that contains the specific details of each exception. So you could do...
+</p>
+<pre class="block php"><code>try{
+   $user-&gt;store();
+}catch($e fValidationException){
+
+// &lt; general error catching logic &gt;
+$errorMessage = &quot;Oops, something went wrong! &quot;;
+
+// get errors
+$errors = $e-&gt;getErrors();
+
+// get a specific error
+if($errors-&gt;hasField('email')){
+    // get error object
+    $emailError = $errors-&gt;getField('email');
+
+    // get various properties (as an example)
+    $emailError-&gt;getValue(); // &quot;foo@example&quot; - the value
+    $emailError-&gt;getMessage(); // &quot;The value specified must be unique, however it already exists&quot; - the current English message
+    $emailError-&gt;getCode(); // &quot;ALREADY_EXISTS&quot; - the error code
+
+    // actual logic
+    if($emailError-&gt;getCode() == &quot;ALREADY_EXISTS&quot;){
+        $errorMessage .= 'This email has already been registered - &lt;a href=&quot;#&quot;&gt;have you forgot your password&lt;/a&gt;?'
+        // remove field from array
+        $errors-&gt;removeField('email');
+    }
+}
+
+// reset exception array, or, alternatively, create a new exception
+$e-&gt;setErrors($errors);
+
+// other error handling 
+$errorMessage .= &quot; These errors were also found: &quot; . $e-&gt;getMessage();
+
+// etc etc
+fMessaging::create('error', $errorMessage);
+
+}</code></pre>
+
+<p>
+ EDIT: Changed to a more suitable example.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="12/3/11 12:22am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1637">
+				<div class="body" id="body-1637">
+					
+<p>
+Why don't you simply throw an exception if the email already exists ?
+</p>
+<pre class="block php"><code>// submit method called when user tries to register
+// the parent class instantiate the User Model object
+
+protected function submit()
+{
+	try {		
+	
+		$validator = new fValidation();
+		$validator
+			-&gt;addRequiredFields('email', 'password', 'password_confirm', 'name', 'prename')
+			-&gt;addEmailFields('email')			
+			-&gt;addCallbackRule('password', 'hText::checkTrim', 'Password should be at least 6 caracters long')
+		/* .. other validation*/
+			-&gt;validate();
+
+		//Validation passed
+		$this-&gt;user-&gt;params = array(
+			'email' =&gt; fRequest::get('email', 'string'),
+			'password' =&gt; fRequest::get('password', 'string'),
+			'name' =&gt; fRequest::get('name', 'string'),
+			/* other passed parameters to the User Model object */
+		);
+
+		// if account with provided email doesn't exist already : account creation
+		if (!$this-&gt;user-&gt;emailExists()) {
+			$this-&gt;user-&gt;create();
+			$infos = $this-&gt;user-&gt;getInfos();
+			$this-&gt;sendEmailConfirm($infos['id']);
+			$this-&gt;setSession($infos['id'], $persitent = null);	
+			
+		} else {
+			throw new fValidationException(
+				'This account already exists'.
+				'&lt;a href=&quot;'.URL_PUBLIC.'auth/lostpass&quot;&gt;Forgot password ?&lt;/a&gt;'
+			);
+		}
+		
+	}  catch (fException $e) {
+		fMessaging::create('error', $this-&gt;currentLink, $e-&gt;getMessage());
+		$this-&gt;render();
+	}
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="12/3/11 6:42am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1638">
+				<div class="body" id="body-1638">
+					
+<p>
+I'd like to able to release more of that functionality towards the ORM automatic validation mechanism. I often find using a manual <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> object to be overkill; more often than not, I can simply toss the data straight into the ORM functionality, and it will reject the data if the database finds it invalid. There is, however, no easy way to intercept this validation information from ORM - it comes pre-packaged into the English strings, which is what I'm search of an alternative for.
+</p>
+
+<p>
+As a start-off point, this is how it usually works:
+</p>
+<pre class="block php"><code>
+try{
+     $user = new User(); // set up for fORM
+     $user-&gt;setUsername(fRequest::get('username'));
+     $user-&gt;setPassword(fRequest::get('password'));
+     $user-&gt;setEmail(fRequest::get('email')); // skipping generic email validation
+     $user-&gt;store();
+}catch(fValidationException $e){
+     fMessaging::create('error', 'path/to/page', $e-&gt;getMessage());
+     fURL::redirect('path/to/page');
+}
+</code></pre>
+
+<p>
+ That's how it is now, and I think it <em>should</em> be like the one I posted a couple posts back.
+</p>
+
+<p>
+It works remarkably well right now - it lets me rapidly develop applications, because I no longer have to mess around with escaping strings, checking lengths, or checking if that primary key (email) is unique - the ORM system automatically handles that. I wish this custom error list mechanism exists because the data is <em>already there</em> - just not in the format I need it to be in. There's no need for the system to do more work, as the validation is complete. There also needs to be a minimal amount of extra code because, again, the validation has already been done - I just need to catch the error and react accordingly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="12/3/11 6:53am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1679">
+				<div class="body" id="body-1679">
+					
+<p>
+I'm practising Flourish ORM these days and I'm facing the same problem. Any solution since :) ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													younes											</span>
+					<span class="date_posted" title="2/2/12 2:52pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1680">
+				<div class="body" id="body-1680">
+					
+<p>
+I'm considering five different options (I also appreciate wbond's input on which option to take):
+</p>
+
+<ol>
+<li>I could use a message translation array, and translate error messages into parseable strings. Advantage: Not very much code difference, easy to install. Disadvantage: Limited, probably doesn't mix well with other localizations, and not future-proof.</li>
+</ol>
+
+<ol>
+<li>You could also use the fORMValidation::addStringReplacement function to manually change errors for each kind of <a href="../flourishlib.com/docs/fORM.html">fORM</a> class we're dealing with. Advantage: Very accurate and specific, if you only need to do this to a select few classes/fields. Disadvantage: Gets complicated and it's inefficient for large applications.</li>
+</ol>
+
+<ol>
+<li>The one I'm currently using is to use fActiveRecord::validate(TRUE,TRUE), which tosses validation errors into an array where the keys are the fields, and the value is the error message. Then I use an array to translate the error messages into error codes (or you can also just detect them by directly comparing strings). This works well, but you'll need to modify all code so it attempts to ::validate() instead of ::store(). It also works for <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> objects. <strong>Probably the best option right now</strong>; you can easily just use the default error message when desirable, but you can also easily detect simple field-to-error conditions without convoluted string manipulation.</li>
+</ol>
+
+<ol>
+<li>I'm considering to write this as a sort of &quot;plugin&quot; which does the functionality I wrote about above. I'm not sure about this because there's no plugin architecture or conventions (so far I simply use the xf prefix, i.e. xfAdvValidation). Advantage: relatively easy to install, easy to work with, infinite flexibility due to being a 3rd party script. Drawback: Not being associated with Flourish, separate maintenance, not necessarily future-proof, and it's quite complex and demanding (lots of string manipulation).</li>
+</ol>
+
+<ol>
+<li>Submit changes to Flourish itself, so the <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> object also stores a {field: error} array, much like that used in option 3. Advantage: cleanest, fastest implementation. Drawback: need to go through every single file and find where they use <a href="../flourishlib.com/docs/fValidationExceptions.html">fValidationExceptions</a>, and figure out how to reverse engineer their data. Also not sure how Will Bond handles this sort of thing.</li>
+</ol>
+
+<p>
+While I do wish we had proper error messages that would make extracting the errors easier, the English strings are more or less okay for now, because we can still use regular expressions on them. A roundabout method, yes, but implementing proper error messages everywhere would be quite a challenge.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="2/2/12 9:37pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1681">
+				<div class="body" id="body-1681">
+					
+<p>
+I used a registerHookCallback, according to this : <a href="../flourishlib.com/docs/fORM.html#CustomValidationUsingaHook">http://flourishlib.com/docs/fORM#CustomValidationUsingaHook</a>
+</p>
+<pre class="block php"><code>&lt;?php
+/** Controller: Registering page*/
+class Controller_Auth_Register extends Controller_Auth
+{ 
+	public function index()
+	{
+		/**/
+	}
+
+	protected function submit()
+    	try {
+			$user = new User();
+			$user-&gt;create();
+			$this-&gt;setSession($user-&gt;getId());
+
+		} catch (fValidationException $e) {
+			fMessaging::create('error', $this-&gt;currentLink, $e-&gt;getMessage());
+			$this-&gt;render();
+		}
+	}
+}
+
+
+
+/** User Model */
+class User extends fActiveRecord
+{
+    protected function configure()
+    {
+		fORMColumn::configureEmailColumn($this, 'email');
+        fORM::registerHookCallback($this, 'post::validate()', 'User::validateUniqueEmail');
+    }
+
+    public function create()
+    {
+    	$this
+    		-&gt;setEmail(fRequest::get('email'))
+    		-&gt;setName(fRequest::get('name'))
+			-&gt;setHashedPassword(fRequest::get('password'))
+			-&gt;store();
+    }
+
+    public function setHashedPassword($password)
+	{
+		$this-&gt;setPassword(fCryptography::hashPassword($password));
+		return $this;
+	}
+
+	
+	static public function validateUniqueEmail($object, &amp;$values, &amp;$old_values, &amp;$related_records, &amp;$cache, &amp;$validation_messages)
+    {
+    	$emailExists = fRecordSet::build('User', array('email=' =&gt; fRequest::get('email')))-&gt;count();
+    	
+    	if ($emailExists) {
+
+    		// register
+    		if (!$object-&gt;getId()) { // isn't stored
+    			// exception will delete validation array messages
+				throw new fValidationException(__('Email already exists. &lt;a&gt;Lost password ?&lt;/a&gt;'));
+
+    		// settings
+    		} else {
+    			// btw, the __(&quot;string&quot;) is a gettext function
+    			$validation_messages['email_new'] = __('New email isnt available');
+    		}
+    	}
+
+	}
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													younes											</span>
+					<span class="date_posted" title="2/3/12 8:09am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1682">
+				<div class="body" id="body-1682">
+					
+<p>
+That's pretty useful! Too bad there's no easy way to remove the previous offending error message (or is there - can you override the validation messages?)
+</p>
+
+<p>
+We've come up with some good solutions for now, but in the long run, everyone benefits if we can get the functionality into Flourish's core. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="2/3/12 9:30am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1683">
+				<div class="body" id="body-1683">
+					
+<p>
+Yes throwing an exception will override the validation messages: The Try/Catch will apparently get the last thrown exception.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													younes											</span>
+					<span class="date_posted" title="2/3/12 12:43pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1684">
+				<div class="body" id="body-1684">
+					
+<p>
+I mean, just overriding a particular message. Say you're validating that registration form up there; it'd be nice if you can filter and catch other validation errors as well, while replacing the email error with something else.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="2/3/12 8:08pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1685">
+				<div class="body" id="body-1685">
+					<pre class="block php"><code>$validation_messages['email'] = &quot;hey I'm a new email error message&quot;</code></pre>
+
+<p>
+  will do.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													younes											</span>
+					<span class="date_posted" title="2/7/12 3:59pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

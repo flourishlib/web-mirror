@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>getUserACLs returning null anywhere but on the index.php page &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">getUserACLs returning null anywhere but on the index.php page</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					joseph			</span>
+	<span class="date_posted" title="12/27/10 2:35am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Will.
+</p>
+
+<p>
+Thank you so much for the great software. I have a problem accessing the user acls from any page other than the one that performed the login operation. I AM testing all of this on a localhost - perhaps paths or sessions are not set up correctly?
+</p>
+
+<p>
+Any suggestions?
+</p>
+
+<p>
+Thanks!
+</p>
+
+<p>
+Joseph
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1068">
+				<div class="body" id="body-1068">
+					
+<p>
+Hi Joseph
+</p>
+
+<p>
+Could you post your code?
+</p>
+
+<p>
+Best,   Michael
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="12/28/10 2:31am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1069">
+				<div class="body" id="body-1069">
+					
+<p>
+Hi Michael,
+</p>
+
+<p>
+In config.php:
+</p>
+<pre class="block php"><code>define('DOC_ROOT', realpath(dirname(__FILE__) . '/../'));
+define('URL_ROOT', substr(DOC_ROOT, strlen(realpath($_SERVER['DOCUMENT_ROOT']))));
+
+error_reporting(E_STRICT | E_ALL);
+fCore::enableErrorHandling('html');
+fCore::enableExceptionHandling('html');
+
+fTimestamp::setDefaultTimezone('Asia/Bangkok');
+
+fAuthorization::setLoginPage(URL_ROOT);
+
+// This prevents cross-site session transfer
+fSession::setPath(DOC_ROOT . '/data/session/');</code></pre>
+
+<p>
+ In init.php:
+</p>
+<pre class="block php"><code>include dirname(__FILE__) . '/config.php';
+
+$db = new fDatabase('mysql', 'lv_repository', 'root', 'root');
+fORMDatabase::attach($db);
+
+fSession::open();</code></pre>
+
+<p>
+ In index.php (where the login occurs, and in one directory higher than config.php and init.php):
+</p>
+<pre class="block php"><code>$valid_pass  = fCryptography::checkPasswordHash(fRequest::get('password'), $user-&gt;getPassword());			
+		if ($valid_pass) {
+			$level = new UserLevel($user-&gt;getLevelId());				
+			fAuthorization::setUserACLs(
+				array(
+					'level'  				=&gt; $level-&gt;getLevelName(),
+					'process_asset'  		=&gt; $user-&gt;getAccessProcessAsset(),
+					'delete_asset'  		=&gt; $user-&gt;getAccessDeleteAsset(),
+					'approve_asset'  		=&gt; $user-&gt;getAccessApproveAsset(),
+					'link_asset'  			=&gt; $user-&gt;getAccessLinkAsset(),
+					'manage_category' 	 	=&gt; $user-&gt;getAccessManageCategory(),
+					'translate_category'  	=&gt; $user-&gt;getAccessTranslateCategory(),
+					'manage_user' 		 	=&gt; $user-&gt;getAccessManageUser(),
+					'assign_task'  			=&gt; $user-&gt;getAccessAssignTask(),
+					'report'  				=&gt; $user-&gt;getAccessReport()
+				)
+			);
+		} else {
+			fMessaging::create('error', fURL::get(), 'The password entered is incorrect');
+		}</code></pre>
+
+<p>
+ And finally in my page trying to access the ACLs:
+</p>
+<pre class="block php"><code>include './inc/init.php';
+
+if (fAuthorization::checkACL('level', 'super_admin')) {</code></pre>
+
+<p>
+ Please let me know if there is anything else you need. Thank you SO SO much for your help!
+</p>
+
+<p>
+Joseph
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													joseph											</span>
+					<span class="date_posted" title="12/28/10 6:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1070">
+				<div class="body" id="body-1070">
+					
+<p>
+Did anyone have a chance to look over this? I am very grateful for any insights!
+</p>
+
+<p>
+As a side note - it does not seem like the session data is being deleted (unless this happens infrequently)...
+</p>
+
+<p>
+Thanks in advance,
+</p>
+
+<p>
+Joseph
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													joseph											</span>
+					<span class="date_posted" title="1/1/11 5:01pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1071">
+				<div class="body" id="body-1071">
+					
+<p>
+All of the user details for <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> are stored in the session. My initial thought it that something about the session cookie is causing issues. Can you check and see what is contained in the session by calling:
+</p>
+<pre class="block php"><code>fCore::expose($_SESSION);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/2/11 6:54pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1073">
+				<div class="body" id="body-1073">
+					
+<p>
+Hi Will.
+</p>
+
+<p>
+Even though <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> has been called - the only thing that seems to be in the session is:
+</p>
+
+<p>
+Array (     <a href="fSession::type">fSession::type</a> =&gt; normal     <a href="fSession::expires">fSession::expires</a> =&gt; 1294018005 )
+</p>
+
+<p>
+Thanks so much for your help.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													joseph											</span>
+					<span class="date_posted" title="1/2/11 8:07pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1074">
+				<div class="body" id="body-1074">
+					
+<p>
+So there is definitely a problem with session data being persisted. My first hunch would be a session cookie. You can use the <code>session_id()</code> function to get your session id and then print it to the page. Check to make sure it is the same when you reload the page. You can also use your browser to see if localhost is sending you cookies.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/2/11 8:10pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1075">
+				<div class="body" id="body-1075">
+					
+<p>
+Hi Will.
+</p>
+
+<p>
+I put the <a href="../flourishlib.com/docs/fExpose.html">fExpose</a> call on the index.php page and saw an error this time around:
+</p>
+<pre class="block php"><code>Warning
+-------
+{doc_root}\\lastvoices\\index.php(37): fAuthorization::setUserACLs(Array)
+{doc_root}\\lastvoices\\inc\\flourish\\fAuthorization.php(439): fSession::regenerateID()
+{doc_root}\\lastvoices\\inc\\flourish\\fSession.php(440): session_regenerate_id()
+[internal function]
+session_regenerate_id(): Cannot regenerate session id - headers already sent</code></pre>
+
+<p>
+ The ACLs seem to still be set for that page, but are not in the session variable. Does anything in the code below look like it would modify the header?
+</p>
+<pre class="block php"><code>include './inc/init.php';
+
+$action = fRequest::get('action');
+
+// --------------------------------- //
+if ('log_out' == $action) {
+	fAuthorization::destroyUserInfo();
+	fMessaging::create('success', fURL::get(), 'You were successfully logged out');
+	fURL::redirect(fURL::get());	
+}
+// --------------------------------- // 
+if ('log_in' == $action &amp;&amp; fRequest::isPost()) {	
+	if (validateEmail(fRequest::get('email'))) {
+		try {
+			$user = new User(array('email' =&gt; fRequest::get('email')));			
+		} catch (fNotFoundException $e) {
+			fMessaging::create('error', fURL::get(), $e-&gt;printMessage());
+		}		
+		$valid_pass  = fCryptography::checkPasswordHash(fRequest::get('password'), $user-&gt;getPassword());			
+		if ($valid_pass) {
+			$level = new UserLevel($user-&gt;getLevelId());
+			$accessArray = array(
+				'level'  				=&gt; $level-&gt;getLevelName(),
+				'process_asset'  		=&gt; $user-&gt;getAccessProcessAsset(),
+				'delete_asset'  		=&gt; $user-&gt;getAccessDeleteAsset(),
+				'approve_asset'  		=&gt; $user-&gt;getAccessApproveAsset(),
+				'link_asset'  			=&gt; $user-&gt;getAccessLinkAsset(),
+				'manage_category' 	 	=&gt; $user-&gt;getAccessManageCategory(),
+				'translate_category'  	=&gt; $user-&gt;getAccessTranslateCategory(),
+				'manage_user' 		 	=&gt; $user-&gt;getAccessManageUser(),
+				'assign_task'  			=&gt; $user-&gt;getAccessAssignTask(),
+				'report'  				=&gt; $user-&gt;getAccessReport()
+			);
+			fAuthorization::setUserACLs(
+				$accessArray
+			);
+		} else {
+			fMessaging::create('error', fURL::get(), 'The password entered is incorrect');
+		}
+	} else {
+		fMessaging::create('error', fURL::get(), 'The email entered is invalid');
+	}
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													joseph											</span>
+					<span class="date_posted" title="1/2/11 8:25pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1091">
+				<div class="body" id="body-1091">
+					
+<p>
+I don't know if you ever solved this, but here are a few thoughts for people having trouble in the future.
+</p>
+
+<ol>
+<li>The warning about regenerating the session id is just because you exposed content  before setting the <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> user values. If you use ob_start(), you can get around this.</li>
+<li>You should only be setting user info once per session with <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a>. Due to  the security architecture of <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a>, the session id is regenerated whenever  user information changes. Thus if you set the user info on every page, every request  will generate a new session id. It is not necessary to set this user info on every  request since it is saved in the session.</li>
+<li>If you are still having trouble, I would look more into the session cookie being  sent to your browser.</li>
+</ol>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/15/11 9:09am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

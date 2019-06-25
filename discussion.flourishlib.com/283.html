@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>mailbox - ListMessages in reverse order? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">mailbox - ListMessages in reverse order?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					gexus			</span>
+	<span class="date_posted" title="8/18/10 8:09pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I'm just starting to use the <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> and was wondering if it's possible to retrieve the list in reverse order?  So the newest items would be at the top of the array.. I'm using array_reverse() which is actually working just fine, just wanted to see if there's a better option.
+</p>
+
+<p>
+Thanks!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-880">
+				<div class="body" id="body-880">
+					
+<p>
+That sounds like a reasonable feature to add. If you open a ticket, it will get added to my list of things to do.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/21/10 3:58pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1505">
+				<div class="body" id="body-1505">
+					
+<p>
+Hi there
+</p>
+
+<p>
+This <em>should</em> be all that's required to change the function to allow for newest first (which I've set to be the default on my copy as it makes sense to me).
+</p>
+
+<p>
+I basically just added an extra parameter and in the imap and POP3 sections did the start and finish based on the order parameter, and there's an arsort at the end to reverse the order of the array if we're sorting by newest.
+</p>
+<pre class="block php"><code>	public function listMessages($limit=NULL, $page=NULL, $order='newest')
+	{
+		$this-&gt;connect();
+		
+		if ($this-&gt;type == 'imap') {
+			$total_messages = 0;
+			$response = $this-&gt;write('STATUS &quot;INBOX&quot; (MESSAGES)');
+			foreach ($response as $line) {
+				if (preg_match('#^\\s*\\*\\s+STATUS\\s+&quot;?INBOX&quot;?\\s+\\((.*)\\)$#', $line, $match)) {
+					$details = self::parseResponse($match[1], TRUE);
+					$total_messages = $details['messages'];
+				}
+			}
+			
+			if (!$limit) {
+				$start = 1;
+				$end   = '*';
+			} else {
+				if (!$page) {
+					$page = 1;
+				}
+				if ($order == 'newest') {
+					$start = $total_messages - $limit * $page + 1;
+					$end   = $start + $limit - 1;
+				} else {
+					$start = ($limit * ($page-1)) + 1;
+					$end   = $start + $limit - 1;
+				}
+			}
+			
+			if ($start &gt; $total_messages) {
+				return array();
+			}
+			
+			if ($end &gt; $total_messages) {
+				$end = $total_messages;
+			}
+			
+			$output = array();
+
+				$response = $this-&gt;write('FETCH ' . $start . ':' . $end . ' (UID INTERNALDATE RFC822.SIZE ENVELOPE)');
+
+			foreach ($response as $line) {
+				if (preg_match('#^\\s*\\*\\s+(\\d+)\\s+FETCH\\s+\\((.*)\\)$#', $line, $match)) {
+					$details = self::parseResponse($match[2], TRUE);
+					$info    = array();
+					
+					$info['uid']      = $details['uid'];
+					$info['received'] = self::cleanDate($details['internaldate']);
+					$info['size']     = $details['rfc822.size'];
+					
+					$envelope = $details['envelope'];
+					$info['date']    = $envelope[0] != 'NIL' ? $envelope[0] : '';
+					$info['from']    = self::joinEmails($envelope[2]);
+					if (preg_match('#=\\?[^\\?]+\\?[QB]\\?[^\\?]+\\?=#', $envelope[1])) {
+						do {
+							$last_subject = $envelope[1];
+							$envelope[1] = preg_replace('#(=\\?([^\\?]+)\\?[QB]\\?[^\\?]+\\?=) (\\s*=\\?\\2)#', '\\1\\3', $envelope[1]);
+						} while ($envelope[1] != $last_subject);
+						$info['subject'] = self::decodeHeader($envelope[1]);
+					} else {
+						$info['subject'] = $envelope[1] == 'NIL' ? '' : self::decodeHeader($envelope[1]);
+					}
+					if ($envelope[9] != 'NIL') {
+						$info['message_id'] = $envelope[9];
+					}
+					if ($envelope[5] != 'NIL') {
+						$info['to'] = self::joinEmails($envelope[5]);
+					}
+					if ($envelope[8] != 'NIL') {
+						$info['in_reply_to'] = $envelope[8];
+					}
+					
+					$output[$info['uid']] = $info;
+				}
+			}
+		
+		} elseif ($this-&gt;type == 'pop3') {
+			if (!$limit) {
+				$start = 1;
+				$end   = NULL;
+			} else {
+				if (!$page) {
+					$page = 1;
+				}
+				if ($order == 'newest') {
+					$start = $total_messages - $limit * $page + 1;
+					$end   = $start + $limit - 1;
+				} else {
+					$start = ($limit * ($page-1)) + 1;
+					$end   = $start + $limit - 1;
+				}
+			}
+			
+			$total_messages = 0;
+			$response = $this-&gt;write('STAT', 1);
+			preg_match('#^\\+OK\\s+(\\d+)\\s+#', $response[0], $match);
+			$total_messages = $match[1];
+			
+			if ($start &gt; $total_messages) {
+				return array();
+			}
+			
+			if ($end === NULL || $end &gt; $total_messages) {
+				$end = $total_messages;
+			}
+			
+			$sizes = array();
+			$response = $this-&gt;write('LIST');
+			array_shift($response);
+			foreach ($response as $line) {
+				preg_match('#^(\\d+)\\s+(\\d+)$#', $line, $match);
+				$sizes[$match[1]] = $match[2];
+			}
+			
+			$output = array();
+			for ($i = $start; $i &lt;= $end; $i++) {
+				$response = $this-&gt;write('TOP ' . $i . ' 1');
+				array_shift($response);
+				$value = array_pop($response);
+				// Some servers add an extra blank line after the 1 requested line
+				if (trim($value) == '') {
+					array_pop($response);
+				}
+				
+				$response = trim(join(&quot;\\r\\n&quot;, $response));
+				$headers = self::parseHeaders($response);
+				$output[$i] = array(
+					'uid'      =&gt; $i,
+					'received' =&gt; self::cleanDate(preg_replace('#^.*;\\s*([^;]+)$#', '\\1', $headers['received'][0])),
+					'size'     =&gt; $sizes[$i],
+					'date'     =&gt; $headers['date'],
+					'from'     =&gt; self::joinEmails(array($headers['from'])),
+					'subject'  =&gt; isset($headers['subject']) ? $headers['subject'] : ''
+				);
+				if (isset($headers['message-id'])) {
+					$output[$i]['message_id'] = $headers['message-id'];
+				}
+				if (isset($headers['to'])) {
+					$output[$i]['to'] = self::joinEmails($headers['to']);
+				}
+				if (isset($headers['in-reply-to'])) {
+					$output[$i]['in_reply_to'] = $headers['in-reply-to'];
+				}
+			}
+		}
+		if ($order == 'newest') {
+			arsort($output);
+		}
+		return $output;
+	}</code></pre>
+
+<p>
+ EDIT: I'm not suggesting it's the best way of doing it, but it seems to be working to me - if anyone wants to use it then just replace the relevant function with my version above and it should be good to go.
+</p>
+
+<p>
+(No idea why when I originally posted this I said it wasn't pretty - I meant my bits not the function as a whole which is quite nice ;) ).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													pete											</span>
+					<span class="date_posted" title="8/4/11 1:52pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

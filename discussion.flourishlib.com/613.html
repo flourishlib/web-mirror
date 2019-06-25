@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Multiple databases &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Multiple databases</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					chemdream			</span>
+	<span class="date_posted" title="5/8/12 3:19pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I always run multiple mysql servers that are circular replicated.
+</p>
+
+<p>
+I then use HyperDB to extend flourish's db class.
+</p>
+
+<p>
+With HyperDB, I can add all my mySQL servers as master read/write servers. If one server fails, another takes over. ie: load balancing + high availability.
+</p>
+
+<p>
+I wish this was just built into Flourish. HyperDB is actually not that many lines of code. It seems like something that could be added easily into flourish?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1740">
+				<div class="body" id="body-1740">
+					
+<p>
+chemdream, although I'm not familiar with HyperDB, generally the way that various libraries or third-party multi-master solutions take care of this is by creating offsets for IDs.  This works fine if all you ever do is auto-increment numeric IDs.  It falls apart pretty quickly when you start using natural keys, particularly if replication is not speedy enough or if the natural load balancing causes duplicate entries to occur.
+</p>
+
+<p>
+It may also be the case that HyperDB doesn't actually do writing to more than a single server at once, and just fails over to write to another in the event the currently selected write server is down.  While Flourish doesn't handle this directly, it is possible to add roles to flourish, and you could likely use a simple wrapper.
+</p>
+
+<p>
+In general I don't feel like this is something flourish should handle.  Flourish handles read/write differentiations for databases.  If you wanted to add say 10 write servers, and have one selected at any given point this would likely best be done outside of the library where you can decide how to share state across multiple client connections.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/9/12 1:33am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1741">
+				<div class="body" id="body-1741">
+					
+<p>
+Exactly,
+</p>
+
+<p>
+I use HyperDB to write to only one DB at a time. the replication takes care of the rest. If one server goes down, HyperDB will choose another server.
+</p>
+
+<p>
+I just figured since it's a quick(ish) thing to do, why not have it in the lib?
+</p>
+
+<p>
+Just a suggestion...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													chemdream											</span>
+					<span class="date_posted" title="5/9/12 8:54pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1742">
+				<div class="body" id="body-1742">
+					
+<p>
+@chemdream
+</p>
+
+<p>
+My point is that this is much more fitting in the framework since it is highly dependent on storing a user state and the mechanism to do so should not be determined by Flourish.  It may be simple to have flourish run through a number of configured databases, but then you get into &quot;where does it keep the list of what is active, disabled, currently online, currently in use, currently used by X vs. Y users, etc&quot;.
+</p>
+
+<p>
+Storing it in a session may resolve this, but other people will want to use full fledged databases, others will want to use caches, etc.  Then you also get into &quot;schema dependence&quot; unless you're going to have 800 configuration methods related simply to this.
+</p>
+
+<p>
+inKWell handles this simply by allows you to define the roles (as flourish allows) but then you can set an array of hosts.  It will choose a host at random when the user connects and stick with that host for that user.
+</p>
+<pre class="block php"><code>&lt;?php
+
+	return iw::createConfig('Core', array(
+		//
+		// By default database support is disabled.  You should not set this to FALSE unless you
+		// configure at least one database below.
+		//
+		'disabled'  =&gt; TRUE,
+
+		'databases' =&gt; array(
+			//
+			// Multiple databases can be configured.  If database support is
+			// enabled above the default database is always 'default', but it
+			// is possible to add independent databases and then configure
+			// ActiveRecords/models to use those databases using the 'database'
+			// configuration element in their independent configurations.
+			//
+			// Database names are reflected by the keys and optionally can have
+			// a '::role' string appended to them, example: 'default::both'.
+			// If the role is ommitted the default role is both.
+			//
+			// For more information about roles, please see Flourish's
+			// fORM Documentation.
+			//
+			'default::both' =&gt; array(
+				//
+				// The database types used/allowed by inKWell reflect whatever
+				// is currently supported by Flourish, examples at the time of
+				// creating this file include: db2, mssql, mysql, oracle,
+				// postgresql, and sqlite.
+				//
+				// Both the type and name are required and should be a string
+				// value.
+				//
+				'type' =&gt; NULL,
+				'name' =&gt; NULL,
+				//
+				// Authentication information if required
+				//
+				'user'     =&gt; NULL,
+				'password' =&gt; NULL,
+				//
+				// If the host parameter is configured as an array then inKWell
+				// will select a random host to pull data from.  This can be
+				// good for &quot;round-robin&quot; hunting.  The particular database
+				// server which a visitor connects to for the first time will
+				// be stored in their session to ensure any effect they have on
+				// the data will be reflected instantly to them.  Replication
+				// between databases must be handled elsewhere, and is presumed
+				// to be for the most part on-the-fly.
+				//
+				// You can specify ports with each host in standard syntax:
+				//
+				// &lt;address&gt;:&lt;port&gt;
+
+				'hosts' =&gt; array('127.0.0.1'),
+			),
+		),
+	));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/10/12 3:46pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

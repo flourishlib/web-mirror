@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Inconsitency in inline comments in fCryptography (symmetric) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Inconsitency in inline comments in fCryptography (symmetric)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					passcod			</span>
+	<span class="date_posted" title="11/3/10 4:36am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I am looking at adding support for PHPSecLib's AES/Rjindael implementation in <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>, and I have noticed the following inconsistency in the inline documentation:
+</p>
+
+<p>
+In symmetricKeyEncrypt() :
+</p>
+<pre class="block php"><code>// Set up the main encryption, we are gonna use AES-192 (also know as rijndael-192)
+// in cipher feedback mode. Cipher feedback mode is chosen because no extra padding
+// is added, ensuring we always get the exact same plaintext out of the decrypt method
+$module   = mcrypt_module_open('rijndael-192', '', 'cfb', '');</code></pre>
+
+<p>
+ and in symmetricKeyDecrypt() :
+</p>
+<pre class="block php"><code>// Set up the main encryption, we are gonna use AES-256 (also know as rijndael-256) in cipher feedback mode
+$module   = mcrypt_module_open('rijndael-192', '', 'cfb', '');</code></pre>
+
+<p>
+ So which is it? AES/Rijndael 192 or 256? The code clearly uses 192, so this is not a problem per-se, just a mistake in the documentation, perhaps?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-990">
+				<div class="body" id="body-990">
+					
+<p>
+Yes, the classes uses AES 192. I believe I originally started with the idea of doing 256, but opted for 192.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/4/10 1:17pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

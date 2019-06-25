@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>I have a problem with fSession directory fCache backend &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">I have a problem with fSession directory fCache backend</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="9/20/11 5:56am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi
+</p>
+
+<p>
+I dont know what I am doing wrong.
+</p>
+
+<p>
+I first used <a href="../flourishlib.com/docs/fSession.html">fSession</a> in a very basic way, but i had the PHP session locking issue : while opening a long-loading page in which the session is open, a fast-loading page is blocked. Some consider it is a PHP bug, but PHP devs do not.
+</p>
+
+<p>
+Anyway, this is a problem to me, and this is a production server with no cache library installed. I then tried <a href="../flourishlib.com/docs/fCache.html">fCache</a> directory backend to <a href="../flourishlib.com/docs/fSession.html">fSession</a> as an alternative to PHP Sessions. Worked fine : almost same mecanism, without the locks ! Perfect.
+</p>
+
+<p>
+Unfortunately, i just realized <a href="../flourishlib.com/docs/fSession.html">fSession</a> is creating 10K session files EACH DAY in the cache directory :(
+</p>
+
+<p>
+I have more or less 250 daily visitors.
+</p>
+
+<p>
+What housekeeping process can i setup? Or maybe this session ID multiplication is not normal?
+</p>
+
+<p>
+Any help greatly appreciated
+</p>
+
+<p>
+Thanks
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1571">
+				<div class="body" id="body-1571">
+					
+<p>
+Hi again
+</p>
+
+<p>
+I think i missed something : a lot of CLI calls that appear to be creating a lot of session files as well
+</p>
+
+<p>
+I separated CLI sessions and actual web session to have a clear view of whats going on
+</p>
+
+<p>
+Maybe a simple mistake :)
+</p>
+
+<p>
+Aurelien
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="9/20/11 7:46am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1572">
+				<div class="body" id="body-1572">
+					
+<p>
+Ok, it appears many sessions are actually &quot;false&quot; sessions from the CLI
+</p>
+
+<p>
+However, I noticed that all my web sessions cache files have a TTL at 0, even though I set the lenght at '7 days' using <a href="../flourishlib.com/api/fSession.html#setLength">fSession::setLength()</a>
+</p>
+
+<p>
+So, correct me if i am wrong :
+</p>
+
+<ul>
+<li>The cache TTL in the session file (first line) will always be 0</li>
+</ul>
+
+<ul>
+<li>I have to look for fSession::expires string in the session data and use it to setup some housekeeping process that delets expired files</li>
+</ul>
+
+<p>
+Is this the right way of handling <a href="../flourishlib.com/docs/fCache.html">fCache</a> directory backend Sessions ?
+</p>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="9/20/11 8:09am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1573">
+				<div class="body" id="body-1573">
+					
+<p>
+No, I believe you found a bug in using <a href="../flourishlib.com/docs/fCache.html">fCache</a> with <a href="../flourishlib.com/docs/fSession.html">fSession</a>. I have a feeling I am not properly setting a TTL when calling <a href="../flourishlib.com/api/fCache.html#set">fCache::set()</a>. If you can just open a ticket for this it will ensure I don't forget to fix it. Hopefully I can get to this tonight.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/20/11 8:11am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1574">
+				<div class="body" id="body-1574">
+					
+<p>
+Thanks a lot
+</p>
+
+<p>
+/ticket/669
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="9/20/11 8:26am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

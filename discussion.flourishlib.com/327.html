@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fValidation throws an exception when inserting a new object in Oracle (index is filled by a trigger + sequence) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fValidation throws an exception when inserting a new object in Oracle (index is filled by a trigger + sequence)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aurelien			</span>
+	<span class="date_posted" title="11/16/10 11:46am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I surely have missed something in the documentation but I don't find what :)
+</p>
+
+<p>
+I am inserting a new object in an Oracle Database.
+</p>
+
+<p>
+It fails on an <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception because the &quot;user_id&quot; column &quot;cannot be null&quot; (among other columns). Indeed. But I do not give the user_id on purpose, because it is automatically filled by a trigger + sequence, like mysql autoincrement feature.
+</p>
+
+<p>
+What should I do to avoid this kind of behaviour?
+</p>
+
+<p>
+I am using the last version of flourishlib.
+</p>
+
+<p>
+BTW, other colums, which HAVE a default value, are also reported as requesting a value by <a href="../flourishlib.com/docs/fValidation.html">fValidation</a>.
+</p>
+
+<p>
+Table is the following in Oracle :
+</p>
+<pre class="block sql"><code>
+  CREATE TABLE &quot;ITPNET&quot;.&quot;USERS&quot; 
+   (	&quot;USER_ID&quot; NUMBER(10,0) NOT NULL ENABLE, 
+	&quot;USERNAME&quot; VARCHAR2(45 BYTE) NOT NULL ENABLE, 
+	&quot;FIRSTNAME&quot; VARCHAR2(45 BYTE) DEFAULT 'User' NOT NULL ENABLE, 
+	&quot;LASTNAME&quot; VARCHAR2(45 BYTE) DEFAULT 'User' NOT NULL ENABLE, 
+	&quot;EMAIL&quot; VARCHAR2(255 BYTE), 
+	&quot;ARCHIVED&quot; NUMBER(3,0) DEFAULT 0 NOT NULL ENABLE, 
+	&quot;CREATED_AT&quot; DATE DEFAULT SYSDATE NOT NULL ENABLE, 
+	&quot;MODIFIED_AT&quot; DATE DEFAULT SYSDATE NOT NULL ENABLE, 
+	&quot;LOCATION&quot; VARCHAR2(30 BYTE) DEFAULT 'HIDE' NOT NULL ENABLE, 
+	&quot;NUMLOGINS&quot; NUMBER(10,0) DEFAULT 0, 
+	 CONSTRAINT &quot;PRIMARY_8&quot; PRIMARY KEY (&quot;USER_ID&quot;)
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT)
+  TABLESPACE &quot;ITPNET&quot;  ENABLE
+   ) PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT)
+  TABLESPACE &quot;ITPNET&quot; ;
+ 
+  CREATE OR REPLACE TRIGGER &quot;ITPNET&quot;.&quot;USERS_USER_ID_TRG&quot; BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW
+BEGIN
+  if inserting and :new.user_id is NULL then
+  SELECT users_user_id_SEQ.nextval into :new.user_id FROM DUAL;
+  end if;
+END;
+/
+ALTER TRIGGER &quot;ITPNET&quot;.&quot;USERS_USER_ID_TRG&quot; ENABLE;</code></pre>
+
+<p>
+ Thanks for your help !
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1011">
+				<div class="body" id="body-1011">
+					
+<p>
+Can you paste the output of the following?
+</p>
+<pre class="block php"><code>fCore::expose(fORMSchema::retrieve()-&gt;getColumnInfo('users'));</code></pre>
+
+<p>
+ There is code in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> that should detect <code>USER_ID</code> as being an &quot;auto-incrementing&quot; primary key since there is a trigger with the right structure.
+</p>
+
+<p>
+Also, can you paste the output of:
+</p>
+<pre class="block sql"><code>SELECT
+	TRIGGER_BODY
+FROM
+	ALL_TRIGGERS
+WHERE
+	TRIGGERING_EVENT = 'INSERT' AND
+	STATUS = 'ENABLED' AND
+	TRIGGER_NAME NOT LIKE 'BIN$%' AND
+	TABLE_NAME = 'USERS' AND
+	OWNER = 'ITPNET'</code></pre>
+
+<p>
+ This is the SQL query that <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> uses to detect the triggers.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/10 12:00pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1012">
+				<div class="body" id="body-1012">
+					
+<p>
+First of all thanks for beeing so quick at helping :)
+</p>
+
+<p>
+1st request, the columninfo :
+</p>
+<pre><code>Array
+(
+    [user_id] =&gt; Array
+        (
+            [type] =&gt; integer
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %i
+            [default] =&gt; {null}
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [username] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 45
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %s
+            [default] =&gt; {null}
+            [valid_values] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [firstname] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 45
+            [default] =&gt; User
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %s
+            [valid_values] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [lastname] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 45
+            [default] =&gt; User
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %s
+            [valid_values] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [email] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 255
+            [not_null] =&gt; {false}
+            [placeholder] =&gt; %s
+            [default] =&gt; {null}
+            [valid_values] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [archived] =&gt; Array
+        (
+            [type] =&gt; integer
+            [default] =&gt; 0
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %i
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [created_at] =&gt; Array
+        (
+            [type] =&gt; date
+            [default] =&gt; SYSDATE 
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %d
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [modified_at] =&gt; Array
+        (
+            [type] =&gt; date
+            [default] =&gt; SYSDATE 
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %d
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [location] =&gt; Array
+        (
+            [type] =&gt; varchar
+            [max_length] =&gt; 30
+            [default] =&gt; HIDE
+            [not_null] =&gt; {true}
+            [placeholder] =&gt; %s
+            [valid_values] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+    [numlogins] =&gt; Array
+        (
+            [type] =&gt; integer
+            [default] =&gt; 0
+            [not_null] =&gt; {false}
+            [placeholder] =&gt; %i
+            [valid_values] =&gt; {null}
+            [max_length] =&gt; {null}
+            [max_value] =&gt; {null}
+            [min_value] =&gt; {null}
+            [decimal_places] =&gt; {null}
+            [auto_increment] =&gt; {false}
+        )
+  
+)</code></pre>
+
+<p>
+ The question is, about the above data : Won't there be an issue by trimming the quotes from the oracle default values? For example, Firstname default value in oracle is not &quot;(string)User&quot;, it is actually &quot;(string)'User'&quot;. A contrario, created_at default value is &quot;(string)SYSDATE&quot; because this is a function, and need not to be quoted when put in a SQL sentence.
+</p>
+
+<p>
+Second one, the SQL, returned no rows. After investigating a bit, it appears that the triggers wher put on TRIGGER_EVENT = 'INSERT OR UPDATE', thus failing to meet the criterion. After modifying the SQL with TRIGGERING_EVENT LIKE '%INSERT%' , the result was OK.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aurelien											</span>
+					<span class="date_posted" title="11/16/10 12:51pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1013">
+				<div class="body" id="body-1013">
+					
+<p>
+Thanks for the info, that should help me to get this fixed.
+</p>
+
+<p>
+In terms of the string, the stripping of the quotes is correct, since <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> treats the default value as a constant. It does appear that I am going to have to find a way to handle dynamic values such as <code>SYSDATE</code>. Similar constructs exist for other databases too, so it is something I should be handling anyway. Perhaps I can provide either a native PHP datatype, or a callback. That way for <code>SYSDATE</code> I can provide a PHP callback for <code>time()</code>, or something like that.
+</p>
+
+<p>
+I will also need to change that SQL statement to look for both <code>INSERT</code> and <code>INSERT OR UPDATE</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/10 1:06pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1043">
+				<div class="body" id="body-1043">
+					
+<p>
+Both of these issues should be fixed in r946. The triggers should be detected properly, both in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.
+</p>
+
+<p>
+For <code>SYSDATE</code> support, I remembered that <a href="../flourishlib.com/docs/fDate.html">fDate</a>, <a href="../flourishlib.com/docs/fTime.html">fTime</a> and <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> support the <code>CURRENT_DATE</code>, <code>CURRENT_TIME</code> and <code>CURRENT_TIMESTAMP</code> constants as aliases for <code>time()</code>. I just tweaked <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to convert <code>SYSDATE</code> to <code>CURRENT_DATE</code>, and it look like you should be all set!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/4/10 9:55pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

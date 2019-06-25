@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>MVC incorporating flourish &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">MVC incorporating flourish</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					joho			</span>
+	<span class="date_posted" title="12/7/10 6:12pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+While looking around for small-ish frameworks, I ran into (amongst others) MicroMVC, which looks promising, but I also ran into an MVC (or what claimed to be anyway) that incorporated the flourish framework into its &quot;core&quot;. I cannot for the life of me remember the URL or name of that MVC framework. Does anyone else have a clue as to what that might have been .. ?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1047">
+				<div class="body" id="body-1047">
+					
+<p>
+I don't know if you were thinking of this one <a href="https://github.com/dotink/inKWell">https://github.com/dotink/inKWell</a> ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="12/7/10 9:25pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1052">
+				<div class="body" id="body-1052">
+					
+<p>
+Here are all of the frameworks that I know of that currently use Flourish in their core:
+</p>
+
+<ul>
+<li><a href="http://inkwell.dotink.org/">http://inkwell.dotink.org/</a> (<a href="https://github.com/dotink/inKWell">https://github.com/dotink/inKWell</a>)</li>
+<li><a href="http://sitecmd.org/">http://sitecmd.org/</a> (<a href="https://github.com/vxnick/sitecmd">https://github.com/vxnick/sitecmd</a>)</li>
+<li><a href="https://github.com/zares/petalon">https://github.com/zares/petalon</a></li>
+<li><a href="https://github.com/ihumanable/rigby">https://github.com/ihumanable/rigby</a></li>
+</ul>
+
+<p>
+These may or may not be in a usable state.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/12/10 8:13am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1076">
+				<div class="body" id="body-1076">
+					
+<p>
+I can't speak for the other frameworks, but obviously I can speak for inKWell since I'm the one working on it.  It is in a very usable state, although I'm battling with finding the time to write better documentation and to polish the website for an actual beta release.  I'm always available to answer questions directly though, and the more extensive and updated documentation thus far is in the github wiki, not on the site which is not extensively developed.
+</p>
+
+<p>
+One additional note, the inkwell_site branch on github has a bit more to offer than the master branch, as it has what eventually will be forked out as official extensions, including the stock CMS and basic PagesController
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/3/11 2:22am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1184">
+				<div class="body" id="body-1184">
+					
+<p>
+I'm currently using Petalon, is quite good but the bad thing it has is the documentation is almost negligible.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="3/22/11 11:42am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

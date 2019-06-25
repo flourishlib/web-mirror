@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Problem with date validation &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Problem with date validation</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="5/24/10 3:15pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+In my 'groups' table (PostgreSQL 8.4.3) I have defined two date type columns:
+</p>
+<pre class="block sql"><code>...
+start_date date,
+end_date   date,
+...</code></pre>
+
+<p>
+ When creating a new record, a var_dump($groups) just after $group-&gt;populate() shows that both date values (in the form d/m/Y, i.e. '21/05/2010') are already there. However, $groups-&gt;validate() is throwing an error:
+</p>
+<pre><code>The following problems were found:
+    * Start Date: Please enter a date
+    * End Date: Please enter a date</code></pre>
+
+<p>
+ So it seems both dates are not being recognized as such by the validation process. What am I missing?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-734">
+				<div class="body" id="body-734">
+					
+<p>
+Flourish uses <a href="http://php.net/strtotime"><code>strtotime()</code></a> for date parsing. That function requires the date be in a US English format, which would require <code>m/d/Y</code>.
+</p>
+
+<p>
+To remedy this issue, all date and time parsing goes through <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>, which allows for localization: <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>#Localization. You will need to write a function that translates to the US format, and you'd probably want it to be user-specific.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/24/10 3:24pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-735">
+				<div class="body" id="body-735">
+					
+<p>
+Thanks for your reply!
+</p>
+
+<p>
+I have tested the example function in <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>#Localization and it seems it has a problem.
+</p>
+
+<p>
+Using the expresion #(<br />
+d{1,2})/(<br />
+d{1,2})/(<br />
+d{2}|<br />
+d{4})# as shown in the example, the year is always taken as 2-digits number, because d{2} takes precedence over d{4}. So the resulting $matches array for a date such as 26/05/2010 is:
+</p>
+
+<p>
+array(4) { <a href="http://discussion.flourishlib.com/0">0</a>=&gt;  string(8) &quot;26/05/20&quot; <a href="1.html">1</a>=&gt;  string(2) &quot;26&quot; <a href="http://discussion.flourishlib.com/2">2</a>=&gt;  string(2) &quot;05&quot; <a href="3.html">3</a>=&gt;  string(2) &quot;20&quot; } 
+</p>
+
+<p>
+then returning a wrong final result of 2020-05-26.
+</p>
+
+<p>
+Changing the order in the year part of the expression #(<br />
+d{1,2})/(<br />
+d{1,2})/(<br />
+d{4}|<br />
+d{2})# seems to do the trick:
+</p>
+
+<p>
+array(4) { <a href="http://discussion.flourishlib.com/0">0</a>=&gt;  string(10) &quot;26/05/2010&quot; <a href="1.html">1</a>=&gt;  string(2) &quot;26&quot; <a href="http://discussion.flourishlib.com/2">2</a>=&gt;  string(2) &quot;05&quot; <a href="3.html">3</a>=&gt;  string(4) &quot;2010&quot; } 
+</p>
+
+<p>
+A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/24/10 6:07pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-736">
+				<div class="body" id="body-736">
+					
+<p>
+Thanks for the heads-up! I added begin and end anchors as an alternate solution.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/24/10 9:07pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

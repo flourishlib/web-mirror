@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSession &amp;&amp; fAuthorization::requireAuthLevel &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSession &amp;&amp; fAuthorization::requireAuthLevel</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					frank			</span>
+	<span class="date_posted" title="7/19/10 8:13am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I'm confused. I have made, on my own xammp server, an project with flourishlib. This is working like a dream. Now i've uploaded this website to a customers webserver. The database connection is also working perfectly.
+</p>
+
+<p>
+I've changed the init.php and the config.php and all works fine.
+</p>
+
+<p>
+I defined the url -&gt; working define('SITE_URL',&quot;<a href="http://somewebsite.nl/">http://somewebsite.nl/</a>&quot;);
+</p>
+
+<p>
+I defined the login-&gt; working fAuthorization::setLoginPage('<a href="http://somewebsite/login.php'">http://somewebsite/login.php'</a>);
+</p>
+
+<p>
+I defined the session path-&gt; working fSession::setPath(DOC_ROOT . '/storage/session/'); //this map has chmod 777 rights
+</p>
+
+<p>
+And it really writes the session to this path. Now i'm using a login page to set the requireAuthLevel, it connects to the database and returns 1 row with the correct information.
+</p>
+
+<p>
+Next i set the authlevel : fAuthorization::setUserAuthLevel('admin'); fAuthorization::setUserToken($user); // this is the current user object fURL::redirect(SITE_URL.'index.php')
+</p>
+
+<p>
+Next i get redirected to my index.php and run into the next piece of code works as designed : fAuthorization::requireAuthLevel('user'); $user = <a href="../flourishlib.com/api/fAuthorization.html#getUserToken">fAuthorization::getUserToken()</a>;
+</p>
+
+<p>
+<strong>I believe this is where it goes very wrong?</strong> No Error just a redirect to my login page. Somehow fAuthorization::requireAuthLevel('user') doesn't work and doesn't generate any error!?
+</p>
+
+<p>
+So i have the right privileges (i'm 'admin' higher then 'user' in my code) in the code so i should get passed the fAuthorization::requireAuthLevel('user') part??
+</p>
+
+<p>
+<strong>Any idea's? Differences with php version or some webserver settings? Any clue where to look or how the retrieve the error or anything :)</strong>
+</p>
+
+<p>
+Please help.
+</p>
+
+<p>
+Kind regards,
+</p>
+
+<p>
+Frank van der Geld
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-831">
+				<div class="body" id="body-831">
+					
+<p>
+Damm, it was because of a sub-domain that it wasn't working.
+</p>
+
+<p>
+using: static public function ignoreSubdomain()
+</p>
+
+<p>
+My bad.
+</p>
+
+<p>
+Frank
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="7/20/10 3:40am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

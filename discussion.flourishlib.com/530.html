@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>db escape &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">db escape</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="9/6/11 11:07pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+hi,
+</p>
+
+<p>
+is this normal behaviour...
+</p>
+<pre class="block php"><code>$db-&gt;escape('string', &quot;testing 
+		123&quot;);</code></pre>
+
+<p>
+ which creates a string literal of 'testing <br />
+r<br />
+n 123' and is inserted into the DB as is?
+</p>
+
+<p>
+this means i will have to string or preg replace every occurance in order to display it back which surely cant be right...
+</p>
+
+<p>
+i was expecting it to be stored in the db as 
+</p>
+<pre><code>#!text/html
+testing
+123</code></pre>
+
+<p>
+ am i missing something?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1558">
+				<div class="body" id="body-1558">
+					
+<p>
+What type of database are you using, and what version?
+</p>
+
+<p>
+Are you actually getting the <br />
+r<br />
+n out when you query the database, or are you just seeing it in the generated SQL?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/7/11 11:44pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1560">
+				<div class="body" id="body-1560">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+I am using mysql 4.1.xx yeh i know super old but nothing i can do with this AIX box as no root access :(
+</p>
+
+<p>
+Yes the <br />
+r<br />
+n comes out on the query...
+</p>
+
+<p>
+If i do it via place holders the query looks the same but does not suffer the same problem as using escape...
+</p>
+
+<p>
+Weird?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="9/8/11 7:07am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1564">
+				<div class="body" id="body-1564">
+					
+<p>
+Can you paste the exact code that is working, and also the code that isn't that you would expect to work?
+</p>
+
+<p>
+What version of PHP are you running on this AIX box? Unfortunately I don't have any access to AIX boxes, but if you can figure out what it causing the issue, I'd be happy to test a fix across all of the machines I do have.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/12/11 10:33pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1575">
+				<div class="body" id="body-1575">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+I will duplicate the code as soon as i can... busy with so much stuff.
+</p>
+
+<p>
+I do appreciate all your help.
+</p>
+
+<p>
+Many Thanks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="9/20/11 8:31am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

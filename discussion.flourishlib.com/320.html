@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Upload directories for fORMFile::configureImageUploadColumn  &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Upload directories for fORMFile::configureImageUploadColumn </h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="11/6/10 3:27am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+I'm using a form to upload an array of image files, so using fORMFile::configureImageUploadColumn looks as a good solution to deal with all the required checking. However, I would need to put those files in diverse user directories, so I can't put a fixed path in the configure method().
+</p>
+
+<p>
+As I'm not sure about the order in which ORM processing is done, would it be right adding a $upload_path property to my model class to use it within the configure method? i.e.:
+</p>
+<pre class="block php"><code>
+public $upload_path;
+protected function configure()
+{
+    fORMFile::configureImageUploadColumn($this, 'picture', $this-&gt;upload_path);
+}</code></pre>
+
+<p>
+ That way I could set that property on each case.
+</p>
+
+<p>
+Regards,
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1001">
+				<div class="body" id="body-1001">
+					
+<p>
+The configure method is only called once at the beginning of the script execution, so that won't solve your problems.
+</p>
+
+<p>
+Even if it did, <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> expects to manage the file upload directory, so if you move then out it is going to start getting really confused when files can't be found.
+</p>
+
+<p>
+I'm not sure what type of file checking you are looking to do, but <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> combined with <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> does everything except for handing files that have already been uploaded on a previous form post. This is the part that requires <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> to manage the upload directory and keep track of the files. It sounds like in your situation you'll need to roll your own that can handle multiple directories.
+</p>
+
+<p>
+If you have any questions about how to handle this and can provide the beginning of the code, I can help you flesh out some of it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/8/10 8:55am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

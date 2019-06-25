@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Can&#039;t get fSchema-&gt;setKeysOverride() to work &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Can&#039;t get fSchema-&gt;setKeysOverride() to work</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="6/10/09 8:59am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Ok so I have been trying out this method while experimenting with getting the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> class to recognize normal indexes in MySQL tables. As I said in the other thread, getting <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to recognize normal index keys was easy, but I can't get setKehsOverride() to work.
+</p>
+
+<p>
+I tried the most basic example I could think of, namely
+</p>
+<pre class="block php"><code>$schema-&gt;setKeysOverride(array('primary' =&gt; array('id')), 'product_amounts', 'primary');</code></pre>
+
+<p>
+ Now the operation in itself is pretty meaningless since I am replacing the primary key with the primary key but this doesn't work and neither does any of the other versions I've tried. As far as I can see I am following the format of getKeys() but maybe I'm missing something.
+</p>
+
+<p>
+The errors I get when trying this seems to be related to the keys-array being emptied when I run setKeysOverride.
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-290">
+				<div class="body" id="body-290">
+					
+<p>
+Be sure you have r597 or newer. There was a bug in <a href="../flourishlib.com/api/fSchema.html#setKeysOverride">fSchema::setKeysOverride()</a> up until then.
+</p>
+
+<p>
+If you specify the type of key you are replacing as the third parameter, the first parameter does not need the type of key as an array key. For instance, your example above would become:
+</p>
+<pre class="block php"><code>$schema-&gt;setKeysOverride(array('id'), 'product_amounts', 'primary');</code></pre>
+
+<p>
+ If you want to specify multiple types of keys, include the key type as an array key like you did, but leave off the third parameter:
+</p>
+<pre class="block php"><code>$schema-&gt;setKeysOverride(array('primary' =&gt; array('id')), 'product_amounts');</code></pre>
+
+<p>
+ Hopefully those two things should take care of the issues you are having.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/12/09 8:47am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-508">
+				<div class="body" id="body-508">
+					
+<p>
+Hello.
+</p>
+
+<p>
+Am I correct in thinking that I can use <a href="../flourishlib.com/api/fSchema.html#setKeysOverride">fSchema::setKeysOverride()</a> to create relationships in my models? I have a restrictive MySQL setup and am having trouble setting up foreign keys. I would ideally like to override flourish's auto detection of relationships.
+</p>
+
+<p>
+Cheers, Pete
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													kippertoffee											</span>
+					<span class="date_posted" title="11/3/09 4:51pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

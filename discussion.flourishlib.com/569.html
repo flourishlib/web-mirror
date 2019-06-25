@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>%r prepared statement bug (with postgresql) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">%r prepared statement bug (with postgresql)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					theyouyou			</span>
+	<span class="date_posted" title="11/22/11 1:34pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+The following SQL statement produces a SQL error:
+</p>
+<pre class="block php"><code>$prepared = $this-&gt;db-&gt;prepare(&quot;UPDATE documents SET %r = %s WHERE document_id = %i&quot;);	
+$this-&gt;db-&gt;query($prepared, 'author', 'theyouyou', 23);</code></pre>
+
+<p>
+ SQL error (translated from french) :
+</p>
+<pre><code>PostgreSQL error (ERROR: bind message passes 3 parameters but the prepared statement fstm1 needs 0) in {false}</code></pre>
+
+<p>
+ BTW the &quot;normal&quot; statement cause no error 
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fStatement.html">fStatement</a> object (in firephp):
+</p>
+<pre><code>bound_params =
+database = fDatabase(...)
+identifier = 'fstmt1'
+placeholders = array(
+   [0] =&gt; '%s'  // Where's the '%r' ?
+   [1] =&gt; '%i'
+)
+statement = Resource id #41
+sql =
+untranslated_sql =
+used =
+)</code></pre>
+
+<p>
+ The PHP Log:
+</p>
+<pre><code>{doc_root}\\slire3\\app\\model\\Document.php(126): fDatabase-&gt;prepare('UPDATE document...')
+{doc_root}\\slire3\\lib\\flourish\\fDatabase.php(2663): fDatabase-&gt;prepareStatement('UPDATE document...')
+{doc_root}\\slire3\\lib\\flourish\\fDatabase.php(2759): fStatement-&gt;__construct(Object(fDatabase), 'UPDATE document...', Array, NULL)
+{doc_root}\\slire3\\lib\\flourish\\fStatement.php(101): vsprintf('UPDATE document...', Array)
+[internal function]
+vsprintf(): Too few arguments</code></pre>
+
+<p>
+ What's wrong ?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1628">
+				<div class="body" id="body-1628">
+					
+<p>
+I think it is likely an issue that identifiers (column and table names) can not be provided at run time, but must be provided when preparing the statement. Try this:
+</p>
+<pre class="block php"><code>$prepared = $this-&gt;db-&gt;prepare(&quot;UPDATE documents SET %r = %s WHERE document_id = %i&quot;, 'author');    
+$this-&gt;db-&gt;query($prepared, 'theyouyou', 23);</code></pre>
+
+<p>
+ If you open a ticket about this, I can make sure future version have a friendlier error message.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/28/11 1:42pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1632">
+				<div class="body" id="body-1632">
+					
+<p>
+I tried your example, it didn't work: I have the same error message.
+</p>
+
+<p>
+But I got the answer on <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php line 2670, you wrote:   
+</p>
+
+<ul>
+<li>Identifier placeholders (%r) are not supported with prepared statements</li>
+</ul>
+
+<p>
+I think you should add this information in the fDatabase:Limitations documentation :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="11/29/11 6:19am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

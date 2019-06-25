@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSMTP problem &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSMTP problem</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					johnnydeep			</span>
+	<span class="date_posted" title="2/24/11 2:57pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi! When I'm trying to send an email using the <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> class I got this error and I don't know what it mean:
+</p>
+<pre class="block php"><code>Fatal error: Uncaught exception 'fConnectivityException' with message 'Unknown SMTP welcome message, 554 server.com, from server smtp.server.com on port 25' in fSMTP.php:235 Stack trace: 
+
+#0 fSMTP.php(529): fSMTP-&gt;connect() 
+#1 fEmail.php(1347): fSMTP-&gt;send('myemail@server.com', Array, 'To: &quot;John&quot; &lt;j...', 'This is the bod...') 
+#2 test.php(20): fEmail-&gt;send(Object(fSMTP)) 
+#3 {main} thrown in fSMTP.php on line 235
+</code></pre>
+
+<p>
+ The server reject the connection? Any clue? Thanks in advanced.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1115">
+				<div class="body" id="body-1115">
+					
+<p>
+It sounds like the SMTP server is broken, or configured to not let you use it. An SMTP server should respond upon connection with <code>220 example.com</code>, whereas a <code>554</code> response means &quot;Transaction failed.&quot;
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/24/11 3:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1116">
+				<div class="body" id="body-1116">
+					
+<p>
+@wbond and @johnnydeep
+</p>
+
+<p>
+This was the same error I was receiving on windows with regards to the following bug: http://flourishlib.com/ticket/566
+</p>
+
+<p>
+What version of PHP are you running johnnydeep, and are you on Windows by any chance?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/24/11 7:47pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1117">
+				<div class="body" id="body-1117">
+					
+<p>
+@wbond the SMTP it's working fine, I can send emails using Outlook.
+</p>
+
+<p>
+@msahagian I'm running XAMPP in Windows NT and PHP 5.3.5
+</p>
+
+<p>
+Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													johnnydeep											</span>
+					<span class="date_posted" title="2/24/11 8:53pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1118">
+				<div class="body" id="body-1118">
+					
+<p>
+@johnnydeep
+</p>
+
+<p>
+At the very least make the change I indicated in that ticket.  If you don't it is likely that your system will send an invalidly formatted hostname to the mail server with the EHLO command -- with that said though your welcome message should look something similar to:
+</p>
+
+<p>
+220 providence.dotink.org ESMTP Postfix (Debian/GNU)
+</p>
+
+<p>
+Can you telnet into your SMTP server and paste the initial output from the server?  When I was debugging I also modified the read() and write() methods on <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> to echo what was being read/written -- this helped gratefully in seeing the dialogue that was occurring between Flourish and the SMTP server, so it could likely help you.
+</p>
+
+<p>
+The welcome message should look pretty similar to the above.  Out of curiosity as well, what software is running the SMTP server?  Does it require SSL off the bat?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/24/11 9:12pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1119">
+				<div class="body" id="body-1119">
+					
+<p>
+Also note that there is <a href="../flourishlib.com/api/fSMTP.html#enableDebugging">fSMTP::enableDebugging()</a> which will print all data to and from the SMTP server.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/24/11 9:37pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1157">
+				<div class="body" id="body-1157">
+					
+<p>
+The fix doesn't work for me. I dont have access because it's a production environment, I run the lastest version of flourish and give me
+</p>
+
+<p>
+Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>' with message 'Unknown SMTP welcome message, 554 cinmlip01.e2k.ad.xxx.com, from server smtp.ar.server.xxx.com on port 25' in <br />
+lib<br />
+<a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a>.php:235 Stack trace: #0 
+</p>
+
+<p>
+Should I use another library to send emails?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													johnnydeep											</span>
+					<span class="date_posted" title="3/17/11 8:11am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1160">
+				<div class="body" id="body-1160">
+					
+<p>
+I would recommend calling <a href="../flourishlib.com/api/fSMTP.html#enableDebugging">fSMTP::enableDebugging()</a> with the parameter <code>TRUE</code> on your <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> instance and see what messages are being sent back and forth between your site and the server. If you can paste the output of that, I should be able to help.
+</p>
+<pre class="block php"><code>$smtp = new fSMTP('server');
+$smtp-&gt;enableDebugging(TRUE);
+$email-&gt;send($smtp);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/18/11 12:41pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

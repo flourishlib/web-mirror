@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Enable Schema Caching &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Enable Schema Caching</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="6/26/09 12:17pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Version : r619
+</p>
+
+<p>
+I'm finally getting around to enabling schema caching.  Unfortunately, I can't seem to make it work.  
+</p>
+
+<p>
+Here is the code I'm using : 
+</p>
+<pre class="block php"><code>/**
+ * Connect to the  database with ORM
+ */
+// Connecting to a MySQL database on the server example.com
+fORMDatabase::attach(
+	$ss7AutoDB = new fDatabase('mysql', DB, DB_USER, DB_PASS, DB_HOST, DB_PORT)
+); 
+
+// Cache the database to prevent schema analysis calls
+fORM::enableSchemaCaching(new fCache('file', APP_PATH . '/schema_cache/flourish_schema_cache.info'));
+
+</code></pre>
+
+<p>
+ Here is the file it should  write to:
+</p>
+<pre><code>-rw-rw-rw-    1 ss7admin ss7admin        0 Jun 26 11:48 flourish_schema_cache.info</code></pre>
+
+<p>
+ I know that caching was attempted at least.  Before I had the file permissions correct, flourish output errors that the file did not exist and the directory was no writable.  So, I created the file and made the directory writable.  The errors went away.  However, nothing ever gets written to the file.
+</p>
+
+<p>
+Then, I deleted the file and made sure the directory was still writable.  I got no errors this time.  However, a cache file was not created.
+</p>
+
+<p>
+Does anyone see what I am doing wrong?
+</p>
+
+<p>
+Thanks, Justin
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

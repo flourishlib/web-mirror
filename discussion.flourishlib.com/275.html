@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORM::mapClassToTable when table name is singular &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORM::mapClassToTable when table name is singular</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ben			</span>
+	<span class="date_posted" title="8/2/10 3:09am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i'm trying to map a class to a table with a singular name. the conventional way for this to work is to pluralize the table name but this will not work in my case since i'm trying to access an existing database used by other applications.
+</p>
+
+<p>
+it gives me this error: <em>The noun specified could not be singularized</em>
+</p>
+
+<p>
+anyone knows any work-around for this?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-852">
+				<div class="body" id="body-852">
+					
+<p>
+Can you post some code, including the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class, your database table name and the method call that caused the error?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/2/10 3:06pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-861">
+				<div class="body" id="body-861">
+					
+<p>
+Hi wbond,
+</p>
+
+<p>
+Sorry for late reply. Here are some info:
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class:
+</p>
+<pre class="block php"><code>class UserCharacter extends fActiveRecord{
+
+}</code></pre>
+
+<p>
+ database table name: user_character
+</p>
+
+<p>
+error caused by:
+</p>
+<pre class="block php"><code>$user_character= new UserCharacter();
+echo $user_character-&gt;reflect();</code></pre>
+
+<p>
+ error message:
+</p>
+<pre><code>Uncaught fProgrammerException
+-----------------------------
+{doc_root}\\test\\index.php(22): fActiveRecord-&gt;reflect()
+{doc_root}\\include\\lib\\flourish\\fActiveRecord.php(2343): fORMRelated::reflect('UserCharacter', Array, false)
+{doc_root}\\include\\lib\\flourish\\fORMRelated.php(1035): fORM::classize('MSSNGR_CHAR_LIS...')
+{doc_root}\\include\\lib\\flourish\\fORM.php(337): fGrammar::singularize('MSSNGR_CHAR_LIS...')
+{doc_root}\\dinclude\\lib\\flourish\\fGrammar.php(572)
+The noun specified could not be singularized</code></pre>
+
+<p>
+ i tried the other tables with singular database table names and it seems that they are working just fine. one specific thing that i have noticed here is the accessing of MSSNGR_CHAR_LIST table which have caused the problem. is there any way to disable it from accessing unnecessary database tables?
+</p>
+
+<p>
+thanks for your help
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ben											</span>
+					<span class="date_posted" title="8/12/10 1:55am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-862">
+				<div class="body" id="body-862">
+					
+<p>
+Flourish explores your database and finds related tables and makes them available via simple method calls. In this case it found a related table, but the related table wasn't plural. You'll probably need to map all of your tables to classes. There isn't really a way around this that I can think of.
+</p>
+<pre class="block php"><code>fORM::mapClassToTable('MssngrCharList', 'mssngr_char_list');
+// Add other singular tables too</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/12/10 11:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Minification problem  &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Minification problem </h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					theyouyou			</span>
+	<span class="date_posted" title="10/26/11 12:36pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+the Flourish JSMin version caused me javascript errors (unterminated string litteral)
+</p>
+
+<p>
+The Minify JSMin version doesn't: <a href="http://code.google.com/p/minify/source/browse/trunk/min/lib/JSMin.php">http://code.google.com/p/minify/source/browse/trunk/min/lib/JSMin.php</a> <br />
+  &quot;Minify uses an enhanced port of Douglas Crockford's JSMin library and custom classes to minify CSS and HTML&quot;
+</p>
+
+<p>
+Should I open a ticket?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1595">
+				<div class="body" id="body-1595">
+					
+<p>
+theyouyou - it may be the case that JSMin.php is actually the one with the error (although it is unclear since we can't see your code or the difference between the outputs).  To determine if this is the case, you could compile Crockford's actual C implementation:  <a href="http://www.crockford.com/javascript/jsmin.c">http://www.crockford.com/javascript/jsmin.c</a> and run it through manually (then test it).
+</p>
+
+<p>
+I can tell you from my own playing around with various minification algorithms and mechanisms that badly formed javascript can cause this.  You may want to run your non-minified JS through a linter to catch common errors.
+</p>
+
+<p>
+If I'm not mistaken, that error is most commonly caused by an assignment not terminated with an ;
+</p>
+
+<p>
+Examples:
+</p>
+<pre class="block js"><code>var foo = function () {
+
+}  // This should have a ; at the end.
+
+var bar = {
+  'foo' : foo
+}  // This should also have a ; at the end.</code></pre>
+
+<p>
+ These go commonly unnoticed, particularly on longer functions or objects because the bracket notation will often mean the end of an if, for, while, statement -- where it obviously is not required.  
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="10/26/11 2:57pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1596">
+				<div class="body" id="body-1596">
+					
+<p>
+Thank you msahagian.
+</p>
+
+<p>
+Sorry the code is a little bit long, but I didn't manage to get the exact part that causes the problem  I can't see any ';' missing, do you ?
+</p>
+<pre class="block js"><code>
+// Sammy
+var sammy = $.sammy(function() {
+
+
+
+});
+// End of Sammy
+
+$(document).ready(function(){
+
+	$('.contentChild').equalHeightColumns();
+
+	// Init
+    // sammy.run(&quot;#!/search&quot;);
+	
+	// Dropdown
+	$(&quot;#tabAccount a&quot;).click( function() {
+		toggleAccountDropdown();
+	});
+	
+	// General
+	$(&quot;.radioButton&quot;).click( function() {
+		$(this).parent().find('.radioButton').prop(&quot;disabled&quot;, false).removeClass(&quot;toggled&quot;);
+		$(this).addClass(&quot;toggled&quot;).prop(&quot;disabled&quot;, true);
+	});
+	$(&quot;.toggleButton&quot;).click( function() {
+		$(this).toggleClass(&quot;toggled&quot;);
+	});
+	$('[placeholder]').defaultValue();
+	// End of General
+
+
+	
+	
+});</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="10/26/11 3:33pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1597">
+				<div class="body" id="body-1597">
+					
+<p>
+Your code looks fine, but I'd be curious to know what is contained in the following methods:
+</p>
+
+<p>
+toggleAccountDropdown() and the .equalHeightColumns() on the jQuery object.
+</p>
+
+<p>
+I did a quick scan of some source which I found and presume is the same .equalHeightColumns() stuff you're using, and didn't see too much to worry about.  This all being said, there are probably a number of other minor syntax issues which could cause the minified JS to be a problem -- or it could legitimately be a bug.
+</p>
+
+<p>
+Is the site that this is on public in any way?  I.e. can I go there and see the syntax error so I can try and trace it back myself?
+</p>
+
+<p>
+I believe firebug will give you some nice context in the console on JS syntax errors which can be helpful if you are having an issue with the minified code but not the non-minified version.
+</p>
+
+<p>
+Obviously debugging minified code is more difficult because all your stuff tends to be on one, two, or three lines at most usually.
+</p>
+
+<p>
+If you care to go through the trouble of providing all the JS code:
+</p>
+
+<ul>
+<li>jQuery version</li>
+<li>Exact source of plugin for equal height columns</li>
+<li>Missing source for the toggleAccountDropdown() function</li>
+<li>etc</li>
+</ul>
+
+<p>
+I can gladly attempt to recreate this and help with the debugging.  Also, just to mention again, it may be worth trying to run all of this through the original jsmin.c and using that manually minified code.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="10/26/11 4:20pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1598">
+				<div class="body" id="body-1598">
+					
+<p>
+Thank you again msahagian but I doubt that it's really worth it, IMHO.
+</p>
+
+<p>
+I may have to convert some of my old flatten php projects into MVC OOP style, with the Flourish Framework (or not). So I would spend a lot of time debugging my JavaScript which actually works fine when it's minified with Minify. 
+</p>
+
+<p>
+Since my last message, I implemented the Minify Class which doesn't cause any problem. <a href="http://code.google.com/p/minify/wiki/CustomServer">http://code.google.com/p/minify/wiki/CustomServer</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="10/26/11 5:13pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

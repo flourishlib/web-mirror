@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Guidance needed &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Guidance needed</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					kris			</span>
+	<span class="date_posted" title="9/5/09 9:30am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, I'm developing an application and looking for some advice.
+</p>
+
+<p>
+The situation:  Person A joins our training program he gives us the names of 10 of his friends who then fill out a survey for him. Person A completes the training then his 10 friends fill out the same survey and we figure out the improvement.
+</p>
+
+<p>
+The particular problem I'm having is generating unique URLs for each survey. Using plain IDs like so is obviously undesirable:
+</p>
+
+<p>
+<a href="http://www.survey.com/1-10-0">www.survey.com/1-10-0</a>
+</p>
+
+<p>
+What I would like is an URL friendly hash like <a href="http://www.survey.com/NzcwNjgyNQ,">www.survey.com/NzcwNjgyNQ,</a> that I can decode. I looked at <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> and Symmetric-Key Encryption but the hash generated is obviously not appropriate.
+</p>
+
+<p>
+Any ideas?
+</p>
+
+<p>
+Much thanks.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-396">
+				<div class="body" id="body-396">
+					
+<p>
+I would probably not worry so much about being able to decode the hash, and just add another column to your database table where you store a random 16 character code. If you set the column up as <code>NOT NULL UNIQUE</code>, you can ensure you will always have one 16 character code per survey.
+</p>
+
+<p>
+The method <a href="../flourishlib.com/api/fCryptography.html#randomString">fCryptography::randomString()</a> will allow you to create a random string for each survey. The likelihood of generating the same random 16 character alphanumeric string is pretty close to zero.
+</p>
+
+<p>
+If you are using the ORM you can load records by <code>UNIQUE</code> constrains by passing an associative array of the <code>column_name =&gt; value</code> to the constructor.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/9/09 3:03am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

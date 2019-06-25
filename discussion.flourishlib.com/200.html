@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>session &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">session</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dao27			</span>
+	<span class="date_posted" title="1/26/10 7:42pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+i updated to the last flowrish code and have some problem:
+</p>
+<pre class="block php"><code>if ($find_agency-&gt;getAgencyName() === fRequest::get(&quot;user_name&quot;) &amp;&amp; $find_agency-&gt;getPassword() === fRequest::get(&quot;password&quot;))
+			{
+				fAuthorization::setUserAuthLevel($find_agency-&gt;getAgencyType());
+				fAuthorization::setUserToken($find_agency-&gt;getAgencyId());
+				fAuthorization::setUserACLs(array(
+					'*' =&gt; array(
+						'*'
+					)
+				));
+				fURL::redirect(fAuthorization::getRequestedURL(TRUE, 'http://localhost/turism/admin/'));
+			}
+			else
+			{
+				throw new fValidationException(&quot;Username or/and password don't match.&quot;);
+			}</code></pre>
+
+<p>
+ so :
+</p>
+<pre class="block php"><code>fCore::expose(fAuthorization::getUserACLs());
+echo fAuthorization::getUserAuthLevel();
+
+
+if (fAuthorization::checkACL('users', 'edit')) {
+    echo 'ai voie';
+} else { echo 'nu ai voie'; }</code></pre>
+
+<p>
+ works for that page and other from that patch but in admin director doesn't. What shoul i do?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-598">
+				<div class="body" id="body-598">
+					
+<p>
+Your code never calls <a href="../flourishlib.com/api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a>, <a href="../flourishlib.com/api/fAuthorization.html#requireAuthLevel">fAuthorization::requireAuthLevel()</a> or <a href="../flourishlib.com/api/fAuthorization.html#requireLoggedIn">fAuthorization::requireLoggedIn()</a>, so I don't believe <a href="../flourishlib.com/api/fAuthorization.html#getRequestedURL">fAuthorization::getRequestedURL()</a> will return anything.
+</p>
+
+<p>
+The issue you are having is that <a href="../flourishlib.com/api/fURL.html#redirect">fURL::redirect()</a> isn't redirecting to the proper place, correct? If this isn't the case, can you include some more code so I can see how you are setting up your session.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/27/10 5:22pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-599">
+				<div class="body" id="body-599">
+					
+<p>
+if i call <a href="../flourishlib.com/api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a>; i never can go to admin because the fCore::expose(<a href="../flourishlib.com/api/fAuthorization.html#getUserACLs">fAuthorization::getUserACLs()</a>) print {null} and i don't have right to see that page and redirect me back to fAuthorization::setLoginPage. my issue is that the session keep value on <a href="http://site.com">http://site.com</a>(index.php or somethingelse.php) but don't keep session include auth or ACl on <a href="http://site.com/admin/">http://site.com/admin/</a>{index.php or somethingelse.php}. redirecting on fURL::redirect(fAuthorization::getRequestedURL(TRUE, '<a href="http://localhost/turism/admin/'">http://localhost/turism/admin/'</a>)) work.  
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dao27											</span>
+					<span class="date_posted" title="1/27/10 5:54pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-600">
+				<div class="body" id="body-600">
+					
+<p>
+right back i write the message i figure out what cause the problem. for admin part i have anoter config.php so in that i call another fSession::setPath (DOC_ROOT . '/storage/session/') and now this directory become others since i have another DOC_ROOT. tanks for your time, i'm glad i figure out. but curiosity is that before used auth class not with ACL and with same config file different from site to admin and it's the first time i have this issue.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dao27											</span>
+					<span class="date_posted" title="1/27/10 6:04pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-602">
+				<div class="body" id="body-602">
+					
+<p>
+I'm glad you figured this out. It has seemed that many of the session issues I've fielded seem to be related to not initializing the session the same on different pages. I wonder how I could add some documentation to improve this.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/2/10 4:35pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fTemplate php inside js &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fTemplate php inside js</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="8/1/11 12:33am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+How can I or whats the best way of rendering php vars inside my external JS using <a href="../flourishlib.com/docs/fTemplate.html">fTemplate</a>?
+</p>
+<pre class="block php"><code>$this-&gt;tpl-&gt;add('js', APP_PATH.'/scripts/export.js');</code></pre>
+
+<p>
+ Inside the JS there will a few php vars...
+</p>
+<pre class="block js"><code>$(document).ready(function() {
+	var options = {width: 900, type: 'application/pdf', url: '&lt;?php echo this-&gt;get('some_var'); ?&gt;'};
+
+	//more code...
+});</code></pre>
+
+<p>
+ Thanks,
+</p>
+
+<p>
+Darren
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1503">
+				<div class="body" id="body-1503">
+					
+<p>
+I am by no means an expert ad could be totally wrong here.  I see two ways of doing this.
+</p>
+
+<p>
+The first is to make your external js dynamic by making it a php page and give it a header.
+</p>
+
+<p>
+<strong>In Your Template</strong>
+</p>
+<pre class="block js"><code>&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/dynamic_js.php&quot;&gt;&lt;/script&gt;</code></pre>
+
+<p>
+ <strong>Source for dynamic_js.php</strong>
+</p>
+
+<p>
+&lt;?php
+</p>
+
+<p>
+// set the header to force it to be js Header(&quot;content-type: application/x-javascript&quot;); ?&gt;
+</p>
+
+<p>
+$(document).ready(function() {     var options = {width: 900, type: 'application/pdf', url: '&lt;?php echo fTemplating::get('some_var'); ?&gt;'};       //more code... });
+</p>
+
+<p>
+// end dynamic_js.php
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dberry											</span>
+					<span class="date_posted" title="8/4/11 12:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1504">
+				<div class="body" id="body-1504">
+					
+<p>
+The other is to set a js var equal to your php and pass it to your js...
+</p>
+<pre class="block js"><code>&lt;script type=&quot;text/javascript&quot;&gt;
+  some_var = &lt;?php echo fTemplating::get('some_var');
+&lt;/script&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/your.js&quot;&gt;&lt;/script&gt;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dberry											</span>
+					<span class="date_posted" title="8/4/11 12:54pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1506">
+				<div class="body" id="body-1506">
+					
+<p>
+Hi... thanks for the reply...
+</p>
+
+<p>
+RE: first reply - Because i add that external JS dynamically based on the page through the flourish template engine $this-&gt;tpl-&gt;add('js', 'script') i cant have a .php file as it only supports .js extension.
+</p>
+
+<p>
+Your second reply is very similar to what i was doing except you moved the var out of the js and placed inline?
+</p>
+
+<p>
+However you have given me an idea though... i might be able to use the $this-&gt;tpl-&gt;set('some_name', 'js file') which may do it...
+</p>
+
+<p>
+What i have done at the moment is put my JS string into a php function and add it via the set() method which works fine just that i think its messy...
+</p>
+
+<p>
+But thanks and enjoy your weekend.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="8/5/11 6:34am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1509">
+				<div class="body" id="body-1509">
+					
+<p>
+You can force the output type of <a href="../flourishlib.com/api/fTemplating.html#place">fTemplating::place()</a> by passing a second parameter with the type of thing you are placing. This allows for using PHP scripts as CSS or JS. There is some more info at <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a>#PlacingElements.
+</p>
+<pre class="block php"><code>$this-&gt;tpl-&gt;add('js', APP_PATH.'/scripts/export.js.php');
+$this-&gt;tpl-&gt;add('css', APP_PATH.'/scripts/export.css.php');
+
+$this-&gt;tpl-&gt;place('css', 'css');
+$this-&gt;tpl-&gt;place('js', 'js');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/5/11 8:20am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1522">
+				<div class="body" id="body-1522">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+Thanks, sorry for the late reply... this worked but didnt allow the use of $this inside those files?
+</p>
+
+<p>
+What i did was use  -
+</p>
+<pre class="block php"><code>$this-&gt;tpl-&gt;add('js', APP_ROOT.'/scripts/export.js.php');
+$this-&gt;tpl-&gt;place('js');</code></pre>
+
+<p>
+ It needed an absolute path rather then APP_PATH being relative... Im not sure if this is your intention between .php files and the others?
+</p>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="8/14/11 7:50am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1526">
+				<div class="body" id="body-1526">
+					
+<p>
+With the method I described you won't have access to template variables (<code>$this</code>) in the JS because the URL to the PHP page is just placed inside of a script tag and then the browser requests that page separately. This technique will allow for dynamic js, but it will not have access to everything in the current request.
+</p>
+
+<p>
+For instance, if you look at the source of a page using the example I provided, you should see:
+</p>
+<pre><code>#!text/html
+&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/scripts/export.js.php&quot;&gt;&lt;/script&gt;</code></pre>
+
+<p>
+ If you want to have access to the current request, you'd have to have <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> place a PHP file that contains a <code>&lt;script&gt;</code> tag and PHP variables. It seems like this is what you did. In that case you would need the filesystem path to the PHP script, and all of the JS would be directly included in the rendered HTML.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/16/11 8:59pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1527">
+				<div class="body" id="body-1527">
+					
+<p>
+thanks Will that makes it clear :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="8/17/11 2:47am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

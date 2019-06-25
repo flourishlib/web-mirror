@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCore::handleException() BUG/Typo &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCore::handleException() BUG/Typo</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/gabrielu">			gabrielu		</a> 	</span>
+	<span class="date_posted" title="6/2/10 1:07pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've noticed that setting <a href="../flourishlib.com/api/fCore.html#enableErrorHandling">fCore::enableErrorHandling()</a> and <a href="../flourishlib.com/api/fCore.html#enableExceptionHandling">fCore::enableExceptionHandling()</a> without 'html' as the value still prints the message on screen.  In my scenario I do the following:
+</p>
+<pre class="block php"><code>$template = new fTemplating(DOC_ROOT . '/templates/');
+$template-&gt;set('site_down', 'site_down.php');
+
+fCore::enableErrorHandling(DOC_ROOT . '/writable/errors.log');
+fCore::enableExceptionHandling(DOC_ROOT . '/writable/exceptions.log', array($template, 'place'), array('site_down'));
+
+$db = new fDatabase('mysql', 'invalid_db', 'invalid_user', 'invalid_pass', 'invalid_host');
+
+if($db-&gt;getConnection()) {
+	echo &quot;connected!&quot;;
+} else {
+	echo &quot;cannot connect!&quot;;
+}
+fORMDatabase::attach($db);</code></pre>
+
+<p>
+ I purposely used invalid database connection information.  I expected the connection to fail and for the &quot;site_down.php&quot; template to load with all errors and exceptions being written to .log files.  Instead the &quot;<em>It appears an error has occured - we apologize for the inconvenience. The problem may be resolved if you try again.</em>&quot; message was printed on screen.
+</p>
+
+<p>
+I was able to track down the error and believe that it is in <a href="../flourishlib.com/api/fCore.html#handleException">fCore::handleException()</a> line# 824:
+</p>
+<pre class="block php"><code>if (self::$exception_destination != 'html' &amp;&amp; $exception instanceof fException) {</code></pre>
+
+<p>
+ I believe that should be changed to:
+</p>
+<pre class="block php"><code>if (self::$exception_destination == 'html' &amp;&amp; $exception instanceof fException) {</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-758">
+				<div class="body" id="body-758">
+					
+<p>
+I can definitely see how this could be interpreted as a bug, however that was the intended functionality. I think you make a good point, so I changed the code to only print the message if the destination is not <code>html</code> and there is no callback. Basically <a href="../flourishlib.com/api/fException.html#printMessage">fException::printMessage()</a> acts as a default callback for non-<code>html</code> destinations. This change was made in r844.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/4/10 1:04pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-763">
+				<div class="body" id="body-763">
+					
+<p>
+Thanks!  It was giving me problems (printing error message to screen) when I wanted to show a message/page like &quot;Website Updating...&quot; when there was an issue connecting to the database.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/gabrielu">							gabrielu						</a> 					</span>
+					<span class="date_posted" title="6/4/10 4:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-773">
+				<div class="body" id="body-773">
+					
+<p>
+I tried using this, and i want to send myself an email in case my site gives off some errors to address them.
+</p>
+<pre class="block php"><code>fCore::enableErrorHandling('my@email.com');
+fCore::enableExceptionHandling('my@email.com');
+	
+fCore::enableErrorHandling(DOC_ROOT . '/logs/errors.log');
+fCore::enableExceptionHandling(DOC_ROOT . '/logs/exceptions.log');</code></pre>
+
+<p>
+ I made my site catch an exception but there is no email that is sent and the logs are never created. Is this still a bug? Anyone experiencing this issue?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													psylovibe											</span>
+					<span class="date_posted" title="6/9/10 10:47pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-774">
+				<div class="body" id="body-774">
+					
+<p>
+It seems that you can't have a 
+</p>
+<pre class="block php"><code>Try { 
+} Catch { 
+}</code></pre>
+
+<p>
+ on code that you want <a href="../flourishlib.com/api/fCore.html#enableErrorHandling">fCore::enableErrorHandling()</a> and <a href="../flourishlib.com/api/fCore.html#enableExceptionHandling">fCore::enableExceptionHandling()</a> to handle.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/gabrielu">							gabrielu						</a> 					</span>
+					<span class="date_posted" title="6/9/10 11:36pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-776">
+				<div class="body" id="body-776">
+					
+<p>
+Right, the exception handler is only for uncaught exceptions. There is no way built into Flourish to log all exceptions that are thrown. You probably wouldn't want to do that anyway since there are many places where Flourish throws and catches exceptions that you never need to know or worry about.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/9/10 11:39pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-775">
+				<div class="body" id="body-775">
+					
+<p>
+You can only have only destination for errors and one destination for exceptions. In the example you provided, the errors and exceptions should be going to the log files and not the email since you overrode the email with the log file path.
+</p>
+
+<p>
+I use email error and exception notification daily on many production sites, however I do not use logging on a regular basis. If there is a problem, please be sure to file a ticket.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/9/10 11:36pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Use phpseclib for cross-server compat. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Use phpseclib for cross-server compat.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="10/10/10 5:29am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Instead of requiring the mcrypt extension, a good idea to make the code more portable and useful to coders would be to provide support for phpseclib. This could be implemented as an optional init parameter: e.g. fCore::usePHPSecLib( string $phpseclib_include_path ); and only used thereafter.
+</p>
+
+<p>
+The current reliance on mcrypt breaks Flourish on most free hosting plans, which denies its use to many.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-944">
+				<div class="body" id="body-944">
+					
+<p>
+Given that phpseclib uses mcrypt if it's available (for speed) why use phpseclib optionally?  Why not include it with flourishlib and just use it all the time whenever doing encryption?  It'll encrypt with or without mcrypt and do it at the fastest possible speed.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/10/10 4:01pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-946">
+				<div class="body" id="body-946">
+					
+<p>
+I won't be including phpseclib in Flourish due to licensing issues - I've done a lot of work to keep Flourish MIT, but phpseclib is LGPL.
+</p>
+
+<p>
+I certainly can add support for phpseclib if mcrypt is not found. <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> would just check to see if mcrypt was available. If not, phpseclib would be checked for next. Flourish would just rely on it being available in the <code>include_path</code>, or that it would have already been manually included. This would prevent the need for adding a special method to <a href="../flourishlib.com/docs/fCore.html">fCore</a>. This technique is possible since phpseclib is LPGL and not GPL.
+</p>
+
+<p>
+Ideally I'd take some time and implement AES in <a href="../flourishlib.com/docs/fCrytography.html">fCrytography</a> in pure PHP since most of the rest of phpseclib is not required, and since it would be simpler for end-developers, but unfortunately I doubt I'll have time for that in the near future.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/10/10 4:07pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-948">
+				<div class="body" id="body-948">
+					
+<p>
+Seems like it'd be easier to ask the phpseclib developer to fork phpseclib with the MIT license or re-license it with the MIT license or something.
+</p>
+
+<p>
+Implementing cryptographic algorithms, yourself, is generally not recommended.  To top it off, phpseclib, per its own documentation, has the fastest pure-PHP AES implementation around.  You could try to write a faster implementation but would you succeed when no one else has?
+</p>
+
+<p>
+Also, you wouldn't need to include all of phpseclib - including Crypt_AES and Crypt_Rijndael is sufficient.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/10/10 7:58pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-949">
+				<div class="body" id="body-949">
+					
+<p>
+Yes, it certainly would be a good idea to ask and see if the phpseclib developer would license the code as MIT.
+</p>
+
+<p>
+Either way, with code related to security, I would definitely write unit tests to ensure that the code is correct. In the process I would also audit the code and check it against reference algorithms.
+</p>
+
+<p>
+If you would find a pure PHP implementation of mcrypt useful, please open a ticket and that will make sure I end up getting to it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/10/10 8:40pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-951">
+				<div class="body" id="body-951">
+					
+<p>
+Another way would be to include Movable Type's implementation:
+</p>
+
+<p>
+<a href="http://www.movable-type.co.uk/scripts/aes-php.html">http://www.movable-type.co.uk/scripts/aes-php.html</a>
+</p>
+
+<p>
+It is licensed under a simple CC-By, which allows you to relicense the work provided you retain the copyright notice.
+</p>
+
+<p>
+This implementation is arguably slower than phpseclib's, and therefore checking for phpseclib before using it would be better.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/12/10 6:51am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-953">
+				<div class="body" id="body-953">
+					
+<p>
+According to benchmarks included within the phpseclib documentation phpseclib is more than 5x faster than the movable type implementation:
+</p>
+
+<p>
+<a href="http://phpseclib.sourceforge.net/documentation/sym_crypt.html#sym_crypt_aes_benchmarks">http://phpseclib.sourceforge.net/documentation/sym_crypt.html#sym_crypt_aes_benchmarks</a>
+</p>
+
+<p>
+I'd still go with asking the phpseclib to re-license.  You'd be surprised at how many open source developers I've come across who simply have no understanding of how the license they're using works.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="10/12/10 11:18am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

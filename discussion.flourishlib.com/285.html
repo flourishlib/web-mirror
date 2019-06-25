@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Another fTemplating improvement &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Another fTemplating improvement</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="8/23/10 1:13pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+In a previous suggestion I talked about a widget system that I'm working with (this thread can be found here, <a href="261.html">http://flourishlib.com/discussion/2/261</a>)
+</p>
+
+<p>
+As this system has gotten some more real world use it has become necessary, for my project, to have a way to place an element at the beginning of an <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> array.
+</p>
+
+<p>
+Using some of the code from before:
+</p>
+<pre class="block php"><code>
+//In the common init.php
+ 
+$template = new fTemplating('/path/to/templates/');
+
+//Get a handle to the special widget, it will be shown at the top of a special page
+$template-&gt;set('special-widget', 'widgets/special.widget.php');
+ 
+//On most pages we will show the a, b, c, and d widgets
+$template-&gt;set('a-widget', 'widgets/a.widget.php');
+$template-&gt;set('b-widget', 'widgets/b.widget.php');
+$template-&gt;set('c-widget', 'widgets/c.widget.php');
+$template-&gt;set('d-widget', 'widgets/d.widget.php');
+
+$template-&gt;add('widgets', 'a-widget');
+$template-&gt;add('widgets', 'b-widget');
+$template-&gt;add('widgets', 'c-widget');
+$template-&gt;add('widgets', 'd-widget');
+</code></pre>
+
+<p>
+ Then later on being able to prepend allows me to do something like this
+</p>
+<pre class="block php"><code>//Put the special widget first
+$template-&gt;prepend('widgets', 'special-widget');
+$template-&gt;place('widget-panel');</code></pre>
+
+<p>
+ To acheive this I added a method to the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> class following the same code style as the rest of the class. 
+</p>
+<pre class="block php"><code>	/**
+	 * Adds a value to the beginning of an array element
+	 *
+	 * @param string $element The element to add to
+	 * @param mixed $value The value to add
+	 * @param fTemplating The template object to allow for method chaining
+	 */
+	public function prepend($element, $value) {
+	  if(!isset($this-&gt;elements[$element])) {
+	    $this-&gt;elements[$element] = array();
+	  }
+	  if(!is_array($this-&gt;elements[$element])) {
+	    throw new fProgrammerException(
+	      '%1$s was called for an element, %2$s, which is not an array',
+	      'prepend()',
+	      $element
+	    );
+	  }
+	  array_unshift($this-&gt;elements[$element], $value);
+	  
+	  return $this;
+	}</code></pre>
+
+<p>
+ For the sake of symmetry I added an append function that simply calls the add function.
+</p>
+
+<p>
+This was useful for my use-case but may not be generally useful.  I submit this code for consideration of inclusion.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-882">
+				<div class="body" id="body-882">
+					
+<p>
+How about a third optional parameter for <a href="../flourishlib.com/api/fTemplating.html#add">fTemplating::add()</a> that would allow adding at the beginning? This would reduce the amount of code and would prevent having to create <code>append</code> for symmetry sake.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/23/10 1:19pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-883">
+				<div class="body" id="body-883">
+					
+<p>
+That is an equally acceptable solution.  Thanks for taking the time to look at this Will.  I wonder then if it makes sense to allow arbitrary insertion, something like the following:
+</p>
+<pre class="block php"><code>//Referencing the code from above
+$template-&gt;add('widgets', 'special-widget', 0);
+//widgets would look like:
+// array ( 'special',
+//         'a',
+//         'b',
+//         'c',
+//         'd'        );
+
+
+$template-&gt;add('widgets', 'special-widget', 2);
+//widgets would look like:
+// array ( 'a',
+//         'b',
+//         'special',
+//         'c',
+//         'd'        )</code></pre>
+
+<p>
+ This does lead to some thorny questions like what would -1 do, it could follow some of the other functions in the php language (like substr) and place it at the end of the array.  What happens if you give a number greater than the length, in the above example what would the following code do.
+</p>
+<pre class="block php"><code>$template-&gt;add('widgets', 'special-widget', 10);</code></pre>
+
+<p>
+ Flourish is such a wonderful library because of it's straightforward nature, so although arbitrary positioning would be nice, unless you can think of some ways to handle these weird edge cases, it would probably be best to just have a boolean flag as the third parameter.
+</p>
+
+<p>
+Thanks again for your attention.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="8/23/10 2:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-921">
+				<div class="body" id="body-921">
+					
+<p>
+In r904 I added the boolean parameter to add things at the beginning. I decided this was the most straight-forward solution, and anything beyond that was getting complicated.
+</p>
+
+<p>
+Just to let you know, I did break backwards compatibility with that release. The method you had requested added, <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> was renamed to <a href="../flourishlib.com/api/fTemplating.html#filter">fTemplating::filter()</a> since that was a more accurate name. In addition, a new <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> was added that is the opposite of <a href="../flourishlib.com/api/fTemplating.html#add">fTemplating::add()</a>. It will remove an element from the end of an array and return it. It accepts an optional boolean parameter to remove the value from the beginning instead of the end.
+</p>
+
+<p>
+It is also now possible to use array dereference syntax in element names with <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> to access or set those values:
+</p>
+<pre class="block php"><code>$template-&gt;set('user', array(
+    'first_name' =&gt; 'John',
+    'last_name'  =&gt; 'Smith'
+));
+echo $template-&gt;get('user[first_name]');
+$template-&gt;set('user[logged_in]', TRUE);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/12/10 8:45am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

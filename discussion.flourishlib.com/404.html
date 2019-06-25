@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Can&#039;t simulate insertion of rows &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Can&#039;t simulate insertion of rows</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="4/13/11 6:12pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Using this schema:
+</p>
+<pre class="block sql"><code>DROP TABLE IF EXISTS poll_basic_results;
+CREATE TABLE poll_basic_results (
+  rid INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  pid INT UNSIGNED NOT NULL DEFAULT 0,
+  uid INT UNSIGNED NOT NULL DEFAULT 0,
+  answer INT UNSIGNED NOT NULL DEFAULT 0,
+  timestamp INT UNSIGNED NOT NULL DEFAULT 0,
+  code VARCHAR(32) NOT NULL DEFAULT '',
+  zip VARCHAR(16) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX rid_pid ON poll_basic_results (rid, pid);</code></pre>
+
+<p>
+ This code is supposed to populate the table, with 1000 rows of random choices made.
+</p>
+<pre class="block php"><code>      $time = time();
+      $pid = arg(2, 'int');
+      $poll = new Poll($pid);
+      $max = 2;
+      if ($poll-&gt;getAnswer3() != '') {
+        $max = 3;
+      }
+      if ($poll-&gt;getAnswer4() != '') {
+        $max = 4;
+      }
+      
+      for ($i = 0; $i &lt; 1000; $i++) {
+        $result = new PollBasicResult;
+        $result-&gt;setPid($pid);
+        $result-&gt;setAnswer(fCryptography::random(1, $max));
+        $result-&gt;setTimestamp($time);
+        $result-&gt;store();
+      }
+      
+      Base_Router::route('poll/'.$pid);
+    }
+    catch (fNotFoundException $e) {
+      Base_Router::route('404');
+    }
+    catch (fValidationException $e) {
+      die($e-&gt;getMessage());
+    }</code></pre>
+
+<p>
+ But I get this error:
+</p>
+<pre><code>#!text/html
+Rid, Pid: The values specified must be a unique combination, however the specified combination already exists</code></pre>
+
+<p>
+ Yet, I can insert new rows manually with the same Pid, because Rid is auto-incrementing:
+</p>
+<pre><code>#!text/html
+mysql&gt; INSERT INTO poll_basic_results (pid, uid, answer, timestamp) VALUES(40, 0, 1, UNIX_TIMESTAMP());
+Query OK, 1 row affected (0.01 sec)
+mysql&gt; INSERT INTO poll_basic_results (pid, uid, answer, timestamp) VALUES(40, 0, 1, UNIX_TIMESTAMP());
+Query OK, 1 row affected (0.00 sec)
+mysql&gt; INSERT INTO poll_basic_results (pid, uid, answer, timestamp) VALUES(40, 0, 1, UNIX_TIMESTAMP());
+Query OK, 1 row affected (0.01 sec)</code></pre>
+
+<p>
+ No problem over and over again. Why is the code attempting to assign Rid? Even passing NULL (as phpMyAdmin does) doesn't do anything ($result-&gt;setRid(NULL);).
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1235">
+				<div class="body" id="body-1235">
+					
+<p>
+Enabled debug. What I don't understand is why the select is made on the second time the loop is about to go (maybe at the setPid() line).
+</p>
+<pre><code>#!text/html
+Query time was 0.0001220703125 seconds for:
+SHOW CREATE TABLE &quot;poll_basic_results&quot;
+Query time was 8.2969665527344E-5 seconds for:
+BEGIN
+Query time was 0.00014495849609375 seconds for:
+SELECT &quot;rid&quot; FROM &quot;poll_basic_results&quot; WHERE &quot;poll_basic_results&quot;.&quot;rid&quot; IS NULL AND &quot;poll_basic_results&quot;.&quot;pid&quot; = 41
+Query time was 0.0001380443572998 seconds for:
+INSERT INTO &quot;poll_basic_results&quot; (&quot;pid&quot;, &quot;uid&quot;, &quot;answer&quot;, &quot;timestamp&quot;, &quot;code&quot;, &quot;zip&quot;) VALUES (41, 0, 2, 1302739078, '', '')
+Query time was 0.00058913230895996 seconds for:
+COMMIT
+Query time was 8.6069107055664E-5 seconds for:
+BEGIN
+Query time was 0.00016403198242188 seconds for:
+SELECT &quot;rid&quot; FROM &quot;poll_basic_results&quot; WHERE &quot;poll_basic_results&quot;.&quot;rid&quot; IS NULL AND &quot;poll_basic_results&quot;.&quot;pid&quot; = 41
+Query time was 8.5115432739258E-5 seconds for:
+ROLLBACK
+The following problems were found:
+
+Rid, Pid: The values specified must be a unique combination, however the specified combination already exists
+Total query time: 0.025109529495239 seconds</code></pre>
+
+<p>
+ Then I removed the UNIQUE KEY, which allows the loop to run but for some reason it makes a lot more than 1000 rows. It runs until PHP runs out of memory (and I only allow up to 128 MB). Any reason for this? Is the random() function using more memory as time goes by?
+</p>
+
+<p>
+Fatal error: Allowed memory size of 134217728 bytes exhausted (tried to allocate 64 bytes) in /home/tatsh/dev/poluza/sutra/trunk/Libraries/Flourish/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php on line 2491
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/13/11 8:06pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1238">
+				<div class="body" id="body-1238">
+					
+<p>
+Can you paste the output of the following?
+</p>
+<pre class="block php"><code>fCore::expose(fORMDatabase::retrieve()-&gt;getColumnInfo('poll_basic_results'));</code></pre>
+
+<p>
+ It almost seems as if <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> is not detecting your database schema properly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/14/11 1:27pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1242">
+				<div class="body" id="body-1242">
+					
+<p>
+Fatal error: Call to undefined method <a href="../flourishlib.com/api/fDatabase.html#getColumnInfo">fDatabase::getColumnInfo()</a> Couldn't figure out what you meant if that was mistaken.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/15/11 12:12am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1246">
+				<div class="body" id="body-1246">
+					
+<p>
+Sorry, that should have been:
+</p>
+<pre class="block php"><code>fCore::expose(fORMSchema::retrieve()-&gt;getColumnInfo('poll_basic_results'));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/15/11 8:29am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1261">
+				<div class="body" id="body-1261">
+					
+<p>
+Did you ever get this to work?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/22/11 12:40pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1264">
+				<div class="body" id="body-1264">
+					
+<p>
+Yes. I didn't add the unique key so I don't have the expose() output for you but I did realise I was calling the wrong function which resulted in a redirect loop, the reason why the loop was 'resetting' back to 0 after it hit 1000. Maybe a kind of bug on how I route a path (?q of the URL string but rewritten without the ?q=) in my system but I'm not sure there's really a way around it (yet).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/22/11 12:49pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

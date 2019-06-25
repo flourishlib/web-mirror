@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Security recommendations on comment form? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Security recommendations on comment form?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="4/1/11 12:35pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Very simple form but with huge potential problems if done wrong as we all know. So once it's submitted, are there good things to use already within Flourish or should I go use a more robust solution like HTML Purifier? Or are there some other good ones? Of course I'd like to strip most HTML tags, so strip_tags() seems like an easy choice to stay light. Thoughts?
+</p>
+
+<p>
+Thanks
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1201">
+				<div class="body" id="body-1201">
+					
+<p>
+Flourish escape all the data before store in the database. Also you can use a token to increase the security in the form ( <a href="../flourishlib.com/api/fRequest.html#generateCSRFToken">fRequest::generateCSRFToken()</a> and <a href="../flourishlib.com/api/fCRUD.html#validateRequestToken">fCRUD::validateRequestToken()</a> )
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="4/1/11 2:20pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1202">
+				<div class="body" id="body-1202">
+					
+<p>
+Yes, I am using <a href="../flourishlib.com/api/fRequest.html#get">fRequest::get()</a> and <a href="../flourishlib.com/api/fRequest.html#generateCSRFToken">fRequest::generateCSRFToken()</a> and validate as well. My main thing I'm wondering is the best way to filter unwanted tags. I already do something like this:
+</p>
+<pre class="block php"><code>  public static function getAlwaysAllowed() {
+    return array(
+      '&lt;b&gt;',
+      '&lt;blockquote&gt;',
+      '&lt;br&gt;',
+      '&lt;cite&gt;',
+      '&lt;em&gt;',
+      '&lt;i&gt;',
+      '&lt;p&gt;',
+      '&lt;q&gt;',
+      '&lt;small&gt;',
+      '&lt;strong&gt;',
+      '&lt;sub&gt;',
+      '&lt;sup&gt;',
+    );
+  }</code></pre>
+<pre class="block php"><code>// Submission function
+$allowed = Base_Comment::getAlwaysAllowed();
+$comment-&gt;setText(strip_tags($this-&gt;post['text'], implode(' ', $allowed)));</code></pre>
+
+<p>
+ Only one issue. I don't want any attributes preserved. So I need to regex them out I suppose.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="4/1/11 2:49pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1203">
+				<div class="body" id="body-1203">
+					
+<p>
+If you want to remove all html tags you can use an ereg_replace with <a href="http://discussion.flourishlib.com/&lt;*&gt;">&amp;lt;*&amp;gt;</a> as pattern. That will remove everything enclose with &lt;&gt; or &lt;/&gt;.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="4/1/11 3:31pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-1204">
+				<div class="body" id="body-1204">
+					
+<p>
+If you want to allow some HTML, but not all, you should DEFINITELY use <a href="http://htmlpurifier.org/">HTML Purifier</a>. I use this when I need to handle cleaning HTML. See <a href="http://htmlpurifier.org/comparison">http://htmlpurifier.org/comparison</a> for reasons why.
+</p>
+
+<p>
+I would almost certainly be unwise to use regex to try and remove certain tags or attributes, because your pattern will most likely miss an edge case. You may be able to get away with only allowing things you know are valid, but that is still a very difficult task and would require a lot of initial and continued testing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/1/11 3:43pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

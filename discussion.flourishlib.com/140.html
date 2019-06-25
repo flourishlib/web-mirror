@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>database type problem...? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">database type problem...?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					traq			</span>
+	<span class="date_posted" title="9/27/09 1:34am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I get the following error when trying to run a query using $DB-&gt;query(/*my sql statement*/); (&quot; $DB &quot; is defined as: &quot; $DB = new <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>('mysql', '********', '********', '********', '********'); &quot;):
+</p>
+<pre><code>Fatal error: Uncaught exception 'fProgrammerException' with message 'The database type specified, fDatabase Object ( [cache:private] =&gt; {null} [connection:private] =&gt; resource(22) of type (mysql link) [database:private] =&gt; ********* [debug:private] =&gt; {null} [extension:protected] =&gt; mysql [host:private] =&gt; ********* [inside_transaction:private] =&gt; {null} [password:private] =&gt; ********* [port:private] =&gt; {null} [query_time:private] =&gt; {null} [schema_info:protected] =&gt; Array ( ) [slow_query_threshold:private] =&gt; {null} [translation:private] =&gt; {null} [type:private] =&gt; mysql [unbuffered_result:private] =&gt; {null} [username:private] =&gt; ********* ), is invalid. Must be one of: mssql, mysql, oracle, postgresql, sqlite.' in /********my server********/clients/dennis/include/flourish/fResult.php:144 Stack trace: #0 /********my server********/clients/dennis/include/flourish/fDatabase.php(2090): fResult-&gt;__construct(Object(fDatab in /********my server********/clients/dennis/include/flourish/fResult.php on line 144</code></pre>
+
+<p>
+ Does this mean that the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> type is not being correctly set?  Or is the database itself not being recognized?  Where do I need to start fixing?  I'd really appreciate any help.  Thanks!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-427">
+				<div class="body" id="body-427">
+					
+<p>
+I believe you have a recent version of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> but an older version of <a href="../flourishlib.com/docs/fResult.html">fResult</a>. Make sure you have the <a href="../flourishlib.com/docs/fResult.html">fResult</a> class from the same revision of Flourish that you got the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class from.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/27/09 1:37am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-428">
+				<div class="body" id="body-428">
+					
+<p>
+solved it!  perfect!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													traq											</span>
+					<span class="date_posted" title="9/27/09 3:47am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

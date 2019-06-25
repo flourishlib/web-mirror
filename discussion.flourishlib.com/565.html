@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Issue with Insert Id &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Issue with Insert Id</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ddsystems			</span>
+	<span class="date_posted" title="11/15/11 11:53am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When I try to store a record in a table with multiple indexes using active  record it does not return a valid ID. I have a table called &quot;Events&quot;
+</p>
+
+<p>
+ CREATE TABLE IF NOT EXISTS <code>events</code> (    <code>id</code> int(11) NOT NULL AUTO_INCREMENT,    <code>startdate</code> datetime NOT NULL,    <code>enddate</code> datetime NOT NULL,    <code>text</code> varchar(250) NOT NULL,    <code>link</code> varchar(250) DEFAULT NULL,    <code>notify</code> int(1) DEFAULT NULL,    <code>type</code> varchar(100) DEFAULT NULL,    <code>companyid</code> int(11) NOT NULL,    <code>propertyid</code> int(11) NOT NULL,    PRIMARY KEY (<code>id</code>,<code>companyid</code>)  ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
+</p>
+
+<p>
+ Example Code:
+</p>
+
+<p>
+ $event = new event();  $event-&gt;setStartdate($startdate);  $event-&gt;setEnddate($enddate);  $event-&gt;setLink(fRequest::get(&quot;file&quot;));  $event-&gt;setNotify(fRequest::get(&quot;notify&quot;));  $event-&gt;setCompanyid($_loggedinUser-&gt;company-&gt;getId());  $event-&gt;setPropertyid($curProperty);  $event-&gt;store();
+</p>
+
+<p>
+ After running this if I try and do $event-&gt;getId(); it returns null or  blank.
+</p>
+
+<p>
+This same process works if I remove the &quot;companyid&quot; from the primary key
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1610">
+				<div class="body" id="body-1610">
+					
+<p>
+ddsystems, it could be a bug in the way that Flourish is detecting what to update when a record is stored.  I'd post a ticket.  That being said, while it may make sense to index companyid, it doesn't seem to need to be part of your primary key given that the id using auto-increment will always be unique.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="11/15/11 11:47pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1613">
+				<div class="body" id="body-1613">
+					
+<p>
+Yes, as it stands right now Flourish only supports auto-incrementing columns that are part of a single-column primary key. Like msahagian said, from a practical perspective, I'm not sure what the value would be in having a auto-incrementing column that is part of a multi-column primary key.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/11 9:04am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1617">
+				<div class="body" id="body-1617">
+					
+<p>
+I have it set up that way so that I can verify that the record belongs to the company using similar code to this
+</p>
+
+<p>
+// Loading a record with a multiple column primary key
+</p>
+
+<p>
+$event = new Event(array('id' =&gt; 2, 'companyid' =&gt; 3));
+</p>
+
+<p>
+Is there a better way to go about doing this using activerecord? I'd rather not have to use a custom query if I can avoid it (would require a bit of rewriting at this point)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ddsystems											</span>
+					<span class="date_posted" title="11/16/11 10:47am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1618">
+				<div class="body" id="body-1618">
+					
+<p>
+That constructor call will also work if you set up a unique constraint over those two columns.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/11 10:49am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1619">
+				<div class="body" id="body-1619">
+					
+<p>
+Awesome, thanks for the advice. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ddsystems											</span>
+					<span class="date_posted" title="11/16/11 11:06am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>NVARCHAR support in MSSQL and EXEC statements &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">NVARCHAR support in MSSQL and EXEC statements</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					kevin pirkl			</span>
+	<span class="date_posted" title="9/1/09 12:22pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+MSSQL direct (not ODBC)
+</p>
+
+<p>
+I'm trying to do something like the below code where one NVARCHAR column is being returned in a SQL result set.  The recordset has one column containing Chinese characters.. 
+</p>
+
+<p>
+This way works   $result = $db-&gt;translatedQuery(&quot;SELECT....&quot;); and I get back string(39) &quot;chinese characters here omitted&quot;
+</p>
+
+<p>
+This doesnt work   $result = $db-&gt;translatedQuery(&quot;EXEC...&quot;); and I get back   string(13) &quot;?????????????&quot; 
+</p>
+
+<p>
+Do you have any pointers why the result set translate for the UTF-8/NVARCHAR column is not translated for EXEC?
+</p>
+
+<p>
+Thanks
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-379">
+				<div class="body" id="body-379">
+					
+<p>
+Unfortunately getting NVARCHAR/NCHAR/NTEXT data into PHP is a painful task. The <code>translatedQuery()</code> call is actually finding all of the national columns and altering the SQL to cast them to binary data. Once the data comes back, then the binary data is converted from USC-2LE (the native encoding for national columns in SQL Server) to UTF-8.
+</p>
+
+<p>
+You should be able to emulate this manually for an <code>EXEC</code> statement by adding appropriate <code>CAST</code> statements to the SQL and <a href="http://php.net/iconv"><code>iconv()</code></a> calls in the PHP.
+</p>
+<pre class="block php"><code>$result = $db-&gt;query('EXEC  CAST(ncolumn AS VARBINARY(MAX)) AS ncol');
+foreach ($result as $row) {
+    $row['ncol'] = iconv('ucs-2le', 'utf-8', $row['ncol']);
+    // 
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/1/09 12:44pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

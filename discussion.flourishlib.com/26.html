@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORMFile columns in fRecordSet::build where clauses... &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORMFile columns in fRecordSet::build where clauses...</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="3/7/09 2:14pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+now that i've realised i should be using <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> to associate uploaded files with records, i'm a bit confused as to how i specify retrieval of record rows from the db that do or do not have a photo associated with them.  i'm not seeing in the documentation exactly what is written to the column set as an <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> column, so when doing an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, what should i be looking for in the where clause if i want to get an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> of records that do not yet have files?
+</p>
+
+<p>
+thank you!  this library has been immeasurably helpful!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-75">
+				<div class="body" id="body-75">
+					
+<p>
+When you configure a column as a file upload column, you have to specify the folder to store the files in. Thus, just the filename of the uploaded file will be stored in the database column. Any record without an uploaded file should contain NULL in the file upload column.
+</p>
+
+<p>
+Here is a quick example of an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class with an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> call to returns all records with a file.
+</p>
+<pre class="block php"><code>class User extends fActiveRecord
+{
+    protected function configure()
+    {
+        fORMFile::configureFileUploadColumn($this, 'photo', '/path/to/folder');
+    }
+}
+
+$users_with_photo = fRecordSet::build(
+    'User',
+    array('photo!' =&gt; NULL),
+    array('first_name' =&gt; 'asc')
+);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/7/09 10:28pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-78">
+				<div class="body" id="body-78">
+					
+<p>
+ah, makes very good sense.  thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="3/7/09 11:59pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

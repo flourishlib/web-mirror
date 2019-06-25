@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>SHOW CREATE TABLE on unused tables? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">SHOW CREATE TABLE on unused tables?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vinegar			</span>
+	<span class="date_posted" title="3/25/09 10:44pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+with <code>fCore::enableDebugging(TRUE)</code> set, i'm seeing <code>SHOW CREATE TABLE</code> queries on every single table in the database i've attached, rather than just on the tables i'm actually using in my models (which are just extensions of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>).  this seems like a waste of execution time when you could just look at the necessary table only when the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class is instantiated, eh?  
+</p>
+
+<p>
+is this normal behavior or does it only happen with debugging on?  
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-152">
+				<div class="body" id="body-152">
+					
+<p>
+@vinegar : Check out this similar question and answer : <a href="35.html">http://flourishlib.com/discussion/2/35</a>
+</p>
+
+<p>
+Basically, Will is saying that flourish needs to do the show create tables on everything in the db to know about foreign keys, etc.  Yes, this does slow down execution.
+</p>
+
+<p>
+However, after the code is stable and in production, all this schema data can be cached so that these queries are no longer run.
+</p>
+
+<p>
+When evaluating frameworks, I was really put off by the fact that many of them require you to actually list the schema in your models.  Seriously.  So, every time you made a minor change, you were supposed to go update your model.  I'll bet that doesn't get done very frequently...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/25/09 11:45pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-153">
+				<div class="body" id="body-153">
+					
+<p>
+ok, but debug output shows it's still hitting the database for SHOW CREATE TABLE on every table in the database even with schema caching turned on and a populated cache.  the total execution time doesn't really change so i'm not sure if this is just the ORM being ambiguous in its debug calls or not...
+</p>
+
+<p>
+but regardless, SHOW CREATE TABLE should show you foreign key constraints for the table.  why not use that to only hit the tables that are required?  this seems to make flourish a bad choice for anything you're not dedicating a database to, and would severely hurt performance in any database with a large number of tables that may be unrelated to the application.  at the very least, an <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> method to turn this behaviour off would be helpful.  i can imagine this making flourish problematic in shared hosting environments where the user might be limited to a single db.
+</p>
+
+<p>
+edit: also, it seems <a href="../flourishlib.com/api/fORMSchema.html#enableSmartCaching">fORMSchema::enableSmartCaching()</a> is unable to create a cache file in directories flourish can otherwise write to just fine.  this is the error returned when the file doesn't exist:
+</p>
+<pre><code>/mnt/fs/html/private/libs/flourish/fORMSchema.php(61): fSchema-&gt;setCacheFile('/mnt/fs/html/vh...')
+The cache file specified, {false}, does not exist and the cache file directory, /, is not writable</code></pre>
+
+<p>
+ perhaps the fact that the error report is missing the variables can lend some understanding here.  if i manually create the file, it will write to it just fine.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vinegar											</span>
+					<span class="date_posted" title="3/26/09 1:23pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-164">
+				<div class="body" id="body-164">
+					
+<p>
+Yes, Flourish will run every <code>SHOW CREATE TABLE</code> statement for every table in the database to get all of the relationship info. Unfortunately relationships go both directions along a <code>FOREIGN KEY</code> constraint, plus <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> is not aware of your <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes. This means that for it to really return all of the relationship information (<a href="../flourishlib.com/api/fSchema.html#getRelationships">fSchema::getRelationships()</a>) it has to parse every table.
+</p>
+
+<p>
+Part of the issue is supporting MySQL 4. If I only were supporting 5, I could get all of the info in less database queries using the <code>INFORMATION_SCHEMA</code> tables.
+</p>
+
+<p>
+Beyond that, the smart caching in <a href="../flourishlib.com/docs/fORMSchema.html">fORMSchema</a> <em>should</em> prevent these lookups for production environments. From the sounds of it, there is a bug, so I will look into it. Thanks for the report!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 11:58pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-165">
+				<div class="body" id="body-165">
+					
+<p>
+i understand, thank you.  is there any possibility of a switch to turn this behaviour off?  i mean, the developer should know if his tables have foreign keys or not, shouldn't he? :)
+</p>
+
+<p>
+thanks again!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vinegar											</span>
+					<span class="date_posted" title="3/29/09 12:14am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-166">
+				<div class="body" id="body-166">
+					
+<p>
+Unfortunately not. This method of detecting the database schema to power the ORM is the foundation of the whole ORM. Without this a whole other system would have to be created via XML files or configuration in the PHP to define all of this information.
+</p>
+
+<p>
+I'm not quite sure with the caching (once I fix it) why you'd want to turn this off?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/29/09 12:24am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-167">
+				<div class="body" id="body-167">
+					
+<p>
+maybe a bit of OCD, probably just itching me because i'm still seeing it hit the database in debug output.  obviously with the caching, it's not such a big deal. :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vinegar											</span>
+					<span class="date_posted" title="3/29/09 12:45am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

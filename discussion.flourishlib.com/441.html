@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Dynamic SQL &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Dynamic SQL</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="5/31/11 2:54am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+I am trying to build a dynamic SQL query.
+</p>
+
+<p>
+This works
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM inventory WHERE %r = %i LIMIT 25&quot;, 'slots', 38);</code></pre>
+
+<p>
+ How these dont
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM inventory WHERE %r %r %i LIMIT 25&quot;, 'slots', 'LIKE', 38);
+$result = $db-&gt;query(&quot;SELECT * FROM inventory WHERE %r %r %s LIMIT 25&quot;, 'slots', 'LIKE', '38%');</code></pre>
+
+<p>
+ Any help appreciated :(
+</p>
+
+<p>
+Thanks
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1357">
+				<div class="body" id="body-1357">
+					
+<p>
+I suggest you to use <a href="../flourishlib.com/api/fCore.html#enableDebugging">fCore::enableDebugging()</a> in order to debug and see what is the result of the interpreted query. You can allways enable debug only in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> (see <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>#Debugging)
+</p>
+
+<p>
+BTW, <code>%r</code> is used to escaping identifiers, not other strings like modifiers or values, and here is where your query goes wrong, I think (see <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>#EscapingIdentifiers)
+</p>
+
+<p>
+Try something like this:
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM inventory WHERE %r LIKE %s LIMIT 25&quot;, 'slots', '38%');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/xoan">							xoan						</a> 					</span>
+					<span class="date_posted" title="5/31/11 4:02am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1360">
+				<div class="body" id="body-1360">
+					
+<p>
+Indeed, it would likely be the case that it's failing because you are attempting to escape the LIKE as if it were an identifier (such as a table or column name).
+</p>
+
+<p>
+On this note, it may perhaps be useful to add a %u placeholder for unescaped data (if the user really needs such a thing).
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/31/11 3:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1361">
+				<div class="body" id="body-1361">
+					
+<p>
+I was thinking about the idea of <code>%u</code> this morning. Do you think <code>%u</code> for unescaped, or <code>%r</code> for raw would be more intuitive?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/31/11 3:09pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1364">
+				<div class="body" id="body-1364">
+					
+<p>
+Any thoughts on this msahagian or xoan?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/2/11 7:51am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1367">
+				<div class="body" id="body-1367">
+					
+<p>
+I don't use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class directly (I'm more <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> :), but I think <code>%u</code> for <em>unscaped</em> sounds good.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="6/2/11 8:23am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1369">
+				<div class="body" id="body-1369">
+					
+<p>
+Perhaps I'm missing something, but isn't this thread based on the fact that %r is already used for identifiers?  Using %r would cause some serious breaks in backwards compatibility in terms of security it would seem.  %u seems suitable to me.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/2/11 12:16pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1393">
+				<div class="body" id="body-1393">
+					
+<p>
+Haha, you are completely correct. I'm not sure how I forgot about <code>%r</code> being for identifiers. I should be adding this <code>%u</code> code soon.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/11/11 9:17pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

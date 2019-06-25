@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Why force use of fUTF8? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Why force use of fUTF8?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="4/7/09 8:43am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello.
+</p>
+
+<p>
+I have been looking at your library for some time now and I've found it very interesting. However, I am wondering why you are forcing us to use <a href="../flourishlib.com/docs/fUTF8.html">fUTF8</a> even if I'm really not interested of using that part of the library.
+</p>
+
+<p>
+I got the impression that I could pick and choose the classes I want from the library but this doesn't seem to be true? I thought one of the ideas was to get away from the close coupling that the frameworks use.
+</p>
+
+<p>
+Kindly, Marcus.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-180">
+				<div class="body" id="body-180">
+					
+<p>
+Hi Marcus,
+</p>
+
+<p>
+I apologize I didn't get a chance to respond sooner, I just got back from vacation yesterday.
+</p>
+
+<p>
+I decided to hard-code UTF-8 into Flourish for a few reasons. One of the most important reasons is that most websites will run into &quot;extended&quot; characters very quickly when dealing with curly quotes. By default HTML is set to use ISO-8859-1 for all encoding, however this character set does not include curly quotes, just single and double primes. If any content is pasted into an input that includes curly quotes, the browser is going to have to figure out what the best solution is. Some send it as UTF-8 multi-bytes sequences and some will use Windows-1252 encoded which is compatible with ISO-8859-1. Basically there is no defined behavior the browsers need to implement when users input characters that don't fit into the character set. This leads to data corruption, which is obviously not a good thing.
+</p>
+
+<p>
+As you can see, a character set that includes support beyond the characters of ISO-8859-1 is very important. UTF-8 is pretty much the universal option across almost all software. UTF-8 can handle almost every character in every language and will realistically never cause you any encoding problems. All of the databases, save SQL Server, natively support UTF-8. All XML parsers support UTF-8. All browsers support UTF-8. Email clients also support UTF-8 with the appropriate mime-type headers and encoding. JSON uses UTF-8.
+</p>
+
+<p>
+Now, it would be possible to support other character sets with some of the different end-points for Flourish, however I wanted to provide a solution for everything without having to worry about translating encodings and specifying encodings through the end-developer code. In addition, I was able to write UTF-8 versions of all of the PHP string functions in <a href="../flourishlib.com/docs/fUTF8.html">fUTF8</a>, even if the mbstring extension is not installed. Trying to do this for multiple encodings would increase the size of Flourish and would have taken quite a bit more time. In the end I don't support anything other than UTF-8 because the costs outweigh the benefits.
+</p>
+
+<p>
+If you aren't very familiar with UTF-8, I highly recommend checking out a few of these links for more information. There is a good reason why the majority of software out there supports UTF-8. Certainly there are situations where UTF-8 is less desirable, but everything has its trade-offs.
+</p>
+
+<ul>
+<li><a href="http://www.joelonsoftware.com/articles/Unicode.html">http://www.joelonsoftware.com/articles/Unicode.html</a></li>
+<li><a href="http://www.phpwact.org/php/i18n/charsets">http://www.phpwact.org/php/i18n/charsets</a></li>
+<li><a href="http://en.wikipedia.org/wiki/UTF-8">http://en.wikipedia.org/wiki/UTF-8</a></li>
+</ul>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/14/09 2:27pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Populating records 2 relationships away &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Populating records 2 relationships away</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mike			</span>
+	<span class="date_posted" title="5/27/11 11:22am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have the following one-to-many relationships:     Group has many User<br />
+     User has many Favorite
+</p>
+
+<p>
+I am trying to submit data for all three record types at once and have it populate. Here are my inputs:
+</p>
+<pre class="block php"><code>&lt;?php ... ?&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;&lt;?=$group-&gt;encodeId()?&gt;&quot; /&gt;
+&lt;?php foreach ($users as $i =&gt; $user): ?&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;users::id[&lt;?=$i?&gt;]&quot; value=&quot;&lt;?=$user-&gt;encodeId()?&gt;&quot; /&gt;
+    &lt;input type=&quot;text&quot; name=&quot;users::name[&lt;?=$i?&gt;]&quot; value=&quot;&lt;?=$user-&gt;encodeName()?&gt;&quot; /&gt;
+    
+    &lt;?php foreach ($user-&gt;buildFavorites() as $j =&gt; $favorite): ?&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;favorites::id[] value=&quot;&lt;?=$favorite-&gt;encodeId()?&gt;&quot; /&gt;
+        &lt;input type=&quot;text&quot; name=&quot;favorites::link[] value=&quot;&lt;?=$favorite-&gt;encodeLink()?&gt;&quot; /&gt;
+    &lt;?php endforeach; ?&gt;
+&lt;?php endforeach; ?&gt;</code></pre>
+
+<p>
+ My problem is that I can't figure out how to associate the favorites with the correct users. What ends up happening is that each user gets ALL the favorites. I've been playing around with the naming of the fields for a while now, and I can't get it right.
+</p>
+
+<p>
+Thanks, Mike
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1353">
+				<div class="body" id="body-1353">
+					
+<p>
+There is a patch to allow for nested populate calls on <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> (ticket #485), I just haven't had the time to go through it and figure out how I want it to change the API.
+</p>
+<pre class="block php"><code>// This currently works
+$group-&gt;populateUsers();
+
+// This is the proposed API
+$group-&gt;populate(array('Users' =&gt; array('Favorites')));</code></pre>
+
+<p>
+I'm not sure I like the idea of nested array structures, just because it gets hard to tell when in the nesting structure you are. Now, the input name syntax in the HTML is like this:
+</p>
+<pre><code>#!text/html
+&lt;input type=&quot;text&quot; name=&quot;users::favorites::id[]&quot; value=&quot;foo&quot; /&gt;</code></pre>
+
+<p>
+ Because of that, I am thinking the API for nested populate actions should be:
+</p>
+<pre class="block php"><code>$group-&gt;populate('Users', 'Users::Favorites');
+
+// Or if there is more than one relationship route between tables
+$group-&gt;populate('Users{route_to_users}', 'Users{route_to_users}::Favorites{route_to_favorites}');</code></pre>
+
+<p>
+ One benefit to the string syntax is that is is very similar to the <a href="../flourishlib.com/api/fActiveRecord.html#replicate">fActiveRecord::replicate()</a> syntax, and I would like to keep syntax and APIs similar when possible.
+</p>
+
+<p>
+What do people think? Do you like the nested array syntax, or the string syntax that is like the input names?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/30/11 12:56pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1362">
+				<div class="body" id="body-1362">
+					
+<p>
+Will, this would be a very useful addition, and for the record I like the syntax you are proposing over the array syntax.  Although it does appear a bit convoluted with the routes being specified.  Using the array syntax what would be the method of specifying the route?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/31/11 3:14pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1365">
+				<div class="body" id="body-1365">
+					
+<p>
+Yeah, so the routes are relatively uncommon in practice. This <code>{route}</code> syntax is used both by the input names and by <a href="../flourishlib.com/api/fActiveRecord.html#replicate">fActiveRecord::replicate()</a>. There was a slight bug in the example code I had posted. Instead of:
+</p>
+<pre class="block php"><code>$group-&gt;populate('Users::{route_to_users}', 'Users{route_to_users}::Favorites{route_to_favorites}');</code></pre>
+
+<p>
+ it should be:
+</p>
+<pre class="block php"><code>$group-&gt;populate('Users{route_to_users}', 'Users{route_to_users}::Favorites{route_to_favorites}');</code></pre>
+
+<p>
+ I've fixed my previous post to reflect this.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/2/11 7:54am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1366">
+				<div class="body" id="body-1366">
+					
+<p>
+Sorry, I missed directly answering your question about the array syntax. It would use the same curly syntax:
+</p>
+<pre class="block php"><code>$group-&gt;populate(array(
+    'Users{route_to_users}' =&gt; array(
+        'Favorites{route_to_favorites}'
+    )
+));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/2/11 7:58am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1370">
+				<div class="body" id="body-1370">
+					
+<p>
+Thanks for the quick response. I tried out the patch, but I don't think that it's exactly what I'm looking for. The problem is that there's still no way to group the favorites with particular users.
+</p>
+
+<p>
+For example, I tried the following syntax:
+</p>
+<pre class="block php"><code>&lt;?php foreach ($users as $i =&gt; $user): ?&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;users::id[&lt;?=$i?&gt;]&quot; value=&quot;&lt;?=$user-&gt;encodeId()?&gt;&quot; /&gt;
+    &lt;input type=&quot;text&quot; name=&quot;users::name[&lt;?=$i?&gt;]&quot; value=&quot;&lt;?=$user-&gt;encodeName()?&gt;&quot; /&gt;
+    
+    &lt;?php foreach ($user-&gt;buildFavorites() as $j =&gt; $favorite): ?&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;favorites::id[&lt;?=$i?&gt;][] value=&quot;&lt;?=$favorite-&gt;encodeId()?&gt;&quot; /&gt;
+        &lt;input type=&quot;text&quot; name=&quot;favorites::link[&lt;?=$i?&gt;][] value=&quot;&lt;?=$favorite-&gt;encodeLink()?&gt;&quot; /&gt;
+    &lt;?php endforeach; ?&gt;
+&lt;?php endforeach; ?&gt;</code></pre>
+
+<p>
+ Notice that the favorites are now arrays of arrays, with the first index indicating which user it belongs to. This way, I can say that &quot;user1&quot; has &quot;favorite1&quot; and &quot;favorite2&quot;, and &quot;user2&quot; has &quot;favorite3&quot;, &quot;favorite4&quot; and &quot;favorite5&quot;. The way things are now, there is no way to distinguish favorites 1 and 2, from 3, 4 and 5.
+</p>
+
+<p>
+I hope that cleared things up.
+</p>
+
+<p>
+Thanks, Mike
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mike											</span>
+					<span class="date_posted" title="6/3/11 11:08am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1371">
+				<div class="body" id="body-1371">
+					
+<p>
+For this patch to work, your HTML should look like the following:
+</p>
+<pre class="block php"><code>&lt;?php foreach ($users as $i =&gt; $user): ?&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;users::id[&lt;?=$i?&gt;]&quot; value=&quot;&lt;?=$user-&gt;encodeId()?&gt;&quot; /&gt;
+    &lt;input type=&quot;text&quot; name=&quot;users::name[&lt;?=$i?&gt;]&quot; value=&quot;&lt;?=$user-&gt;encodeName()?&gt;&quot; /&gt;
+    
+    &lt;?php foreach ($user-&gt;buildFavorites() as $j =&gt; $favorite): ?&gt;
+        &lt;input type=&quot;hidden&quot; name=&quot;users::favorites::id[&lt;?=$i?&gt;][] value=&quot;&lt;?=$favorite-&gt;encodeId()?&gt;&quot; /&gt;
+        &lt;input type=&quot;text&quot; name=&quot;users::favorites::link[&lt;?=$i?&gt;][] value=&quot;&lt;?=$favorite-&gt;encodeLink()?&gt;&quot; /&gt;
+    &lt;?php endforeach; ?&gt;
+&lt;?php endforeach; ?&gt;</code></pre>
+
+<p>
+ The reason for this is that when populating child records, the request is filtered by the <code>users::</code> prefix. Then when the favorites are populated for the users, it is further filtered by <code>favorites::</code>. Hence you need <code>users::favorites::</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/3/11 3:21pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1377">
+				<div class="body" id="body-1377">
+					
+<p>
+Perfect. Got it working. Thanks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mike											</span>
+					<span class="date_posted" title="6/7/11 10:19am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

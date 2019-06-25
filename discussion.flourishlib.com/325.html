@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Database connection timeout handling &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Database connection timeout handling</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/gabrielu">			gabrielu		</a> 	</span>
+	<span class="date_posted" title="11/12/10 2:05am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+What is the proper way to handle database connection timeouts with flourish?
+</p>
+
+<p>
+When extension_loaded('mysql') was run before extension_loaded('mysqli') I was able to set a 5 second database timeout as follows:
+</p>
+<pre class="block php"><code>define('DB_DOWN_REDIRECT', '/updating');
+
+function &amp;Database()
+{
+	// avoid connecting to db when down
+	if (fURL::get() == DB_DOWN_REDIRECT)
+		return;
+		
+	static $database = NULL;
+	
+	if ($database == NULL) {
+		try {
+			ini_set('mysql.connect_timeout', '5');
+			
+			$database = new fDatabase('mysql', 'db', 'user', 'pass', 'localhost');
+			
+			if ($database-&gt;getExtension() == 'mysqli') {
+				echo &quot;Recommend you disable the mysqli extension for db timeout handling.  Change flourish fDatabase.php so that mysql extension is loaded before mysqli extension within determineExtension().&quot;;
+				exit;
+			}
+			
+			// attempt to connect now to avoid connection issues later
+			$connected = $database-&gt;getConnection();
+			
+			fORMDatabase::attach($database);
+		} catch (Exception $e) {
+			// database connection failed
+			fURL::redirect(DB_DOWN_REDIRECT);
+		}
+	}
+	
+	return $database;
+}
+
+Database();</code></pre>
+
+<p>
+ You'll notice that in the code above I check if we loaded the &quot;mysqli&quot; extension and display a message to myself as a reminder for when I update flourish.  At the moment my solution is to manually edit <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php so that &quot;mysql&quot; extension is checked/loaded first.  I do this because there doesn't seem to be a simple solution to set the connection timeout to mysqli without removing the extension from the server.
+</p>
+
+<p>
+Could timeout handling be added to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>?  or maybe integrate mysqli_real_connect() into <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> so that timeouts can be set?
+</p>
+
+<p>
+Is there a better way to handle db timeouts with flourish?  
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1008">
+				<div class="body" id="body-1008">
+					
+<p>
+Adding a parameter to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to control the timeout would be a good thing to do. Can you open a ticket for that?
+</p>
+
+<p>
+In the meantime you can extend <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and override the extension member to ensure you always use <code>mysql</code>.
+</p>
+<pre class="block php"><code>class Database extends fDatabase {
+    protected function determineExtension()
+    {
+        $this-&gt;extension = 'mysql';
+    }
+}
+
+$db = new Database();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/12/10 10:01am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1009">
+				<div class="body" id="body-1009">
+					
+<p>
+Thanks @wbond.  I had tried this method but forgot to use &quot;protected&quot; so it didn't work for me.  This works! :)
+</p>
+
+<p>
+Ticket submitted...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/gabrielu">							gabrielu						</a> 					</span>
+					<span class="date_posted" title="11/12/10 11:25am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Destroy User Info  &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Destroy User Info </h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/jmtucu">			jmtucu		</a> 	</span>
+	<span class="date_posted" title="7/26/11 7:59pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi again!
+</p>
+
+<p>
+I've a method called logout() with
+</p>
+<pre class="block php"><code>    public function logout()
+    {
+      fAuthorization::destroyUserInfo();
+      fMessaging::create('success', URL_ROOT . 'student/login', 'Session closed.');
+      fURL::redirect(
+        URL_ROOT . 'student/login'
+        );
+    }</code></pre>
+
+<p>
+ But it seem doesn't work, if I call <a href="../flourishlib.com/api/fAuthorization.html#checkLoggedIn">fAuthorization::checkLoggedIn()</a> it give me true =/
+</p>
+
+<p>
+In the login I'm using only this
+</p>
+<pre class="block php"><code>fAuthorization::setUserAuthLevel($type);
+fSession::enablePersistence();</code></pre>
+
+<p>
+ I don't know why I can't destroy the user session...
+</p>
+
+<p>
+Any idea? 
+</p>
+
+<p>
+Thanks!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1468">
+				<div class="body" id="body-1468">
+					
+<p>
+When you hit the login page, are you running those two lines of code? If so, it is logging you in again. I imagine you are probably running those only once a user has provided a valid login and password.
+</p>
+
+<p>
+Sometimes these types of issues happen when you change your session cookie parameters. For instance, if you just started using <a href="../flourishlib.com/api/fSession.html#ignoreSubdomain">fSession::ignoreSubdomain()</a>, then your old session cookie is set to a different domain than the cookie is now trying to use. When this happens I often have to clear my cookies and try logging in fresh.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/11 9:30pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1470">
+				<div class="body" id="body-1470">
+					
+<p>
+Yes, I'm running those lines only when the login it's valid.
+</p>
+
+<p>
+The problem was the cookie, I dont know why but after delete manually it works like a charm :)
+</p>
+
+<p>
+Thanks will!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="7/26/11 11:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

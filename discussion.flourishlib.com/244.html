@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Mapping Class to Database &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Mapping Class to Database</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="6/7/10 10:55am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've finally gotten around to trying to use the 'new' multiple database support in Flourish.  However, I'm hitting a road block.  Each time I use a class that I've mapped to the non-default database, flourish still attempts the query with the default database.
+</p>
+
+<p>
+I'm sure I'm doing something wrong.
+</p>
+
+<p>
+Does anyone have suggestions?
+</p>
+
+<p>
+Here are my connection settings:
+</p>
+<pre class="block php"><code>/*
+ * Connection parameters for the STP Downloads DB (default)
+*/
+define('DOWNLOADS_DB_HOST','server_name');
+define('DOWNLOADS_DB_USER','user_name');
+define('DOWNLOADS_DB_PASS','user_password');
+define('DOWNLOADS_DB','stp_downloads');
+define('DOWNLOADS_DB_PORT',3397);
+
+
+/*
+ * Connection parameters for the SS7AUTO DB 
+*/
+define('SS7AUTO_DB_HOST','server_name');
+define('SS7AUTO_DB_USER','user_name');
+define('SS7AUTO_DB_PASS','user_password');
+define('SS7AUTO_DB','ss7auto');
+define('SS7AUTO_DB_PORT',3354);</code></pre>
+
+<p>
+ Here is where I attach the databases and map the class to the database
+</p>
+<pre class="block php"><code>// Consider the downloads_db to be the default
+fORMDatabase::attach(
+		$downloads_db = new fDatabase('mysql', DOWNLOADS_DB, DOWNLOADS_DB_USER, DOWNLOADS_DB_PASS, DOWNLOADS_DB_HOST, DOWNLOADS_DB_PORT),
+		'default'
+);
+
+fORMDatabase::attach(
+		$ss7auto_db = new fDatabase('mysql', SS7AUTO_DB, SS7AUTO_DB_USER, SS7AUTO_DB_PASS, SS7AUTO_DB_HOST, SS7AUTO_DB_PORT),
+		'ss7auto_db'
+);
+
+// Tell flourish to use the ss7auto db for the access_code table
+fORM::mapClassToDatabase('AccessCode', 'ss7auto_db');
+</code></pre>
+
+<p>
+ Here is the class that should use the ss7auto_db
+</p>
+<pre class="block php"><code>&lt;?php
+
+class AccessCode extends fActiveRecord
+{
+	/**
+	 * Flourish required function
+	 * @return 
+	 */
+	protected function configure()
+	{
+        // Note : This class is mapped to the database 'ss7auto' in constants.php
+	}
+
+    /**
+     * Create a new entry in table downloads
+     * @param String $access_code
+     * @return Integer|BOOL - False on no affected rows
+     */
+    public static function insAccessCodes($access_code)
+    {
+        $sql = &quot;insert into access_codes (code) values (%s)&quot;;
+        
+        try
+        {
+            $db = fORMDatabase::retrieve();
+print_r($db);
+            $sql = $db-&gt;escape($sql,$access_code);
+echo &quot;\\nSQL=$sql\\n&quot;;
+            $result = $db-&gt;query($sql);
+            
+            if($result-&gt;countAffectedRows() !== 1)
+            {
+                return FALSE;
+            }
+            
+            return $result-&gt;getAutoIncrementedValue();
+            
+        }   catch ( fSQLException $e ) { manage_error($e); }
+            catch ( Exception $e ) { manage_error($e); }
+    }
+    
+}
+?&gt;</code></pre>
+
+<p>
+ The results of the print_r in the class are as follows : 
+</p>
+<pre><code>fDatabase Object
+(
+    [cache:fDatabase:private] =&gt; 
+    [cache_prefix:fDatabase:private] =&gt; 
+    [connection:fDatabase:private] =&gt; mysqli Object
+        (
+            [affected_rows] =&gt; 10
+            [client_info] =&gt; mysqlnd 5.0.5-dev - 081106 - $Revision: 289630 $
+            [client_version] =&gt; 50005
+            [connect_errno] =&gt; 0
+            [connect_error] =&gt; 
+            [errno] =&gt; 0
+            [error] =&gt; 
+            [field_count] =&gt; 4
+            [host_info] =&gt; MySQL host info: server_name via TCP/IP
+            [info] =&gt; 
+            [insert_id] =&gt; 0
+            [server_info] =&gt; 5.1.46-log
+            [server_version] =&gt; 50146
+            [sqlstate] =&gt; 00000
+            [protocol_version] =&gt; 10
+            [thread_id] =&gt; 151
+            [warning_count] =&gt; 0
+        )
+
+    [database:fDatabase:private] =&gt; stp_downloads
+    [debug:fDatabase:private] =&gt; 
+    [error:fDatabase:private] =&gt; 
+    [extension:protected] =&gt; mysqli
+    [host:fDatabase:private] =&gt; nettest2
+    [inside_transaction:fDatabase:private] =&gt; 
+    [password:fDatabase:private] =&gt; user_password
+    [port:fDatabase:private] =&gt; 3397
+    [query_time:fDatabase:private] =&gt; 0.99228286743164
+    [schema_info:protected] =&gt; Array
+        (
+        )
+
+    [slow_query_threshold:fDatabase:private] =&gt; 
+    [statement:fDatabase:private] =&gt; select cmd, clli, cmds_id, stps_id from cmds
+            join cmds_to_cmd_groups as ctcg using (cmds_id)
+            join cmd_groups as cg using (cmd_groups_id)
+            join stps using (stps_id)
+            join downloads_to_cmd_groups as dtcg using (cmd_groups_id)
+            where downloads_id = 46
+            order by ctcg.priority
+    [translation:fDatabase:private] =&gt; 
+    [type:fDatabase:private] =&gt; mysql
+    [unbuffered_result:fDatabase:private] =&gt; 
+    [username:fDatabase:private] =&gt; user_name
+)</code></pre>
+
+<p>
+ Does anyone see something I'm doing wrong?  The print_r clearly shows the fORMDatabase::retrieve returned the 'default' database.
+</p>
+
+<p>
+I even tried placing the mapClassToDatabase in the configure() function of the AccessCode class.  That produced the same result.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-764">
+				<div class="body" id="body-764">
+					
+<p>
+When you are using multiple database with <a href="../flourishlib.com/api/fORMDatabase.html#retrieve">fORMDatabase::retrieve()</a>, you need to pass the class name, and possibly the role. If you don't pass any parameters, you get the default database.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/7/10 11:03am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-765">
+				<div class="body" id="body-765">
+					
+<p>
+LOL.  Will, I was just posting to say I had &quot;solved&quot; the problem when I saw your response.  I came up with the same solution.
+</p>
+
+<p>
+However, for me, it begs a question.  If I have to pass the class name in for the retrieve method, what's the point of the mapClassToDatabase()?  I thought it was going to take care of the association so my retrieve calls retrieve the correct db.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="6/7/10 11:12am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-766">
+				<div class="body" id="body-766">
+					
+<p>
+The real point of it is that it takes care of all of the <a href="../flourishlib.com/api/fORMDatabase.html#retrieve">fORMDatabase::retrieve()</a> calls that happen throughout the ORM and plugins.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/7/10 11:14am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Can&#039;t find some classes &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Can&#039;t find some classes</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					frank			</span>
+	<span class="date_posted" title="11/12/09 8:04am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello,
+</p>
+
+<p>
+I have a problem with finding my classes on the production server. Under my develop machine it works great.
+</p>
+
+<p>
+The difference between my develop and production machine is :
+</p>
+
+<p>
+develop -&gt; windows xp with xammp;
+</p>
+
+<p>
+production -&gt; unix apache
+</p>
+
+<p>
+//For this example I replaced the domain name with &lt;domain&gt;!!
+</p>
+
+<p>
+So the following standard flourish class seems to load just fine : /home/love/domains/&lt;domain&gt;/public_html/inc/flourish/<a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a>.php
+</p>
+
+<p>
+But if i start using my own classes it just keeps popping up these Fatal error's : /home/love/domains/&lt;domain&gt;/public_html/inc/flourish/Dat_Member.php Fatal error: Class 'Dat_Member' not found in /home/love/domains/&lt;domain&gt;/public_html/login.php on line 106
+</p>
+
+<p>
+Now the class i'm trying to autoload (Filename : Dat_member.php) :
+</p>
+
+<p>
+class Dat_member extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> {     protected function configure()     {         fORM::addCustomClassTableMapping($this, 'dat_member');         fGrammar::addCamelUnderscoreRule('Region1', 'region1');         fGrammar::addCamelUnderscoreRule('Region2', 'region2');         fGrammar::addCamelUnderscoreRule('Region3', 'region3');         fGrammar::addCamelUnderscoreRule('Region4', 'region4');         fGrammar::addCamelUnderscoreRule('Area1', 'area1');         fGrammar::addCamelUnderscoreRule('Area2', 'area2');     }      }
+</p>
+
+<p>
+The autoload class used : function <span class="underline">autoload($class) { 	$flourish_file = DOC_ROOT . '/inc/flourish/' . $class . '.php';   	if (file_exists($flourish_file)) { 		return require $flourish_file; 	} 	 	$file = DOC_ROOT . '/inc/classes/' . $class . '.php';   	if (file_exists($file)) { 		return require $file; 	} 	 	throw new Exception('The class ' . $class . ' could not be loaded'); }</span>
+</p>
+
+<p>
+<span class="underline"> What am i doing wrong here on the production server?</span>
+</p>
+
+<p>
+<span class="underline"> With kind regards,</span>
+</p>
+
+<p>
+<span class="underline"> Frank van der Geld</span>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-511">
+				<div class="body" id="body-511">
+					
+<p>
+Unix filesystems are case sensitive, whereas Windows ones are not and your class is called <code>Dat_member</code>, but your file is <code>Dat_Member.php</code>. Windows ignores the difference in case in the <code>m</code>, while Unix does not. You'll need to either rename the class to <code>Dat_Member</code> or the file to <code>Dat_member.php</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/12/09 8:21am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

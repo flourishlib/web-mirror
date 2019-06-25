@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Cannot connect to SQL Server db &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Cannot connect to SQL Server db</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					cecil chua			</span>
+	<span class="date_posted" title="4/27/11 3:58pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I get the following error message:
+</p>
+<pre><code>Fatal error: Uncaught exception 'fConnectivityException' with message 'Unable to connect to database' in C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fDatabase.php:623
+Stack trace:
+#0 C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fDatabase.php(2428): fDatabase-&gt;connectToDatabase()
+#1 C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fDatabase.php(2610): fDatabase-&gt;prepareSQL('SELECT?????????...', Array, false)
+#2 C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fSchema.php(2693): fDatabase-&gt;query('SELECT?????????...')
+#3 C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fSchema.php(2464): fSchema-&gt;getTables()
+#4 C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fActiveRecord.php(1080): fSchema-&gt;getKeys('Patient', 'primary')
+#5 C:\\Program Files\\Apache2.2\\htdocs\\testflourish.php(16): fActiveRecord-&gt;__construct('p01')
+#6 {main} thrown in C:\\Program Files\\Apache2.2\\htdocs\\flourish\\fDatabase.php on line 623 </code></pre>
+
+<p>
+ My code is as follows:
+</p>
+<pre class="block php"><code>&lt;?php 
+ini_set(&quot;error_reporting&quot;,E_ALL);
+ini_set(&quot;display_errors&quot;,1);
+
+include_once $_SERVER['DOCUMENT_ROOT'] . &quot;/flourish/toinclude.php&quot;;
+
+class Patient extends fActiveRecord
+{
+  protected function configure()
+   {
+   }
+}
+
+fORMDatabase::attach(new fDatabase(&quot;mssql&quot;, &quot;hospitalSQL&quot;,&quot;Cecil Chua&quot;,&quot;&quot;,&quot;GEMSTONE&quot;));
+fORM::mapClassToTable(&quot;Patient&quot;,&quot;Patient&quot;);
+$mypatient = new Patient(&quot;p01&quot;);
+echo $mypatient-&gt;PatientName;
+echo &quot;It is working&quot;; ?&gt;</code></pre>
+
+<p>
+ If I were to use SQL Server Manager Studio, I would log onto GEMSTONE, with windows authentication, and select the database hospitalSQL (which is just under the database folder).  I don't log onto GEMSTONE<br />
+SQLEXPRESS or anything like that.
+</p>
+
+<p>
+What am I doing wrong?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1280">
+				<div class="body" id="body-1280">
+					
+<p>
+I could be completely wrong, but I don't think the PHP SQL Server extension supports windows authentication. Instead I think you need to use a SQL Server login. I know that works, since that is how I've done every time I've ever had to connect to SQL Server.
+</p>
+
+<p>
+Also, in addition to the exception, normally the SQL Server extensions trigger some warnings on a failed connection.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/27/11 4:12pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1281">
+				<div class="body" id="body-1281">
+					
+<p>
+I created a new account &quot;mytest&quot; with SQL Server authentication (no password).  Assigned this person dbreader and dbwriter roles to hospitalSQL.  I logged in as this person on SQL Server Manager Studio.  It can access the database.
+</p>
+
+<p>
+I still get the same error message.  I didn't understand what you meant by: &quot;the SQL Server extensions trigger some warnings on a failed connection.&quot;  The message I gave was the error message reported by php based on error_reporting=E_ALL and display_errors=On
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													cecil chua											</span>
+					<span class="date_posted" title="4/27/11 4:40pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1282">
+				<div class="body" id="body-1282">
+					
+<p>
+Is there some common reason for these kinds of faults?  I'm doing this for the first time, so am probably doing something stupid.  For example, the database should be mapped as localhost:GEMSTONE or something?  Or <br />
+<br />
+GEMSTONE?  Or is case sensitivity supposed to be a problem (although I did check case on SQL Server)?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													cecil chua											</span>
+					<span class="date_posted" title="4/27/11 4:46pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1283">
+				<div class="body" id="body-1283">
+					
+<p>
+In terms of the error messages, <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> throws an exception when it can't connect, however many of the PHP extensions used by <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> trigger their own warning messages that may contain additional information about why the connection failed.
+</p>
+
+<p>
+The next thing I would do is check the port number. Regularly SQL Server runs on port 1433, but I know that SQL Express tends to install on a different port.
+</p>
+
+<p>
+As far as I know, the name resolution in PHP for the server name uses either an IP address or a DNS hostname. I don't believe a UNC path such as <code>\\\\GEMSTONE</code> will work, but I may be wrong. Just to be sure the name resolution isn't what is stopping you, try using the IP of the server when testing.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/27/11 4:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1284">
+				<div class="body" id="body-1284">
+					
+<p>
+How do I check the port number?
+</p>
+
+<p>
+I can't find a port anywhere on the configuration things in SQL Server Manager Studio.
+</p>
+
+<p>
+Then, I went into the registry and looked at HKEY<br />
+LOCAL_MACHINE<br />
+SOFTWARE<br />
+Microsoft<br />
+Microsoft SQL Server<br />
+MSSQL.10.SQLEXPRESS<br />
+TCP
+</p>
+
+<p>
+The ListenOnAllIPs is set to 1.  I have three folders below that (IP1, IP2, IPAll)  For all three, TcPPort is blank.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/27/11 5:17pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1285">
+				<div class="body" id="body-1285">
+					
+<p>
+SQLServer Manager Studio (not flourish/php) responds to both GEMSTONE and localhost.  It does not respond to 127.0.0.1. Or 127.0.0.1:1433 or 127.0.0.1:0 (the value of DynamicPort in the registry)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/27/11 5:24pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1286">
+				<div class="body" id="body-1286">
+					
+<p>
+I just tried connecting with pure SQL using the sqlsrv driver, and it worked.  My code is:
+</p>
+<pre class="block php"><code>
+&lt;?php 
+$connstr=&quot;ISOMTEACHING5\\INFOSYS280&quot;;
+$conninfo=array(&quot;Database&quot;=&gt;&quot;hospitalSQL&quot;);
+$conn=sqlsrv_connect($connstr,$conninfo);
+if ($conn==false)
+  echo &quot;db not connectng&quot;;
+else
+  echo &quot;db connection successful&quot;;
+
+
+$result=sqlsrv_query($conn,&quot;Select * from Patient&quot;);
+if ($result==false)
+  {  echo &quot;It didn't work&quot;;
+     die( print_r (sqlsrv_errors())  ); }
+else
+  echo &quot;It should run&quot;;</code></pre>
+
+<p>
+ So I tried again with flourish with similar syntax:
+</p>
+<pre class="block php"><code>&lt;?php 
+ini_set(&quot;error_reporting&quot;,E_ALL);
+ini_set(&quot;display_errors&quot;,1);
+
+include_once $_SERVER['DOCUMENT_ROOT'] . &quot;/flourish/toinclude.php&quot;;
+
+class Patient extends fActiveRecord
+{
+  protected function configure()
+   {
+   }
+}
+
+$connstr=&quot;ISOMTEACHING5\\INFOSYS280&quot;;
+$conninfo=array(&quot;Database&quot;=&gt;&quot;hospitalSQL&quot;);
+fORMDatabase::attach(new fDatabase(&quot;mssql&quot;, $conninfo,&quot;&quot;,&quot;&quot;,$connstr));
+fORM::mapClassToTable(&quot;Patient&quot;,&quot;Patient&quot;);
+$mypatient = new Patient(&quot;p01&quot;);
+echo $mypatient-&gt;PatientName;
+echo &quot;It is working&quot;; ?&gt;</code></pre>
+
+<p>
+ And it isn't working still.  Note the database has changed.  I'm using my office sqlserver now rather than my home one.  But I get the same error message!
+</p>
+
+<p>
+Is it just that Flourish doesn't work wil the sqlsrv driver?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													cecil chua											</span>
+					<span class="date_posted" title="4/27/11 10:51pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1287">
+				<div class="body" id="body-1287">
+					
+<p>
+Flourish does not accept an array for the <code>$database</code> parameter, so that will definitely not work. Try passing in a database name to the <code>$database</code> parameter and Flourish will turn it into whatever the available database extension requires.
+</p>
+
+<p>
+The only thing that I could see possibly not working with <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is that it currently expects a username and password and adds them to the <code>$conninfo</code> array it builds. Where you aren't specifying either, Flourish is thus passing those as blank strings. It may be necessary to set up some logic so that if the <code>$username</code> or <code>$password</code> is <code>NULL</code> that they are not added to the <code>$conninfo</code> array.
+</p>
+
+<p>
+Either way, try using <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> with your verified good hostname/database combination.
+</p>
+<pre class="block php"><code>$db = new fDatabase('mssql', 'hospitalSQL', '', '', 'ISOMTEACHING5\\INFOSYS280');</code></pre>
+
+<p>
+ The other thing that could be an issue is the port number. Did you ever figure out what port you are running on? If you haven't, double check by following the directions at <a href="http://decipherinfosys.wordpress.com/2008/01/02/finding-the-port-number-for-a-particular-sql-server-instance/">http://decipherinfosys.wordpress.com/2008/01/02/finding-the-port-number-for-a-particular-sql-server-instance/</a>. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> specifically adds the port number, where in your example you omit it. I don't know if the driver defaults to 1433, or what exactly happens, but that is another thing to check.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/27/11 11:42pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1288">
+				<div class="body" id="body-1288">
+					
+<p>
+It is working now.  It looks like a combination of the port and need for a dedicated SQL Server user account.  On the office machine, the port was 61495.  I can't figure out the port on my home machine- there is literally no &quot;listen&quot; message in the logs.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/28/11 1:49am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

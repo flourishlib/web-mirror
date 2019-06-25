@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>activerecord exists() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">activerecord exists()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					kris			</span>
+	<span class="date_posted" title="12/23/09 11:35am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've got the following code:
+</p>
+<pre class="block php"><code>$user = new User();
+$user-&gt;setFacebookId( 555555555 );
+
+if ( $user-&gt;exists() ){
+	echo 'exists';
+} else {
+	echo 'does not exist';
+}
+</code></pre>
+
+<p>
+ I have a record in my database with that value but it always returns false on exists(). Am I doing something wrong? I could swear it worked the other day as well. Many thanks.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-551">
+				<div class="body" id="body-551">
+					
+<p>
+Is facebook_id unique? If so, the proper way to check would be:
+</p>
+<pre class="block php"><code>try {
+    $user = new User(array('facebook_id' =&gt; 55555555));
+} catch (fNotFoundException $e) {
+    $user = new User();
+    $user-&gt;setFacebookId(55555555);
+}</code></pre>
+
+<p>
+ <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> just indicates if the instance was loaded from the database. In this case you aren't passing any sort of unique identifier (primary key or unique key) to the constructor, so it has not been loaded from the database.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/23/09 11:41am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-552">
+				<div class="body" id="body-552">
+					
+<p>
+Ok, thanks. So under what circumstances would you use <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a>? Presumably if you're trying to retrieve a record that doesn't exist it will just throw an error? Thanks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													kris											</span>
+					<span class="date_posted" title="12/23/09 12:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-553">
+				<div class="body" id="body-553">
+					
+<p>
+Exists is often useful in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> hooks, since they get called for all records and the code is not in the scope of when the object is instantiated.
+</p>
+
+<p>
+I often use this functionality to send out emails when a record is first inserted into the database, but not on subsequent edits.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/23/09 12:26pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-554">
+				<div class="body" id="body-554">
+					
+<p>
+It seems a few of us were expecting exists() to behave differently!  I had this same confusion a while back :
+</p>
+
+<p>
+<a href="48.html">http://flourishlib.com/discussion/1/48</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="12/23/09 3:25pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-565">
+				<div class="body" id="body-565">
+					
+<p>
+Yes, I did notice that. I added some documentation to the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#exists section about its behavior.
+</p>
+
+<p>
+One of the main reasons it doesn't behave like you guys expected is that would require the record objects to be able to change identity over their lifetime, which could easily cause weird side effects in code.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/29/09 3:12pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

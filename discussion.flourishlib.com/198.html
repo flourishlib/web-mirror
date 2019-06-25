@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord -- Deep related records in forms &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord -- Deep related records in forms</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="1/15/10 7:09pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+In the documentation for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, you describe <a href="../flourishlib.com/docs/fActiveRecord.html#Associating">how to craft input field names</a> so that related records are populated automagically by <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>'s link methods.  My question is, how might this work for deep relations?
+</p>
+
+<p>
+For example, say I have a Survey model which has Groups, Groups have Fields, Fields have Dependents. 
+</p>
+
+<p>
+Thank you!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-586">
+				<div class="body" id="body-586">
+					
+<p>
+please tell me  if you succed to use populate related field because i try and i did't.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="1/17/10 3:31pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-591">
+				<div class="body" id="body-591">
+					
+<p>
+This works for deep relations by using nested foreach loops and <a href="../flourishlib.com/api/fRequest.html#filter">fRequest::filter()</a>. Here is a rough outline of what you would need to do.
+</p>
+
+<p>
+Your inputs would all need to be named in the following form. <code>$key</code>, <code>$key_2</code>, etc should be replaced which integer keys. All fields and dependents that are part of the same group would use the same <code>$key</code> and all field columns and dependents that are part of a field would use the same <code>$key_2</code>, etc.
+</p>
+<pre><code>groups::group_id[$key]
+groups::name[$key]
+...
+groups::fields::field_id[$key][$key_2]
+groups::fields::group_id[$key][$key_2]
+groups::fields::type[$key][$key_2]
+...
+groups::fields::dependents::dependent_id[$key][$key_2][$key_3]
+groups::fields::dependents::field_id[$key][$key_2][$key_3]
+groups::fields::dependents::column[$key][$key_2][$key_3]</code></pre>
+
+<p>
+ <a href="../flourishlib.com/api/fRequest.html#filter">fRequest::filter()</a> is an internal function so you'll need to click the &quot;Show Protected/Internal&quot; link on the API docs page to see it. It takes a prefix and a key and replaces $_GET and $_POST with only the key/value pairs that start with $prefix and that match the $key specified. Once the request is filtered, you can then use a normal <a href="../flourishlib.com/api/fActiveRecord.html#populate">fActiveRecord::populate()</a>.
+</p>
+
+<p>
+Here is some code that may help in your understanding. I know what I have presented isn't a complete working example, I just don't have time to write it all out.
+</p>
+<pre class="block php"><code>$survey = new Survey();
+$survey-&gt;populate();
+
+$groups = array();
+
+// This gets the keys to use with fRequest::filter()
+$groups_keys = array_keys(fRequest::get('groups::group_id'));
+foreach ($groups_keys as $group_key) {
+    fRequest::filter('groups::', $group_key);
+    $group = new Group();
+    $group-&gt;populate();
+    
+    $fields = array();    
+
+    $fields_keys = array_keys(fRequest::get('fields::field_id'));
+    foreach ($fields_keys as $field_key) {
+        fRequest::filter('fields::', $field_key);
+        $field = new Field();
+        $field-&gt;populate();
+        
+        // continue nesting for dependents
+
+        $fields[] = $field;
+        fRequest::unfilter();
+    }
+    $group-&gt;associateFields($fields);
+    $groups[] = $group;
+    fRequest::unfilter();
+}
+$survey-&gt;associateGroups($groups);
+
+$survey-&gt;store();</code></pre>
+
+<p>
+ The store operation will validate all the way down the stack and should create friendly error messages for any level of relations. Similarly, all related records will be stored when you call the <code>$survey-&gt;store()</code>.
+</p>
+
+<p>
+Let me know if you need any clarification beyond this.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/19/10 2:44pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-592">
+				<div class="body" id="body-592">
+					
+<p>
+ah, thank you!  brilliant as always.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="1/19/10 4:50pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-594">
+				<div class="body" id="body-594">
+					
+<p>
+No problem. I wouldn't be opposed to implementing some sort of functionality that could handle this in <a href="../flourishlib.com/docs/fORMRelated.html">fORMRelated</a>, I'm just not sure how the API would look. If anyone has any ideas about how this could work, I'd be open to hearing them.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/20/10 1:35pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

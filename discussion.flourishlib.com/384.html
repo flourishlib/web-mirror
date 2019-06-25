@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSession::setLength() must be called before... &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSession::setLength() must be called before...</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="3/22/11 10:10pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I am totally sure I have not called any <a href="../flourishlib.com/docs/fSession.html">fSession</a> methods before calling setLength().
+</p>
+
+<p>
+I get this error: Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>' with message '<a href="../flourishlib.com/api/fSession.html#setLength">fSession::setLength()</a> must be called before any of <a href="../flourishlib.com/api/fSession.html#add">fSession::add()</a>, <a href="../flourishlib.com/api/fSession.html#clear">fSession::clear()</a>, <a href="../flourishlib.com/api/fSession.html#enablePersistence">fSession::enablePersistence()</a>, <a href="../flourishlib.com/api/fSession.html#get">fSession::get()</a>, <a href="../flourishlib.com/api/fSession.html#open">fSession::open()</a>, <a href="../flourishlib.com/api/fSession.html#set">fSession::set()</a> or session_start()'
+</p>
+<pre class="block php"><code>class SomeClass {
+    public static function setupAuthorization() {
+    fSession::setLength('30 minutes', '1 week');
+    //fSession::setPath('/writable-dir');
+    fSession::enablePersistence();
+    
+    fAuthorization::setLoginPage(Sutra::getConfig()-&gt;getBaseUrl().'login');
+    fAuthorization::setAuthLevels(array('admin' =&gt; 100, 'user' =&gt; 50, 'guest' =&gt; 25));
+  }
+  
+  public static function render() {
+    self::getDb();
+    self::getConfig();
+    self::getPage();
+    self::setupAuthorization();
+  }
+}</code></pre>
+
+<p>
+ NONE of the other static functions functions call any <a href="../flourishlib.com/docs/fSession.html">fSession</a> methods.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1185">
+				<div class="body" id="body-1185">
+					
+<p>
+I can't tell from the code you've posted, but that error message is for the <strong>entire</strong> lifecycle of that request.
+</p>
+
+<p>
+If you are following the standard architecture and have some sort of init.php that gets called for every request you will probably want to check there to make sure nothing is opening <a href="../flourishlib.com/docs/fSession.html">fSession</a>.  
+</p>
+
+<p>
+Be aware that even if you don't see <a href="../flourishlib.com/api/fSession.html#open">fSession::open()</a> there are many classes and functions that call it.  I would bet money on <a href="../flourishlib.com/docs/fMessaging.html">fMessaging</a> being the issue, especially if you followed the header examples here.  <a href="../flourishlib.com/api/fMessaging.html#check">fMessaging::check()</a>, <a href="../flourishlib.com/api/fMessaging.html#create">fMessaging::create()</a>, <a href="../flourishlib.com/api/fMessaging.html#get">fMessaging::get()</a>, and <a href="../flourishlib.com/api/fMessaging.html#show">fMessaging::show()</a> all call into <a href="../flourishlib.com/docs/fSession.html">fSession</a>.
+</p>
+
+<p>
+Follow your execution flow using a debugger like MacGDBp or one of the fine debuggers built into Eclipse or Netbeans, you can set a break point in every <a href="../flourishlib.com/docs/fSession.html">fSession</a> function and then look at your stack trace to see who is calling it before SomeClass.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="3/22/11 10:56pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1186">
+				<div class="body" id="body-1186">
+					
+<p>
+What about <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a>? How much involvement does that have with <a href="../flourishlib.com/docs/fSession.html">fSession</a>?
+</p>
+
+<p>
+I swapped and put setupAuthorization at the top, since this static function render is just called from index.php. That has fixed the problem.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													audvare											</span>
+					<span class="date_posted" title="3/22/11 11:07pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1187">
+				<div class="body" id="body-1187">
+					
+<p>
+<a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> calls into <a href="../flourishlib.com/docs/fSession.html">fSession</a> quite a bit, look at <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a>
+</p>
+
+<p>
+From just a quick search it looks like the following function call into <a href="../flourishlib.com/docs/fSession.html">fSession</a>.
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fAuthorization.html#checkLoggedIn">fAuthorization::checkLoggedIn()</a> <a href="../flourishlib.com/api/fAuthorization.html#destroyUserInfo">fAuthorization::destroyUserInfo()</a> <a href="../flourishlib.com/api/fAuthorization.html#getRequestedUrl">fAuthorization::getRequestedUrl()</a> <a href="../flourishlib.com/api/fAuthorization.html#getUserACLs">fAuthorization::getUserACLs()</a> <a href="../flourishlib.com/api/fAuthorization.html#getUserAuthLevels">fAuthorization::getUserAuthLevels()</a> <a href="../flourishlib.com/api/fAuthorization.html#getUserToken">fAuthorization::getUserToken()</a> <a href="../flourishlib.com/api/fAuthorization.html#setRequestedUrl">fAuthorization::setRequestedUrl()</a> <a href="../flourishlib.com/api/fAuthorization.html#setUserACLs">fAuthorization::setUserACLs()</a> <a href="../flourishlib.com/api/fAuthorization.html#setUserAuthLevels">fAuthorization::setUserAuthLevels()</a> <a href="../flourishlib.com/api/fAuthorization.html#setUserToken">fAuthorization::setUserToken()</a>
+</p>
+
+<p>
+It's probably a good idea to have an init script and in that script call <a href="../flourishlib.com/api/fSession.html#setLength">fSession::setLength()</a> Since this is normally an application wide setting having it be part of your bootstrap isn't a bad idea.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="3/22/11 11:18pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>ORM Problem &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">ORM Problem</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					melimelo			</span>
+	<span class="date_posted" title="9/7/11 3:07pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hey guys,
+</p>
+
+<p>
+I've been trying to exercise myself with flourish and everything is going great cuz it's super well documented and explained. Haven't got any problem so far until I reach the point of Database.
+</p>
+
+<p>
+Connecting and querying is simple but I have never seen anything like an ORM / active record before and I have read the doc more than 10 times and tried multiple thing I can't manage to understand how it work.
+</p>
+
+<p>
+My database is following the ORM Convention but my problem is that I just don't know what to do at all with it.
+</p>
+
+<p>
+So maybe guys you could post a complete simple example for me cuz in the doc it's all split up and can't manage to make work anything.
+</p>
+
+<p>
+So how do I check if there is a similar entry like if I wanna check if this email <a href="mailto:xxx@gmail.com">xxx@gmail.com</a> already exist in the DB how do i do it ? (I'm not even sure the ORM can do that)
+</p>
+
+<p>
+How do I retrieve/modify/delete a row based on it's primary key ?
+</p>
+
+<p>
+Can I add a row with the orm ?
+</p>
+
+<p>
+If you could just make me a simple functionnal example with some of the features I would be gratefull.
+</p>
+
+<p>
+thanks in advance.
+</p>
+
+<p>
+Melimelo
+</p>
+
+<p>
+ps: sorry for my poor english it's not my mothertongue
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1557">
+				<div class="body" id="body-1557">
+					
+<p>
+Hi Melimelo
+</p>
+
+<p>
+Like you said the flourish lib is very well documented, so I will give you a few examples based on your question, and then perhaps you can look at the documentation again and it will seem more clear.
+</p>
+
+<p>
+So basically the idea behind the <a href="../flourishlib.com/docs/fORM.html">fORM</a> is to relieve you from writing tons of code for mapping your PHP classes with your database models. Your PHP is object oriented and your database is relational, hence ORM - Object-Relational Mapping.
+</p>
+
+<p>
+Usually if you model a problem domain like say 'students' and 'classes' in your database, you would create create IDs in either table and in this way link them together. We say that you will join the tables. The result is a row with the data you need. Join student and classes to get which classes a student attend.
+</p>
+
+<p>
+In an object oriented language like PHP (as of 5.3) you would 'simply' call a method to achieve the same like: $student-&gt;getClasses().
+</p>
+
+<p>
+The ORM will do all the work in between. So basically it makes it possible for you to forget about the database logic and queries (this is of course an exaggeration).
+</p>
+
+<p>
+In flourish this works by looking at the database model that you've created. It so you have to create it correctly. You have to setup foreign keys. So that the <a href="../flourishlib.com/docs/fORM.html">fORM</a> can 'learn' your model.
+</p>
+
+<p>
+Once you've setup your database you can do things like the following.
+</p>
+
+<p>
+Create a new student (insert row):
+</p>
+<pre class="block php"><code>$student = new Student();
+$student-&gt;setName('Mona');
+$student-&gt;store();   // here the row is created
+
+$id = $student-&gt;getId();
+</code></pre>
+
+<p>
+ Fetch a row / an object:
+</p>
+<pre class="block php"><code>$student = new Student(5); // will fetch student with primary key 5, it can handle complex primary keys as well.
+	
+$student = new Student('xxx@gmail.com'); // this only works if the email is the primary key.
+</code></pre>
+
+<p>
+ 	 Delete a row / an object:
+</p>
+<pre class="block php"><code>$student-&gt;delete();
+</code></pre>
+
+<p>
+ 	 If you want to 'search' for objects on values other than the primary key. You mention search by email:
+</p>
+<pre class="block php"><code>fRecordSet::build('Student', array('email=' =&gt; 'xxx@gmail.com'));  // note the = sign in the array. 
+</code></pre>
+
+<p>
+ 	 See more here: <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> 	 Sorry for not making a functional example. Feel free to ask away. 	
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="9/7/11 5:06pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1561">
+				<div class="body" id="body-1561">
+					
+<p>
+Oh thanks so much I got a &quot;tilt&quot; with your explaination and can now use it ( it's quite handy).
+</p>
+
+<p>
+However i still do have some question :
+</p>
+
+<ul>
+<li>is this secure ? So basicly if you add a row with data cominf from the user is flourish taking care of sql injection or do i need to treat the data before ? </li>
+</ul>
+
+<ul>
+<li>imagine you have a register page. You don't want two people with the same nickname do i just send the data and get an exception cuz there is a unique key on it ? Or do i check before if it's the second option how can i check that ? I can make a search by nickname and if i get an exception this mean i can proceed to the registration but this seems really strange to me.</li>
+</ul>
+
+<p>
+Thanks in advance.
+</p>
+
+<p>
+Melimelo
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													melimelo											</span>
+					<span class="date_posted" title="9/8/11 9:01am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1563">
+				<div class="body" id="body-1563">
+					
+<p>
+Regarding security you should check this part of the documentation <a href="../flourishlib.com/docs/Security.html">http://flourishlib.com/docs/Security</a>
+</p>
+
+<p>
+(it also covers your question regarding sql injection)
+</p>
+
+<p>
+Regarding the registration page scenario, you will of course need to check the existens of a user by the same name or email or whatever you use as the identifier. Never sites will check this when you leave the input field or after a short break from typing - telling your whether the name is available or not.
+</p>
+
+<p>
+/Michael 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="9/8/11 11:31am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1562">
+				<div class="body" id="body-1562">
+					
+<p>
+Sorry double post :S
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													melimelo											</span>
+					<span class="date_posted" title="9/8/11 9:03am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1566">
+				<div class="body" id="body-1566">
+					
+<p>
+Hello,
+</p>
+
+<p>
+Thanks again for all the help I already got. Here is my last question do I need to do such a thing to be sure it's safe or is the setEmail enough ? (I'm really confused) :
+</p>
+<pre class="block php"><code>$user-&gt;setEmail($db-&gt;escape('string', $email));</code></pre>
+
+<p>
+ Thanks in advance.
+</p>
+
+<p>
+Melimelo
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													melimelo											</span>
+					<span class="date_posted" title="9/13/11 12:42pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1567">
+				<div class="body" id="body-1567">
+					
+<p>
+It is safe. You don't have to do anything special.
+</p>
+
+<p>
+Flourish applies what it has learned from reading the database scheme, it will ensure that only strings, integers and so on will go into the database.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="9/14/11 5:13am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

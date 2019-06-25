@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSession include error &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSession include error</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="10/31/10 10:19pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm trying to use <a href="../flourishlib.com/docs/fSession.html">fSession</a>, in particular <a href="../flourishlib.com/api/fSession.html#open">fSession::open()</a> in some common init code.  This works fine on my development server, as well as other dev, qa, and prod servers.  I'm trying to deploy to a new host and I'm getting a rather cryptic error.
+</p>
+<pre><code>#!text/html
+Parse error: syntax error, unexpected T_STRING in /lib/flourish/classes/fSession.php on line 668</code></pre>
+
+<p>
+ The weird thing is that the version of <a href="../flourishlib.com/docs/fSession.html">fSession</a> I'm deploying ends at line 668, from lines 648 to 668 is just the Copyright Notice comment.  <a href="../flourishlib.com/docs/fSession.html">fSession</a> is the first Flourish class that would be encountered and loaded, so I'm trying to figure out if this is some sort of isolated thing or if all Flourish classes will exhibit this error.
+</p>
+
+<p>
+The target server I'm deploying to is running PHP version 5.2.13 on Linux.  I can provide more details if needed.
+</p>
+
+<p>
+Has anyone else run into this issue, could it be a newline incompatibility issue?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-981">
+				<div class="body" id="body-981">
+					
+<p>
+I presume you've checked to make sure the file isn't legitimately corrupted?
+</p>
+
+<p>
+If the file looks fine in your editor, and the editor is set to UTF-8, I'm wondering if you are running some sort of op-code cache that could be corrupting things?
+</p>
+
+<p>
+Does it work if you add a closing PHP tag at the end of the file?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/1/10 8:52am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-985">
+				<div class="body" id="body-985">
+					
+<p>
+I did check to make sure that the file wasn't corrupted, my editor (TextMate) is set up for UTF-8 support.  I've successfully built a bunch of sites with Flourish, it is the library that makes me love PHP again.  This is the first time I've run into anything like this, I think it's something with the server config.
+</p>
+
+<p>
+I will see if adding the php close tag fixes the problem and report back for history's sake.
+</p>
+
+<p>
+Thanks for the idea Will.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="11/1/10 3:24pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-986">
+				<div class="body" id="body-986">
+					
+<p>
+After banging my brain against this for a while I realized it was my error, somehow the <a href="../flourishlib.com/docs/fSession.html">fSession</a> that I deployed ended up with the file contents repeated twice in the same file. 
+</p>
+
+<p>
+I'm not sure how this happened, but removing the duplicate class definition fixed everything up.  Thanks for your help Will.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="11/2/10 10:17am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

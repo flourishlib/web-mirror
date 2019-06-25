@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Fmailbox With Codeigniter &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Fmailbox With Codeigniter</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bryce			</span>
+	<span class="date_posted" title="3/22/11 10:54am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Im using Revision 953 of Fmailbox and all is working great except a few things.
+</p>
+
+<p>
+Im trying to return the word 'FALSE' if there is no connection to the imap or pop server
+</p>
+<pre class="block php"><code>if (!$this-&gt;connection) {
+   Return FALSE;
+}</code></pre>
+
+<p>
+ If i print_r(); the class from my codeigniter controller its blank so somewhere the word false is lost.
+</p>
+
+<p>
+And one more erro that i came across when getting this great app to work with codeigniter was these two lines of code
+</p>
+<pre class="block php"><code>if ($structure['type'] == 'text' &amp;&amp; $structure['subtype'] == 'plain') {
+	$info['text'] = $content;
+	return $info;
+}
+
+if ($structure['type'] == 'text' &amp;&amp; $structure['subtype'] == 'html') {
+	$info['html'] = $content;
+	return $info;
+}</code></pre>
+
+<p>
+ Now this code is located under
+</p>
+<pre class="block php"><code>// Attachments or inline content
+if ($has_disposition) {</code></pre>
+
+<p>
+ Now $content was blank and all my messages showed up as blank so I had to move it above this
+</p>
+<pre class="block php"><code>// This indicates a content-id which is used for multipart/related
+if ($structure['content_id']) {</code></pre>
+
+<p>
+ So some where things are getting lost I did run error reporting but came up with nothing.
+</p>
+
+<p>
+Any help or advice will be appreciated.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1181">
+				<div class="body" id="body-1181">
+					
+<p>
+My recommendation would be to use a completely unaltered version of <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> to see if you can properly retrieve messages. If everything works with that, then your modifications are causing the issue. If not, you can file a ticket and I can fix <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/22/11 11:00am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1182">
+				<div class="body" id="body-1182">
+					
+<p>
+Im using a standard version the only change I made was function <span class="underline">construct I changed it back to an earlier version so when I call the function I can use and array <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> </span>construct($config)
+</p>
+
+<p>
+I also added <a href="../flourishlib.com/docs/fUTF8.html">fUTF8</a> class under Fmailbox on the same page.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/22/11 11:09am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1183">
+				<div class="body" id="body-1183">
+					
+<p>
+And yes i do retrieve messages all that is working great. Just returning data is the problem.
+</p>
+
+<p>
+Should i create a ticket for this?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bryce											</span>
+					<span class="date_posted" title="3/22/11 11:11am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1190">
+				<div class="body" id="body-1190">
+					
+<p>
+If you can email the original message source, including headers, to <a href="mailto:will@flourishlib.com">mailto:will@flourishlib.com</a>, I will check it out and fix any bugs.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/11 8:32am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

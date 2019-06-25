@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Keep Session with fXML &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Keep Session with fXML</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					thix_rj_br			</span>
+	<span class="date_posted" title="11/4/11 4:56pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello, I'm from Brazil, so apologize about the bad English.
+</p>
+
+<p>
+I'm trying to use <a href="../flourishlib.com/docs/fXML.html">fXML</a> to first authenticate then to retrieve information form a website.
+</p>
+
+<p>
+The problem is that the session is not kept from a call to the other.
+</p>
+
+<p>
+The code piece that matters is bellow.
+</p>
+<pre class="block php"><code>$login  = new fXML('mywebsite?user='.$user.'&amp;pass='.$pass, 5, TRUE);
+		
+		if($login-&gt;error_code == 0){
+		
+			$url = 'mywebsite?action=ChamadoCadastrar&amp;estabelecimentoid='.$estabelecimentoid.
+						'&amp;motivoid='.$motivoid.
+						'&amp;tipon3='.$tipon3.
+						'&amp;solicitante='.urlencode($solicitante).
+						'&amp;descricao='.urlencode($descricao);
+						
+			$xml = new fXML($url, 5, TRUE);
+</code></pre>
+
+<p>
+ When it calls &quot;$xml = <a href="../flourishlib.com/docs/fXML.html">fXML</a>($url, 5, TRUE);&quot; the user is no longer logged in.
+</p>
+
+<p>
+Can anyone help?
+</p>
+
+<p>
+Thanks in advance;
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

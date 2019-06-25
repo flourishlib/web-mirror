@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>configureDateCreatedColumn stops working if setDefaultTimezone() is called &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">configureDateCreatedColumn stops working if setDefaultTimezone() is called</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="10/14/09 4:48pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I think I found an interesting and rather bizarre issue in r719.  When <a href="../flourishlib.com/api/fTimestamp.html#setDefaultTimezone">fTimestamp::setDefaultTimezone()</a> is called, columns set with <a href="../flourishlib.com/api/fORMDate.html#configureDateCreatedColumn">fORMDate::configureDateCreatedColumn()</a> or <a href="../flourishlib.com/api/fORMDate.html#configureDateUpdatedColumn">fORMDate::configureDateUpdatedColumn()</a> no longer auto-set their values or return <a href="../flourishlib.com/docs/fDate.html">fDate</a> objects.
+</p>
+
+<p>
+Here's a quick example:
+</p>
+
+<p>
+assuming the schema...
+</p>
+<pre class="block sql"><code>CREATE TABLE IF NOT EXISTS `surveys` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `title` varchar(250) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `last_edited` datetime NOT NULL,
+  PRIMARY KEY  (`id`),
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;</code></pre>
+
+<p>
+ The database and web server are both set to Etc/UTC as a baseline.
+</p>
+<pre class="block php"><code>define('BASEPATH', realpath('.'));
+
+function __autoload($class_name){
+	$app_files = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator(BASEPATH . '/application/'),
+		RecursiveIteratorIterator::LEAVES_ONLY,
+		RecursiveIteratorIterator::CATCH_GET_CHILD
+	);
+	foreach ($app_files as $filename=&gt;$cur) {
+		// check for file name
+		if($cur-&gt;getBasename('.php') == $class_name){
+			// class found
+			require($cur-&gt;getRealPath());
+			return;
+		}
+	}
+}
+
+require(BASEPATH . '/application/config/system.php');
+
+$db = new fDatabase(
+	$config['db']['engine'],
+	$config['db']['database'],
+	$config['db']['username'],
+	$config['db']['password'],
+	$config['db']['host']
+);
+fORMDatabase::attach($db);
+
+class SurveyModel extends fActiveRecord
+{
+
+	public function configure()
+	{
+		// Attach model to database table
+		fORM::addCustomClassTableMapping($this, 'surveys');
+		// Set date-created column
+		fORMDate::configureDateCreatedColumn($this, 'date_created');
+		// Set date-updated column
+		fORMDate::configureDateUpdatedColumn($this, 'last_edited');
+	}
+
+}
+
+/**
+ * Create a new survey model object without setting default time zone and store it
+ */
+try{
+	$survey = new SurveyModel();
+	$survey-&gt;setTitle('test survey 1');
+	$survey-&gt;store();
+} catch(fException $e){
+	$e-&gt;printMessage();
+}
+
+/**
+ * Output test survey 1
+ */
+?&gt;
+&lt;ul&gt;
+	&lt;lh&gt;Test Survey 1&lt;/lh&gt;
+	&lt;li&gt;Title: &lt;?php echo $survey-&gt;encodeTitle(); ?&gt;&lt;/li&gt;
+	&lt;li&gt;Date Created: &lt;?php echo $survey-&gt;getDateCreated()-&gt;modify('c', 'America/New_York')-&gt;format('m/d/Y g:iA T'); ?&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;?php
+
+/**
+ * Set default timezone and then try to create/store survey
+ */
+fTimestamp::setDefaultTimezone('Etc/UTC');
+try{
+	$survey = new SurveyModel();
+	$survey-&gt;setTitle('test survey 2');
+	$survey-&gt;store();
+} catch(fException $e){
+	$e-&gt;printMessage();
+}
+
+/**
+ * Output test survey 2
+ */
+?&gt;
+&lt;ul&gt;
+	&lt;lh&gt;Test Survey 2&lt;/lh&gt;
+	&lt;li&gt;Title: &lt;?php echo $survey-&gt;encodeTitle(); ?&gt;&lt;/li&gt;
+	&lt;li&gt;Date Created: &lt;?php echo $survey-&gt;getDateCreated()-&gt;modify('c', 'America/New_York')-&gt;format('m/d/Y g:iA T'); ?&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+<p>
+ When run, test survey 1 is created, stored, and displayed correctly.  After I set a default timezone, however, test survey 2 fails to validate and returns &quot;Please enter a date/time&quot; for date_created and date_updated, and then throws &quot;Fatal error: Call to a member function modify() on a non-object&quot; in the display test.
+</p>
+
+<p>
+I've tried this with multiple time zones, and with time zone columns set in the model with configureTimezoneColumn() and get the same result every time.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-498">
+				<div class="body" id="body-498">
+					
+<p>
+I wonder if this might be an issue with the timezone you specified? Perhaps try <code>'UTC'</code> instead of <code>'Etc/UTC'</code>? I know I'm running code with those <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a> configurations and <code>'America/New_York'</code> without any issues.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/22/09 4:27pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-499">
+				<div class="body" id="body-499">
+					
+<p>
+Yup, I didn't even think of <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> missing the Etc branch in its valid timezone array.  Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="10/23/09 4:35pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

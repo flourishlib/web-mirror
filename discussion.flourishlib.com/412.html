@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>What generates the Flourish documentation? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">What generates the Flourish documentation?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="4/25/11 9:31pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+It's clearly not Doxygen or phpDoc (unless with a ton of modifications). I'd like to make a nice set of documentation like this with my code which is all commented correctly (for use with phpDoc/Doxygen).
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1275">
+				<div class="body" id="body-1275">
+					
+<p>
+I think the last time I asked Will he mentioned PHPDoc with a bunch of custom stuff -- not sure if this has changed, but I will let him answer for clarifications.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="4/26/11 12:35am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1278">
+				<div class="body" id="body-1278">
+					
+<p>
+To get what I wanted I started using some !PhpDocumenter with customized smarty templates. Later I added some PHP and regular expressions to post-process the output of !PhpDocumenter. I ran into a few things and ended up having to modify !PhpDocumenter to output more information, or in a different way. The order in which I approached the problem directly reflects how much a pain it is to accomplish.
+</p>
+
+<p>
+Unfortunately I personally have found the !PhpDocumenter code-base is huge, is written for PHP 4 and, ironically, is not documented that well. I know there is an effort with <a href="http://www.docblox-project.org/">http://www.docblox-project.org/</a> to make a modern PHP docblock parser. Unfortunately it only runs on PHP 5.2, so I won't be able to use it for the foreseeable future since this server is stuck on 5.1.6 due to CentOS/Plesk.
+</p>
+
+<p>
+I wish the Flourish doc generation was something simpler. I also wish the site was a simple configuration of <a href="http://trac.edgewall.org/">Trac</a> (or even <a href="http://mtrack.wezfurlong.org/">mtrack</a> now that it exists). Some <em>decade</em> when I have a ridiculous amount of free time I will port everything over to newer and better systems.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/26/11 3:22pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

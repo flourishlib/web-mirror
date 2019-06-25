@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>firephp &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">firephp</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					martin santangelo			</span>
+	<span class="date_posted" title="2/6/09 7:57pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I use firephp in my projects to send debug data without breaking the html or ajax response. An integration into flourish <a href="../flourishlib.com/docs/fCore.html">fCore</a> for debugging will be a great feature I think. <a href="http://www.firephp.org/">http://www.firephp.org/</a>
+</p>
+
+<p>
+Regards
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-24">
+				<div class="body" id="body-24">
+					
+<p>
+I looked into FirePHP some and it certainly does look like a useful bit of functionality.
+</p>
+
+<p>
+Most of Flourish is built in a way that functionality can be injected via use of callbacks. While there currently is no way to register a callback for use with <a href="../flourishlib.com/api/fCore.html#debug">fCore::debug()</a>, that may be a useful feature to add.
+</p>
+
+<p>
+With such a callback interface, it would be possible to intercept the debug messages and then pass them off to FirePHP. If this is something you think you would find useful you should file a ticket requesting such an enhancement. With a ticket, you and I can both track the status of adding the enhancement.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/6/09 11:19pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-27">
+				<div class="body" id="body-27">
+					
+<p>
+For future readers reference, Martin filed ticket #136 and the static method <a href="../flourishlib.com/api/fCore.html#registerDebugCallback">fCore::registerDebugCallback()</a> was added in r508. Documentation about how to use it is included on the <a href="../flourishlib.com/docs/fCore.html#Debugging">fCore class documentation page</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/7/09 11:05pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-28">
+				<div class="body" id="body-28">
+					
+<p>
+Thank you, that was fast.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													martin santangelo											</span>
+					<span class="date_posted" title="2/8/09 11:18am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-198">
+				<div class="body" id="body-198">
+					
+<p>
+I still can't figure out how to get FirePHP to actually work with flourish.  I've setup flourish to register a debug callback function : 
+</p>
+<pre class="block php"><code>fCore::registerDebugCallback('handleDebug');</code></pre>
+
+<p>
+ I've setup a simple function to display the output as plain text and with fb():
+</p>
+<pre class="block php"><code>function handleDebug($message)
+{
+    // Code to pass message to another debugging or logging system
+	fb($message);
+	echo $message;
+}</code></pre>
+
+<p>
+ I call the request debug output:
+</p>
+<pre class="block php"><code>fCore::debug('My Test Error Message', TRUE);</code></pre>
+
+<p>
+ I get the correct HTML output.  However, there is no info in FireBug.  
+</p>
+
+<p>
+Does anyone have suggestions?  
+</p>
+
+<p>
+FYI : Yes, FirePHP is included in my setup.
+</p>
+<pre class="block php"><code>require_once( APP_PATH . '/FirePHPCore/fb.php');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="5/5/09 1:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-231">
+				<div class="body" id="body-231">
+					
+<p>
+i had similar problems and i had fun figuring out why firephp was so quirky.  i think those guys like being... obtuse.
+</p>
+
+<p>
+in any case, here's what i came up with using their OO methods:
+</p>
+<pre class="block php"><code>fCore::enableDebugging(TRUE);
+fCore::registerDebugCallback('trace_debug');
+
+function trace_debug($msg){
+
+	// check that FirePHP is loaded
+	if(!class_exists('FirePHP'))
+		// class not found, load it
+		include('fb.php');
+
+	// get FirePHP instance
+	$firephp = FirePHP::getInstance(TRUE);
+
+	// send trace
+	$firephp-&gt;trace($msg);
+
+}</code></pre>
+
+<p>
+ That's easy, but it wasn't really the problem. FirePHP has fallen behind on keeping up with Firebug development.  FirePHP 0.3 just came out which *kind of* works with the recent Firebug alphas, but you have to have Firebug open to the Net panel.  Once the page loads, switch over to the Console panel and you'll see all your debug traces.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="5/15/09 11:20pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-842">
+				<div class="body" id="body-842">
+					
+<p>
+Vena,
+</p>
+
+<p>
+The last time I tried your suggestion (I am AppBeacon in the messages above),  I still couldn't get it to work.  Since then, I've been muddling through debugging with echos and prints.  I'd sort of forgotten all about firephp.  
+</p>
+
+<p>
+Lately, I've been getting irked by my troubleshooting issues and rediscovered FirePHP.  I FINALLY figured out how to get FirePHP to work with flourish.   It's almost the same as yours.  Thanks for the directions.  For some reason, I could not get your method to work without first including require_once(APP_PATH . '/FirePHPCore/FirePHP.class.php'); before enabling debugging.  No matter what I did with my autoload function, I couldn't get flourish to load FirePHP.
+</p>
+<pre class="block php"><code>/**
+ * Setup firebug
+ */
+require_once(APP_PATH . '/FirePHPCore/FirePHP.class.php');
+fCore::enableDebugging(TRUE);
+fCore::registerDebugCallback('trace_debug');
+ 
+function trace_debug($msg)
+{
+	// check that FirePHP is loaded
+	if(!class_exists('FirePHP'))
+	{        
+		// get FirePHP instance
+		$firephp = FirePHP::getInstance(TRUE);
+	}
+	require_once(APP_PATH . '/FirePHPCore/fb.php'); 
+
+	// Send the trace
+	FB::send($msg);
+}
+</code></pre>
+
+<p>
+ When you need to output debug info, do the following:
+</p>
+<pre class="block php"><code>fCore::debug('Test debug info here.');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="7/23/10 10:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

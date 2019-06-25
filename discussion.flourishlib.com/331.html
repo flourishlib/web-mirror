@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>How to be sure an fDatabase instance is still connected? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">How to be sure an fDatabase instance is still connected?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					peranme			</span>
+	<span class="date_posted" title="12/1/10 8:04am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi!
+</p>
+
+<p>
+I'm trying to write a function that'll tell me if the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> instance I'm using is still connected (so I can reconnect if that's not the case), and this is what I have so far:
+</p>
+<pre class="block php"><code>function IsConnectedToDb(&amp;$db){
+  $strDbName=&quot;my_db&quot;;
+  $boolIsConnected=false;
+  if(is_object($db)){
+    if($db instanceof fDatabase){
+      if($db-&gt;getDatabase()==$strDbName){        
+        return true;
+      }
+    }
+  }
+  return false;
+}</code></pre>
+
+<p>
+ (I suspect the &amp; in the declaration might be superfluous, but maybe it could save RAM?)
+</p>
+
+<p>
+What this does is check the name of the database, but is that ACTUALLY the same thing as checking if the connection is still alive? Is there a shorter/better/faster way of doing it?
+</p>
+
+<p>
+TIA!
+</p>
+
+<p>
+Per.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1025">
+				<div class="body" id="body-1025">
+					
+<p>
+To my knowledge there isn't anything built in that will accomplish this. Depending on what extension is being used, <a href="../flourishlib.com/api/fDatabase.html#getConnection">fDatabase::getConnection()</a> will return the connection resource or object. You might be able to use this, but I am not sure how every database extension handles disconnection. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> would probably need to be enhanced to detect how each extension presents this information.
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fDatabase.html#getDatabase">fDatabase::getDatabase()</a> will just return the name of the database, so that will definitely not help.
+</p>
+
+<p>
+Just out of curiosity, is your database connection timing out on you because you are running a long-lived process?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/1/10 2:19pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1026">
+				<div class="body" id="body-1026">
+					
+<p>
+Hi again!
+</p>
+
+<p>
+Yeah, this is a daemon process I've got going to do some stuff related to a web service in the background, and at the time it seemed like a good idea to write it in PHP and run it from CLI.
+</p>
+
+<p>
+I've got it restarting after having done a set number of &quot;jobs&quot;, but sometimes it'll run for as much as 30-40 hours without restart, and I'd like to be sure the connection is still alive somehow, if that's at all possible. 8-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													peranme											</span>
+					<span class="date_posted" title="12/1/10 2:47pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

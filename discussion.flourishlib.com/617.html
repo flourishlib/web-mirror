@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>aggregate on fRecordSet &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">aggregate on fRecordSet</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/netpork">			netpork		</a> 	</span>
+	<span class="date_posted" title="5/25/12 9:15am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Can't find any examples of using aggregate functions with fRecordSet::build. Can someone please give me some examples? :)
+</p>
+
+<p>
+Thanks in advance.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1751">
+				<div class="body" id="body-1751">
+					
+<p>
+Are you referring to this ancient thing? <a href="http://www.php.net/manual/en/function.aggregate.php">http://www.php.net/manual/en/function.aggregate.php</a> ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/25/12 10:38am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1752">
+				<div class="body" id="body-1752">
+					
+<p>
+no, how can i use avg, min, max on the recordset.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/netpork">							netpork						</a> 					</span>
+					<span class="date_posted" title="5/25/12 11:48am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1753">
+				<div class="body" id="body-1753">
+					
+<p>
+I don't see how using these on the RecordSet itself makes much sense.  It is possible to &quot;filter&quot; recordsets if you're looking for particular records based on a criteria.  What I'm suspecting you're trying to do is use these on particular values on records in the recordset.
+</p>
+
+<p>
+You can call a particular method on the records in a recordset using the <a href="../flourishlib.com/api/fRecordSet.html#call">fRecordSet::call()</a> method.  This allows you to essentially get the return of those calls as an array with one simple line.  So for example if you had a bunch of files with a 'download_count' column, you might do something like the following:
+</p>
+<pre class="block php"><code>$average_download_count = avg($record_set-&gt;call('getDownloadCount'));</code></pre>
+
+<p>
+ I have never tried this, but I don't see why it wouldn't work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/25/12 12:50pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1754">
+				<div class="body" id="body-1754">
+					
+<p>
+errr... avg() apparently isn't a function, haha, are you referring to SQL here?  min() and max() are functions, and the above would work with them:
+</p>
+<pre class="block php"><code>$highest_download_count = max($record_set-&gt;call('getDownloadCount'));</code></pre>
+
+<p>
+ If you are referring to SQL, it'd probably be helpful to see what you're trying to do in regards to the SQL.  Generally speaking a recordset is going to reflect a selection of a number of records and all their columns.  Since Flourish uses the schema information to determine the nature of available columns, etc, you can't arbitrarily select a function value and create an &quot;abstract&quot; record so to speak (at least not as far as I know).
+</p>
+
+<p>
+You could use a simple <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> query to get a Result and then fetchScalar() on it if you are trying to get these values in the SQL itself.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="5/25/12 12:58pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1755">
+				<div class="body" id="body-1755">
+					
+<p>
+Yeah, atm I am using simple query and fetchScalar(). I am just curious how to use flourishs aggregate functions, there is an example for count in the docs:
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fRecordSet.html#AggregateFunctions">http://flourishlib.com/docs/fRecordSet#AggregateFunctions</a>
+</p>
+
+<p>
+I just need few more use cases for avg, min and max ...
+</p>
+
+<p>
+Thanks for your kind help.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/netpork">							netpork						</a> 					</span>
+					<span class="date_posted" title="5/25/12 6:15pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

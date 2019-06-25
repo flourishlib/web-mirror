@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRecordSet build column comparison &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRecordSet build column comparison</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bdavis			</span>
+	<span class="date_posted" title="6/15/09 2:48am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Can you compare column values within fRecordSet::build?
+</p>
+<pre class="block php"><code>$code_check = fRecordSet::build('PromoCode',array('promo_code=' =&gt; $code,'expiration_date&gt;' =&gt; date('Y-m-d'),'current_uses&lt;' =&gt; 'max_uses'));</code></pre>
+
+<p>
+ current_uses and max_uses are columns in the table promo_codes.
+</p>
+
+<p>
+Here is the query flourish is performing:
+</p>
+<pre class="block php"><code>SELECT promo_codes.* FROM promo_codes WHERE promo_codes.promo_code = '8LYXYVxw' AND promo_codes.expiration_date &gt; '2009-06-15' AND promo_codes.current_uses &lt; NULL  ORDER BY promo_codes.promo_code_id ASC</code></pre>
+
+<p>
+ max_uses is showing as NULL. Why is that?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-301">
+				<div class="body" id="body-301">
+					
+<p>
+Currently there is no way to compare two columns directly through the <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> method, you would have to use <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>. The reason <code>max_uses</code> comes through as <code>NULL</code> is because <code>max_uses</code> is an integer? column and <code>max_uses</code> is a string and not an integer.
+</p>
+
+<p>
+If you want, you can open a ticket requesting the ability to compare columnsthat way I won't forget.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/16/09 1:58pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

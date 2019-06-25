@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Creating Users for a site &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Creating Users for a site</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					richard			</span>
+	<span class="date_posted" title="5/28/09 11:29am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+has anyone created a tutorial on handling authentication for users and giving them certain permissions, I have read the documentation but not 100% certain on how to handle the construction of the users model.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-240">
+				<div class="body" id="body-240">
+					
+<p>
+I don't currently have a tutorial about users and authentication, and Im a little tight on time right now, so Im not sure when I will be able to get enhancing the <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> documentation.
+</p>
+
+<p>
+I think youve seen the <a href="docs:BlogFlourishDemoSite">Flourish Demo Site</a> which uses the very basics to authenticate a single account. These basics are extended to specific auth levels and ACLs based on the project needs. The <code>fAuthorization::require*()</code> methods allow kicking the user to a login page when they don't meet the requirements for viewing a page.
+</p>
+
+<p>
+Most of the sites I work on have an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class that works with a <code>users</code> table in the database. From there, I plug the <code>user_id</code> into <a href="../flourishlib.com/api/fAuthorization.html#setUserToken">fAuthorization::setUserToken()</a> so that I can create the appropriate <code>User</code> object on each page load. I also use either the ACLs or auth levels to control page access. I set the auth level or ACLs during the login process once I've verified their login/password. You obviously don't need to use the ORM to get stuff out of the database, you can simply use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.
+</p>
+
+<p>
+I know this doesn't include any code, but hopefully it can nudge you in the right direction. Perhaps someone else has some code they can share?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/28/09 2:04pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-243">
+				<div class="body" id="body-243">
+					
+<p>
+Will thanks. will be looking towards the enchanced documentation. once i get it working, i'll write up something on how to do it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													richard											</span>
+					<span class="date_posted" title="5/28/09 3:43pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

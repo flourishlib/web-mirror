@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Error in fRequest::getBestAcceptLanguage()? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Error in fRequest::getBestAcceptLanguage()?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="5/23/10 5:44am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm using <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> 'accept' methods as a lighter replacement for the language detection routines I was using (<a href="http://techpatterns.com/downloads/php_language_detection.php">http://techpatterns.com/downloads/php_language_detection.php</a>). However, I have noted some odd behaviour in detected languages (with PHP 5.3.2).
+</p>
+
+<p>
+For example, var_dump(<a href="../flourishlib.com/api/fRequest.html#getAcceptLanguages">fRequest::getAcceptLanguages()</a>) returns the correct languages as defined in my Mac Firefox 3.6.3, that is:
+</p>
+<pre class="block php"><code>array(8) { [&quot;es-es&quot;]=&gt;  float(1) [&quot;es&quot;]=&gt;  float(0.9) [&quot;en-gb&quot;]=&gt;  float(0.8) [&quot;en-us&quot;]=&gt;  float(0.6) [&quot;en&quot;]=&gt;  float(0.5) [&quot;fr-fr&quot;]=&gt;  float(0.4) [&quot;fr-be&quot;]=&gt;  float(0.3) [&quot;it&quot;]=&gt;  float(0.1) }</code></pre>
+
+<p>
+ But var_dump(<a href="../flourishlib.com/api/fRequest.html#getBestAcceptLanguage">fRequest::getBestAcceptLanguage()</a>) doesn't return string(5) &quot;es-es&quot;, as would be expected, but: 
+</p>
+<pre class="block php"><code>string(2) &quot;es&quot; </code></pre>
+
+<p>
+ Changing the order of both calls doesn't make any difference. Looking at the code in <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>, it seems that, in absence of any filters defined in the call, it should just return the first key in the languages array:
+</p>
+<pre class="block php"><code>if (!$options) {
+        return key($items);
+}</code></pre>
+
+<p>
+ However, for some reason, key() is not pointing to the first array element, but to the second one. Maybe a reset() should be added to be assured that we really start picking from the first element:
+</p>
+<pre class="block php"><code>$items = self::processAcceptHeader($header);
+
+reset($items); // Be sure we start from the first element
+
+if (!$options) {
+        return key($items);
+}</code></pre>
+
+<p>
+ Regards,
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-742">
+				<div class="body" id="body-742">
+					
+<p>
+Thanks for the report, this is fixed in r834.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/27/10 2:00am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

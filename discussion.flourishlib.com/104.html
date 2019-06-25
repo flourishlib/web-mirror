@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Downloading files to desktop &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Downloading files to desktop</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					pxl			</span>
+	<span class="date_posted" title="6/21/09 8:06am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, this is my first time posting, but I've been using Flourish for a couple of weeks now - I would first like to say that Flourish is fantastic, I've had a lot of fun putting together several applications quickly, securely and efficiently - Flourish making my life much easier!
+</p>
+
+<p>
+I currently have a project which requires users to download files directly from the uploaded folder to their desktop. These files include images, PDFs and Word Docs. Before Flourish I would use: 
+</p>
+<pre class="block php"><code>header('Content-disposition: attachment; filename='.$file);
+header('Content-type: '.$header_type);
+readfile('http://path/to/uploaded/files/'.$file);</code></pre>
+
+<p>
+ My first point - is that I don't actually know if this is the correct way to download files - Sure, it works but I don't know how secure this method is (read: <a href="../flourishlib.com/docs/Security.html">http://flourishlib.com/docs/Security</a>  - &quot;Path Traversal&quot;). 
+</p>
+
+<p>
+My Second point - is there a more effective and secure way to do this with Flourish? I have been reading through the documentation, but I can't find anything relating to downloading files.
+</p>
+
+<p>
+Any advice would be greatly appreciated!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-313">
+				<div class="body" id="body-313">
+					
+<p>
+The <a href="../flourishlib.com/docs/fFile.html">fFile</a> and <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> objects will actually convert any path into the real file path, translating upwards directory traversals such as <code>../</code> and other things like symlinks. A good way to ensure that a file is in a directory would be something like this:
+</p>
+<pre class="block php"><code>try {
+    $dir  = new fDirectory('/path/to/uploaded/files');
+    $file = new fFile($dir-&gt;getPath() . $file);
+    
+    // This prevents path traversal
+    if ($dir-&gt;getPath() != $file-&gt;getDirectory()-&gt;getPath()) {
+        throw new fValidationException('The file specified is not in the download dir');
+    }
+
+    // This outputs all appropriate headers for the file,
+    // presents it as an attachment and outputs the file
+    $file-&gt;output(TRUE, TRUE);
+    
+} catch (fValidationException $e) {
+    echo 'The file you requested could not be found';
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/22/09 11:01am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-314">
+				<div class="body" id="body-314">
+					
+<p>
+Ah! An elegant solution. Thank you very much.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													pxl											</span>
+					<span class="date_posted" title="6/22/09 6:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

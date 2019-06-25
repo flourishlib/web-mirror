@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fImage and runtime thumbnail &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fImage and runtime thumbnail</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					masterix21			</span>
+	<span class="date_posted" title="7/7/10 1:59pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+i need to generate a runtime thumbnail, but if i use this code, it will overwrite my file:
+</p>
+<pre class="block php"><code>$img = new fImage(dirname($img).&quot;/&quot;.basename($img));
+$img-&gt;resize($w, $h, false);
+$img-&gt;saveChanges('jpg', $q);</code></pre>
+
+<p>
+ I need to print the content and send header &quot;image/jpeg&quot;.
+</p>
+
+<p>
+Any solution?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-822">
+				<div class="body" id="body-822">
+					
+<p>
+Well, if you care about performance, I wouldn't recommend creating the thumbnail at runtime, or minimally at least cache it once you create it. Here is how I could write it.
+</p>
+<pre class="block php"><code>$thumbnail_dir = new fDirectory('./path/for/thumbs');
+$img = new fImage($img_path);
+
+// Check to see if the thumbnail exists
+$thumb_path = $thumbnail_dir-&gt;getPath() . pathinfo($img-&gt;getName(), PATHINFO_FILENAME) . '.jpg';
+if (file_exists($thumb_path)) {
+    $thumb = new fFile($thumb_path);
+    // If the thumbnail is out of date, unset so it gets recreated
+    if ($thumb-&gt;getMTime()-&gt;lt($img-&gt;getMTime())) {
+        unset($thumb);
+    }
+}
+
+if (!isset($thumb)) {
+    $thumb = $img-&gt;duplicate($thumbnail_dir, TRUE);
+    $thumb-&gt;resize($w, $h);
+    $thumb-&gt;saveChanges('jpg', $q);
+}
+
+$thumb-&gt;output(TRUE);</code></pre>
+
+<p>
+ This will use the cached file if it is newer than the original, otherwise it will create a thumbnail and then output it to the browser with the proper headers.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/7/10 2:12pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-823">
+				<div class="body" id="body-823">
+					
+<p>
+mhm.... it's not the code that i needed. For my project, i need to generate some thumb at runtime, without write each time on disk a new file.
+</p>
+
+<p>
+I tried this solution:
+</p>
+<pre class="block php"><code>$img = new fImage(dirname($img).&quot;/&quot;.basename($img));
+$img-&gt;resize($w, $h, false);
+$img-&gt;output(true);</code></pre>
+
+<p>
+ but the resize, don't work (and i can't set a quality parameter to thumb). What i'm wrong?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													masterix21											</span>
+					<span class="date_posted" title="7/9/10 6:33am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-824">
+				<div class="body" id="body-824">
+					
+<p>
+Unfortunately it sounds like <a href="../flourishlib.com/docs/fImage.html">fImage</a> isn't the solution for your problem. <a href="../flourishlib.com/docs/fImage.html">fImage</a> queues all image modifications and runs that when the changes are saved. This is done because !ImageMagick is a command line program and it would be slower and lossier to do one modification at a time. Even if <a href="../flourishlib.com/docs/fImage.html">fImage</a> selects the GD backend, it will still function in the same way.
+</p>
+
+<p>
+You'll need to either save the thumbnail to a temporary file and then delete it once output, or use raw GD functions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/9/10 9:27am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

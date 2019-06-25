@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fUpload::move() destination file name &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fUpload::move() destination file name</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="3/7/09 12:14pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+would it make sense to have an optional parameter in <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> for the destination file name?
+</p>
+
+<p>
+i can see a use case that makes an obvious conflict - say your destination directory is full of images named with a number that corresponds to a database entry's index, and then someone wants to upload a file they might have named '2.jpg'.  if you implemented <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> as documented, the user is going to get an erroneous conflict error, or worse yet they're going to inadvertently overwrite an existing '2.jpg' if you set enableOverwrite().
+</p>
+
+<p>
+of course there are ways around this case, but it seems to me <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> is the simpler place to resolve it, no?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-72">
+				<div class="body" id="body-72">
+					
+<p>
+you know, i should learn to read a bit more.  <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> renames the file on conflict, and i should be using <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> anyway!
+</p>
+
+<p>
+sorry about that :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="3/7/09 1:19pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-74">
+				<div class="body" id="body-74">
+					
+<p>
+Not a problem. In case you do need to use <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> without the ORM, it does have an option you can set to <a href="../flourishlib.com/docs/fUpload.html#SettingOptionsSecurity">overwrite a file when being moved</a>.
+</p>
+
+<p>
+In addition, you can manually rename a file after the move with code such as below. Since <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> returns an <a href="../flourishlib.com/docs/fFile.html">fFile</a> (or <a href="../flourishlib.com/docs/fImage.html">fImage</a>) object, you can chain a method call from the return value.
+</p>
+<pre class="block php"><code>// Ensure the file is always temp.jpg
+$upload   = new fUpload();
+$temp_jpg = $upload-&gt;move($dir, 'file')-&gt;rename($dir . 'temp.jpg');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/7/09 10:22pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-161">
+				<div class="body" id="body-161">
+					
+<p>
+Sorry to bump an old thread, but i'm wondering if you could tell me how one might make <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> use the primary key as the filename?
+</p>
+
+<p>
+thank you!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="3/28/09 10:58pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-163">
+				<div class="body" id="body-163">
+					
+<p>
+You will likely need to write a callback and register it with the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> hook <code>'post::store()'</code>. You can see the page <a href="../flourishlib.com/docs/fORM.html">fORM</a>#AddingFunctionalitytofActiveRecord for more info about adding functionality to <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+</p>
+
+<p>
+Here is a quick little example that should work, however I have not tested it:
+</p>
+<pre class="block php"><code>class User extends fActiveRecord
+{
+	static public function renameImage($object, &amp;$values, &amp;$old_values, &amp;$related_records, &amp;$cache)
+	{
+		if ($object-&gt;getImage()) {
+			$info = fFilesystem::getPathInfo(
+				$object-&gt;getImage()-&gt;getFilename()
+			);
+			if ($info['filename'] != $object-&gt;getUserId()) {
+				$image-&gt;rename($info['dirname'] . '/' . $user-&gt;getUserId() . '.' . $info['extension']);
+				$user-&gt;store();	
+			}
+		}	
+	}
+	
+	protected function configure()                                                    
+	{
+		fORMFile::configureFileUploadColumn($this, 'image', '/path/to/dir');
+		fORM::registerHookCallback($this, 'post::store()', array('User', 'renameImage'));	
+	}
+}</code></pre>
+
+<p>
+ On a side note, this example (and another post in the forums here) shows that it would be a little nicer if <a href="../flourishlib.com/api/fImage.html#rename">fImage::rename()</a> would allow just a filename rather than a whole file path. I'll open a ticket for that so that it gets done.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 11:31pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-184">
+				<div class="body" id="body-184">
+					
+<p>
+Hey Will, I tried your example (with a few tweaks, as you're using variables like $image and $user which were never created :) ), but it seems to only work for existing records.  If the record is just being created, an <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception is thrown saying that a record with the same primary key already exists.  It seems like there's some problem using store() in a post::store() callback...
+</p>
+
+<p>
+Any idea what could be done differently here?
+</p>
+
+<p>
+Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="4/15/09 5:54pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-187">
+				<div class="body" id="body-187">
+					
+<p>
+just to update - i've tried pretty much every hook, it's either obviously inappropriate (the file hasn't been received or saved yet), or i get that primary key already exists error.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="4/23/09 12:47pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-188">
+				<div class="body" id="body-188">
+					
+<p>
+duh.  so basically i solved the problem by instead of using the passed $object, just instantiating a new one with the passed $object's PK and storing on that.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="4/23/09 1:57pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

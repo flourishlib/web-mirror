@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fEmail makeQuotedPrintable bug? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fEmail makeQuotedPrintable bug?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="9/8/10 9:22am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm using <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> to send out some html email messages, it appears that somewhere in the makeQuotedPrintable function a wrapped line ended with a period character '.' and that character was subsequently removed from the email body.
+</p>
+
+<p>
+The process that sends this email also dumps the raw html into a file to provide a browser fallback, I'll provide a link to the markup that when sent as the HTML message causes an error.  
+</p>
+
+<p>
+<a href="http://faveroo.com/production/resources/columbus/email/dded073d34a043de66009980186921f2.html">http://faveroo.com/production/resources/columbus/email/dded073d34a043de66009980186921f2.html</a>
+</p>
+
+<p>
+Please disregard the content of the email, I'm not trying to spam the forum just trying to get some technical help.  
+</p>
+
+<p>
+When this markup is encoded as the html body of the message the link for the &quot;Go get it!&quot; button is altered from &quot;<a href="http://faveroo.com/columbus/">http://faveroo.com/columbus/</a>...&quot; to &quot;<a href="http://faveroocom/columbus/">http://faveroocom/columbus/</a>...&quot; 
+</p>
+
+<p>
+The script also sends the same email out but with some extra information at the beginning, this version of the email works fine, because the &quot;.&quot; character doesn't align with the line width anymore.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-916">
+				<div class="body" id="body-916">
+					
+<p>
+Do you have a copy of the content that failed? I checked out the linked HTML, but the <code>.</code> seemed to come through fine. I also tried to add a <code>.</code> at the end, but it <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> seemed to encode it in the same way that <a href="http://php.net/quoted_printable_encode">quoted_printable_encode()</a> does. Also, do you have the original message source of the message where the <code>.</code> is missing?
+</p>
+
+<p>
+I am also thinking it may be possible it is an SMTP issue. Once I have more details from you I should hopefully be able to figure it out.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/8/10 11:32am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-917">
+				<div class="body" id="body-917">
+					
+<p>
+Sure, here is the section in question
+</p>
+<pre><code>#!text/html
+
+owspan=3D&quot;2&quot;&gt;=0D=0A                           &lt;img width=3D&quot;326&quot; height=3D&quot;=
+230&quot; src=3D&quot;http://faveroo.com/production/resources/columbus/images/generat=
+ed/deal/6.jpg&quot; /&gt;=0D=0A                         &lt;/td&gt;=0D=0A           =20=
+=20          &lt;/tr&gt;=0D=0A                       &lt;tr&gt;=0D=0A             =20=
+=20          &lt;td&gt;=0D=0A                           &lt;a href=3D&quot;http://faveroo=
+com/columbus/deal/10-for-20-towards-food-6/&quot;&gt;&lt;img style=3D&quot;border:none&quot;=20=
+alt=3D&quot;Go Get It&quot; src=3D&quot;http://faveroo.com/production/resources/columbus/i=
+mages/email/go-get-it.jpg&quot; /&gt;&lt;/a&gt;=0D=0A                         &lt;/td&gt;=0D=0A=
+</code></pre>
+
+<p>
+ As you can see the 5th line ends with &quot;<a href="http://faveroo">http://faveroo</a>&quot; and the next line begins with &quot;com&quot; somewhere in there the '.' got stripped out. 
+</p>
+
+<p>
+This could be sendmail's fault, I thought I would bring it up here first.
+</p>
+
+<p>
+For reference, here is a dump of the raw message:
+</p>
+<pre><code>#!text/html
+Return-path: &lt;mail@faveroo.com&gt;
+Envelope-to: cron@faveroo.com
+Delivery-date: Wed, 08 Sep 2010 05:09:14 -0400
+Received: from [69.16.237.100] (port=44227 helo=host.umediagroup.com)
+	by host.umediagroup.com with esmtpa (Exim 4.69)
+	(envelope-from &lt;mail@faveroo.com&gt;)
+	id 1OtElY-0005n0-73
+	for cron@faveroo.com; Wed, 08 Sep 2010 03:08:20 -0400
+Date: Wed, 8 Sep 2010 03:08:20 -0400
+To: cron@faveroo.com
+Subject: =?utf-8?Q?$10_for_$20_towards_food_at_The_Lost_Shepherd?=
+From: &quot;Faveroo!&quot; &lt;mail@faveroo.com&gt;
+Message-ID: &lt;9eab13d45f69a4b2d5ed31b7f8268420@host.umediagroup.com&gt;
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary=&quot;jq_KhmydauSTnV_JihHdlatlmsu_&quot;
+
+This message has been formatted using MIME. It does not appear that your
+email client supports MIME.
+
+--jq_KhmydauSTnV_JihHdlatlmsu_
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Please enable HTML or visit http://faveroo.com/production/resources/columbu=
+s/email/dded073d34a043de66009980186921f2
+--jq_KhmydauSTnV_JihHdlatlmsu_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+&lt;table style=3D&quot;font-family: Helvetica, Arial, sans-serif; text-align:cente=
+r&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;h2 style=3D&quot;font-size: 14px; font-weight: bold; color: #424242;=
+=20text-align: center; width: 630px&quot;&gt;Having trouble viewing this email?=20&lt;=
+a href=3D&quot;http://faveroo.com/production/resources/columbus/email/dded073d34=
+a043de66009980186921f2.html&quot;&gt;Click here&lt;/a&gt; to view it in a browser window.=
+&lt;/h2&gt;&lt;br /&gt;&lt;h3 style=3D&quot;font-size: 10px; color: #424242; text-align: center=
+&quot;&gt;Be sure to add mail@faveroo.com to your address book or safe sender list=
+=20so our e-mails get to your inbox!&lt;/h3&gt;=0D=0A                    &lt;table=
+=20cellspacing=3D&quot;0&quot; cellpadding=3D&quot;0&quot; width=3D&quot;630&quot; style=3D&quot;background:=
+=20#4cc6ee; border: 3px solid #0683b1; font-family: Arial, Helvetica, sans-=
+serif&quot;&gt;=0D=0A                      &lt;tbody&gt;=0D=0A                      =20=
+=20&lt;tr&gt;=0D=0A                          &lt;td colspan=3D&quot;3&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A=
+=20                       &lt;/tr&gt;=0D=0A                        &lt;tr&gt;=0D=0A=20=
+=20                        &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A         =20=
+=20               &lt;td width=3D&quot;590&quot; height=3D&quot;96&quot;&gt;=0D=0A              =20=
+=20            &lt;img width=3D&quot;100%&quot; src=3D&quot;http://faveroo.com/production/res=
+ources/columbus/images/email/header.jpg&quot; /&gt;=0D=0A                     =20=
+=20   &lt;/td=0D=0A                          &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=
+=0A                        &lt;/tr&gt;=0D=0A                        &lt;tr&gt;=0D=0A=20=
+=20                        &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A         =20=
+=20               &lt;td width=3D&quot;590&quot;&gt;=0D=0A                            &lt;h1=
+=20style=3D&quot;background: #1f10b2; color: #ffffff; text-align: center; font-s=
+ize: 20px; font-weight: bold; padding: 5px 0px; margin: 0;&quot;&gt;Columbus deal=
+=20for September 8, 2010&lt;/h1&gt;=0D=0A                          &lt;/td&gt;=0D=0A=20=
+=20                        &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A         =20=
+=20             &lt;/tr&gt;=0D=0A                        &lt;tr&gt;=0D=0A         =20=
+=20               &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A                  =20=
+=20      &lt;td width=3D&quot;554&quot; style=3D&quot;background: #ffffff; padding: 18px;&quot;&gt;=
+=0D=0A                            &lt;table id=3D&quot;top-section&quot;&gt;=0D=0A    =20=
+=20               &lt;tbody&gt;=0D=0A                       &lt;tr&gt;=0D=0A      =20=
+=20                 &lt;td style=3D&quot;padding-right: 18px&quot;&gt;=0D=0A          =20=
+=20               &lt;h2 style=3D&quot;color: #000000; font-size: 30px; font-weight=
+: bold; text-align: left&quot;&gt;$10 for $20 towards food at The Lost Shepherd&lt;/h2=
+&gt;=0D=0A                         &lt;/td&gt;=0D=0A                         &lt;td=20r=
+owspan=3D&quot;2&quot;&gt;=0D=0A                           &lt;img width=3D&quot;326&quot; height=3D&quot;=
+230&quot; src=3D&quot;http://faveroo.com/production/resources/columbus/images/generat=
+ed/deal/6.jpg&quot; /&gt;=0D=0A                         &lt;/td&gt;=0D=0A           =20=
+=20          &lt;/tr&gt;=0D=0A                       &lt;tr&gt;=0D=0A             =20=
+=20          &lt;td&gt;=0D=0A                           &lt;a href=3D&quot;http://faveroo=
+com/columbus/deal/10-for-20-towards-food-6/&quot;&gt;&lt;img style=3D&quot;border:none&quot;=20=
+alt=3D&quot;Go Get It&quot; src=3D&quot;http://faveroo.com/production/resources/columbus/i=
+mages/email/go-get-it.jpg&quot; /&gt;&lt;/a&gt;=0D=0A                         &lt;/td&gt;=0D=0A=
+=20                      &lt;/tr&gt;=0D=0A                     &lt;/tbody&gt;=0D=0A=20=
+=20                 &lt;/table&gt;=0D=0A                          &lt;/td&gt;=0D=0A=20=
+=20                        &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A         =20=
+=20             &lt;/tr&gt;=0D=0A                        &lt;tr&gt;=0D=0A         =20=
+=20               &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A                  =20=
+=20      &lt;td width=3D&quot;554&quot; style=3D&quot;background: #ffffff; padding: 18px;&quot;&gt;=
+=0D=0A                            &lt;table id=3D&quot;bottom-section&quot;&gt;=0D=0A =20=
+=20                     &lt;tbody&gt;=0D=0A                          &lt;tr&gt;=0D=0A=
+=20                           &lt;td style=3D&quot;width: 320px; padding-right:=201=
+8px&quot; valign=3D&quot;top&quot;&gt;=0D=0A                              &lt;table id=3D&quot;left-c=
+ol&quot; style=3D&quot;text-align: left&quot;&gt;=0D=0A                  &lt;tbody&gt;=0D=0A  =20=
+=20                &lt;tr&gt;=0D=0A                      &lt;td&gt;=0D=0A         =20=
+=20             &lt;table style=3D&quot;width: 300px; background:#f4f3f3; padding:=
+=200px 10px&quot;&gt;=0D=0A                        &lt;tbody&gt;=0D=0A              =20=
+=20          &lt;tr height=3D&quot;40&quot; width=3D&quot;320&quot; style=3D&quot;color: #000000; font-=
+weight: bold; font-size: 14px&quot;&gt;=0D=0A                            &lt;td&gt;=0D=0A=
+=20                             Value:&amp;nbsp;$20=0D=0A                 =20=
+=20         &lt;/td&gt;=0D=0A                            &lt;td&gt;=0D=0A         =20=
+=20                   &amp;bull;=0D=0A                            &lt;/td&gt;=0D=0A=
+=20                           &lt;td&gt;=0D=0A                              Disco=
+unt:&amp;nbsp;$10=0D=0A                            &lt;/td&gt;=0D=0A            =20=
+=20              &lt;td&gt;=0D=0A                              &amp;bull;=0D=0A =20=
+=20                         &lt;/td&gt;=0D=0A                            &lt;td&gt;=0D=
+=0A                              Savings:&amp;nbsp;50%=0D=0A              =20=
+=20            &lt;/td&gt;=0D=0A                          &lt;/tr&gt;=0D=0A       =20=
+=20               &lt;/tbody&gt;=0D=0A                      &lt;/table&gt;=0D=0A  =20=
+=20                  &lt;/td&gt;=0D=0A                    &lt;/tr&gt;=0D=0A       =20=
+=20           &lt;tr&gt;=0D=0A                      &lt;td&gt;=0D=0A              =20=
+=20        &lt;h4 style=3D&quot;color: #2989c7; font-size: 16px; font-weight: bold;=
+=20margin:0px; padding-top: 20px&quot;&gt;THE LOST SHEPHERD&lt;/h4&gt;=0D=0A        =20=
+=20            &lt;/td&gt;=0D=0A                    &lt;/tr&gt;=0D=0A             =20=
+=20     &lt;tr&gt;=0D=0A                      &lt;td&gt;=0D=0A                    =20=
+=20  &lt;p style=3D&quot;color: #424242; font-size: 12px&quot;&gt;Long before you&amp;#039;re=
+=20even thinking about lunch or dinner, the staff at The Lost Shepherd=20is=
+=20meticulously preparing the menu items from scratch, daily. With today&amp;#0=
+39;s Faveroo, you&amp;#039;ll enjoy $20 worth of food for only $10 at Powell&amp;#0=
+39;s casual American tavern. Sit back and relax on the outdoor patio or=20g=
+o to cheer on the Buckeyes. It&amp;#039;s that kind of place.&lt;/p&gt;=0D=0A   =20=
+=20                 &lt;/td&gt;=0D=0A                    &lt;/tr&gt;=0D=0A        =20=
+=20          &lt;tr&gt;=0D=0A                      &lt;td style=3D&quot;padding-top:=2020=
+px; color: #3e3e3e; font-size: 12px&quot;&gt;=0D=0A                        &lt;a href=
+=3D&quot;http://www.thelostshepherd.com&quot;&gt;http://www.thelostshepherd.com&lt;/a&gt;=0D=
+=0A                      &lt;/td&gt;=0D=0A                    &lt;/tr&gt;=0D=0A   =20=
+=20               &lt;tr&gt;=0D=0A                      &lt;td style=3D&quot;padding-top:=
+=2020px; color: #38bd24; font-size: 10px; font-weight: bold&quot;&gt;=0D=0A   =20=
+=20                   LOCATIONS:=0D=0A                      &lt;/td&gt;=0D=0A=20=
+=20                  &lt;/tr&gt;=0D=0A                    &lt;tr&gt;=0D=0A        =20=
+=20                    &lt;td&gt;345 West Olentangy Street&lt;/td&gt;=0D=0A       =20=
+=20                   &lt;/tr&gt;=0D=0A                            &lt;tr&gt;=0D=0A=20=
+=20                            &lt;td&gt;Powell, Ohio 43065&lt;/td&gt;=0D=0A      =20=
+=20                    &lt;/tr&gt;=0D=0A                            &lt;tr&gt;=0D=0A=20=
+=20                            &lt;td&gt;(614) 792-5678&lt;/td&gt;=0D=0A          =20=
+=20                &lt;/tr&gt;=0D=0A                            &lt;tr&gt;&lt;td&gt;&amp;nbsp;&lt;/t=
+d&gt;&lt;/tr&gt;=0D=0A                  &lt;/tbody&gt;=0D=0A                &lt;/table&gt;=0D=0A=
+=20                           &lt;/td&gt;=0D=0A                            &lt;td=20=
+valign=3D&quot;top&quot;&gt;=0D=0A                              &lt;table id=3D&quot;right-col&quot;&gt;=
+=0D=0A                   &lt;tbody&gt;=0D=0A                     &lt;tr&gt;=0D=0A =20=
+=20                    &lt;td&gt;=0D=0A                         &lt;img src=3D&quot;http:=
+//faveroo.com/production/resources/columbus/images/generated/business/7.jpg=
+&quot; /&gt;=0D=0A                       &lt;/td&gt;=0D=0A                     &lt;/tr&gt;=0D=
+=0A                     &lt;tr&gt;=0D=0A                       &lt;td&gt;=0D=0A   =20=
+=20                    &lt;img src=3D&quot;http://faveroo.com/production/resources/=
+columbus/images/email/charity.jpg&quot; /&gt;=0D=0A                       &lt;/td&gt;=0D=
+=0A                     &lt;/tr&gt;=0D=0A                   &lt;/tbody&gt;=0D=0A  =20=
+=20             &lt;/table&gt;=0D=0A                            &lt;/td&gt;=0D=0A =20=
+=20                       &lt;/tr&gt;=0D=0A                        &lt;/tbody&gt;=0D=0A=
+=20                     &lt;/table&gt;=0D=0A                          &lt;/td&gt;=0D=0A=
+=20                         &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A        =20=
+=20              &lt;/tr&gt;=0D=0A                        &lt;tr&gt;=0D=0A        =20=
+=20                &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A                 =20=
+=20       &lt;td width=3D&quot;590&quot; style=3D&quot;text-align:center; padding: 14px&quot;&gt;=0D=
+=0A                            &lt;p style=3D&quot;color: #ffffff; font-weight:=20b=
+old; font-size: 12px;&quot;&gt;You are receiving this email from &lt;a style=3D&quot;text-d=
+ecoration: none&quot; href=3D&quot;http://faveroo.com/columbus&quot;&gt;Faveroo.com&lt;/a&gt;.=20=
+=20If you do not wish to receive future e-mails, &lt;a style=3D&quot;text-decoratio=
+n: none&quot; href=3D&quot;http://faveroo.com/columbus/unsubscribe/Y3JvbkBmYXZlcm9vLm=
+NvbQ=3D=3D/&quot;&gt;click here to unsubscribe&lt;/a&gt;. Questions? Comments? &lt;a style=
+=3D&quot;text-decoration: none&quot; href=3D&quot;mailto:support@faveroo.com&quot;&gt;Contact=20us=
+&lt;/a&gt;.&lt;/p&gt;=0D=0A                          &lt;/td&gt;=0D=0A                  =20=
+=20      &lt;td width=3D&quot;20&quot;&gt;&amp;nbsp;&lt;/td&gt;=0D=0A                        &lt;/tr&gt;=0D=
+=0A                      &lt;/tbody&gt;=0D=0A                    &lt;/table&gt;&lt;/td&gt;&lt;/t=
+r&gt;&lt;/table&gt;
+--jq_KhmydauSTnV_JihHdlatlmsu_--
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ihumanable											</span>
+					<span class="date_posted" title="9/8/10 12:49pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-918">
+				<div class="body" id="body-918">
+					
+<p>
+Can you paste the exact original HTML that was used for the email?
+</p>
+
+<p>
+Signs are pointing towards an SMTP issue. I will try to do some independent testing of lines starting with a . and SMTP servers tonight.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/8/10 4:04pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-920">
+				<div class="body" id="body-920">
+					
+<p>
+Tonight I finally got some time to check out <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> and <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> and I found some bugs related to lines starting with a <code>.</code>. <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> had issues on all platforms when a line started with a <code>.</code> and <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> had an issue on Windows when the email started with a <code>.</code>.
+</p>
+
+<p>
+Both of these are fixed in r903.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/11/10 11:20pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

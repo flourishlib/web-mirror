@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Early implementation of JSONSerializable? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Early implementation of JSONSerializable?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/mattsah">			mattsah		</a> 	</span>
+	<span class="date_posted" title="2/8/11 5:58pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Per <a href="http://markmail.org/thread/ft7d6bn7swnw2dls">http://markmail.org/thread/ft7d6bn7swnw2dls</a> (read the full thread) -- it seems like there is a high chance that the interface JSONSerializable will be added to PHP.  This adds a single method called jsonSerialize(), which can return an alternate variable to be encoded, primarily for adding protected/private properties.
+</p>
+
+<p>
+Although the interface might change, it would be an interesting concept to support this interface early.  I'm not sure how keen everyone is on interfaces, but a check could be done using interface_exists(), and if not found, could add the interface.  From there <a href="../flourishlib.com/api/fJSON.html#encode">fJSON::encode()</a> could check to see if an object passed implements the interface, and if so, encode the return value of it's jsonSerialize() method instead.
+</p>
+
+<p>
+With regards to my previous idea of serializing XML, it might be interesting to add an XMLSerializable interface as well during that implementation, with an equivalent xmlSerialize() method.
+</p>
+
+<p>
+This seems somewhat redundant only in the sense that PHP already has a serializable interface, however, this allows for more granular control, as well as supporting multiple serialization techniques.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1113">
+				<div class="body" id="body-1113">
+					
+<p>
+I went ahead and implemented this on my fork cause I needed it.  Although rather than include the interface in my Flourish fork I decided the implementation of the interface should be up to the developer.  So basically fJSON::encode is just seeing if it's an object and if it's an instanceof JSONSerializable and if so calling the method and encoding that instead.
+</p>
+
+<p>
+For me personally this is enough simply because the rest of my framework can take care of loading interfaces.  It didn't seem that there was a really clean way to work the interface into Flourish itself.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="2/18/11 2:46am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1373">
+				<div class="body" id="body-1373">
+					
+<p>
+One of the things I had overlooked when I initially implemented this is that <a href="../flourishlib.com/docs/fJSON.html">fJSON</a> will simply look for json_encode, and if it's available use that.  I have added a new parameter $force to <a href="../flourishlib.com/api/fJSON.html#encode">fJSON::encode()</a> and <a href="../flourishlib.com/api/fJSON.html#decode">fJSON::decode()</a> in the .inK (dotink) fork on github.  This parameter forces <a href="../flourishlib.com/docs/fJSON.html">fJSON</a> to use the manual flourish encoding and provides a good bridge for systems which have json_encode/json_decode but don't yet have the interface.
+</p>
+
+<p>
+If JSONSerializable is checked for in upstream, it might be a good idea to add this parameter as well to enforce the use of it when implemented non-natively.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/3/11 8:39pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1421">
+				<div class="body" id="body-1421">
+					
+<p>
+So from looking through the mailing list and PHP trunk it appears that it looks for an object that implements the <code>JSONSerializable</code> interface, which requires the class to have a method <code>-&gt;jsonSerialize()</code>. Rather than define an interface <code>JSONSerialize</code> and bundle it with Flourish I think I will probably just end up looking to see if a class has the method <code>jsonSerialize</code>.
+</p>
+
+<p>
+In the future, for things like this, please add a ticket. The only reason I ask for that is that it is easier for me to keep track of todo items when they are a ticket.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/20/11 8:43pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1423">
+				<div class="body" id="body-1423">
+					
+<p>
+My general suggestion would be to leave the interface availability up to the developer.  I.e. <strong>don't have flourish create the interface, only have it check for it</strong>.  The interface is extremely simple and generally speaking, while it essentially is equivalent to checking if the method exists, since it's the only method, it would seem to me the interface is more explicit in defining what -&gt;jsonSerialize() does.
+</p>
+
+<p>
+The possibility of conflict is low, most likely, but if someone just happened to put a method jsonSerialize() on some object, this would come up unintentionally true (and who knows the consequences), while checking for the interface is much more explicit.
+</p>
+
+<p>
+The point of $force on encode() and decode() is predominately due to the lack of recursion that would be supported by json_encode($value-&gt;jsonSerialize()) -- since if there were any child objects with jsonSerialize() they would not have that method called by current stable versions of PHP, where as native support for JSONSerializable interface, would.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/21/11 11:44am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

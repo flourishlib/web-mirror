@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Allow overloading of relationship getters &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Allow overloading of relationship getters</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					marcus			</span>
+	<span class="date_posted" title="7/22/10 3:22am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have no idea if this is possible with the way things are built or how much time it would take, but allowing overloading of the buildRelationship() functions would be really awesome. This would essentially mean that you could send in the same arguments as in <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> minus the class since that's already set.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-840">
+				<div class="body" id="body-840">
+					
+<p>
+I'm not sure exactly what you wan't to achieve - post some code :)
+</p>
+
+<p>
+But you can do something like this:
+</p>
+<pre class="block php"><code>class A /* The fActiveRecord class */
+{
+	public function __call($method_name, $parameters)
+	{
+		list($action, $subject) = fORM::parseMethod($method_name);
+		echo __CLASS__ . ' is ' . $action . 'ing ' . $subject . '&lt;br/&gt;';
+	}
+	
+}
+
+class B extends A /* Your active record class */
+{
+	public function __call($method_name, $parameters)
+	{
+		list($action, $subject) = fORM::parseMethod($method_name);
+		echo __CLASS__ . ' is ' . $action . 'ing ' . $subject . '&lt;br/&gt;';
+		parent::__call($action . 'Plans', $parameters);
+	}
+}
+
+$b = new B;
+$b-&gt;buildRoads();
+
+// B is building roads
+// A is building plans</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="7/22/10 5:21am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-841">
+				<div class="body" id="body-841">
+					
+<p>
+I was primarily thinking of being able to restrict and sort the data you get back from it in the same way that you can when you do a normal <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>.
+</p>
+
+<p>
+As the class name is already given that can be excluded but being able to do for example
+</p>
+<pre class="block php"><code>$b-&gt;buildRoads(array(&quot;road_length&gt;&quot; =&gt; 5), array(&quot;road_length&quot; =&gt; &quot;asc&quot;));</code></pre>
+
+<p>
+ Assuming of course that there is a road_length column and it's an INT. Right now if you want the data returned by the relationship getter to be sorted you have to do that through <a href="../flourishlib.com/api/fORMRelated.html#setOrderBys">fORMRelated::setOrderBys()</a> which of course works but there's no way to put in a WHERE clause or limiting the number of returned records.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													marcus											</span>
+					<span class="date_posted" title="7/22/10 5:35am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-845">
+				<div class="body" id="body-845">
+					
+<p>
+The reason such functionality does not exist is for the sake of clarity. When calling a <code>build{RelatedRecords}()</code> method on an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, it will return all related records for the related class. Now, due to things like <code>populate{RelatedRecords}()</code>, the related records may or may not be coming from the database. In addition, if the related records have been retrieved from the database already, they are cached to prevent excess database calls. Because of this, there is no way to allow for the exact same functionality as <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>.
+</p>
+
+<p>
+You can use <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> on the returned record set, however that may be inefficient if you have many related records and may not provide all of the same functionality as the SQL-based build.
+</p>
+
+<p>
+I've considered changing the API so that if an array of conditions and order bys is passed, that way a SQL statement will always be executed, but then it can get confusing. Instead of knowing that all of the related records are returned, you would be pulling from two totally different sources and could get very different results. Imagine calling a <code>build</code> with conditions and getting 5 records, but then calling <code>build</code> without conditions and getting no records.
+</p>
+
+<p>
+I have to be honest, I also haven't spent too much time trying to work this all out due to what I view the benefits of an ORM being. I think one of main benefits of an ORM isn't so much writing less SQL, but encapsulating all of the business rules and making conditionals cleaner. By that, I mean that writing methods to handle slight variations in where clauses ends up creating messy looking concatenation of SQL strings. <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> removes that by encapsulating all of the SQL string concatenation without really abstracting away much of the syntax. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> provides a nice container to wrap all of the business logic up into. Thus, when I want to do this sort of thing, I wrap all of the conditionals and <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> operations up into methods on my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes. Here is an example:
+</p>
+<pre class="block php"><code>class User extends fActiveRecord
+{
+    static public function build()
+    {
+        return fRecordSet::build(__CLASS__);
+    }
+
+    static public function buildActive()
+    {
+        return fRecordSet::build(__CLASS__, array('status=' =&gt; 'Active'));
+    }
+}</code></pre>
+
+<p>
+ So, in your situation I would probably make a method such as:
+</p>
+<pre class="block php"><code>class City extends fActiveRecord
+{
+    public function buildRoadsOfLength($length)
+    {
+        return fRecordSet::build(
+            __CLASS__,
+            array('road_length&gt;' =&gt; $length),
+            array('road_length' =&gt; 'asc')
+        );
+    }
+}</code></pre>
+
+<p>
+ That said, I know different developers have different styles and many would approach the problem from a different angle. Because of that, I'd be open to hearing ideas about how to handle this situation.
+</p>
+
+<p>
+Should I create a prefix other than <code>build</code> for always querying the database, instead of possibly hitting the cache? Should I try to find a way to translate <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> where conditions into <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> conditions, and use <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> internally when a record set has already been cached?
+</p>
+
+<p>
+Related to this concept, should there be a new method to add one or more new related records, instead of having to list all related records for the <code>associate</code> methods? Should there be a method to remove only one or a few records instead of specifying the full list via <code>associate</code>?
+</p>
+
+<p>
+As always, I appreciate any ideas or suggestions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/10 1:26am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

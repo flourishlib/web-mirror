@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Flourish makes PHP sane; can&#039;t PHP learn from Flourish? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Flourish makes PHP sane; can&#039;t PHP learn from Flourish?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					audvare			</span>
+	<span class="date_posted" title="10/28/11 4:32am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I find that Flourish brings so much sanity to PHP programming yet at the same time when writing a new function, class, etc, some PHP not-so-nice things make their re-appearance. These are things talked about by critics in part when it comes to PHP:
+</p>
+
+<ul>
+<li>No function naming consistency (strcat (C style), popen (POSIX style), and str_replace (underscore? style))</li>
+<li>Sometimes return values are objects and sometimes they are arrays (in PHP, both are almost the same when only dealing with hash table vs object; both can even have functions (closures))</li>
+<li>Casting array to string makes illogical string 'Array' instead of something like implode(',', $array) (like Javascript)</li>
+<li>Having to write get and set methods
+<ul>
+<li>By contrast: Objective-C has @synthesize and Javascript simply creates a property to an object; Ruby is very similar</li>
+<li>We could just NOT make things private/protected (encapsulated); Perl has yet to implement such a feature (supposedly coming in 6) (they believe in 'freedom' for the programmer)</li>
+</ul>
+</li>
+</ul>
+
+<p>
+I'm only pointing out a few common things I hear about. I'm not necessarily complaining but I am saying that it's great that Flourish brings PHP to a new level because Flourish is actually designed. That's all PHP needs in general, rather than emulating Java in one version (PHP 5.2), Javascript in another (PHP 5.3), and Ruby in the who-knows-when version (5.4?).
+</p>
+
+<p>
+For the first issue, I've considered using <a href="../flourishlib.com/docs/fUTF8.html">fUTF8</a> for all string operations but there come to mind a few issues:
+</p>
+
+<ul>
+<li>Performance</li>
+<li><a href="../flourishlib.com/docs/fUTF8.html">fUTF8</a> is a little more annoying to type than most other names (use an IDE, but not everyone likes this mode of thinking)</li>
+</ul>
+
+<p>
+The rest of the solution I suppose is aliasing and creating better, more useful classes (this is what Flourish does for many things). <a href="../flourishlib.com/docs/fNumber.html">fNumber</a> essentially makes numbers objects in PHP (pretty much a first, but I'm sure many might wonder why this is a good idea, especially when there is also no literal syntax possibility yet). <a href="../flourishlib.com/docs/fDate.html">fDate</a>/<a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>/<a href="../flourishlib.com/docs/fTime.html">fTime</a> is all the date functions' replacements.
+</p>
+
+<p>
+For the third issue, a general purpose Array (really, hash table) class could be made that implemented toString(), Iterable, etc and returned the values imploded (with their toString() methods called as well).
+</p>
+
+<p>
+For the fourth issue, it seems like every class (regardless of need) should have a default call() method that's something like:
+</p>
+<pre class="block php"><code>public function __call($method, $arguments) {
+  if (substr($method, 0, 3) === 'get') { // fUTF8::sub would be better right? :)
+    $value = substr($method, 3);
+    if (isset($this-&gt;$value)) {
+      return $this-&gt;$value;
+    }
+    return NULL;
+  }
+  if (substr($method, 0, 3) === 'set') {
+    $prop = substr($method, 3)
+    $this-&gt;$prop = $arguments[0];
+  }
+  return $this;
+}</code></pre>
+
+<p>
+ Other thoughts:
+</p>
+
+<p>
+Other than using real tabs, I like the standards put in place. Naming convention is great. Almost like how in Objective-C almost everyone uses a 2-3 letter uppercase prefix instead of a full word. Consider this the 'vendor prefix' (like in CSS -webkit- or OpenGL GL_NV_). It's very useful and much simpler than a full word (and better than none). PHP lacks a good packaging system (STILL, who ever heard of a class 'autoloader' in another language?) and so this is the closest we can get without using the (IMO terrible) namespacing syntax (my criticism is choosing possibly the worst possible character for it, <br />
+).
+</p>
+
+<p>
+The other issue that is still going on is compatibility. The cheap hosts are really holding us back! I want to actually use closures (honestly, already have)! But I know I can't because the average host remains on PHP 5.2. It's a horrible situation and I really don't know the solution besides somehow convincing the cheap hosts (I'm looking at GoDaddy for one) to actually stay up to date. The only way this could happen is if everyone began using PHP 5.3 functionality a lot more and nothing supported 5.2. Probably not going to happen soon.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

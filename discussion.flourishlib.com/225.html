@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Problem with joining table in many-to-many relationships &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Problem with joining table in many-to-many relationships</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="5/4/10 6:11am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a database schema with two tables, 'users' and 'groups', and a joining table, 'user_groups'. The users and groups tables are very straightforward (I put only relevant fields, for briefness):
+</p>
+<pre class="block sql"><code>CREATE TABLE users (
+    id              serial PRIMARY KEY,
+    uid             varchar(32),
+    name            varchar(64),
+    surname         varchar(64),
+);
+
+CREATE TABLE groups (
+    id              serial PRIMARY KEY,
+    groupid         varchar(16) DEFAULT '',
+    groupname       varchar(128) DEFAULT '',
+    active          boolean DEFAULT FALSE,
+);
+
+CREATE TABLE users_groups (
+    id_user         integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id_group        integer NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+    PRIMARY KEY (id_user, id_group)
+);
+</code></pre>
+
+<p>
+ This schema looks fine and fCore::expose($schema-&gt;getRelationships('users')) shows the following for users table:
+</p>
+<pre class="block php"><code>Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; users
+                    [column] =&gt; id
+                    [related_table] =&gt; groups
+                    [related_column] =&gt; id
+                    [join_table] =&gt; users_groups
+                    [join_column] =&gt; id_user
+                    [join_related_column] =&gt; id_group
+                    [on_update] =&gt; no_action
+                    [on_delete] =&gt; cascade
+                )
+        
+        )
+  
+)
+</code></pre>
+
+<p>
+ However, so long as each user could have a distinct role in each group he is member of, I would need to add a 'role' field to the user_groups table:
+</p>
+<pre class="block sql"><code>CREATE TABLE users_groups (
+    id_user         integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id_group        integer NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+    role            varchar(16) DEFAULT '',
+    PRIMARY KEY (id_user, id_group)
+);
+</code></pre>
+
+<p>
+ The problem is that after adding that new field, the many-to-many relationship is lost:
+</p>
+<pre class="block php"><code>Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; users
+                    [column] =&gt; id
+                    [related_table] =&gt; users_groups
+                    [related_column] =&gt; id_user
+                    [on_delete] =&gt; cascade
+                    [on_update] =&gt; no_action
+                )
+        
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+        )
+  
+)
+</code></pre>
+
+<p>
+ I don't see the reason for which it doesn't work, so long as the foreign keys are the same ones and they are single column FOREIGN KEY constraints. Any help?
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-688">
+				<div class="body" id="body-688">
+					
+<p>
+Trying to circumvent the problem above, I have defined a new 'roles' table, using the joining table primary key pairs as foreign key, as follows:
+</p>
+<pre class="block sql"><code>CREATE TABLE roles (
+    id_user         integer NOT NULL,
+    id_group        integer NOT NULL,
+    role            varchar(32),
+    PRIMARY KEY (id_user, id_group),
+    FOREIGN KEY (id_user, id_group) REFERENCES users_groups(id_user, id_group) ON DELETE CASCADE
+);
+</code></pre>
+
+<p>
+ This is what I get for that table using getRelationships:
+</p>
+<pre class="block php"><code>Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; roles
+                    [column] =&gt; id_user
+                    [related_table] =&gt; users_groups
+                    [related_column] =&gt; id_group
+                )
+        
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+        )
+  
+)</code></pre>
+
+<p>
+ As you see, it identifies 'id_user' as column referencing to 'id_groups' in users_groups, while it should be id_user,id_group in both cases.
+</p>
+
+<p>
+If this doesn't work, how could I solve the problem of linking values to the joining table?
+</p>
+
+<p>
+Regards, A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/4/10 7:36am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-690">
+				<div class="body" id="body-690">
+					
+<p>
+Unfortunately Flourish does not support multi-column foreign keys. The rather extensive additional complexity of modeling multiple columns per relationship was just deemed not worth it. That said, multi-column primary keys are supported.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/4/10 8:40am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-689">
+				<div class="body" id="body-689">
+					
+<p>
+For a table to be considered a joining table, and thus creating a many-to-many relationship, it can not contain any information that is not contained in the two tables being joined. This is why your first example acts as you were expecting, but the second table does not. With a many-to-many relationship there is no object to model the joining table since it is just the normalized form of storing relationship info.
+</p>
+
+<p>
+With the second example, <code>users</code> is in a one-to-many relationship with <code>users_groups</code> and <code>users_groups</code> is in a many-to-one relationship with <code>groups</code>. You'll need a <code>UsersGroup</code> class to represent the <code>users_groups</code> rows and to be able to retrieve the <code>role</code> information.
+</p>
+
+<p>
+That said, there is functionality built into Flourish to make retrieval of the related information in your second example easier. With the one-to-many relationship between <code>users</code> and <code>users_groups</code>, you can use the <code>build</code> action:
+</p>
+<pre class="block php"><code>$users_groups = $user-&gt;buildUsersGroups();
+foreach ($users_groups as $users_group) {
+    echo $users_group-&gt;encodeRole();
+}</code></pre>
+
+<p>
+ So here <code>$users_groups</code> is an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object. There is also a <code>build</code> method for <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> that creates another <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> from a many-to-one relationship. Thus to get all of the groups a user is in, you can call:
+</p>
+<pre class="block php"><code>$groups = $user-&gt;buildUsersGroups()-&gt;buildGroups();</code></pre>
+
+<p>
+ I hope this helps.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/4/10 8:36am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-695">
+				<div class="body" id="body-695">
+					
+<p>
+Thanks for your reply!
+</p>
+
+<p>
+Using the pure many-to-many model (that is, without roles information) I had no problem to get both related records stored with something as:
+</p>
+<pre class="block php"><code>$user = new User();
+$user-&gt;setUid   ('useruid');
+$user-&gt;setName  ('Someusername');
+$user-&gt;setEmail ('somemail@mail.com');
+$user-&gt;store();
+
+$group = new Group();
+$group-&gt;setGroupid   ('homegroup');
+$group-&gt;setGroupname ('Full group name');
+$group-&gt;setType      ('project');
+
+$group-&gt;associateUsers(array($user));
+$group-&gt;store();
+</code></pre>
+
+<p>
+ But if join tables can't contain extra fields and multi-column foreign keys are neither supported, it seems I will have to follow the three tables route: users, groups, user_groups, and three classes (User, Group, UserGroup). However, using three tables, I'm not able to use associateUsers anymore in user_groups:
+</p>
+<pre class="block php"><code>$usergroup-&gt;associateUsers(array($user));
+$usergroup-&gt;associateGroups(array($group));
+$usergroup-&gt;store();
+</code></pre>
+
+<p>
+ Because it complains about not being a *-to-many relationship, and it's right, of course). I have then attempted the solution you told about to mblarsen in Message 681:
+</p>
+<pre class="block php"><code>$user = new User();
+$user-&gt;setUid   ('useruid');
+$user-&gt;setName  ('Someusername');
+$user-&gt;setEmail ('somemail@mail.com');
+$user-&gt;store();
+
+$group = new Group();
+$group-&gt;setGroupid   ('homegroup');
+$group-&gt;setGroupname ('Full group name');
+$group-&gt;setType      ('project');
+
+$usergroup = new UserGroup();
+$usergroup-&gt;setRole   ('boss');
+$usergroup-&gt;setIdUser ($user-&gt;getId());
+
+$group-&gt;associateUserGroups($usergroup);
+$group-&gt;store(</code></pre>
+
+<p>
+ );
+</p>
+
+<p>
+However, only 'users' and 'groups' tables are updated (just like in mblarsen case). but the 'user_groups' remains empty. Surely I could leave away the 'associate' and use the 'manual' way, getting both ids from users and groups, adding them to $usergroup instance and storing that table too, but I would prefer to stay in a shorter and straight path, if possible. Any news about the ticket you opened with this issue?
+</p>
+
+<p>
+Finally, I have not found too much documentation about 'build', 'encode', 'associate', and so on. Although 'get' and 'set' are really intuitive, of course, maybe those 'methods' would need  further details.
+</p>
+
+<p>
+Thanks for a so nice library, and for your kind help!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/5/10 7:20am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-696">
+				<div class="body" id="body-696">
+					
+<p>
+Sorry, in the post there is a typo error (it lacks the closing parenthesis):
+</p>
+<pre class="block php"><code>&gt; $group-&gt;associateUserGroups($usergroup);
+&gt; $group-&gt;store(</code></pre>
+
+<p>
+ In my code I really have '$group-&gt;store();', of course.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/5/10 7:26am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-697">
+				<div class="body" id="body-697">
+					
+<p>
+Well, finally I have got it, but I have had to make two changes:
+</p>
+
+<p>
+In the database, I have removed the two-columns primary key, replacing it with a serial column, and indexing the main fields.
+</p>
+<pre class="block sql"><code>CREATE TABLE user_groups (
+    id              serial PRIMARY KEY,
+    id_user         integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id_group        integer NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+    role            varchar(32),
+);
+CREATE INDEX user_groups_id_user_idx ON user_groups (id_user) ;
+CREATE INDEX user_groups_id_group_idx ON user_groups (id_group) ;</code></pre>
+
+<p>
+ Also, I have had to change the last 'store' call as follows:
+</p>
+<pre class="block php"><code>...
+$usergroup = new UserGroup();
+$usergroup-&gt;setRole ('boss');
+$usergroup-&gt;setIdUser ($user-&gt;getId());
+
+$group-&gt;associateUserGroups(array($usergroup));
+$group-&gt;store();</code></pre>
+
+<p>
+ If I use $group-&gt;associateUserGroups($usergroup); it doesn't work. Setting it within an array, it does it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/5/10 2:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-706">
+				<div class="body" id="body-706">
+					
+<p>
+I tested it and in previous revisions, if you pass with an array, but the original multi-column primary key, it does work. In r819 I changed it so you can also pass a single <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/6/10 2:03pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-700">
+				<div class="body" id="body-700">
+					
+<p>
+I'm actually going to be looking into the associate issue right now, I'll let you guys know what happens.
+</p>
+
+<p>
+In terms of the operations that are possible for column, you should check out <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#ColumnOperations. That describes the <code>prepare</code> and <code>encode</code> verbs for columns. The section <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations describes all of the operations that can be performed on an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> for manipulating related records.
+</p>
+
+<p>
+The <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> page has all of the documentation for the class, but the <code>build</code> action is described at <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>#FromRelatedRecords.
+</p>
+
+<p>
+If you want to learn about the action verbs used throughout Flourish, check out the MethodNaming page.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/5/10 11:48pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-714">
+				<div class="body" id="body-714">
+					<blockquote>
+<p>
+ There is also a <code>build</code> method for <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> that creates another <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> from a many-to-one relationship. Thus to get all of the groups a user is in, you can call:    $groups = $user-&gt;buildUsersGroups()-&gt;buildGroups();
+</p>
+</blockquote>
+<p>
+Yes, that 'build' works. However, it seems it lacks the pagination feature described for 'normal' build method. Then, to get a paginated output of the groups a user is member of, I'll have to use a manual way... Is pagination available on other build methods (i.e. buildFromSQL)?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="5/10/10 7:37am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-716">
+				<div class="body" id="body-716">
+					
+<p>
+Yes, the build methods on <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> will create the whole set of record since it used a cached version of the records when possible, and also uses those cached record when associating records.
+</p>
+
+<p>
+You have two choices for build record related to <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects:
+</p>
+
+<ol>
+<li>Call the full build and use <a href="../flourishlib.com/api/fRecordSet.html#slice">fRecordSet::slice()</a></li>
+<li>Perform an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> and specify the appropriate foreign key in the where conditions array</li>
+</ol>
+
+<p>
+In terms of doing pagination in <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, just use the SQL <code>LIMIT</code> and <code>OFFSET</code> clauses. For <a href="../flourishlib.com/api/fRecordSet.html#buildFromArray">fRecordSet::buildFromArray()</a>, use array slice before passing the array in.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/10/10 10:31am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

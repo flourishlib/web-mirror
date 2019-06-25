@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Getting related records with non-standard class names &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Getting related records with non-standard class names</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					kaerigan			</span>
+	<span class="date_posted" title="1/26/10 11:11am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello there. I'm just starting out with Flourish and I'm already in need of assistance.
+</p>
+
+<p>
+My problem is this: I like to organize my classes the way the Zend Framework does it (i.e My_Awesome_Class = My/Awesome/Class.php) and so I was trying to apply this to my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes. I have two tables; &quot;users&quot; and &quot;posts&quot;, my classes are named Record_User and Record_Post respectively and I have used <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> to configure the classes properly (I think?). Now, here's the code I'm trying to execute:
+</p>
+<pre class="block php"><code>$u = new Record_User(1); // user already exists
+$posts = $u-&gt;buildPosts(); // I've already got some posts in the database, too</code></pre>
+
+<p>
+ However, I get the following error: 
+</p>
+<pre><code>The class specified, Post, does not appear to be a valid fActiveRecord class</code></pre>
+
+<p>
+ And indeed, &quot;Post&quot; is not a valid class. How can I make ensure that &quot;Record_Post&quot; is used instead and that this results in a collection of posts instead of an error? I've tried all this without adhering to my class naming habits and it works, but that won't do. Also, the classes:
+</p>
+<pre class="block php"><code>class Record_User extends fActiveRecord {
+    protected function configure() {
+        fORM::mapClassToTable($this, 'users');
+    }
+}
+
+class Record_Post extends fActiveRecord {
+    protected function configure() {
+        fORM::mapClassToTable($this, 'posts');
+    }
+}</code></pre>
+
+<p>
+ Thanks in advance!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-595">
+				<div class="body" id="body-595">
+					
+<p>
+As of right now Flourish does not explicitly support using different notations other than underscore for tables and columns and upper camel case for classes. I'm not sure it ever will since there would be quite a bit of work involved with trying to figure out what syntax should be looked for where.
+</p>
+
+<p>
+That said, I think I have seen people using underscores in their classes names in the forum some. Have you tried this?
+</p>
+<pre class="block php"><code>$u = new Record_User();
+$posts = $u-&gt;buildRecord_Posts();</code></pre>
+
+<p>
+ That may or may not work.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/26/10 11:18am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-596">
+				<div class="body" id="body-596">
+					
+<p>
+I see. I think I tried what you proposed, but it did not work. And even if it did, it is, if I may say so, a rather ugly solution. So I guess I'll either have to conform to the current naming convention or use another ORM.
+</p>
+
+<p>
+Perhaps one could add the ability to configure a class name prefix? However, I am not sure this makes sense as none of the Flourish classes use such a system.
+</p>
+
+<p>
+Thanks anyway.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													kaerigan											</span>
+					<span class="date_posted" title="1/26/10 4:14pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

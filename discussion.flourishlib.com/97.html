@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>recursive function &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">recursive function</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="6/10/09 3:57pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<pre class="block php"><code>function get_categs_tree($id=0)
+{
+   global $db;
+   static $categs = array (&quot;0&quot; =&gt; &quot;Top&quot;);
+   static $level = 0;
+   $level++;
+   $r = $db-&gt;select(&quot;SELECT * FROM CATEGORII where PARENT_ID = $id and ACTIV = 1 ORDER BY CATEGORIE&quot;);
+   //$db-&gt;print_last_query();	
+   while ($row = $db-&gt;get_row($r, 'MYSQL_ASSOC')) {
+   		if ($level==1) {
+			$categs[$row[&quot;ID_CATEGORIE&quot;]] = $row[&quot;CATEGORIE&quot;];		
+		} else {
+			$categs[$row[&quot;ID_CATEGORIE&quot;]] = str_repeat ('&amp;nbsp;&amp;nbsp;', $level-1).'|___'.$row[&quot;CATEGORIE&quot;];		
+		}  
+    	get_categs_tree($row[&quot;ID_CATEGORIE&quot;]);
+   }   
+   $level--;
+  return $categs;
+}
+
+can someone give an idea how i can change this with orm? pls pls</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-295">
+				<div class="body" id="body-295">
+					
+<p>
+If you can provide the database schema being used along with a simple description of what the code is doing, it will be easier for others to give you suggestions.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/12/09 9:06am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-297">
+				<div class="body" id="body-297">
+					
+<p>
+Schema is very simple, have an id, title, and a parent_id. this must be a function who references itself to find parent who have parent_id = 0, and children as many levels exist, like categories and subcategories of that category.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/12/09 8:23pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-418">
+				<div class="body" id="body-418">
+					
+<p>
+I comeback with this because i need this very much. more details, so:
+</p>
+
+<p>
+table:
+</p>
+<pre class="block sql"><code>--
+-- Table structure for table `categorii`
+--
+
+CREATE TABLE IF NOT EXISTS `categorii` (
+  `id_categorie` int(11) NOT NULL AUTO_INCREMENT,
+  `categorie` varchar(100) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `activ` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_categorie`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `categorii`
+--
+
+INSERT INTO `categorii` (`id_categorie`, `categorie`, `parent_id`, `activ`) VALUES
+(1, 'Vanzari', 0, 1),
+(2, 'Cumparari', 0, 1),
+(3, 'Masini', 1, 1);</code></pre>
+
+<p>
+ php function:
+</p>
+<pre class="block php"><code>#GET CATEGORY TREE
+function get_categs_tree($id=0)
+{
+   global $db;
+   static $categs = array (&quot;0&quot; =&gt; &quot;Top&quot;);
+   static $level = 0;
+   $level++;
+   $r = $db-&gt;select(&quot;SELECT * FROM CATEGORII where PARENT_ID = $id and ACTIV = 1 ORDER BY CATEGORIE&quot;);
+   //$db-&gt;print_last_query();	
+   while ($row = $db-&gt;get_row($r, 'MYSQL_ASSOC')) {
+   		if ($level==1) {
+			$categs[$row[&quot;ID_CATEGORIE&quot;]] = $row[&quot;CATEGORIE&quot;];		
+		} else {
+			$categs[$row[&quot;ID_CATEGORIE&quot;]] = str_repeat ('&amp;nbsp;&amp;nbsp;', $level-1).'|___'.$row[&quot;CATEGORIE&quot;];		
+		}  
+    	get_categs_tree($row[&quot;ID_CATEGORIE&quot;]);
+   }   
+   $level--;
+  return $categs;
+}
+
+
+use function :
+
+
+{{{
+#!php
+### Populare select
+
+#DENUMIREA SELECT-ului in template-ul HTML
+$xtpl-&gt;assign('SELECT_NAME', 'parent_id');
+
+$parent_categ = Categorii::get_categs_tree(0);
+//print_r($parent_categ);
+foreach ($parent_categ as $value =&gt; $option) {
+	# selectare pt edit  / iau id de mai sus pentru test
+	
+	if ($value == $parent_id) {
+		$xtpl-&gt;assign('SELECTED', &quot;selected='selected'&quot;);
+	} else {
+		$xtpl-&gt;assign('SELECTED', &quot;&quot;);
+	}
+	# end selectare pt edit
+	
+	$xtpl-&gt;assign('VALUE_P', $value);
+	$xtpl-&gt;assign('NAMESELECT_P', $option);
+	$xtpl-&gt;parse('main.options');
+}
+
+### End Populare select</code></pre>
+
+<p>
+ }}}
+</p>
+
+<p>
+i want this made it with <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, can somebody please help me?
+</p>
+
+<p>
+a link maybe helps : <a href="http://deadlytechnology.com/scripts/simple-recursive-php-tree-menu-example/">http://deadlytechnology.com/scripts/simple-recursive-php-tree-menu-example/</a>   about recursive function. if you need any other details please let me note.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="9/22/09 10:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-424">
+				<div class="body" id="body-424">
+					
+<p>
+@Mungiu
+</p>
+
+<p>
+I've put together an example of how I would approach this.  Because I don't quite understand your recursive function, I haven't touched it very much.  I've just modified it enough to show how to use it.
+</p>
+
+<p>
+First, I like to completely separate all database interaction from the rest of my application.  So, I build a class for each and every table in my application.  That class does NOTHING except setup objects to extract data from the db.  It does not do anything with the data.  This makes it very easy to have a collection of all the queries for a database table.  Again, you need one class for each table.  Each class can have different tables.
+</p>
+<pre class="block php"><code>
+&lt;?php
+// This should be stored in a file called Categorii.php
+class Categorii extends fActiveRecord
+{
+	protected function configure()
+	{
+		// Flourish would try to use humanize to make your table name something like categoriis.
+		// This method maps this class to the table called categorii and prevents the humanization of the word
+		fORM::addCustomClassTableMapping($this, 'categorii');		
+	}
+	
+	/**
+	 * Fetch all records associated with a parent_id from table categorii
+	 * @param Integer $parent_id
+	 * @return Object|BOOL  	// Returns a flourish resultset object or FALSE if no records exist.
+	 */
+	public static function fetchCategorii($parent_id)
+	{
+		try
+		{
+			// Get the database connection.  This is better than using &quot;global $db&quot;
+			$db = fORMDatabase::retrieve();
+			
+			// Note I am using the %i placeholder to represent an integer value
+			$sql = &quot;SELECT * FROM CATEGORII where PARENT_ID = %i and ACTIV = 1 ORDER BY CATEGORIE&quot;;
+			
+			// Escape the parent id
+			$sql = $db-&gt;escape($sql, $parent_id);
+			
+			$result = $db-&gt;query($sql);
+			
+			// If there are no rows, throw an exception
+			$result-&gt;tossIfNoRows();
+			
+			// Return the entire resultset
+			return $result;
+			
+		} catch( fNoRowsException $e) 
+			{
+				// If there were no rows, simply return false
+				 return FALSE; 
+			} catch ( fSQLException $e ) 
+				{
+					// Catch bad SQL statements.
+					echo &quot;ARGH!  I wrote a bad SQL statement and need to manage this error!&quot;;
+					exit;
+				} catch ( fException $e ) 
+					{
+						// Catch any other exception
+						echo &quot;ARGH!  I failed and need to manage this error!&quot;;
+						exit;
+					}
+	}
+}
+
+?&gt;
+</code></pre>
+
+<p>
+ Now, I only have to use the static function above to process the data.  See how my actual logic code is so much cleaner now that there is no database interaction in it:
+</p>
+<pre class="block php"><code>
+&lt;?php
+
+// Don't forget to do your includes &amp;/or autoloads to get flourish pulled in and to have access to Categorii.php
+
+
+### Populare select
+ 
+#DENUMIREA SELECT-ului in template-ul HTML
+$xtpl-&gt;assign('SELECT_NAME', 'parent_id');
+ 
+$parent_categ = get_categs_tree(0);
+//print_r($parent_categ);
+foreach ($parent_categ as $value =&gt; $option) {
+    # selectare pt edit  / iau id de mai sus pentru test
+    
+    if ($value == $parent_id) {
+        $xtpl-&gt;assign('SELECTED', &quot;selected='selected'&quot;);
+    } else {
+        $xtpl-&gt;assign('SELECTED', &quot;&quot;);
+    }
+    # end selectare pt edit
+    
+    $xtpl-&gt;assign('VALUE_P', $value);
+    $xtpl-&gt;assign('NAMESELECT_P', $option);
+    $xtpl-&gt;parse('main.options');
+}
+ 
+### End Populare select
+
+function get_categs_tree($id=0)
+{
+	static $categs = array (&quot;0&quot; =&gt; &quot;Top&quot;);
+	static $level = 0;
+	$level++;
+	
+	
+	// Get a flourish resultset object of all categories matching this parent_id
+	$categories = Categorii::fetchCategorii($parent_id);
+	if($categories === FALSE)
+	{
+		// There weren't any matching records.
+		return FALSE;
+	}
+	
+	// Flourish lets you use foreach to iterate through resultsets and recordset objects.
+	foreach($categories as $row)
+	{
+		if ($level==1)
+		{
+			$categs[$row[&quot;ID_CATEGORIE&quot;]] = $row[&quot;CATEGORIE&quot;];        
+		} else 
+			{
+				$categs[$row[&quot;ID_CATEGORIE&quot;]] = str_repeat ('&amp;nbsp;&amp;nbsp;', $level-1).'|___'.$row[&quot;CATEGORIE&quot;];        
+			}  
+		get_categs_tree($row[&quot;ID_CATEGORIE&quot;]);
+	}   
+	
+	$level--;
+	
+	return $categs;
+}
+
+
+?&gt;
+</code></pre>
+
+<p>
+ I hope this helps.
+</p>
+
+<p>
+Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="9/25/09 5:56pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-426">
+				<div class="body" id="body-426">
+					
+<p>
+Tank you very much for your help, i will look tommorow if it's working. How to say this function, must search in a table for parent category and child category, and child of child category, etc. till don't remain any child, it's for menu with 'n' level.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													eu											</span>
+					<span class="date_posted" title="9/25/09 6:29pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-449">
+				<div class="body" id="body-449">
+					
+<p>
+with a little changes it's workin have posted the result array. Here is the code maybe whould help someone who need to use recursive function. i think is very useful when have categories, subcategories and so long and we want to store in same table.
+</p>
+<pre class="block php"><code>
+						 /**
+				 * Fetch all records associated with a parent_id from table categorii
+				 * @param Integer $parent_id
+				 * @return Object|BOOL      // Returns a flourish resultset object or FALSE if no records exist.
+				 */
+				public static function fetchCategorii($parent_id)
+				{
+					try
+					{
+						// Get the database connection.  This is better than using &quot;global $db&quot;
+						$db = fORMDatabase::retrieve();
+						
+						// Note I am using the %i placeholder to represent an integer value
+						$sql = &quot;SELECT * FROM categorii where parent_id = %i and activ = 1 ORDER BY categorie&quot;;
+						
+						// Escape the parent id
+						$sql = $db-&gt;escape($sql, $parent_id);
+						
+						$result = $db-&gt;query($sql);
+						
+						// If there are no rows, throw an exception
+						$result-&gt;tossIfNoRows();
+						
+						// Return the entire resultset
+						return $result;
+						
+					} catch( fNoRowsException $e) 
+						{
+							// If there were no rows, simply return false
+							 return FALSE; 
+						} catch ( fSQLException $e ) 
+							{
+								// Catch bad SQL statements.
+								echo &quot;ARGH!  I wrote a bad SQL statement and need to manage this error!&quot;;
+								exit;
+							} catch ( fException $e ) 
+								{
+									// Catch any other exception
+									echo &quot;ARGH!  I failed and need to manage this error!&quot;;
+									exit;
+								}
+				}
+			
+						
+			
+							
+				public static function get_categs_tree($id=0)
+				
+				{
+					static $categs = array (&quot;0&quot; =&gt; &quot;Top&quot;);
+					static $level = 0;
+					$level++;
+					
+					// Get a flourish resultset object of all categories matching this parent_id
+					$categories = Categorii::fetchCategorii($id);
+					if($categories === FALSE)
+					{
+						// There weren't any matching records.
+						return FALSE;
+					}
+					
+					// Flourish lets you use foreach to iterate through resultsets and recordset objects.
+					foreach($categories as $row)
+					{
+						
+						
+						if ($level==1)
+						{
+							$categs[$row[&quot;id_categorie&quot;]] = $row[&quot;categorie&quot;];        
+						} else 
+							{
+								$categs[$row[&quot;id_categorie&quot;]] = str_repeat ('&amp;nbsp;&amp;nbsp;', $level-1).'|___'.$row[&quot;categorie&quot;];        
+							} 
+							
+						Categorii::get_categs_tree($row[&quot;id_categorie&quot;]);
+							$level--;
+					}   
+					
+
+					return $categs;
+					
+				}	
+			</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/7/09 1:50pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-450">
+				<div class="body" id="body-450">
+					<pre class="block php"><code>Array
+(
+    [0] =&gt; Top
+    [2] =&gt; Cumparari
+    [6] =&gt; &amp;nbsp;&amp;nbsp;|___Foto - Video
+    [5] =&gt; &amp;nbsp;&amp;nbsp;|___Masini
+    [1] =&gt; Vanzari
+    [8] =&gt; &amp;nbsp;&amp;nbsp;|___Diverse
+    [7] =&gt; &amp;nbsp;&amp;nbsp;|___Electronice
+    [9] =&gt; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|___Calculatoare
+    [4] =&gt; &amp;nbsp;&amp;nbsp;|___Imobiliare
+    [3] =&gt; &amp;nbsp;&amp;nbsp;|___Masini
+)</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="10/7/09 1:51pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

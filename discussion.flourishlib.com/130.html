@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRecordSet Woes &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRecordSet Woes</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="9/1/09 5:04pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I've been playing with flourish for many months now.  I love it.  Unfortunately, I never could figure out how to work with recordsets properly.  Sometimes I could get them to work. Other times they wouldn't.  In frustration, I gave up and just did everything with raw SQL and <a href="../flourishlib.com/docs/fResult.html">fResult</a>.
+</p>
+
+<p>
+I've decided to give it another go and am running into problems again.   Could someone please explain to me what is going on here?
+</p>
+
+<p>
+I have 2 examples.  One works great, the other does not:
+</p>
+
+<p>
+WORKING EXAMPLE :  Table Definition:
+</p>
+<pre class="block sql"><code>CREATE  TABLE IF NOT EXISTS `pegs`.`peg_formats` (
+  `peg_formats_id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `format` VARCHAR(3) NOT NULL ,
+  `created` TIMESTAMP NOT NULL ,
+  PRIMARY KEY (`peg_formats_id`) )
+ENGINE = InnoDB</code></pre>
+<pre class="block php"><code>&lt;?php
+
+/**
+ * Queries for the peg_formats table
+ */
+class PegFormat extends fActiveRecord
+{
+	/**
+	 * Used to indicate if a failure or exception is the cause of a false return 
+	 * @var BOOL
+	 */
+	static $status = TRUE;
+	
+	/**
+	 * Used to report back errors or messages
+	 * @var String
+	 */
+	static $msg = '';
+	
+	/**
+	 * The flourish resultSet or recordSet object.
+	 * 
+	 * Can be used for getting the final SQL in event of an error.
+	 * @var Object
+	 */
+	static $result = '';
+
+	/**
+	 * Required by flourish
+	 * @return 
+	 */
+	protected function configure()
+	{
+	}
+    
+	/**
+	 * Collect all records from the peg_formats table.
+	 * 
+	 * @return Object|BOOL	// fResult object or false if no records 
+	 */
+	public static function fetchPegFormats()
+	{
+		// Reset $msg and status
+		self::$status = TRUE;
+		self::$msg = '';
+		self::$result = '';
+		
+		try
+		{
+			$result = fRecordSet::build(__CLASS__);
+			$result-&gt;tossIfEmpty();
+			
+			return self::$result;
+			
+		} catch ( fEmptySetException $e ) { return FALSE; } catch ( fException $e ) { self::$status = FALSE; self::$msg = $e; return FALSE; }
+	}
+
+}  // End of class PegFormat
+?&gt;</code></pre>
+
+<p>
+ FAILING EXAMPLE :  Table definition:
+</p>
+<pre class="block sql"><code>CREATE  TABLE IF NOT EXISTS `pegs`.`peg_infos` (
+  `peg_number` SMALLINT UNSIGNED NOT NULL ,
+  `peg_name` VARCHAR(15) NOT NULL ,
+  `created` TIMESTAMP NOT NULL ,
+  PRIMARY KEY (`peg_number`) ,
+  UNIQUE INDEX `peg_name` (`peg_name` ASC) )
+ENGINE = InnoDB</code></pre>
+<pre class="block php"><code>&lt;?php
+
+/**
+ * Queries for the peg_infos table
+ */
+class PegInfo extends fActiveRecord
+{
+	/**
+	 * Used to indicate if a failure or exception is the cause of a false return 
+	 * @var BOOL
+	 */
+	static $status = TRUE;
+	
+	/**
+	 * Used to report back errors or messages
+	 * @var String
+	 */
+	static $msg = '';
+	
+	/**
+	 * The flourish resultSet or recordSet object.
+	 * 
+	 * Can be used for getting the final SQL in event of an error.
+	 * @var Object
+	 */
+	static $result = '';
+	
+	/**
+	 * Required by flourish
+	 * @return 
+	 */
+	protected function configure()
+	{
+		fORM::addCustomClassTableMapping($this, 'peg_infos');		
+	}
+    
+	/**
+	 * Collect all records from the peg_infos table.
+	 * 
+	 * @return Object|BOOL	// fResult object or false if no records 
+	 */
+	public static function fetchPegInfos()
+	{
+		// Reset $msg and status
+		self::$status = TRUE;
+		self::$msg = '';
+		self::$result = '';
+		
+		try
+		{
+			
+			$result = fRecordSet::build(__CLASS__);
+			$result-&gt;tossIfEmpty();
+			return self::result;
+			
+		} catch ( fEmptySetException $e ) { return FALSE; } catch ( fException $e ) { self::$status = FALSE; self::$msg = $e; return FALSE; }
+	}
+
+}  // End of class PegInfo
+?&gt;</code></pre>
+
+<p>
+ As you can see, they are virtually identical.  Unfortunately, I get the following exception for the PegInfo class:
+</p>
+<pre><code>        exception 'fProgrammerException' with message 'The table specified, peg_info, does not exist in the database' in /Users/JBN/Dropbox/Work-PC/app/pegs_db/flourish/fSchema.php:1977
+Stack trace:
+#0 /Users/JBN/Dropbox/Work-PC/app/pegs_db/flourish/fActiveRecord.php(816): fSchema-&gt;getKeys('peg_info', 'primary')
+#1 /Users/JBN/Dropbox/Work-PC/app/pegs_db/flourish/fActiveRecord.php(351): fActiveRecord-&gt;__construct()
+#2 /Users/JBN/Dropbox/Work-PC/app/pegs_db/flourish/fRecordSet.php(161): fActiveRecord::forceConfigure('PegInfo')
+#3 /Users/JBN/Dropbox/Work-PC/app/pegs_db/models/PegInfo.php(52): fRecordSet::build('PegInfo')
+#4 /Users/JBN/Dropbox/Work-PC/app/pegs_db/controllers/FileProcessor_Controller.php(65): PegInfo::fetchPegInfos()
+#5 /Users/JBN/Dropbox/Work-PC/app/pegs_db/scripts/process_sentinel_files.php(20): FileProcessor_Controller-&gt;__construct()</code></pre>
+
+<p>
+ Why does flourish think the table name should be 'peg_info'? Notice I even added &quot;fORM::addCustomClassTableMapping($this, 'peg_infos');&quot; to the configure method to force the use of peg_infos ?  
+</p>
+
+<p>
+Any suggestions?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-381">
+				<div class="body" id="body-381">
+					
+<p>
+It appears your timing was just right to run across a bug in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that I introduced last week. If you get r694 or newer, you should be able to get !PegInfo to work properly.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/1/09 10:35pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-382">
+				<div class="body" id="body-382">
+					
+<p>
+Updating to r694 did the trick.  However, I don't understand why I needed the addCustomClassTableMapping in the first place.  Why would <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> think the table should be named peg_info vs. peg_infos?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="9/2/09 2:05pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-383">
+				<div class="body" id="body-383">
+					
+<p>
+Two reasons, however it was an unrelated bug that caused your issues.
+</p>
+
+<p>
+First, a common pattern in database design is to have a table name be the plural of what is being stored in it. So a table containing login records would be called logins. Flourish uses this pattern for its default mapping.
+</p>
+
+<p>
+Second, the word info is an abbreviation of information. Information is a word that is the same in both the singular and plural form. Thus, <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> was looking for the plural underscore notation version of PegInfo, which just so happens to be peg_info. In your case, you pluralized info with an s, which the code wasn't expecting.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> is pretty smart about getting the proper form of common irregularly pluralized nouns. For instance it knows the plural of person is people, etc.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="9/2/09 2:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-384">
+				<div class="body" id="body-384">
+					
+<p>
+Thanks for the clarification.  I'm used to the need for pluralized table names.  Unfortunately, I've become so used to it that I put an &quot;s&quot; et the end of every table name now.  I didn't realize <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> was actually capable of determining proper pluralization.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="9/2/09 4:12pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

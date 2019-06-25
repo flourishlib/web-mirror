@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fDatabase memory size exhausted. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fDatabase memory size exhausted.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="10/4/11 11:55pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+I am doing an oracle sql query where it returns around 180k rows which i then feed off to as csv class to so the user can download the file.
+</p>
+
+<p>
+However <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> dumps on me before that with...
+</p>
+
+<p>
+Fatal error: Allowed memory size of 947912704 bytes exhausted (tried to allocate 11 bytes) in /path/flourish/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php on line 2485
+</p>
+
+<p>
+If i limit the query to 81k rows its fine.
+</p>
+
+<p>
+Any ideas?
+</p>
+
+<p>
+Thanks,
+</p>
+
+<p>
+Darren
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1576">
+				<div class="body" id="body-1576">
+					
+<p>
+If you are dumping to a CSV you probably don't want the query to be buffered, which is the default. Buffering the request pulls the results into memory so you don't have to worry about issues with multiple queries being active on a single connection.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>#UnbufferedQueries talks about how to run an unbuffered query, which should use significantly less memory.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/5/11 12:00am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1577">
+				<div class="body" id="body-1577">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+No joy either...
+</p>
+
+<p>
+Fatal error: Allowed memory size of 444596224 bytes exhausted (tried to allocate 49 bytes) in /path/flourish/<a href="../flourishlib.com/docs/fUnbufferedResult.html">fUnbufferedResult</a>.php on line 345
+</p>
+
+<p>
+The other thing is in the docs it said -
+</p>
+
+<p>
+&quot;If another database query is called, it will either cause the previous call to close or will fail itself.&quot;
+</p>
+
+<p>
+This this not ideal in my case as i could have multiple people accessing the request...
+</p>
+
+<p>
+Any thoughts?
+</p>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="10/5/11 9:15pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1578">
+				<div class="body" id="body-1578">
+					
+<p>
+Hmm, that implies to be that the oracle DB extension must not support unbuffered queries, and Flourish is emulating them, or there is a bug in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.
+</p>
+
+<p>
+I would considering breaking the query into queries in a loop where you only fetch maybe 10k at a time using <code>LIMIT</code> and <code>OFFSET</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/5/11 11:41pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1579">
+				<div class="body" id="body-1579">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+Thats what i did in the end as it was the only way to get around the problem... not sure why it was been exhausted but its certainly a viable workaround for now.
+</p>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="10/6/11 1:41am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

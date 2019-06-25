@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>There are no remaining rows &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">There are no remaining rows</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					shakeel			</span>
+	<span class="date_posted" title="6/5/11 10:58am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I dont wanna no rows found exception . i m using $result-&gt;countReturnedRows(); i execute any query and get the number of return rows . if there is no rows in result then it should return only 0 but its always return exception. please tell me how to remove this exception.i dont need this exception . i need only number of rows either zero or whatever in query result.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1376">
+				<div class="body" id="body-1376">
+					
+<p>
+Shakeel, from what I can tell that method in and of itself does not throw an exception: <a href="../flourishlib.com/api/fResult.html">fResult</a> -- it simply returns the value set to the property, which is set presumably in the creation of the Result object itself, although I didn't confirm this.  There are instances where exceptions are thrown such as attempting to fetch a row with fetchRow() if there are none available.
+</p>
+
+<p>
+As such, I would presume there might be an error in your logic if indeed you are doing something like the following:
+</p>
+<pre class="block php"><code>if ($result-&gt;countReturnedRows()) {
+	// Do some stuff with the rows
+}</code></pre>
+
+<p>
+ If you are calling fetchRow without confirming that rows are returned you can wrap it in a try{}/catch(){} block, such as this:
+</p>
+<pre class="block php"><code>try {
+	$result-&gt;fetchRow();
+	// What to do with the row
+} catch (fNoRemainingException $e) {
+	// What to do if there are no rows
+}</code></pre>
+
+<p>
+ Exceptions are designed to be caught so you can handle them more gracefully without a number of conditionals to handle errors.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="6/6/11 5:13pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

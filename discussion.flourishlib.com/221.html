@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Creating relations between ActiveRecords &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Creating relations between ActiveRecords</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="4/18/10 11:27pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi
+</p>
+
+<p>
+First a huge thank you to wbond and all of the contributors for this great library, I was and still am, very excited when I stumbled upon it.
+</p>
+
+<p>
+I have a problem understanding why newly related records does not get saved. I have three class: Shop, Product, !ProductDescription.
+</p>
+
+<p>
+!ProductDescription is essentially a join table between Shop and Product, thus shop_id and product_id is combined into the primary key of the product_descriptions table.
+</p>
+
+<p>
+A row of Shop exists in the database. I'm trying to create new Products and !ProductDescriptions. When invoking store() on my Product object only the product gets stored. If I invoke store on my !ProductDescription object I get an error stating that shop_id and product_id is not set.
+</p>
+
+<p>
+Here is the code:
+</p>
+<pre class="block php"><code>$shop = new Shop(1);
+
+$product = new Product();
+$product-&gt;setProductCode('XFC-1001');
+$product-&gt;setProductType('office');
+$product-&gt;setBrand('Relief');
+	
+$product_description = new ProductDescription();
+$product_description-&gt;setName('Torch');
+$product_description-&gt;setShortDescription('short');
+$product_description-&gt;setLongDescription('long');
+	
+$product-&gt;associateProductDescriptions($product_description);
+$shop-&gt;associateProductDescriptions($product_description);
+	
+$product-&gt;store();</code></pre>
+
+<p>
+ Passing TRUE to the store method seems to have no effect.
+</p>
+
+<p>
+This is the DB scheme:
+</p>
+<pre class="block sql"><code>CREATE TABLE `product_descriptions` (
+ `product_id` int(11) unsigned NOT NULL,
+ `shop_id` int(11) unsigned NOT NULL,
+ `locale` varchar(255) NOT NULL DEFAULT 'da-DK',
+ `name` varchar(255) NOT NULL,
+ `short_description` varchar(255) NOT NULL,
+ `long_description` text,
+ `package_unit` varchar(255) NOT NULL DEFAULT 'stk',
+ PRIMARY KEY (`product_id`,`shop_id`),
+ KEY `shop_id` (`shop_id`),
+ CONSTRAINT `product_descriptions_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE,
+ CONSTRAINT `product_descriptions_ibfk_2` FOREIGN KEY (`shop_id`) REFERENCES `shops` (`shop_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `shops` (
+ `shop_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+ `name` varchar(255) NOT NULL,
+ PRIMARY KEY (`shop_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `products` (
+ `product_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+ `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `product_code` varchar(255) NOT NULL,
+ `package_size` smallint(6) NOT NULL DEFAULT '1',
+ `brand` varchar(255) NOT NULL,
+ `original` tinyint(1) NOT NULL DEFAULT '0',
+ `product_type` varchar(255) NOT NULL,
+ PRIMARY KEY (`product_id`),
+ KEY `product_code` (`product_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</code></pre>
+
+<p>
+ I have looked through <a href="../flourishlib.com/docs/fActiveRecord.html#RelatedRecordsOperations">http://flourishlib.com/docs/fActiveRecord#RelatedRecordsOperations</a> and the other ORM pages, but haven't found anything that could help me. These pages seems to have a bias on retrieving records.
+</p>
+
+<p>
+I have a feeling my problem has to do with the fact that product_descriptions is a join table between products and shops, but it does not follow that suggest naming scheme: products_shops?
+</p>
+
+<p>
+Any help will be most appreciated 
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-681">
+				<div class="body" id="body-681">
+					
+<p>
+In this semi-complex situation, the way that Flourish performs the actions is causing the issue, however I don't know if it can be solved in a generic way. Perhaps an exception can be added that will detect this.
+</p>
+
+<p>
+So, when you call <code>associate</code> and then store the parent record, what happens is:
+</p>
+
+<ol>
+<li>The parent record is stored in the database - any auto-incrementing key is retrieved and stored in the record</li>
+<li>The child records are iterated through, and the parent primary key is set on each and then each is saved</li>
+</ol>
+
+<p>
+Since the child record requires values from two different parents to save, and the parent primary key is set when it saves, it is not possible to save the group of records all at once. In order to do this, Flourish would have to detect that the child record, <code>ProductDescription</code>, requires keys from two parents and would have to trigger <code>store()</code> on the one that wasn't stored. This would be odd, since the programmer never explicitly requested that the <code>Shop</code> be stored.
+</p>
+
+<p>
+The way to get around this is to do the following:
+</p>
+<pre class="block php"><code>$shop = new Shop(1);
+ 
+$product = new Product();
+$product-&gt;setProductCode('XFC-1001');
+$product-&gt;setProductType('office');
+$product-&gt;setBrand('Relief');
+    
+$product_description = new ProductDescription();
+$product_description-&gt;setName('Torch');
+$product_description-&gt;setShortDescription('short');
+$product_description-&gt;setLongDescription('long');
+
+$product_description-&gt;setShopId($shop-&gt;getShopId());    
+$product-&gt;associateProductDescriptions($product_description);
+
+$product-&gt;store();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/19/10 9:25am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-682">
+				<div class="body" id="body-682">
+					
+<p>
+&quot;Since the child record requires values from <strong>two different parents to save</strong>, and the parent primary key is set when it saves&quot;
+</p>
+
+<p>
+In this situation the Shop object has been loaded from the db. It already has the id. Does this change anything?
+</p>
+
+<p>
+The change you suggested does not seem to work, enabling debug for the db, shows that only one INSERT is created.
+</p>
+
+<p>
+Exposing $product shows that the primary key of the related record $product_description is null:
+</p>
+<pre><code>[related_records:protected] =&gt; Array
+        (
+            [product_descriptions] =&gt; Array
+                (
+                    [product_id] =&gt; Array
+                        (
+                            [record_set] =&gt; fRecordSet Object
+                                (
+                                    [class:private] =&gt; ProductDescription
+                                    [non_limited_count:private] =&gt; {null}
+                                    [pointer:private] =&gt; 0
+                                    [records:private] =&gt; Array
+                                        (
+                                        )
+                          
+                                )
+                    
+                            [count] =&gt; 0
+                            [associate] =&gt; {false}
+                            [primary_keys] =&gt; {null}
+                        )
+              
+                )
+        
+        )</code></pre>
+
+<p>
+ Or how should this be interpreted?
+</p>
+
+<p>
+Thanks
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="4/19/10 9:53am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-683">
+				<div class="body" id="body-683">
+					
+<p>
+Hi, got the code to save the !ProductDescription. It seems that I have to save invoke store() on $product and then set the id in the same manner that you suggested for the shop. This also makes the product association obsolete.
+</p>
+
+<p>
+Note that storing $product again, even with associations set, will not cause the $product_description to be stored, thus storing it &quot;manually&quot;.
+</p>
+
+<p>
+Problem solved, kind of. Hope you can use the input.
+</p>
+
+<p>
+Would it make a difference setting columns specifically in configure()?
+</p>
+
+<p>
+See REQUIRED, NOT REQUIRED BELOW.
+</p>
+<pre class="block php"><code>	$p = new Product();
+	$p-&gt;setProductCode('XFC-1001');
+	$p-&gt;setProductType('office');
+	$p-&gt;setBrand('Relief');
+	
+	$p-&gt;store(); // REQUIRED for the setting of id below
+	
+	$pd = new ProductDescription();
+	$pd-&gt;setShortDescription('short');
+	$pd-&gt;setName('name');
+	$pd-&gt;setLongDescription('long');
+	
+	$pd-&gt;setShopId($s-&gt;getShopId());
+	$pd-&gt;setProductId($p-&gt;getProductId()); // REQUIRED
+	//$p-&gt;associateProductDescriptions($pd); // NOT REQUIRED
+	
+	//$p-&gt;store(); // NOT EFFECT even if TRUE is passed
+	
+	$pd-&gt;store(); // REQUIRED</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="4/19/10 10:16am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-684">
+				<div class="body" id="body-684">
+					
+<p>
+Yes, the method you finalized on will definitely work, however the other methods should also.
+</p>
+
+<p>
+I'll open a ticket so that I make sure to look into associate to see what would cause it not to work in this situation. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/20/10 12:56pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-705">
+				<div class="body" id="body-705">
+					
+<p>
+The method commented out now works in r819. The issue was that a single <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object was being passed instead of an array of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects. I changed the method to accept a single record.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/6/10 2:02pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-707">
+				<div class="body" id="body-707">
+					
+<p>
+Hi, this is great.
+</p>
+
+<p>
+However wont I still have to do something like this?
+</p>
+<pre class="block php"><code>$o-&gt;setShopId($s-&gt;getShopId());
+$p-&gt;associateOfferings($o);
+
+$p-&gt;store();</code></pre>
+
+<p>
+ Where this would be the way to go:
+</p>
+<pre class="block php"><code>$s-&gt;associateOfferings($o);
+$p-&gt;associateOfferings($o);
+
+$p-&gt;store();</code></pre>
+
+<p>
+ or better (as the offering object is main subject of this piece of code):
+</p>
+<pre class="block php"><code>$o-&gt;associateShop($s);      // $s has been fetch frem db, thus it has an ID
+$o-&gt;associateProduct($p);   // $p is a new record
+
+$p-&gt;store();                // This would store $p and associates</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/6/10 10:57pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-708">
+				<div class="body" id="body-708">
+					
+<p>
+Yes, you need to use the first example as that is what is currently implemented.
+</p>
+
+<p>
+The second and third example may seem logical in this specific situation, but they have issues in the more general case. The <code>associate</code> verb not only links two records together, but ties the records together for validation and storing. It removes validation messages about columns that will be filled in upon calling store() since it knows the values will be available later.
+</p>
+
+<p>
+So, say you have a User and !UserPreferences. You could populate your user object and associate a number of !UserPreference objects with it. When you save the User object, the associated !UserPreference object would all be validated. If there were any validation errors, other than the user_id, they would be presented as error of the children, such as &quot;User Preference #2 Name: Please enter a value.&quot;
+</p>
+
+<p>
+In your second example, you are associating a while with two parents. Thus we no longer are dealing with just a parent -&gt; child relationship, but two parents and a child all which must validate each other and produce sane validation messages about what is going on. That combined with the fact that the related records implementation stores information about children, but not parents, makes it really impossible without reimagining how related records are stored and validated.
+</p>
+
+<p>
+The third example is basically the same as the second, and suffers from the same issues. Basically you just have to explicitly tell it what is going on via calling <code>set...</code> for one of the parents instead of <code>associate...</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/6/10 11:18pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-710">
+				<div class="body" id="body-710">
+					
+<p>
+I do see your points in the two-parent scenario with regards to the current implementation of records.
+</p>
+
+<p>
+My &quot;ORM-background&quot; comes from Apple's WebObjects in which you opperate with an EditionContext object (a sandbox) in which you at the end commits/stores. Neither child nor parent centric.
+</p>
+
+<p>
+I guess it would be similar to implemnting the store() method on <a href="../flourishlib.com/docs/fORM.html">fORM</a> (if it had instances) instead of on <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+</p>
+
+<p>
+What are you thought on making object association, say, more liberal. Maybe taking parents into account?
+</p>
+
+<p>
+I will look into the code and validation issues. Maybe I could help out.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/7/10 2:17am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-715">
+				<div class="body" id="body-715">
+					
+<p>
+I can definitely see the usefulness of grouping a number of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects into a single transaction, but also aggregating the validation message and performing delayed association.
+</p>
+
+<p>
+I think a new class would be in order, something such as !<a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a>. This could perform logic such as association, group all of the changes into a single database transaction, but also aggregating validation messages with prefixed field names with object names when there were duplicate field names.
+</p>
+
+<p>
+Right now I'm putting some more time into a side project, but it is something that sounds very useful. If you are interested in working on such a class, I would be very appreciative, I just want to let you know that I do require a <a href="../flourishlib.com/docs/ContributorLicenseAgreements.html">contributor license agreement</a> for code submitted to Flourish.
+</p>
+
+<p>
+The CLA is a legal document that more or less says A) you have the appropriate rights to license the code to Flourish and it users under the MIT license, B) that you are actually licensing it and C) should there be patents or other IP issues with the code, Flourish and its users are not legally responsible.
+</p>
+
+<p>
+If that hasn't scared you away, here is the kind of functionality I would minimally expect from the unit of work:
+</p>
+
+<ul>
+<li>A method to add a record to the unit of work, with an optional prefix to use for validation messages.</li>
+<li>A method to add a record or set of records to the unit of work and associate the record to another record or set of records. This would probably need to handle all types of relationships, including many-to-one, which is what the <code>associate</code> action doesn't do.</li>
+<li>A method to call <code>validate()</code> on all of the record and create a logical exception message, resolving field name conflicts with the provided prefixed, or a prefix based on the class name.</li>
+<li>A method to work out what order the record should be saved in, ensure all of the record are using the same database, and then call <code>store()</code> on all of the records and during the process set the appropriate methods to associate the records together.</li>
+</ul>
+
+<p>
+The only other thing to think about would be if delete operations should be allowed to be mixed into the unit of work. It seems like from a conceptual standpoint it would make sense, I just don't know off of the top of my head if it would require much more work.
+</p>
+
+<p>
+What do you think about all of this?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/10/10 10:24am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-732">
+				<div class="body" id="body-732">
+					
+<p>
+Hi will, no I'm not scared away, I would be glad to help out. 
+</p>
+
+<p>
+That said it would be a big rewrite of some of the classes as well as a change of code style. From something like
+</p>
+<pre class="block php"><code>$myRecord = new MyRecord(1);
+.. make some changes ..
+$myRecord-&gt;store();</code></pre>
+
+<p>
+ To something like:
+</p>
+<pre class="block php"><code>$unitOfWork = new fUnitOfWork();
+
+$myRecord = new MyRecord();
+
+.. make some changes ..
+
+$unitOfWork-&gt;add($myRecord);
+
+$unitOfWork-&gt;store();</code></pre>
+
+<p>
+ Of couse there are variations on this. Like always passing a <a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> object to the constructor of a <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and the the fRecord::build methods.
+</p>
+
+<p>
+Do you see the <a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> as an option or would it be a central change to the framework?
+</p>
+
+<p>
+I've looked at two other ORM frameworks implementing unit of work:
+</p>
+
+<ul>
+<li><a href="http://repose-php.org/">http://repose-php.org/</a> Repose -- unit of work class =&gt; session<br />
+</li>
+<li><a href="http://www.outlet-orm.org/site/">http://www.outlet-orm.org/site/</a> Outlet -- unit of work class =&gt; outlet</li>
+</ul>
+
+<p>
+The two uses slightly different syntaxes:
+</p>
+
+<p>
+Repose (from their page):
+</p>
+<pre class="block php"><code>$project = new Project(&quot;Original name&quot;);
+$project = $session-&gt;add($project);
+$project-&gt;name = &quot;New name&quot;; // Session will NOT lose this change!
+$session-&gt;flush();</code></pre>
+
+<p>
+ Outlet (from their page):
+</p>
+<pre class="block php"><code>$outlet = Outlet::getInstance();
+ 
+$client = new Client;
+$client-&gt;Name = 'Test Client';
+ 
+$project = new Project;
+$project-&gt;Name = 'Cool Project';
+$project-&gt;setClient( $client );
+ 
+$bug = new Bug;
+$bug-&gt;Title = &quot;Button doesn't work&quot;;
+ 
+$project-&gt;addBug( $bug );
+ 
+// inserts the project 
+// and all of the related entities
+// in one transaction
+$outlet-&gt;save( $project );</code></pre>
+
+<p>
+ The main differences being at which point you &quot;interact&quot; with the unit of work object. Where Repose adds objects upon object creation, adding object by object. Outlet defers interaction with unit of work object till the point at which you commit your changes. 
+</p>
+
+<p>
+I've previously worked with frameworks using a code style like Repose, and think it works fine, but I do like the simplicity of the style used by Outlet. The code focuses on working with the records/objects (proxies) rather than the unit of work object.
+</p>
+
+<p>
+What do you think?
+</p>
+
+<p>
+With regards to validation, could you point out to me where work should be done?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/24/10 1:49am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-847">
+				<div class="body" id="body-847">
+					
+<p>
+Sorry that is has taken so long to get back to this topic. As always, there is way too much to be done, and time is the one thing we are ultimately constrained by.
+</p>
+
+<p>
+My vision of an !<a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> class would be an optional class that could even be named something like !<a href="../flourishlib.com/docs/fTransaction.html">fTransaction</a>. You would create the UOW object and then add records to it, however you could continue using the existing <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> methods for situations that don't require the extra complexity. Upon further consideration, I would think it should also handle object deletion.
+</p>
+
+<p>
+Here is an initial idea for the public API of an !<a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> class.
+</p>
+<pre class="block php"><code>class fUnitOfWork
+{
+    /**
+     *@param fActiveRecord|fRecordSet|array $related_records  The record(s) to associate
+     *@param fActiveRecord|fRecordSet|array $records  The record(s) to associate the related records to
+     *@param string $route  The relationship route from $records to $related_records
+     */
+    public function associate($related_records, $records, $route=NULL) { }
+
+    public function commit() { }
+
+    /**
+     *@param fActiveRecord|fRecordSet|array $records  The record(s) to delete
+     *@param string $validation_message_prefix  A string to prepend before all validation messages for this record or records
+     */
+    public function delete($records) { }
+
+    /**
+     *@param fActiveRecord|fRecordSet|array $records  The record(s) to store
+     *@param string $validation_message_prefix  A string to prepend before all validation messages for this record or records
+     */
+    public function store($records, $validation_message_prefix='') { }
+
+    /**
+     *@param boolean $return_messages  If the validation messages should be returned as an array instead of being thrown as an fValidationException
+     *@param boolean $remove_column_names  If the column names should be removed from the validation messages
+     */
+    public function validate($return_messages=FALSE, $remove_column_names=FALSE) { }
+}</code></pre>
+
+<p>
+ My main concerns would be calling the methods <code>store</code> and <code>delete</code>. I almost feel like they should be called something like <code>queueStore()</code> and <code>queueDelete()</code>.
+</p>
+
+<p>
+What are your thoughts on this API?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/10 1:46am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

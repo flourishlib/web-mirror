@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Associate will remove existing relations? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Associate will remove existing relations?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="11/16/10 4:50am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm seeing some strange deletes in my SQL debug when I'm associating my records.
+</p>
+
+<p>
+Will associateRelatedRecords() remove any existing relations?
+</p>
+
+<p>
+$some_record-&gt;associateOtherRecords(array($otherRecord1, $otherRecord2))
+</p>
+
+<p>
+This will invoke DELETE FROM join_table WHERE id = &lt;some_record_id&gt;
+</p>
+
+<p>
+Then INSERT INTO join_table SET ... id = &lt;some_record_id&gt;, other_id = &lt;other_record1&gt; and INSERT INTO join_table SET ... id = &lt;some_record_id&gt;, other_id = &lt;other_record2&gt;
+</p>
+
+<p>
+So first it will empty the joins between my record and the relations, then it will insert the relations passed on as an array.
+</p>
+
+<p>
+(pardon my pseudo code)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1010">
+				<div class="body" id="body-1010">
+					
+<p>
+Yes, the expected behavior of <code>associate</code> is to accept the list of records as the definitive list. If records are not listed there, they will be removed.
+</p>
+
+<p>
+If you have the use for adding records to an association without passing all of the records to <code>associate</code>, I think it would be reasonable to add a new method to perform that function.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/10 8:58am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1014">
+				<div class="body" id="body-1014">
+					
+<p>
+Fair enough - just had to understand how it worked.
+</p>
+
+<p>
+So if I wanted to a method that would append a record to the related set, I would use for instance <a href="../flourishlib.com/api/fORM.html#registerActiveRecordMethod">fORM::registerActiveRecordMethod()</a> or are you suggesting to extend the functionality of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="11/16/10 11:07pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1024">
+				<div class="body" id="body-1024">
+					
+<p>
+I think ideally it would be built into Flourish and part of <a href="../flourishlib.com/docs/fORMRelated.html">fORMRelated</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/1/10 2:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

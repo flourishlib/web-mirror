@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORMDate and time zones &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORMDate and time zones</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="4/28/09 4:02pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a> not supposed to obey fTimestamp::setDefaultTimezone?  It seems like it should, since when i tell it to also use a specific time zone column it sets it to GMT as directed in setDefaultTimezone, but the date and time it actually sets is still the server default (which in this case is CMT).  i thought perhaps flourish (through <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>) knew that it was setting it at the server default and would deal with that when reading out the column and displaying it, formatting the display as GMT like it was told.  unfortunately this doesn't happen, it remains the time in CST even though putting 'T' or 'e' in the format string outputs GMT.
+</p>
+
+<p>
+any ideas?  i've also tried the newer zoneinfo identifiers like Etc/GMT.  It seems like flourish should be aware of the current timezone if it differs from what you set in setDefaultTimezone rather than apparently only treating it as a string assignment right?
+</p>
+
+<p>
+Thanks!  i realise i may not be making complete sense, hopefully it's decipherable :)
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-194">
+				<div class="body" id="body-194">
+					
+<p>
+Can you provide a simple code example and database schema? I'd like to try and replicate the issue on my end so I can figure out what is going on.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/29/09 10:31pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-195">
+				<div class="body" id="body-195">
+					
+<p>
+after i posted that, i figured it HAD to be an issue with php or the servers themselves. since all fTimestamp::setDefaultTimestamp is doing is calling php's date_default_timezone_set(), Flourish probably isn't the problem.  turns out there was an issue on this server with PHP's zone info database.
+</p>
+
+<p>
+so i guess for future reference to anyone else having this problem - try overwriting your current timezonedb with the latest from PECL at <a href="http://pecl.php.net/get/timezonedb">http://pecl.php.net/get/timezonedb</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													vena											</span>
+					<span class="date_posted" title="4/30/09 2:22pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

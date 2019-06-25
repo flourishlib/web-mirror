@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Getting a record associative array from a record set &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Getting a record associative array from a record set</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					nk27			</span>
+	<span class="date_posted" title="4/29/10 7:52pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm giving a try to Flourish -a very nice no-framework!- and I have started with all the database issues. I have no problem getting a <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object with fRecordSet::build, extracting a record from it with fetchRecord() or getting some field value from that record, let us say with getEmail(). However, I've been unable to get an associative array iterating all fields and values of a record without having to get each one separately. I suppose I could get it in a more standard way using <a href="../flourishlib.com/docs/fResult.html">fResult</a> methods, but I'm figuring whether I could get that associative array from a <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, as well. I have not found any information about that in the docs or in previous threads in this forum.
+</p>
+
+<p>
+Thanks in advance.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-687">
+				<div class="body" id="body-687">
+					
+<p>
+Well, it seems it's solved. Looking in depth the object dump I see that all values are protected. Surely this is a rule for Flourish, so I have added a public getAsArray() method to my class, so I can call it to get an array with all the properties and their values as name =&gt; value pairs.
+</p>
+
+<p>
+Thanks for such a great development library!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													nk27											</span>
+					<span class="date_posted" title="4/30/10 12:08pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-692">
+				<div class="body" id="body-692">
+					
+<p>
+Yes, in general with Flourish I try to keep as much information private or protected because it allows me to refactor code without breaking backwards compatibility. That said, the <code>$values</code> array in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> should be pretty stable. I don't believe I've change it since I started Flourish. If there were any breaks with it, it would be listed on the InternalBackwardsCompatibilityBreak page.
+</p>
+
+<p>
+I'm curious  just because I try to make the API intuitive, but robust  for what purpose did you want the raw array of values? Are you just used to using array syntax to retrieve information, or did you want to use array functions on it?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/4/10 8:49am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-694">
+				<div class="body" id="body-694">
+					
+<p>
+Yes, it is only that I'm used to array syntax. Currently I'm only testing Flourish, so I was a bit uncomfortable at the beginning, but no problem to start being used to this model :-)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													nk27											</span>
+					<span class="date_posted" title="5/4/10 6:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

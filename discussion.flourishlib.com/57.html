@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>RecordSet Escaping Data Issue &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">RecordSet Escaping Data Issue</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="4/10/09 12:00pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I can't understand why I am getting a <a href="../flourishlib.com/docs/fProgrammerExcption.html">fProgrammerExcption</a> when using fRecordSet::buildFromSQL.  I don't see why flourish is trying to escape anything in this first query.
+</p>
+
+<p>
+The second query does NOT result in an error.
+</p>
+
+<p>
+flourish : r547
+</p>
+<pre class="block php"><code>	/**
+	 * Report number of orders in each status.
+	 * 
+	 * @return Object : Flourish recordset object
+	 * @param String $user[optional]
+	 */
+	public static function orderCounts($login = '')
+	{
+		if($login == '')
+		{
+			$sql = 
+				&quot;
+					select count(orders_id) as order_count, names
+					from orders
+					join statuses using (statuses_id)
+					group by statuses_id
+				&quot;;
+		} else
+			{
+				$sql = 
+					&quot;
+						select count(orders_id) as order_count, names
+						from orders
+						join user using (user_id)
+						join statuses using (statuses_id)
+						where login = '$login'
+						group by statuses_id
+					&quot;;
+			}
+echo &quot;&lt;p&gt;Sql=$sql&lt;/p&gt;&quot;;			
+			
+		try
+		{
+			$order_counts = fRecordSet::buildFromSQL('Order', $sql);
+			
+			$order_counts-&gt;tossIfEmpty();
+			
+			return $order_counts;
+			
+		} catch ( fEmptySetException $e )
+			{
+				// These can be blank.  Ignore this exception.
+			} catch ( fException $e )
+				{
+					// TODO : Manage this exception
+					echo &quot;Exception in orderCounts : $e&quot;;
+				}
+	}	
+</code></pre>
+
+<p>
+ Here is the error info:
+</p>
+<pre><code>&lt;p&gt;Sql=
+					select count(orders_id) as order_count, names
+					from orders
+					join statuses using (statuses_id)
+					group by statuses_id
+				&lt;/p&gt;Exception in orderCounts : exception 'fProgrammerException' with message 'Unknown data type, {null}, specified. Must be one of: blob, %l, boolean, %b, date, %d, float, %f, integer, %i, string, %s, time, %t, timestamp, %p.' in /app/ss7auto_web/flourish/fDatabase.php:1783
+Stack trace:
+#0 /app/ss7auto_web/flourish/fActiveRecord.php(1136): fDatabase-&gt;unescape(NULL, '1')
+#1 /app/ss7auto_web/flourish/fActiveRecord.php(474): fActiveRecord-&gt;loadFromResult(Object(fResult))
+#2 /app/ss7auto_web/flourish/fRecordSet.php(529): fActiveRecord-&gt;__construct(Object(fResult))
+#3 /app/ss7auto_web/flourish/fRecordSet.php(239): fRecordSet-&gt;__construct('Order', Object(fResult), NULL)
+#4 /app/ss7auto_web/db_models/Order.php(240): fRecordSet::buildFromSQL('Order', '???????select c...')
+#5 /app/ss7auto_web/models/getReports.php(64): Order::orderCounts()
+#6 /app/ss7auto_web/web/index.php(41): getReports-&gt;__construct()
+#7 {main}&lt;p&gt;Sql=
+						select count(orders_id) as order_count, names
+						from orders
+						join user using (user_id)
+						join statuses using (statuses_id)
+						where login = 'g701674'
+						group by statuses_id
+					&lt;/p&gt;</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-181">
+				<div class="body" id="body-181">
+					
+<p>
+So the issue here is that actually data unescaping is failing. This is because <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> is built to load a full row out of a table into an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. Since you are selecting arbitrary columns, plus the result of an aggregate function call, it isn't finding the data type of those values from the database schema, and thus is passing <code>NULL</code> as the data type to the <a href="../flourishlib.com/api/fDatabase.html#unescape">fDatabase::unescape()</a> method.
+</p>
+
+<p>
+In general, all <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> calls should include a <code>SELECT table_name.* FROM…</code> SQL query. I'm gonna open a ticket to add some checks to ensure that other SQL queries won't get this far before failing in such a weird way.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/14/09 2:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-183">
+				<div class="body" id="body-183">
+					
+<p>
+Thanks a lot for the answer.  This issue has come up for me several times.  After beating my head on the wall over and over, I always revert back to plain-jane SQL and queries.
+</p>
+
+<p>
+In fact, this explanation helps me decide to pretty much avoid the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and <a href="../flourishlib.com/docs/fRecordset.html">fRecordset</a> options in almost all instances.  
+</p>
+
+<p>
+I'm sure in most cases, having a full row of data is no big deal. Unfortunately, I have to work with a lot of old databases that aren't exactly normalized and have some rather large data sets.  I can't really afford the overhead and bandwidth of transporting all that unnecessary data across the network and in memory.
+</p>
+
+<p>
+Fortunately, flourish makes dealing with &quot;regular&quot; mysql queries very easy.
+</p>
+
+<p>
+Thanks, Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="4/14/09 5:19pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

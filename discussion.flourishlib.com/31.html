@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORM, search a record in database. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORM, search a record in database.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					donovan			</span>
+	<span class="date_posted" title="3/12/09 6:59am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Is there a way, using ORM and <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, to grab a record from database?
+</p>
+<pre class="block php"><code>$some = new Some(); </code></pre>
+
+<p>
+ This creates a new record, and giving a param to that call will cause just to load a single record with that ID. What if I want to look for a record that has a value (or a value that is like the one I need) when the value I'm able to give is NOT an id?
+</p>
+
+<p>
+I checked the documentation but I did not find anything.  Thank you, in advance. Alb
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-95">
+				<div class="body" id="body-95">
+					
+<p>
+Oh, I'm sorry. It seems that this is the thing I was looking for:
+</p>
+<pre class="block php"><code>// Connect to our SQLite database
+fORMDatabase::attach(new fDatabase('sqlite', '/path/to/database'));
+ 
+// Create an object to represent rows in the database
+class User extends fActiveRecord {
+    // Return an iterable set of User objects
+    public static function findActive() {
+        return fRecordSet::build(
+            'User',                            // Make User objects
+            array('status=' =&gt; 'Active'),      // That are active
+            array('date_registered' =&gt; 'desc') // Ordered by registration date
+        );
+    }
+}
+ 
+// Loop through and display the users' names
+foreach (User::findActive() as $user) {
+    echo $user-&gt;prepareFirstName() . ' ' . $user-&gt;prepareLastName() . '&lt;br /&gt;';
+}</code></pre>
+
+<p>
+ It was in the very first page of the site. I missed it. Thank you, anyway.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/12/09 9:12am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-96">
+				<div class="body" id="body-96">
+					
+<p>
+In addition to loading via primary key, you can load an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> by a SQL <code>UNIQUE</code> key on the table. Simply pass in an associative array of the column names and values.
+</p>
+<pre class="block php"><code>$user = new User(array('email' =&gt; 'will@flourishlib.com'));</code></pre>
+
+<p>
+ If you don't have a unique key, you can build an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object and fetch the first record via <a href="../flourishlib.com/api/fRecordSet.html#fetchRecord">fRecordSet::fetchRecord()</a>:
+</p>
+<pre class="block php"><code>$user = fRecordSet::build(
+    'User',
+    array('first_name=' =&gt; 'Will'),
+    array('first_name' =&gt; 'desc'),
+    1
+)-&gt;fetchRecord():</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 10:30am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-98">
+				<div class="body" id="body-98">
+					
+<p>
+But, when I use fRecordSet::build there's an exception with this message:
+</p>
+
+<p>
+<code>'The column specified, username, does not exist in the table customers'</code>
+</p>
+
+<p>
+Although the column specified effectively EXISTS in the table customers.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													donovan											</span>
+					<span class="date_posted" title="3/12/09 11:02am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-99">
+				<div class="body" id="body-99">
+					
+<p>
+It is possible there may be as bug in something. Can you post the output of the following?
+</p>
+<pre class="block php"><code>fCore::expose(fORMSchema::retrieve()-&gt;getColumnInfo('customers'));</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 11:07am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-100">
+				<div class="body" id="body-100">
+					
+<p>
+Ehm.
+</p>
+
+<p>
+{null}
+</p>
+
+<p>
+This is the output. :|
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													donovan											</span>
+					<span class="date_posted" title="3/12/09 11:10am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-101">
+				<div class="body" id="body-101">
+					
+<p>
+Alright, how about this?
+</p>
+<pre class="block php"><code>fCore::expose(fORMSchema::retrieve()-&gt;getTables());</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 11:13am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-102">
+				<div class="body" id="body-102">
+					
+<p>
+Array (     0 =&gt; customers,     1 =&gt; ordered,     2 =&gt; orders,     3 =&gt; products )
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													donovan											</span>
+					<span class="date_posted" title="3/12/09 11:15am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-103">
+				<div class="body" id="body-103">
+					
+<p>
+What kind of a database are you connecting to? Is it MySQL, SQLite, Postgres or SQL Server? It appears that the database schema is not being detected correctly.
+</p>
+
+<p>
+Right after you call <code>fORMDatabase::attach()</code>, can you add the following code to see what SQL is being executed?
+</p>
+<pre class="block php"><code>fORMDatabase::retrieve()-&gt;enableDebugging(TRUE);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 11:21am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-104">
+				<div class="body" id="body-104">
+					
+<p>
+The database is SQLite. The output of debugging:
+</p>
+<pre><code>Query time was 0.00399994850159 seconds for:
+PRAGMA short_column_names = 1
+
+Query time was 0.00259804725647 seconds for:
+SELECT
+        name
+FROM
+	sqlite_master
+WHERE
+	type = 'table' AND
+	name NOT LIKE 'sqlite_%'
+ORDER BY
+	name ASC</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/12/09 11:27am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-105">
+				<div class="body" id="body-105">
+					
+<p>
+Can you execute the following SQL in your database and paste the output?
+</p>
+<pre class="block sql"><code>SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'customers'</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 12:15pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-106">
+				<div class="body" id="body-106">
+					
+<p>
+I think this is the output.
+</p>
+<pre class="block sql"><code>CREATE TABLE &quot;customers&quot;(
+[id] INTEGER
+,[username] varchar(100)
+,[email] varchar(100)
+,[password] varchar(100)
+,[name] varchar(100)
+,[surname] varchar(100)
+,[address] varchar(100)
+,[zipcode] varchar(50)
+,[country] varchar(100)
+,[cf] varchar(40)
+,[piva] varchar(50)
+,[phone] varchar(50)
+, Primary Key(id)  
+)</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/12/09 12:29pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-108">
+				<div class="body" id="body-108">
+					
+<p>
+Ok, that explains it. I don't think <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> currently detects column names defined with square brackets around them. If this is a new project and you can change the table, try removing those square brackets. If not, I will have an updated revision of Flourish out soon that will handle them.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/12/09 12:33pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-109">
+				<div class="body" id="body-109">
+					
+<p>
+But I did not defined column names with square brackets, or at least that was not what I wanted to do. Anyway, I'm going to drop and rebuild the table without using any of the sqlite managers I already used (that will help to do a better work, I suppose).
+</p>
+
+<p>
+By the way, thank you for your help. And, apologize for bad English. Good day :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="3/12/09 12:39pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-157">
+				<div class="body" id="body-157">
+					
+<p>
+r547 adds support for all three types of identifier quoting available in SQLite.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/28/09 10:16pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

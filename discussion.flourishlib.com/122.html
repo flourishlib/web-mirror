@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fCryptography question &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fCryptography question</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					matt nowack			</span>
+	<span class="date_posted" title="8/12/09 10:15pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm new to flourish but so far have found it to be amazingly well written with great documentation.  There was a question/concern that I had once I read up on the <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> system. 
+</p>
+
+<p>
+From the documentation, and confirmed by testing, the result of a call to:
+</p>
+<pre><code>fCryptography::hashPassword($password)</code></pre>
+
+<p>
+ produces what is referred to in the in-code documentation as an 80 character Flourish fingerprint that looks something like:
+</p>
+<pre><code>fCryptography::password_hash#[salt]#[hash]</code></pre>
+
+<p>
+ I've read the docs and agree with your use of a non-trivial sha1 hash and mangle routine, the only issue I see is that if there ever were to be a vulnerability discovered against the hashing algorithm employed by Flourish that potential crackers could use the first part of the fingerprint to determine that Flourish was used and then know that they could apply a certain attack vector.
+</p>
+
+<p>
+Of course this is all theoretical, no vulnerability has been discovered, and the methodology Flourish uses seems sound to me (I have for my job implemented several security and log on systems in similar fashions).  I'm more just curious as to the design decision to include this in the fingerprint.
+</p>
+
+<p>
+Thank you for your time, and cheers to a great unframework.
+</p>
+
+<p>
+Matt
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-348">
+				<div class="body" id="body-348">
+					
+<p>
+A few people have asked this question of me, and there are two reasons. The initial reason is to make it possible to figure out what is going on with code you may not be familiar with. Rather than having some random hash and having to reverse engineer it when you need to use some other programming language with Flourish, you can google any of those fingerprints and get a description of what is happening.
+</p>
+
+<p>
+Secondly, by adding a fingerprint, it allows me to version the algorithms and released more fixed versions if any vulnerabilities are found. Thus if you upgraded to the latest version of Flourish, perhaps I changed the hash algorithm to use bcrypt if available. I could add a new fingerprint for bcrypt hashes and the code would be able to use the appropriate algorithm for verifying the password. Linux and BSD systems do this with the built in crypt functionality. The hashes start with <code>$1$</code>, <code>$2$</code> or <code>$3$</code> based on what algorithm is used.
+</p>
+
+<p>
+The last point I would make is that security through obscurity isn't security at all. Just because it is a little bit of a challenge to figure out what hashing algorithm is used doesn't mean your hashes are any more secure.
+</p>
+
+<p>
+Thanks for the question!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/14/09 9:30am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-349">
+				<div class="body" id="body-349">
+					
+<p>
+That seems reasonable to me, thanks for the quick response.
+</p>
+
+<p>
+I understand your point on security through obscurity not being security at all, I didn't intend to imply that security through obscurity would be a good practice.  
+</p>
+
+<p>
+Thanks again, I will continue using flourish with my latest project, so far so good.
+</p>
+
+<p>
+Matt
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													matt nowack											</span>
+					<span class="date_posted" title="8/14/09 1:13pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

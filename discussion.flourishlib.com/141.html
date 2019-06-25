@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>loading order for flourish classes &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">loading order for flourish classes</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					traq			</span>
+	<span class="date_posted" title="9/27/09 3:12am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+I ran into an issue with loading the flourish classes.  I put the names of each class I'm loading into an array:
+</p>
+<pre class="block php"><code>$flourish = array(
+	'fCore', 
+	'fDatabase', 
+//etc...</code></pre>
+
+<p>
+ and then, a function to require them all:
+</p>
+<pre class="block php"><code>foreach($flourish as $f){
+	require_once($includePath.'flourish/'.$f.'.php');
+}</code></pre>
+
+<p>
+ However, this quickly ran into problems.  I had simply listed all my required classes alphabetically, which generated errors wherever a class extended another class (the f*Exception classes, for example) because the parent class hadn't been loaded yet.  (I re-arranged everything to place the <a href="../flourishlib.com/docs/fException.html">fException</a> class above all the others, and this solved the problem.)  Maybe it would be a good idea to give a preferred loading order for all the classes...?
+</p>
+
+<p>
+I just wanted to put out a heads-up to any other newbies who might run into this problem.  I decided to try flourish because of the wealth of (coherent!) documentation, but the details of setting the whole system up could use a little more explanation - especially for those of use who are just beginning with OOPHP.
+</p>
+
+<p>
+Thanks!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-429">
+				<div class="body" id="body-429">
+					
+<p>
+You may want to consider auto loading.  You can see a sample here:
+</p>
+
+<p>
+<a href="139.html">http://flourishlib.com/discussion/1/139</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="9/27/09 9:57am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-430">
+				<div class="body" id="body-430">
+					
+<p>
+How does autoloading work, exactly?
+</p>
+
+<p>
+I've seen the suggested autoloader on the site documentation, and I understand what the function actually <em>does</em>, but how is the class name (<strong>$class</strong>, in the link you posted) passed into the function?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													traq											</span>
+					<span class="date_posted" title="9/28/09 7:27pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-431">
+				<div class="body" id="body-431">
+					
+<p>
+You can get more details here:
+</p>
+
+<p>
+<a href="http://us2.php.net/manual/en/language.oop5.autoload.php">http://us2.php.net/manual/en/language.oop5.autoload.php</a>
+</p>
+
+<p>
+Basically, the $class in <span class="underline">autoload($class) is generated by PHP.  When you try to instantiate a class that PHP is not aware of, it automatically calls the </span>autoload method and passes it the name of the class you are trying to instantiate.  If it finds the class, it will automatically add it into PHP.
+</p>
+
+<p>
+Hope that helps.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="9/29/09 3:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-435">
+				<div class="body" id="body-435">
+					
+<p>
+hey...  cool.  thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													traq											</span>
+					<span class="date_posted" title="9/29/09 11:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

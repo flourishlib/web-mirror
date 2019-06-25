@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Comparing within Delta &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Comparing within Delta</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ihumanable			</span>
+	<span class="date_posted" title="7/29/10 11:24am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm doing some calculations with floats and was wondering if there is any built in functionality to do a compare equality within delta.  
+</p>
+
+<p>
+More or less I'm doing this
+</p>
+<pre class="block php"><code>
+$part_one = fRequest::get('part_one', 'float');  //This can be a float, like 32.5
+$part_two = fRequest::get('part_two', 'float');  //This can be a float, like 67.5
+
+$total = $part_one + $part_two;
+$delta = 0.05;
+
+//The total must be 100%
+if( (100 - $delta) &lt; $total &amp;&amp; $total &lt; (100 + $delta) ) {
+  //Valid value
+} else {
+  //Throw an exception
+}
+</code></pre>
+
+<p>
+ Does <a href="../flourishlib.com/docs/fNumber.html">fNumber</a> support anything like this?  Is this necessary in PHP?  I know it's normally frowned upon to write code like &quot;if(32.5 + 67.5 == 100) {&quot; because IEEE floating point representation isn't exact and it might add up to 99.999999999765746857999 or something crazy like that.
+</p>
+
+<p>
+Thanks for any help.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-853">
+				<div class="body" id="body-853">
+					
+<p>
+There isn't anything in <a href="../flourishlib.com/docs/fNumber.html">fNumber</a> to do what you described, but I would probably just use <a href="../flourishlib.com/api/fNumber.html#add">fNumber::add()</a>, <a href="../flourishlib.com/api/fNumber.html#lt">fNumber::lt()</a>, <a href="../flourishlib.com/api/fNumber.html#gt">fNumber::gt()</a>, etc if you are concerned about floating point rounding issues.
+</p>
+
+<p>
+~Also, I think there is an error in your code sample.~ Scratch that, I was reading it wrong.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/2/10 3:12pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fFixture - easy record creation for unit testing &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fFixture - easy record creation for unit testing</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mblarsen			</span>
+	<span class="date_posted" title="2/27/12 12:20pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi - I've just pushed my <a href="../flourishlib.com/docs/fFixture.html">fFixture</a> class to github <a href="https://github.com/mblarsen/fFixture">https://github.com/mblarsen/fFixture</a>.
+</p>
+
+<p>
+<a href="../flourishlib.com/docs/fFixture.html">fFixture</a> provides an easy way of creating sample data (fixtures) for unit testing using Flourish.
+</p>
+
+<p>
+It recursively creates records based on JSON fixture files that you provide. By default it will create records for all fixture files it finds, but you can specify to use only selected fixtures.
+</p>
+
+<p>
+<strong>Usage</strong>
+</p>
+
+<p>
+Create <code>JSON</code> fixture files like this <code>users.json</code>:
+</p>
+<pre class="block js"><code>	[
+		{
+			&quot;user_id&quot;: 1,
+			&quot;name&quot;: &quot;Will Bond&quot;,
+			&quot;contribution&quot;: &quot;Creator of Flourish&quot;
+		}
+	]
+</code></pre>
+
+<p>
+ Create a fixture instance:
+</p>
+<pre class="block php"><code>fFixture::setDatabase($db);
+$fixture = fFixture::create('/path/to/fixture/');
+
+$fixture-&gt;build();</code></pre>
+
+<p>
+ Use your newly created objects:
+</p>
+<pre class="block php"><code>$user = new User(1);
+echo $user-&gt;getName() // outputs: Will Bond</code></pre>
+
+<p>
+ Bring everything down again:
+</p>
+<pre class="block php"><code>$fixture-&gt;tearDown();</code></pre>
+
+<p>
+ That's pretty much it. Hope you like it -- feedback is more than welcome :)
+</p>
+
+<p>
+Check out <a href="http://blog.codeboutique.com/ffixture-easy-unit-testing-with-flourish">blog post on same topic</a>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1700">
+				<div class="body" id="body-1700">
+					
+<p>
+&quot;Yeah but I got a lot of data already that I want to use for testing, what about that?&quot;
+</p>
+
+<p>
+You can use the <a href="../flourishlib.com/api/fORMJSON.html#extend">fORMJSON::extend()</a> method to extend <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> with a toJSON() method. It also extends <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>. Pretty cool stuff.
+</p>
+
+<p>
+I'm considering adding a fFixture::dump($root, $tables) method that uses these methods to build JSON fixture files. Maybe with some limiting options in case of huge datasets.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="2/28/12 1:08pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1704">
+				<div class="body" id="body-1704">
+					
+<p>
+Very useful, I think I'll be using this a lot!
+</p>
+
+<p>
+Feedback to come when I fully test it. :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="3/10/12 6:22am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1705">
+				<div class="body" id="body-1705">
+					
+<p>
+Feedback would be awesome. I wrote this as writing test data using PHP (new Record()) quickly took up a lot of lines compared to the actual testcode, making the code hard to read. Also the DRY principle was hard to uphold. We did write helper/factory classes in some cases, but even these classes started to look alike.
+</p>
+
+<p>
+Having the fixture files really helps a lot. The data is easy to maintain and to reuse, but it also makes it easy to quickly identify problems with your data in case of failing tests.
+</p>
+
+<p>
+In some cases we need lots and lots of records and we create these using PHP within the JSON files. But we've discovered that this breaks the &quot;cleanliness&quot; we had achieved with these fixtures in the first place. String building is error prone and hard to read.
+</p>
+
+<p>
+So we are now working on a way to build fixtures using specifications. Similar to the fixture files but programmatically build. 
+</p>
+<pre class="block php"><code>		$seed = new fFixtureSeed($this-&gt;db, 'products', 100);
+		
+		$seed-&gt;catalog('movie')
+			-&gt;version('DVD', 'Blu-Ray')
+			-&gt;shopId(1)
+			-&gt;name(function ($seed, $number) { return 'Cool Product #' . $number; })
+			-&gt;child('offerings', 2)-&gt;price(49.95, 69.95, 79.95, 119.95, 249.95)-&gt;random()
+				-&gt;version(function ($seed, $num) { return $seed-&gt;up('product')-&gt;object()-&gt;getVersion(); })
+				-&gt;child('price_tiers', 3)
+					-&gt;minUnits(3,5,10)
+					-&gt;price(function ($seed, $num) { /* mark up by 10, 12, 15% */})
+					-&gt;up('products')
+			-&gt;child('product_descriptions', 2)
+		    	-&gt;description('Lorem ipsum dolor sit amet');
+</code></pre>
+
+<p>
+ This will build 100 movie products. 50 DVDs and 50 Blu-rays. For each product there will be two offerings with a random price. The offering version will be the same as the product version. Each offering has three price tiers that are a mark up from the randomly selected price of 10, 12, 15%. I think you get the point.
+</p>
+
+<p>
+Too us this seems like a better way to fill up your fixture files with PHP. 
+</p>
+
+<p>
+In this example (from the unit tests) they are called seeds but will likely be renamed specs. But the point is that you specify the properties of your records that is relevant to you, and leave it to flourish to fill out the rest. These specs can work along side with your fixture files.
+</p>
+
+<p>
+Could this be useful for you as well? Any thoughts?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="3/11/12 5:48am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1706">
+				<div class="body" id="body-1706">
+					
+<p>
+It does look interesting and seems a lot more powerful, but I see a learning curve. Since the main feature is the ability to create many different records of a type, why not just define it in JSON instead? 
+</p>
+<pre class="block js"><code>[
+{
+    &quot;user_id&quot;: &quot;increment&quot;,
+    &quot;name&quot;: {&quot;select&quot;: &quot;iterate&quot;, &quot;data&quot;: [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Bill&quot;, &quot;John&quot;]},
+    &quot;contribution&quot;: {&quot;select&quot;: &quot;random&quot;, &quot;repeat&quot;: 2, &quot;data&quot;: [&quot;foo&quot;, &quot;bar&quot;, &quot;fudge&quot;, &quot;baby hippos&quot;]}
+}
+]</code></pre>
+
+<p>
+ Which would be easily expandable by adding more 'select' types. You could just have a type like &quot;randomInt&quot; and define a max/min, or stuff like that. I think this personally makes sense to me because I've always seen JSON as a data format, and PHP as a processing language, which makes it odd to see data structures built in PHP.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="3/11/12 9:14pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1707">
+				<div class="body" id="body-1707">
+					
+<p>
+I absolutely agree that the JSON files are for the data and PHP is for the processing part, and I would keep as much as possible that relates to a single type of record within these files.  I have considered the option to have hierarchical data in stead of always splitting relations into multiple files. However, I'm unsure if I want to go in the direction of a format within a format, when it comes to having specifications as actual JSON. This would mean that you would have to process the actual values and furthermore I think it could clutter up the simple view of the data even more.  So to achieve iterate and random like functionality, I would still rely on PHP - then it will be clear to me when it is data and when it is process.
+</p>
+
+<p>
+But the real incentive to build specifications is the need to be able to specify exact properties across relations, say from A to C, without having to bother about B and all of the properties of either A, B, and C. This is hard to manage with multiple files - you loose focus on the important parts. Even with hierarchal JSON files like you suggests it could become messy.
+</p>
+<pre class="block php"><code>$spec = new Spec('users', 4);
+$spec-&gt;name(&quot;Alice&quot;, &quot;Bob&quot;, &quot;Bill&quot;, &quot;John&quot;)-&gt;contribution(&quot;foo&quot;, &quot;bar&quot;, &quot;fudge&quot;, &quot;baby hippos&quot;)-&gt;random();</code></pre>
+
+<p>
+ This is the example you produced as I understood it. Since it has no relations it is pretty simple. Lets assume the contribution is a relation:
+</p>
+<pre class="block php"><code>$spec = new Spec('users', 4);
+$spec-&gt;name(&quot;Alice&quot;, &quot;Bob&quot;, &quot;Bill&quot;, &quot;John&quot;)-&gt;child('contribution', 2)-&gt;title(&quot;foo&quot;, &quot;bar&quot;, &quot;fudge&quot;, &quot;baby hippos&quot;)-&gt;random();</code></pre>
+
+<p>
+ Not much more complicated. The case that we could really use specs is where you have some data requirements across relations - e.g. the 'version' in my previous post. An other example could be the case where I would like to test my factory method for getting products from a category that is for sale at the moment. My module could look like this:
+</p>
+<pre class="block php"><code>   category * .. * product
+   product 1 .. * offering</code></pre>
+
+<p>
+ Category is self-explanatory. Offering records are price and date, products are description, codes, etc. So what I'm interested in here is to produce test data where I can assert that a certain number of products from category has offerings are for sale at the moment. So really we don't really bother about the product qualities.
+</p>
+
+<p>
+It could look like this:
+</p>
+<pre class="block php"><code>$spec = new Spec('categories', 2)
+$spec-&gt;categoryId(1, 2)-&gt;child('offerings', 1)-&gt;validFrom(strtotime(&quot;+1 day&quot;), strtotime(&quot;-1 day&quot;);</code></pre>
+
+<p>
+ This would give me a total of 2 offerings, since the default is 1 record pr. relation. But the point is we dont have to specify anything about the 'man in the middle'. Lets do it anyway:
+</p>
+<pre class="block php"><code>$spec = new Spec('categories', 2)
+$spec-&gt;categoryId(1, 2)-&gt;child('products', 20)-&gt;child('offerings', 1)-&gt;validFrom(strtotime(&quot;+1 day&quot;), strtotime(&quot;-1 day&quot;);</code></pre>
+
+<p>
+ The simplest form of a child spec - its quantity. So now we will get a total of 40 offerings 10 of them good for my query.
+</p>
+
+<p>
+Thanks for your feedback - have you tried it out yet? Have tried using PHP in the json files?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="3/12/12 3:38am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

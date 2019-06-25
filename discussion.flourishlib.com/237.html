@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Trying to use one to one relationships &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Trying to use one to one relationships</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="5/31/10 6:30pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi there, im trying to do a very simple one to one relationship from my users table to my user details table, no matter how hard i try i cannot get it to work. Could any body please shed some light on this?
+</p>
+<pre class="block sql"><code>CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_id` int(11) unsigned NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `instance_id` (`instance_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
+
+CREATE TABLE IF NOT EXISTS `user_details` (
+  `user_id` int(11) unsigned NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `user_details`
+  ADD CONSTRAINT `user_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;</code></pre>
+
+<p>
+ And ive tried
+</p>
+<pre class="block php"><code>$user = new User();
+$user-&gt;setEmail(fRequest::get('user::email'));
+$user-&gt;setPassword(fRequest::get('user::password'));
+$user-&gt;setInstanceId($instance-&gt;getInstanceId());
+$user-&gt;store();
+
+$user_details = $user-&gt;createUserDetail();
+$user_details-&gt;setFirstName(fRequest::get('user_detail::first_name'));
+$user_details-&gt;setLastName(fRequest::get('user_detail::last_name'));
+$user_details-&gt;store();</code></pre>
+
+<p>
+ and 
+</p>
+<pre class="block php"><code>$user = new User();
+$user-&gt;setEmail(fRequest::get('user::email'));
+$user-&gt;setPassword(fRequest::get('user::password'));
+$user-&gt;setInstanceId($instance-&gt;getInstanceId());
+			
+$user_details = new UserDetail();
+$user_details-&gt;setFirstName(fRequest::get('user_detail::first_name'));
+$user_details-&gt;setLastName(fRequest::get('user_detail::last_name'));
+$user_details-&gt;associateUser($user);
+			
+$user-&gt;store();</code></pre>
+
+<p>
+ Someone <strong>please</strong> help, its doing my head in.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-751">
+				<div class="body" id="body-751">
+					
+<p>
+What error is occurring, or is nothing happening?
+</p>
+
+<p>
+Can you try adding this code above your creation of the <code>User</code> object?
+</p>
+<pre class="block php"><code>fORMDatabase::retrieve()-&gt;enableDebugging(TRUE);</code></pre>
+
+<p>
+ This will print out all of the SQL statements that are being executed.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/1/10 12:16pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-753">
+				<div class="body" id="body-753">
+					
+<p>
+Yo,
+</p>
+
+<p>
+Heres what i called, 
+</p>
+<pre class="block php"><code>$user = new User();
+	$user-&gt;setEmail('test@example.com');
+	$user-&gt;setPassword('secret');
+	$user-&gt;setInstanceId(1);
+	$user-&gt;store();
+ 
+	$user_details = $user-&gt;createUserDetail();
+	$user_details-&gt;setFirstName('John');
+	$user_details-&gt;setLastName('Doe');
+	$user_details-&gt;store();
+	
+
+	$user = new User();
+	$user-&gt;setEmail('test2@example.com');
+	$user-&gt;setPassword('secret');
+	$user-&gt;setInstanceId(1);
+	
+	$user_details = new UserDetail();
+	$user_details-&gt;setFirstName('John2');
+	$user_details-&gt;setLastName('Doe2');
+	$user_details-&gt;associateUser($user);
+            
+	$user-&gt;store();</code></pre>
+
+<p>
+ And here is the output
+</p>
+<pre><code>Query time was 0.00035619735717773 seconds for:
+SHOW CREATE TABLE users
+Query time was 0.00030994415283203 seconds for:
+BEGIN
+Query time was 0.00048422813415527 seconds for:
+INSERT INTO &quot;users&quot; (&quot;instance_id&quot;, &quot;email&quot;, &quot;password&quot;, &quot;twitter&quot;, &quot;status&quot;, &quot;mobile&quot;, &quot;token&quot;, &quot;created_at&quot;, &quot;updated_at&quot;, &quot;active_at&quot;) VALUES (1, 'test@example.com', 'secret', NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+Query time was 0.00095105171203613 seconds for:
+COMMIT
+Query time was 0.00048685073852539 seconds for:
+SHOW CREATE TABLE user_details
+Query time was 0.038719892501831 seconds for:
+SELECT * FROM &quot;user_details&quot; WHERE &quot;user_details&quot;.&quot;user_id&quot; = 24
+Query time was 0.00031280517578125 seconds for:
+BEGIN
+Query time was 0.00034213066101074 seconds for:
+ROLLBACK
+Uncaught fValidationException
+-----------------------------
+{doc_root}/bootstrap.php(18): fActiveRecord-&gt;store()
+{doc_root}/libraries/flourish/fActiveRecord.php(2670): fActiveRecord-&gt;validate()
+{doc_root}/libraries/flourish/fActiveRecord.php(2878)
+&lt;p&gt;The following problems were found:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;User ID: Please enter a value&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="6/2/10 10:19pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-759">
+				<div class="body" id="body-759">
+					
+<p>
+In the first example you aren't manually setting the <code>user_id</code> on the <code>user_details</code> table, which explains the error. In the second example you almost have it, except you are associating the user with the user detail, but then you save the user.
+</p>
+
+<p>
+The associate action work by associating the passed record to the record you are calling the method on, then you have to save the record you called the method on. I can see how with a one-to-one relationship this might be slightly confusing. If you want to open a ticket, I can probably treat <code>associate</code> a little differently for one-to-one relationships.
+</p>
+
+<p>
+Here is the code that should work:
+</p>
+<pre class="block php"><code>$user = new User();
+$user-&gt;setEmail('test2@example.com');
+$user-&gt;setPassword('secret');
+$user-&gt;setInstanceId(1);
+
+$user_details = new UserDetail();
+$user_details-&gt;setFirstName('John2');
+$user_details-&gt;setLastName('Doe2');
+
+$user-&gt;associateUserDetail($user_details);        
+$user-&gt;store();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/4/10 1:30pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

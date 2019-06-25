@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Translation system &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Translation system</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					masterix21			</span>
+	<span class="date_posted" title="6/19/10 10:11pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, 
+</p>
+
+<p>
+i'm developing multi-language software with flourish and i need to translate all library's error/exception message (for example: <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception, etc).
+</p>
+
+<p>
+How i can solve this problem? This is my first project with flourish but i'm excited by this library because it's really simple to use and it guarantee excellent results (i'm loving <a href="../flourishlib.com/docs/fORM.html">fORM</a>!!!)!
+</p>
+
+<p>
+Please help me. Thank you.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-793">
+				<div class="body" id="body-793">
+					
+<p>
+I just added some functionality to the MessagesList page so that you can download an array to use for translating Flourish messages. You can combine that with some example code on the <a href="../flourishlib.com/docs/fText.html">fText page</a> to do the translation.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/25/10 1:21pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1622">
+				<div class="body" id="body-1622">
+					
+<p>
+On a slight tangent:
+</p>
+
+<p>
+I sometimes wish that there was a translation file that simply converted to a set of response codes, in a particular format. I'm a UX designer, so if <a href="../flourishlib.com/docs/fORM.html">fORM</a> fails some validation, I rarely want it to echo &quot;The value specified must be unique, however it already exists&quot;. I'd rather detect for a shorter code, such as &quot;VALUE_EXISTS field&quot;, which I can check for, and then return my own personalized message. Sure, I can detect for the full string, but that might change in the future and just doesn't feel elegant.
+</p>
+
+<p>
+(Ideally, this sort of thing would also need <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> to give a way to simply output an array of errors.)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													rirez											</span>
+					<span class="date_posted" title="11/20/11 1:27pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1630">
+				<div class="body" id="body-1630">
+					
+<p>
+If you open a new discussion, I would love to get feedback from other users about what a good solution may be.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/28/11 1:48pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-794">
+				<div class="body" id="body-794">
+					
+<p>
+By the way, if you feel so inclined, I'd love to get some of your translations to post them on the site for others to use. Feel free to email me at <a href="mailto:will@flourishlib.com">will@flourishlib.com</a> or post a ticket with the translations as an attachment.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/25/10 1:23pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-800">
+				<div class="body" id="body-800">
+					
+<p>
+ok. I'm preparing a translation to italian.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													masterix21											</span>
+					<span class="date_posted" title="6/27/10 9:54am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-804">
+				<div class="body" id="body-804">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+Why it's offline <a href="http://docs.flourishlib.com/translations/en_to_it_855.phps">http://docs.flourishlib.com/translations/en_to_it_855.phps</a> ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="7/2/10 12:49pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-805">
+				<div class="body" id="body-805">
+					
+<p>
+There was a slight misconfiguration on the server, it is fixed now.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/2/10 1:32pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-1611">
+				<div class="body" id="body-1611">
+					
+<p>
+Hello Will,
+</p>
+
+<p>
+I'd like to translate Flourish Messages to french.<br />
+ But how can I know if it's already done or not ? <br />
+
+</p>
+
+<p>
+Is there any GitHub section where we could find those translation files ?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="11/16/11 6:54am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1614">
+				<div class="body" id="body-1614">
+					
+<p>
+The MessagesList page includes all contributed translations, along with the template for creating new ones. Currently the script that generates these templates does not push them to a GitHub repository.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="11/16/11 9:14am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1615">
+				<div class="body" id="body-1615">
+					
+<p>
+Okay I'll send you the french translation in the next few weeks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													theyouyou											</span>
+					<span class="date_posted" title="11/16/11 9:19am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1621">
+				<div class="body" id="body-1621">
+					
+<p>
+If you need a spanish translation just tell me :)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/jmtucu">							jmtucu						</a> 					</span>
+					<span class="date_posted" title="11/18/11 3:20pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1660">
+				<div class="body" id="body-1660">
+					
+<p>
+French translation :  <a href="http://pastebin.com/Vc70H7An">http://pastebin.com/Vc70H7An</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													younes											</span>
+					<span class="date_posted" title="1/22/12 1:45pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

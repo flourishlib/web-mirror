@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>TWIG problems? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">TWIG problems?</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					miker			</span>
+	<span class="date_posted" title="12/11/10 5:01pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Greetings all!
+</p>
+
+<p>
+Has anyone had any luck using Flourish with TWIG?
+</p>
+
+<p>
+The following returns:
+</p>
+
+<p>
+Fatal error: Class '<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>' not found in /Applications/MAMP/htdocs/local-ports/clients/loni/tests-flourish.php on line 21 
+</p>
+<pre class="block php"><code>&lt;?php
+// twig 0.9.10
+// flourish r949
+session_start();
+
+require_once($_SERVER['DOCUMENT_ROOT'] . '/../inc-framework/init.php');  // load flourish
+
+require_once dirname(__FILE__).'/lib/Twig/Autoloader.php';
+Twig_Autoloader::register();
+
+// set up Twig
+$loader = new Twig_Loader_Filesystem('template');
+$twig = new Twig_Environment($loader, array(
+  'cache' =&gt; 'cache', 'auto_reload' =&gt; true, 'debug' =&gt; false  
+));
+
+require_once('Connections/db.php'); 
+require_once('includes/functions.php');
+
+if (!isset($bindings['mainNavigation'])) {
+    $mysql_db  = new fDatabase('mysql', $database_db, $username_db, $password_db, $hostname_db); // connect to database
+    $result = $mysql_db-&gt;query(&quot;SELECT * FROM menu WHERE menu.menuPublish ='y' AND menu.menuDelete = 'n' ORDER BY menu.menuSort ASC&quot;);
+    
+    $bindings['mainNavigation'] = array();  // create the menu array
+    
+    foreach ($result as $row) {
+		$bindings['mainNavigation'][] = array('url' =&gt; $row['menuLink'], 'title' =&gt; $row['menuText'], 'copy' =&gt; $row['menuText']);
+    }
+
+	var_dump($bindings);
+}
+?&gt;</code></pre>
+
+<p>
+ Works fine if I pull all TWIG references out.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1049">
+				<div class="body" id="body-1049">
+					
+<p>
+I don't know for sure, but I would suspect that <code>Twig_Autoloader::register();</code> is using <code>spl_autoload_register()</code>, which will disable the <code>__autoload()</code> function. To fix this, rename your <code>__autoload()</code> function to <code>my_autoload</code> and call <code>spl_autoload_register()</code>.
+</p>
+<pre class="block php"><code>// Your renamed __autoload() function
+function my_autoload($class) {
+    // ....
+}
+spl_autoload_register('my_autoload');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/12/10 8:00am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

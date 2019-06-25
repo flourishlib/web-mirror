@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Sessions not working in Chrome &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Sessions not working in Chrome</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					alantyson			</span>
+	<span class="date_posted" title="8/4/12 6:20am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi there,
+</p>
+
+<p>
+I'm trying to setup a basic login system:  The setup is:
+</p>
+
+<p>
+<strong>/index.php</strong>                       <em> protected with a call to fAuthorization::requireLoggedIn('Administrator')</em>
+</p>
+
+<p>
+<strong>/auth/login.php</strong>                <em>the login form, which calls /auth/loginverify.php</em>
+</p>
+
+<p>
+<strong>/auth/loginverify.php</strong>        <em>checks for credentials against database, sets the authLevel, calls fSession::enablePersistence and sets some session variables, then calls URL::redirect(fAuthorization::getRequestedURL(TRUE, '/index.php'))</em>
+</p>
+
+<p>
+This setup works fine in Firefox and Safari; however in Chrome, after loginverify.php redirects to index.php, all of the session variables are empty so it redirects back to login.php again.  I can't figure out what is going on, why the session variables can be read after login in index.php in Firefox and Safar but in Chrome they appear blank. I've even deleted all cookies in reset both browsers and same results.
+</p>
+
+<p>
+Many thanks
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1794">
+				<div class="body" id="body-1794">
+					
+<p>
+<strong>PROBLEM SOLVED</strong>
+</p>
+
+<p>
+Spent a whole day on this one and finally found this page: <a href="https://secure.kitserve.org.uk/content/php-session-cookie-problems-google-chrome-and-internet-explorer">https://secure.kitserve.org.uk/content/php-session-cookie-problems-google-chrome-and-internet-explorer</a>
+</p>
+
+<p>
+From the site: <em>When testing a local site in Chromium, you must either access it via IP address (e.g. 127.0.0.1) or set the cookie domain parameter to the empty string.</em>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													alantyson											</span>
+					<span class="date_posted" title="8/4/12 7:15am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1801">
+				<div class="body" id="body-1801">
+					<p>I experienced a similar issue, and thought I would leave my experiences here in case any random googlers run across this page. If you ever experience issues with Chrome dropping your session, logging you out, etc, make sure you have a valid favicon.ico being served. After a day or two if constant authorization issues I discovered that Chrome was starting a <em>new</em> session when the favicon.ico request came back as a 404. Adding the favicon file stopped Chrome from dropping my session.</p>
+
+<p>This was particularly frustrating as Chrome doesn't create a console log line for missing favicon files, it just fails silently.</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/titusjohnson">							titusjohnson						</a> 					</span>
+					<span class="date_posted" title="9/13/12 11:59am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

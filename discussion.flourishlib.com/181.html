@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>session &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">session</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="12/4/09 4:34pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a 
+</p>
+<pre class="block php"><code>$_SESSION['key']</code></pre>
+
+<p>
+ set by a capcha script. if i want to print this in site print 
+</p>
+<pre class="block php"><code>echo $_SESSION['key']</code></pre>
+
+<p>
+ for verify works only if i don't have: 
+</p>
+<pre class="block php"><code>fSession::setPath ( DOC_ROOT . '/storage/session/' )</code></pre>
+
+<p>
+ what is wrong?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-536">
+				<div class="body" id="body-536">
+					
+<p>
+Well, <a href="../flourishlib.com/api/fSession.html#setPath">fSession::setPath()</a> sets the directory in which to save session files. Are you calling this method on the page/script before any session access happens or before the session is opened? My guess is that the captcha code is starting the session before you set the session path, or something along those lines.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/8/09 11:45am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-538">
+				<div class="body" id="body-538">
+					
+<p>
+the session is generated in a contact form : 
+</p>
+<pre><code>#!text/html
+&lt;img src=&quot;capcha/random.php&quot; alt=&quot;captcha&quot; border=&quot;0&quot; class=&quot;&quot; /&gt;</code></pre>
+
+<p>
+ session patch is set on config file and i call thes session variables like this in contact php
+</p>
+<pre class="block php"><code>include_once ($_SERVER ['DOCUMENT_ROOT'] . '/project/inc/init.php');
+include_once ($_SERVER ['DOCUMENT_ROOT'] . '/project/inc/language.php');
+fText::registerComposeCallback('pre', 'traducere_ro');
+//fAuthorization::requireAuthLevel('admin');
+//print_r($_POST);
+//echo random_string(&quot;mun&quot;,3,&quot;~!@#$%^&amp;*&quot;,&quot;giu&quot;);
+//fSession::set('key','sadsa');
+
+
+include_once(&quot;meta.php&quot;);
+
+
+
+
+if(isset($_POST['submit'])) {
+	
+$val=new Validation;
+
+$error = null;
+
+if(md5($_POST['cod']) != $_SESSION['key']) {
+	
+	$error .= 'Codul nu se potriveste cu cel din imagine.&lt;br /&gt;';
+	
+	}</code></pre>
+
+<p>
+ init calling for config where is the setPatch but if it's set it's not working how i say.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="12/8/09 5:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-539">
+				<div class="body" id="body-539">
+					
+<p>
+<a href="../flourishlib.com/docs/fSession.html">fSession</a> v1.0.0b6 and before had a default prefix that was applied to all calls to <a href="../flourishlib.com/api/fSession.html#set">fSession::set()</a> and <a href="../flourishlib.com/api/fSession.html#get">fSession::get()</a>. If you are using one of those versions, you'll need to set the third parameter to <code>''</code> to remove the prefix.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/8/09 9:07pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-540">
+				<div class="body" id="body-540">
+					
+<p>
+i updated to 1.0.0b9 version and still no defined index key if setPatch .
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="12/13/09 7:22pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

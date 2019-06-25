@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Many to many relationship not being built &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Many to many relationship not being built</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					belshire			</span>
+	<span class="date_posted" title="8/17/09 2:06pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi I'm having troubles getting a many to many relationship I've setup in my database to be recognized. I'm building out a catalog for a company and I need products to have a many to many relationship with their assets, categories, and tags. I'm using MySQL and have setup all tables as InnoDB and have the correct joining tables with two columns each a foreign key to the primary key on the related tables. Yet when I output the relationships through fCore::expose($schema-&gt;getRelationships(&quot;products&quot;)); it shows a one to many relationship to the joining table and not a many to many relationship with the assets, categories, or tags tables. 
+</p>
+<pre><code>Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; products
+                    [column] =&gt; id
+                    [related_table] =&gt; products_assets
+                    [related_column] =&gt; product_id
+                    [on_delete] =&gt; no_action
+                    [on_update] =&gt; no_action
+                )
+        
+            [1] =&gt; Array
+                (
+                    [table] =&gt; products
+                    [column] =&gt; id
+                    [related_table] =&gt; products_categories
+                    [related_column] =&gt; product_id
+                    [on_delete] =&gt; no_action
+                    [on_update] =&gt; no_action
+                )
+        
+            [2] =&gt; Array
+                (
+                    [table] =&gt; products
+                    [column] =&gt; id
+                    [related_table] =&gt; products_tags
+                    [related_column] =&gt; product_id
+                    [on_delete] =&gt; no_action
+                    [on_update] =&gt; no_action
+                )
+        
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+        )
+  
+)</code></pre>
+
+<p>
+ I've also tried using the associate method but it returns an error stating that the Producst and Assets (or Categories, or Tags) tables are not in a *-to-many relationship with each other.
+</p>
+<pre class="block php"><code>$assets = fRecordSet::build(&quot;Asset&quot;);
+$products = fRecordSet::build(&quot;Product&quot;, array(&quot;id=&quot; =&gt; &quot;2&quot;));
+$product = $products-&gt;fetchRecord();
+$product-&gt;associateAssets($assets);</code></pre>
+
+<p>
+ Obviously because of this error this isn't the way to build this relationship manually if it's not being built automatically by <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> or <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. 
+</p>
+
+<p>
+Is there a way to build this many-to-many relationship manually? Or is there something with my DB structure that needs to be tweaked for <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to see the joining tables as many-to-many relationships? Any help would be appreciated.
+</p>
+
+<p>
+Here are the create table statements for the associated tables I'm talking about:
+</p>
+<pre class="block sql"><code>CREATE TABLE `products` (
+  `id` int(11) NOT NULL auto_increment,
+  `item_number` varchar(100) character set latin1 NOT NULL,
+  `title` varchar(255) character set latin1 NOT NULL,
+  `weight` varchar(255) character set latin1 NOT NULL,
+  `dimesions` varchar(100) character set latin1 NOT NULL,
+  `description` text character set latin1,
+  `published` int(2) NOT NULL default '1',
+  `parent_id` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) character set latin1 NOT NULL,
+  `top_level` tinyint(2) NOT NULL,
+  `parents` varchar(100) character set latin1 default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `products_categories` (
+  `category_id` int(11) default NULL,
+  `product_id` int(11) default NULL,
+  KEY `category_id` (`category_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `products_categories_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
+  CONSTRAINT `products_categories_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `assets` (
+  `path` varchar(255) character set latin1 NOT NULL,
+  `type` varchar(255) character set latin1 NOT NULL default '',
+  `asset_id` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`asset_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `products_assets` (
+  `asset_id` int(11) default NULL,
+  `product_id` int(11) default NULL,
+  KEY `asset_id` (`asset_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `products_assets_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+  CONSTRAINT `products_assets_ibfk_1` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`asset_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `tags` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) character set latin1 NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `products_tags` (
+  `tag_id` int(11) default NULL,
+  `product_id` int(11) default NULL,
+  KEY `tag_id` (`tag_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `products_tags_ibfk_1` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`),
+  CONSTRAINT `products_tags_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-354">
+				<div class="body" id="body-354">
+					
+<p>
+You just need a slight tweak to your SQL schema to get it all to work. Both of your joining tables right now have two distinct indexes on the foreign keys, but not a multi-column primary key. Here are what I believe the <code>CREATE TABLE</code> statements should look like:
+</p>
+<pre class="block sql"><code>CREATE TABLE products_assets (
+	asset_id INT NOT NULL,
+	product_id INT NOT NULL,
+	PRIMARY KEY (asset_id, product_id),
+	FOREIGN KEY (product_id) REFERENCES products(id),
+	FOREIGN KEY (asset_id) REFERENCES assets(asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE products_categories (
+	category_id INT NOT NULL,
+	product_id INT NOT NULL,
+	PRIMARY KEY (category_id, product_id),
+	FOREIGN KEY (category_id) REFERENCES categories(id),
+	FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/17/09 2:15pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-355">
+				<div class="body" id="body-355">
+					
+<p>
+Thanks, that fixed it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													belshire											</span>
+					<span class="date_posted" title="8/17/09 3:08pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

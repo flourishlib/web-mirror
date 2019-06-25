@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>associate &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">associate</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="7/19/11 2:14pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Please Bond give an idea how to aproach this.
+</p>
+
+<p>
+Sql
+</p>
+<pre class="block sql"><code>CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int(11) NOT NULL auto_increment,
+  `category` varchar(100) NOT NULL,
+  `pid` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `pid` (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `categories`
+--
+
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `categories` (`id`);</code></pre>
+
+<p>
+ array:
+</p>
+<pre class="block php"><code>Array
+(
+    [0] =&gt; Array
+        (
+            [Items for Sale] =&gt; Array
+                (
+                    [0] =&gt; Array
+                        (
+                            [Antiques&amp;nbsp;&amp;&amp;nbsp;Collectibles] =&gt; Array
+                                (
+                                    [0] =&gt; Advertising
+                                    [1] =&gt; Animation&amp;nbsp;&amp;&amp;nbsp;Cartoons
+                                    [2] =&gt; Appliances
+                                    [3] =&gt; Autographs
+                                    [4] =&gt; Autos&amp;nbsp;&amp;&amp;nbsp;Vehicle&amp;nbsp;Memorabilia
+                                    [5] =&gt; Cigarette&amp;nbsp;&amp;&amp;nbsp;Tobacco&amp;nbsp;Paraphernalia&amp;nbsp;&amp;raquo;
+
+                                    [6] =&gt; Clocks&amp;nbsp;&amp;raquo;
+                                    [7] =&gt; Coins&amp;nbsp;&amp;&amp;nbsp;Currency
+                                    [8] =&gt; Comics&amp;nbsp;&amp;raquo;
+                                    [9] =&gt; Dolls&amp;nbsp;&amp;raquo;
+                                    [10] =&gt; Entertainment&amp;nbsp;Memorabilia&amp;nbsp;&amp;raquo;
+                                    [11] =&gt; Food&amp;nbsp;&amp;&amp;nbsp;Beverage
+                                    [12] =&gt; Furniture
+                                    [13] =&gt; Groups&amp;nbsp;&amp;&amp;nbsp;Cultures
+etc...</code></pre>
+
+<p>
+ i want this array to insert in that table to have this categories recurisively. i try something like this
+</p>
+<pre class="block php"><code>foreach ($categories100 as $key =&gt; $value) {
+            foreach ($value as $key1 =&gt; $value1) {
+                $categorii = new Category();
+                $categorii-&gt;setCategory($key1);
+                foreach ($value1 as $key2 =&gt; $value2) {
+                    foreach ($value2 as $key3 =&gt; $value3) {
+                        $subcategorii = new Category();
+                        $categorii-&gt;associateCategory($categorii);
+                        $subcategorii-&gt;setCategory($key2);
+                    }
+                }
+//print_r($categorii);
+            }
+        }</code></pre>
+
+<p>
+ but it says that: The table categories is not in a *-to-manyrelationship with the table categories. but how u say i setted foreig key reference itself.
+</p>
+<pre class="block php"><code>Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; categories
+                    [column] =&gt; pid
+                    [related_table] =&gt; categories
+                    [related_column] =&gt; id
+                )
+        
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; categories
+                    [column] =&gt; id
+                    [related_table] =&gt; categories
+                    [related_column] =&gt; pid
+                    [on_delete] =&gt; no_action
+                    [on_update] =&gt; no_action
+                )
+        
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+        )
+  
+)</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1459">
+				<div class="body" id="body-1459">
+					
+<p>
+Can you please post a the backtrace and error message from the exception that says categories is not related to categories?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/22/11 7:37pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1464">
+				<div class="body" id="body-1464">
+					
+<p>
+Perhaps I'm reading this wrong... but if you were to associate a single Category, wouldn't you want to be doing it on the sub category?  NOT the parent category?
+</p>
+<pre class="block php"><code>                    foreach ($value2 as $key3 =&gt; $value3) {
+                        $subcategorii = new Category();
+                        $subcategorii-&gt;associateCategory($categorii);
+                        $subcategorii-&gt;setCategory($key2);
+                    }</code></pre>
+
+<p>
+ Not sure if this will fix the complain, but it only seems logical.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="7/26/11 1:24pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1466">
+				<div class="body" id="body-1466">
+					
+<p>
+Sorry but i can't understand what u want to say, here i try to make a tree and i initiate a new category and the i try to relate to upper category.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="7/26/11 5:42pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1473">
+				<div class="body" id="body-1473">
+					
+<p>
+EDIT:  The suggestion on line 8 (as far as I can tell) is bunk... it doesn't appear as though you can associate in that way.  The confusing part about self-referencing tables is that from the child's perspective, it is related only to one parent... from the parent's perspective it has many children.  But the associate method, in my understanding, is based on the *-to-many relationship, as such, the expected naming would be -&gt;associateCategories() -- in which case, the required argument would have to be a list of categories.  The recursive function I offered should hypothetically still work to my knowledge.
+</p>
+
+<p>
+Line 8 of your PHP code above is currently:
+</p>
+<pre class="block php"><code>$categorii-&gt;associateCategory($categorii);</code></pre>
+
+<p>
+ I'm saying I think it needs to be:
+</p>
+<pre class="block php"><code>$subcategorii-&gt;associateCategory($categorii);</code></pre>
+
+<p>
+ That being said, you may also want to think about using a recursive function.. Your ids are auto incremented so they do not need to match anything in particular.  From what I can tell you are just trying to make sub categories a child of the parents based on the array keys:
+</p>
+<pre class="block php"><code>function buildFromArray($product_array)
+{
+
+     $child_categories = array();
+
+     foreach ($product_array as $key =&gt; $value) {
+
+          $child_categories[] = $category = new Category();
+
+          if (is_array($value)) {
+               $category-&gt;setCategory(fHTML::decode($key));
+               $category-&gt;associateCategories(buildFromArray($value, $category));
+          } else {
+               $category-&gt;setCategory(fHTML::decode($value));
+          }
+
+          $category-&gt;store();
+     }
+
+     return $child_categories;
+}</code></pre>
+
+<p>
+ I have not tested this but in theory that function should work for what I believe you are trying to do.  The only weird thing is that all your children will be stored before the parents.  But I think this is a necessity of associate.  I could be wrong... Will, are you able to associate records which have not been stored yet?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="7/27/11 12:54pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1475">
+				<div class="body" id="body-1475">
+					
+<p>
+tank u for sugestion i will try your function. i did't in way like this bu i was currios how that can be doing with association.
+</p>
+<pre class="block php"><code>//        foreach ($categories100 as $key =&gt; $value) {
+//            foreach ($value as $key1 =&gt; $value1) {
+//                $categorii = new Category();
+//                $categorii-&gt;setCategory($key1);
+//                $categorii-&gt;store();
+//                foreach ($value1 as $key2 =&gt; $value2) {
+//                    foreach ($value2 as $key3 =&gt; $value3) {
+//                        $subcategorii = new Category();
+//                        $subcategorii-&gt;setCategory($key3);
+//                        $subcategorii-&gt;setPid($categorii-&gt;getId());
+//                        $subcategorii-&gt;store();
+//                        foreach ($value3 as $key4 =&gt; $value4) {
+//                            //foreach ($value4 as $key5 =&gt; $value5) {echo $value5;
+//                            $subsubcategorii = new Category();
+//                            $subsubcategorii-&gt;setCategory($value4);
+//                            $subsubcategorii-&gt;setPid($subcategorii-&gt;getId());
+//                            $subsubcategorii-&gt;store();
+//                            //}
+//                        }
+//                    }
+//                }</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="7/27/11 3:54pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

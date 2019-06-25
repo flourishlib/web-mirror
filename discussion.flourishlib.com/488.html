@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRequest::get and php 5.3.6 not returning a result &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRequest::get and php 5.3.6 not returning a result</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					darren			</span>
+	<span class="date_posted" title="7/20/11 9:07pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Guys,
+</p>
+
+<p>
+I have just upgraded to php 5.3.6 and am using the lastest version of flourish.
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fRequest.html#get">fRequest::get()</a> no longer returns a result and have tracked it down to the <a href="../flourishlib.com/api/fUTF8.html#clean">fUTF8::clean()</a> method.
+</p>
+
+<p>
+at line 622 the iconv seems to be the issue...
+</p>
+<pre class="block php"><code>echo $value; //returns the value
+$value = iconv('UTF-8', 'UTF-8' . (self::$can_ignore_invalid ? '//IGNORE' : ''), (string) $value);
+echo $value; //returns nothing</code></pre>
+<blockquote>
+<p>
+(
+</p>
+</blockquote>
+<p>
+Thanks,
+</p>
+
+<p>
+Darren
+</p>
+
+<ul>
+<li>**EDIT**</li>
+</ul>
+
+<p>
+Further investigation reveals that it does not like the //IGNORE and changing it to the following works...
+</p>
+<pre class="block php"><code>$value = iconv('UTF-8', 'UTF-8', (string) $value);</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1463">
+				<div class="body" id="body-1463">
+					
+<p>
+Can you tell me what operating system you are running on and what the output of the following code is?
+</p>
+<pre class="block php"><code>echo ICONV_IMPL;</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/11 1:23pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1469">
+				<div class="body" id="body-1469">
+					
+<p>
+I am guessing you are probably using MAMP. Some other users have experienced a pretty critical bug in MAMP where the iconv extension is broken. Please see ticket #646 for more details.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/26/11 9:55pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1477">
+				<div class="body" id="body-1477">
+					
+<p>
+Hi WB,
+</p>
+
+<p>
+Sorry for the late reply...
+</p>
+
+<p>
+I am using IBM AIX 5.3 and the echo statement above produces
+</p>
+
+<p>
+IBM iconv
+</p>
+
+<p>
+If you need me to do anything else please let me know.
+</p>
+
+<p>
+Thanks,
+</p>
+
+<p>
+Darren
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="7/29/11 1:08am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1478">
+				<div class="body" id="body-1478">
+					
+<p>
+Can you try using r1018 or newer? I made some changes that fixed issues with iconv() there for MAMP, and hopefully it will fix it for you also.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 11:47am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1479">
+				<div class="body" id="body-1479">
+					
+<p>
+Actually, looking at this a little longer, I'm pretty sure that fix won't help you. I believe the issue is that IBM's iconv implementation doesn't support the <code>//IGNORE</code> flag. I'll commit a new revision that should fix it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 12:13pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1487">
+				<div class="body" id="body-1487">
+					
+<p>
+Ok, this should be fixed for you in r1022.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 2:18pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1495">
+				<div class="body" id="body-1495">
+					
+<p>
+Hi Will,
+</p>
+
+<p>
+As always you are the man :)
+</p>
+
+<p>
+Thanks,
+</p>
+
+<p>
+Darren
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													darren											</span>
+					<span class="date_posted" title="8/1/11 12:16am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

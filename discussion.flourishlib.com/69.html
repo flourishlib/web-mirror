@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Trying to make a smarter search &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Trying to make a smarter search</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					adam patterson			</span>
+	<span class="date_posted" title="5/13/09 6:14pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I would like to make a search that can handle more than one word.
+</p>
+
+<p>
+Currently I have
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM addressbook WHERE 
+		firstname LIKE '%&quot;.$searchstring.&quot;%' OR 
+		lastname LIKE '%&quot;.$searchstring.&quot;%' OR 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	 	ORDER BY id DESC&quot;);</code></pre>
+
+<p>
+ If i search for Adam it works fine, if i search for Adam Patterson it returns nothing.
+</p>
+
+<p>
+So i tried:
+</p>
+<pre class="block php"><code>$searchwords = split(&quot; &quot;, $searchstring);
+foreach($searchwords as $searchword) { Same SQL }</code></pre>
+
+<p>
+ and didn't have any luck.
+</p>
+
+<p>
+I'm not using ORM (another issues) unless some one can explain to me how to make it work properly.
+</p>
+
+<p>
+Thanks in advance for the help.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-211">
+				<div class="body" id="body-211">
+					
+<p>
+In the first example, you are giving it the same search string.  So, when the search is &quot;Adam&quot;, the firsname field matches and you get a result.  When you search for &quot;Adam Patterson&quot;, the firstname field will not match.
+</p>
+
+<p>
+You need to do this :
+</p>
+<pre class="block php"><code>$fsearch = &quot;Adam&quot;;
+$lsearch = &quot;Patterson&quot;;
+
+$result = $db-&gt;query(&quot;SELECT * FROM addressbook WHERE 
+        firstname LIKE '%&quot;.$fsearch.&quot;%' OR 
+        lastname LIKE '%&quot;.$lsearch.&quot;%' OR 
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         ORDER BY id DESC&quot;);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="5/13/09 10:05pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-215">
+				<div class="body" id="body-215">
+					
+<p>
+You could do something like this if you were using ORM:
+</p>
+<pre class="block php"><code>
+$result = fRecordSet::build('Contact',array('first_name|last_name~' =&gt; array($fsearch,$lsearch)),array('contact_id' =&gt; 'desc'));
+</code></pre>
+
+<p>
+ Setup is pretty easy for ORM, just follow the conventions on <a href="../flourishlib.com/docs/OrmConventions.html">http://flourishlib.com/docs/OrmConventions</a> in your DB
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bdavis											</span>
+					<span class="date_posted" title="5/14/09 10:45am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-218">
+				<div class="body" id="body-218">
+					
+<p>
+Like, bdavis said, the ORM makes it very easy to do simple 'LIKE' clause searches, however if you aren't using that you'll need to replicate what is going on.
+</p>
+
+<p>
+Here is the rough outline:
+</p>
+
+<ol>
+<li>Split the search string into words</li>
+<li>Create a parenthetical group of <code>OR</code>ed <code>LIKE</code> conditions for each word</li>
+<li>Combine the <code>OR</code>ed <code>LIKE</code> conditions with <code>AND</code>s</li>
+</ol>
+
+<p>
+For example, if you want to search for <code>john smith</code>, you would explode the string into <code>john</code> and <code>smith</code>.
+</p>
+
+<p>
+Next, make a parenthetical <code>OR</code>ed <code>LIKE</code> conditions for each word:
+</p>
+<pre class="block sql"><code>(first_name LIKE '%john%' OR last_name LIKE '%john%')
+(first_name LIKE '%smith%' OR last_name LIKE '%smith%')</code></pre>
+
+<p>
+ Then we combine then with <code>AND</code>s, resulting in the following SQL:
+</p>
+<pre class="block sql"><code>SELECT
+        *
+    FROM
+        users
+    WHERE
+        (first_name LIKE '%john%' OR last_name LIKE '%john%') AND
+        (first_name LIKE '%smith%' OR last_name LIKE '%smith%')</code></pre>
+
+<p>
+ Obviously along the way you'll want to make sure you use <a href="../flourishlib.com/api/fDatabase.html#escape">fDatabase::escape()</a> on the string values to prevent SQL injection.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/14/09 11:04am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-222">
+				<div class="body" id="body-222">
+					
+<p>
+So basically its not ideal for me to do this without ORM as i have say 20 fields to search and it would be a lot of excess code to search for all possible outcomes.
+</p>
+
+<p>
+This is my un-abbreviated query:
+</p>
+<pre class="block php"><code>$searchwords = split(&quot; &quot;, $searchstring);
+
+	foreach($searchwords as $searchword) {
+	    $result = $db-&gt;query(&quot;SELECT * FROM addressbook WHERE 
+		firstname LIKE '%&quot;.$searchstring.&quot;%' OR 
+		lastname LIKE '%&quot;.$searchstring.&quot;%' OR 
+		address LIKE '%&quot;.$searchstring.&quot;%' OR 
+		suite LIKE '%&quot;.$searchstring.&quot;%' OR 
+		postalcode LIKE '%&quot;.$searchstring.&quot;%' OR 
+		city LIKE '%&quot;.$searchstring.&quot;%' OR 
+		province LIKE '%&quot;.$searchstring.&quot;%' OR 
+		country LIKE '%&quot;.$searchstring.&quot;%' OR 
+		home LIKE '%&quot;.$searchstring.&quot;%' OR 
+		mobile LIKE '%&quot;.$searchstring.&quot;%' OR 
+		work LIKE '%&quot;.$searchstring.&quot;%' OR 
+		work2 LIKE '%&quot;.$searchstring.&quot;%' OR 
+		fax LIKE '%&quot;.$searchstring.&quot;%' OR 
+		email LIKE '%&quot;.$searchstring.&quot;%' OR 
+		email2 LIKE '%&quot;.$searchstring.&quot;%' OR 
+		email3 LIKE '%&quot;.$searchstring.&quot;%' OR 
+		yahoo LIKE '%&quot;.$searchstring.&quot;%' OR 
+		msn LIKE '%&quot;.$searchstring.&quot;%' OR 
+		icq LIKE '%&quot;.$searchstring.&quot;%' OR 
+		aim LIKE '%&quot;.$searchstring.&quot;%' OR 
+		gtalk LIKE '%&quot;.$searchstring.&quot;%' OR 
+		jabber LIKE '%&quot;.$searchstring.&quot;%' OR 
+		skype LIKE '%&quot;.$searchstring.&quot;%' OR 
+		website LIKE '%&quot;.$searchstring.&quot;%'
+	 	ORDER BY id DESC&quot;);</code></pre>
+
+<p>
+ Or my other option would be to support only two or three words so:
+</p>
+<pre class="block php"><code>SELECT
+        *
+    FROM
+        users
+    WHERE
+        (first_name LIKE '%john%' OR last_name LIKE '%john%' OR email LIKE '%john%') AND
+        (first_name LIKE '%smith%' OR last_name LIKE '%smith%' OR email LIKE '%smith%') AND
+        (first_name LIKE '%email%' OR last_name LIKE '%email%' OR email LIKE '%email%')</code></pre>
+
+<p>
+ I think ill work harder at ORM then, i only had trouble because the site examples show SQL lite and Mysql at there wasn't a full on Source.
+</p>
+
+<p>
+Thanks guys, I have some ideas now.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													adam patterson											</span>
+					<span class="date_posted" title="5/15/09 1:12am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-225">
+				<div class="body" id="body-225">
+					
+<p>
+I would use a couple of for/foreach loops to generate the SQL. There are a lot of conditions, but if you are using it on a smallish site, it probably won't be too much of an issue.
+</p>
+
+<p>
+Alternatively, you can use of the full text search options for the database engine you are using. MySQL offers one for MyISAM tables and PostgreSQL has one as part of the contribs.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/15/09 4:15pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-221">
+				<div class="body" id="body-221">
+					
+<p>
+My only problem is i have a single search box, and wont have a way to assign a first name or last name value. The app is an address book so i also have emails phone numbers and other contact details. so some one could search for Adam Edmonton (currently wont work)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													adam patterson											</span>
+					<span class="date_posted" title="5/15/09 12:42am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

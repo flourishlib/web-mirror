@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Database Logging &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Database Logging</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/19/09 10:11pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'd really like to see a logging functionality included into flourish.  For example, I'd like to set a table name as the location to log all SQL queries that are committed.  Or, I'd like to be able to set a log file to write to from anywhere inside an application.    It'd be nice if the logging feature accepted either a table name or a file name and took care of the rest.  Think :   
+</p>
+<pre class="block php"><code>Log::writeToLog('some text');</code></pre>
+
+<p>
+  OR 
+</p>
+<pre class="block php"><code>Log::recordQuery($sql);</code></pre>
+
+<p>
+ Right now, I can setup some rudimentary logging, but it requires me to pass around variables or build a class to deal with it.  
+</p>
+
+<p>
+It would be really nice to have a logging system with the same level of quality and integration as the rest of flourish.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-124">
+				<div class="body" id="body-124">
+					
+<p>
+I'll add this to the list of things to look into. I think this would go hand-in-hand with some sort of centralized caching functionality.
+</p>
+
+<p>
+As you probably have experienced, I tend to prefer to provide hooks so that functionality can be added after the fact, however you are correct that some things would be more useful if provided as part of Flourish.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/20/09 2:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-126">
+				<div class="body" id="body-126">
+					
+<p>
+Will,
+</p>
+
+<p>
+Actually, since I've been using flourish a good bit lately, I've figured out how to do this myself for the most part.  In fact, it's sort of graceful (well, compared to my usual code)!  I'm recording all the queries to a database table.  
+</p>
+
+<p>
+My only problem is with queries performed as part of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.  I've been going through the code, but can't seem to find a way to capture the SQL that is executed.  The hookbacks look like the best way to know WHEN to capture the data, but I can't figure out how to actually get the executed SQL.
+</p>
+
+<p>
+Any advice would be appreciated.
+</p>
+
+<p>
+Thanks, Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/21/09 3:24pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-132">
+				<div class="body" id="body-132">
+					
+<p>
+Yeah, grabbing the actual queries is not currently possible. I mentioned in the other thread that it is pretty easy to see the queries in a print-to-screen debugging sort of way, but there isn't a clean way to grab the SQL without extending <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+</p>
+
+<p>
+Here is a quick little thing I just thought of that may do what you need. You'll need to extend this class with your individual active record classes instead of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+</p>
+<pre class="block php"><code>abstract class AppBeaconActiveRecord extends fActiveRecord
+{
+	/**
+	 * Creates the SQL to insert this record
+	 *
+	 * @param  array $sql_values  The SQL-formatted values for this record
+	 * @return string  The SQL insert statement
+	 */
+	protected function constructInsertSQL($sql_values)
+	{
+		$sql = parent::constructInsertSQL($sql_values);
+		// Do your logging
+		return $sql;
+	}
+	
+	
+	/**
+	 * Creates the SQL to update this record
+	 *
+	 * @param  array $sql_values  The SQL-formatted values for this record
+	 * @return string  The SQL update statement
+	 */
+	protected function constructUpdateSQL($sql_values)
+	{
+		$sql = parent::constructUpdateSQL($sql_values);
+		// Do your logging
+		return $sql;
+	}	
+}</code></pre>
+
+<p>
+ Let's say you have a <code>User</code> class. It should now look like:
+</p>
+<pre class="block php"><code>class User extends AppBeaconActiveRecord
+{
+	// Class contents
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/21/09 5:02pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-135">
+				<div class="body" id="body-135">
+					
+<p>
+Will,
+</p>
+
+<p>
+Thanks so much for this.  It works beautifully.  
+</p>
+
+<p>
+I'm pretty new to OOP.  I've never really seen the point of extending classes until now.  This finally shows me an example that's useful.  Now, I know how to customize flourish to my needs without the risk of missing with the original code and facing upgrade nightmares.
+</p>
+
+<p>
+Thanks a lot.
+</p>
+
+<p>
+Justin
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/21/09 8:34pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-136">
+				<div class="body" id="body-136">
+					
+<p>
+LOL!  Be sure to put some code in this extended class to ensure you don't end up logging your log entries! I failed to do this the first time and ending up with hundreds of log entries reporting that I'd performed a log entry.
+</p>
+
+<p>
+ For example, my log table is called &quot;app_logs&quot;.
+</p>
+<pre class="block php"><code>// This avoids accidentally logging log inserts!
+if( strpos($sql,'app_logs') === false )
+{
+	ManageDbLogger::setLogData( array('type'=&gt;'Query','data'=&gt;$sql) );
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													appbeacon											</span>
+					<span class="date_posted" title="3/21/09 8:43pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

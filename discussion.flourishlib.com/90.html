@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Trying to return IS NOT NULL results. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Trying to return IS NOT NULL results.</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					adam patterson			</span>
+	<span class="date_posted" title="6/7/09 1:00pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Ok long story short, I want to return results that are NOT NULL.
+</p>
+
+<p>
+I will be the first to admit I'm not super fluent with php or mwsql but i did manage to make my query work in the MySQL Query Browser so I know it works.
+</p>
+<pre class="block sql"><code>SELECT * FROM addressbook Where gid='22' and IF(lat IS NOT NULL AND lat != '', 1, 0);</code></pre>
+
+<p>
+ The context is in an addressbook with a google maps portion. Not all contacts have the lat lng information so i dont want to show them.
+</p>
+
+<p>
+In the example above there are two contacts one with geo info and the other without, the query will return the correct contact.
+</p>
+<pre class="block php"><code>$contact_results = $db-&gt;query('SELECT * FROM addressbook WHERE gid = '.$row['gid'].' IF(lat IS NOT NULL AND lat != &quot;&quot;, 1, 0)');</code></pre>
+
+<p>
+ I changed the != <em> to != &quot;&quot; because that caused an error in my string.</em>
+</p>
+
+<p>
+<em> I'm not using ORM but if there is a simple way to go about this in ORM please let me know. I have been struggling with ORM and ultimately would like to be using it but the site examples using MySQL and SQL light confuse me.</em>
+</p>
+
+<p>
+<em> If any one knows of a simple working example with ORM please show me, I learn better from the source code.</em>
+</p>
+
+<p>
+<em> Thanks!</em>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-270">
+				<div class="body" id="body-270">
+					
+<p>
+Well, the issue in your Flourish query is that <code>&quot;&quot;</code> is not equivalent to <code>''</code> in SQL. <code>&quot;&quot;</code> is used for quoting identifiers, such as columns names, that have spaces or other characters that are not normally valid. In addition, you are missing the <code> AND </code> between your two conditions.
+</p>
+
+<p>
+The best way to do this with a normal query in Flourish is:
+</p>
+<pre class="block php"><code>$result = $db-&gt;query(&quot;SELECT * FROM addressbook WHERE gid = %s AND lat IS NOT NULL AND lat != ''&quot;, $row['gid']);</code></pre>
+
+<p>
+ The <code>%s</code> placeholder and the second parameter of the <a href="../flourishlib.com/api/fDatabase.html#query">fDatabase::query()</a> method escapes the <code>gid</code> value as a string to prevent SQL injection.
+</p>
+
+<p>
+If you wanted to use the ORM to do this, you would use the following code. You'll see there is a little bit more setup, but there is quite a bit of added functionality too. Check out the ORM page for more info.
+</p>
+<pre class="block php"><code>// This tells the ORM what database to work with
+fORMDatabase::attach($db);
+
+// Here we create a Contact class to represent a single contact in the database
+class Contact extends fActiveRecord {
+    
+    // This function will return an iterable set of contacts
+    static public function findByGID($gid) {
+        return fRecordSet::build(
+            __CLASS__,
+            array(
+                // This GID will be automatically escaped to prevent SQL injection
+                'gid='  =&gt; $gid,
+                'lat!=' =&gt; NULL
+            )
+        );
+    }    
+
+    // This is run only the first time a contact object is created
+    // Here we are telling the class to model a row from the addressbook table
+    protected function configure() {
+        fORM::addCustomClassTableMapping($this, 'addressbook');
+    }
+}
+
+$contacts = Contact::findByGID($row['gid']);
+foreach ($contacts as $contact) {
+    // A getColumnName() and setColumn() method is automatically
+    // create for each column in the table. The fActiveRecord docs
+    // have more information about other functionality
+    $contact-&gt;setFirstName(fUTF8::upper($contact-&gt;getFirstName()));
+    
+    // This saves the update info in the database
+    $contact-&gt;store();
+}</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="6/8/09 1:06pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-299">
+				<div class="body" id="body-299">
+					
+<p>
+Thanks Will, the Query Worked!
+</p>
+
+<p>
+The ORM mostly works. I get : 
+</p>
+
+<p>
+Fatal error: Call to a member function setFirstName() on a non-object 
+</p>
+
+<p>
+So I think I just have to read the ORM page and get the functions set up, This stuff is so neat to me but so over my head.
+</p>
+
+<p>
+Cheers.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													adampatterson											</span>
+					<span class="date_posted" title="6/14/09 12:36pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

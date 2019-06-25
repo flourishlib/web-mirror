@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>MySQL table names being quoted, causing an error (using ORM) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">MySQL table names being quoted, causing an error (using ORM)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					wes			</span>
+	<span class="date_posted" title="7/29/11 2:06pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi Everyone, hope you're all doing well. I've been using the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class for a while, and decided I wanted to learn a bit more about the <a href="../flourishlib.com/docs/fORM.html">fORM</a> layer. I created a very basic site and a simple database, and everything seems correct, but the query won't execute. It seems Flourish is quoting the table name in SQL, which MySQL doesn't like. Pasting the generated SQL into a terminal also causes the error - but removing the quotes works fine!
+</p>
+<pre class="block sql"><code>USE flourish_test;
+CREATE TABLE books (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    tscreated TIMESTAMP NOT NULL,
+    tsmodified TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
+) TYPE=InnoDB DEFAULT CHARSET=utf8;</code></pre>
+
+<p>
+ In my Book.php class:
+</p>
+<pre class="block php"><code>class Book extends fActiveRecord {
+    protected function configure() {
+        // Automatically have Flourish set the creation &amp; modified timestamps
+        fORMDate::configureDateCreatedColumn( $this, 'tscreated' );
+        fORMDate::configureDateUpdatedColumn( $this, 'tsmodified' );
+    }
+}</code></pre>
+
+<p>
+ In my Flourish init.php, I have (along with the normal init stuff):
+</p>
+<pre class="block php"><code>fORMDatabase::attach(
+    new fDatabase(
+        'mysql', 'flourish_test',
+        'flourish_test_un', 'flourish_test_pw', 'localhost'
+    )
+);
+fORM::mapClassToTable( 'Book', 'books' );</code></pre>
+
+<p>
+ And in my one front end page, I have:
+</p>
+<pre class="block php"><code>$test = new Book();
+$test-&gt;setTitle( 'The Sun Also Rises' );
+$test-&gt;store();</code></pre>
+
+<p>
+ This throws the error (though I think incorrectly) from Flourish that &quot;the noun could not be singularized&quot; - but more importantly shows the query in the debug output as:
+</p>
+<pre class="block sql"><code>INSERT INTO &quot;books&quot; (&quot;name&quot;, &quot;tscreated&quot;, &quot;tsmodified&quot;) VALUES ('The Sun Also Rises', '2011-07-29 14:02:13', '2011-07-29 14:02:13')</code></pre>
+
+<p>
+ I've tried changing the class name, mappings, etc. to and from singular &amp; plural thinking maybe Flourish was getting confused with that, but really that doesn't make sense since I followed the documentation's instructions on singular/plural naming, casing, etc. and also that the SQL is actually 100% accurate - except for the table name being quoted. I read as much as I could before posting this question. I'm losing my mind! Any ideas?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1485">
+				<div class="body" id="body-1485">
+					
+<p>
+So, to address the issue of quoting, Flourish uses the SQL standard for quoting, double quotes. Unfortunately by default MySQL doesn't like that because when they started they didn't really follow the SQL standard very well. In the process of becoming more standards compliant they had to break backwards compatibility, and they didn't want to beak existing users installations. Thus, you have to enable options to get close to the SQL standard with MySQL.
+</p>
+
+<p>
+In <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, right after connecting to MySQL, the following queries are executed. Try executing these and then running the SQL statement:
+</p>
+<pre class="block sql"><code>SET SQL_MODE = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE';
+SET NAMES 'utf8';
+SET CHARACTER SET utf8;</code></pre>
+
+<p>
+ In terms of the &quot;noun could not be singularized,&quot; can you post the backtrace to the exception? This will help us determine what is triggering it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 2:12pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1488">
+				<div class="body" id="body-1488">
+					
+<p>
+Thanks, you should put that bit about MySQL compatibility in the documentation. I executed the SET SQL_MODE query in a console and was able to then execute the query with the table name quoted. I was logged in as the same user though, so shouldn't Flourish have been able to do the same?
+</p>
+
+<p>
+Here's the stack trace - I had changed some naming to &quot;Books&quot; just for example's sake, but the structure and code is the same. The database has one additional field of &quot;description&quot; which isn't important.
+</p>
+<pre class="block php"><code>string 'SET SQL_MODE = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE'' (length=71)
+string 'SET NAMES 'utf8'' (length=16)
+string 'SET CHARACTER SET utf8' (length=22)
+string 'SELECT version()' (length=16)
+string 'SHOW FULL TABLES WHERE table_type = 'BASE TABLE'' (length=48)
+string 'SHOW CREATE TABLE &quot;fonts&quot;' (length=25)
+string 'SHOW CREATE TABLE &quot;fonts&quot;' (length=25)
+string 'SHOW CREATE TABLE &quot;tags&quot;' (length=24)
+string 'SHOW CREATE TABLE &quot;tags_map&quot;' (length=28)
+string 'BEGIN' (length=5)
+string 'INSERT INTO &quot;fonts&quot; (&quot;name&quot;, &quot;created&quot;, &quot;modified&quot;, &quot;description&quot;) VALUES ('Cheesewiz', '2011-07-29 14:02:13', '2011-07-29 14:02:13', NULL)' (length=139)
+string 'ROLLBACK' (length=8)
+
+( ! ) Fatal error: Uncaught exception 'fProgrammerException' with message 'The noun specified could not be singularized' in C:\\localhost\\Fontina\\inc\\flourish\\classes\\fGrammar.php on line 575
+( ! ) fProgrammerException: The noun specified could not be singularized in C:\\localhost\\Fontina\\inc\\flourish\\classes\\fGrammar.php on line 575
+Call Stack
+#	Time	Memory	Function	Location
+1	0.0007	678080	{main}( )	..\\index.php:0
+2	0.0375	6526920	require_once( 'C:\\localhost\\Fontina\\views\\index.php' )	..\\index.php:20
+3	0.0623	9122936	fActiveRecord-&gt;store( )	..\\index.php:25</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="7/29/11 2:51pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1489">
+				<div class="body" id="body-1489">
+					
+<p>
+I certainly can add that to the documentation. As a user, where would you expect that to be found?
+</p>
+
+<p>
+So the issue isn't a SQL query being run. For some reason the ORM is having trouble singularizing one of your table names. Usually this is caused by one of your table names not being plural. Flourish looks at your database schema and finds relationships between them. It is likely some of the code during this process is trying to turn a table into a class name and failing.
+</p>
+
+<p>
+It seems like your backtrace is incomplete since it should include a line referring to <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>, however I am most familiar with the output of <a href="../flourishlib.com/docs/fCore.html">fCore</a> backtraces. Can you call <code>fCore::enableExceptionHandling('html');</code> right before you call <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/29/11 2:56pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1491">
+				<div class="body" id="body-1491">
+					
+<p>
+Great, I think right in the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> section would be perfect!
+</p>
+
+<p>
+I assume you don't need all of the globals output, since I'm not using forms, sessions, etc., so here's the trace part, with the grammar class you mentioned:
+</p>
+<pre class="block php"><code>
+Uncaught fProgrammerException
+-----------------------------
+{doc_root}\\index.php(20): require_once('{doc_root}\\in...')
+{doc_root}\\views\\index.php(26): fActiveRecord-&gt;store()
+{doc_root}\\inc\\flourish\\classes\\fActiveRecord.php(2737): fORM::classize('tags_map')
+{doc_root}\\inc\\flourish\\classes\\fORM.php(352): fGrammar::singularize('tags_map')
+{doc_root}\\inc\\flourish\\classes\\fGrammar.php(575)</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="7/29/11 3:43pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1492">
+				<div class="body" id="body-1492">
+					
+<p>
+Ok, great.
+</p>
+
+<p>
+So yeah, the table <code>tags_map</code> is not plural. To fix this, you'll need to call:
+</p>
+<pre class="block php"><code>fORM::mapClassToTable('TagsMap', 'tags_map');</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/30/11 8:54am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1493">
+				<div class="body" id="body-1493">
+					
+<p>
+Wow, that was a detailed catch... you really know your stuff! I guess I didn't realize I had to map all of the tables - even if I hadn't created ORM classes for them yet. Thanks for looking into it!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="7/30/11 1:18pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1497">
+				<div class="body" id="body-1497">
+					
+<p>
+One more question on ORM, Will -
+</p>
+
+<p>
+The first function invoking the ORM layer seems to always produce this output:
+</p>
+<pre class="block php"><code>string 'SET SQL_MODE = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE'' (length=71)
+string 'SET NAMES 'utf8'' (length=16)
+string 'SET CHARACTER SET utf8' (length=22)
+string 'SELECT version()' (length=16)
+string 'SHOW FULL TABLES WHERE table_type = 'BASE TABLE'' (length=48)
+string 'SHOW CREATE TABLE &quot;books&quot;' (length=25)
+string 'SHOW CREATE TABLE &quot;books&quot;' (length=25)
+// this part is just an example of creating a new book
+// it changes based on what calls are made, even if just querying all records
+string 'BEGIN' (length=5)
+string 'INSERT INTO &quot;books&quot; (&quot;title&quot;, &quot;tscreated&quot;, &quot;tsmodified&quot;) VALUES ('The Sun Also Rises', '2011-08-01 17:38:30', '2011-08-01 17:38:30')' (length=132)
+string 'COMMIT' (length=6)</code></pre>
+
+<p>
+ No errors, just showing what it's doing to set up the query... but I can't turn it off! I looked everywhere and tried every enableDebug(FALSE) statement I could find.
+</p>
+
+<p>
+At first I thought it was an issue with 
+</p>
+<pre class="block php"><code>fRecordSet::build('Book');</code></pre>
+
+<p>
+ to list all - but then I realized (as in the example above) it always does it the first time ORM is invoked.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="8/1/11 5:47pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1498">
+				<div class="body" id="body-1498">
+					
+<p>
+The output looks like the output of <code>var_dump()</code>. It is possible you added one somewhere while trying to debug your earlier issue?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/1/11 5:50pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1499">
+				<div class="body" id="body-1499">
+					
+<p>
+Hmm, good thought but no - even searching all files in the directory only turns up 3 var_dump statements - all in Flourish lib itself (<a href="../flourishlib.com/docs/fCore.html">fCore</a> @ 558, <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> @ 2691 and <a href="../flourishlib.com/docs/fException.html">fException</a> @ 91).
+</p>
+
+<p>
+My entire index page consists of:
+</p>
+<pre class="block php"><code>require_once DOC_ROOT . '/inc/flourish/init.php';
+$somebook = new Book();
+$somebook-&gt;setTitle( 'The Sun Also Rises' );
+$somebook-&gt;store();</code></pre>
+
+<p>
+ My init is basically right out of the example setup:
+</p>
+<pre class="block php"><code>require_once dirname(__FILE__) . '/config.php';
+
+fORMDatabase::attach(
+    new fDatabase(
+        'mysql', 'books',
+        $db_un, $db_pw, 'localhost'
+    )
+);
+
+/**
+ * Import all database models
+ */
+$dh = new DirectoryIterator( DOC_ROOT . '/models' );
+foreach ( $dh as $file_info ) {
+    if ( $file_info-&gt;isFile() &amp;&amp; !$file_info-&gt;isDot() ) {
+        require_once DOC_ROOT . '/models/' . $file_info-&gt;getFileName();
+    }
+}
+
+/**
+ * Map all ORM models to flourish
+ */
+fORM::mapClassToTable( 'Book', 'books' );
+
+// the rest is the log_sql() function from your example, which is commented out, and the session start</code></pre>
+
+<p>
+ Basically if I comment out the 3 $somebook lines, I don't get the output. The Book class itself only has the default timestamp (configureDateCreatedColumn) calls in the configure function.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="8/1/11 6:08pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1546">
+				<div class="body" id="body-1546">
+					
+<p>
+Hey Will, any ideas on this? Could there be a setting I have that's causing it to log SQL interaction? I can use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, but I'd rather use the ORM class.
+</p>
+
+<p>
+EDIT: I commented out the var_dump statement in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> (line 2691) and that stopped it. I was trying to avoid actually changing the source. Maybe it was because I grabbed the latest from GitHub. Sorry for the confusion!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													wes											</span>
+					<span class="date_posted" title="8/27/11 5:47pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1548">
+				<div class="body" id="body-1548">
+					
+<p>
+<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> should not contain any calls to var_dump(), so that is probably your culprit.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/29/11 1:59pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

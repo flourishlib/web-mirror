@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fAuthorization; checking userlevels against database &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fAuthorization; checking userlevels against database</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					samzzi			</span>
+	<span class="date_posted" title="8/11/10 9:22am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi,
+</p>
+
+<p>
+First; Love flourishlib, great job guyz! :)
+</p>
+
+<p>
+Is there a public method of some sort to get the numeric value of the userlevels you set? What I want to do is check the userlevels against a database (for example 'where userlevel &lt;= $<a href="../flourishlib.com/api/fAuthorization.html#getUserAuthLevelNumeric">fAuthorization::getUserAuthLevelNumeric()</a>'
+</p>
+
+<p>
+You already have getUserAuthLevel() but that just returns the string value of your userlevel zo that's a little less efficient to work with a database with userlevels.
+</p>
+
+<p>
+Any feedback is appreciated!
+</p>
+
+<p>
+Kind Regards, Sam
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-860">
+				<div class="body" id="body-860">
+					
+<p>
+There isn't such functionality because I've never really needed it. I store the authorization level name in the database, and the numbers are just used when setting up <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> to make the names relative to each other. Whenever I've needed to get back users, I just specify the auth level names.
+</p>
+
+<p>
+In your case it seems to me like it might make the most sense to store your auth level as a public static member of your User class, then you could use array_search() to get the numeric values.
+</p>
+<pre class="block php"><code>class User
+{
+    static public $auth_levels = array(
+        100 =&gt; 'Admin',
+        50  =&gt; 'User'
+    );
+}
+
+fAuthorization::setAuthLevels(User::$auth_levels);
+
+$numeric_level = array_search($user-&gt;getAuthLevel(), User::$auth_levels);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/11/10 11:14pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-864">
+				<div class="body" id="body-864">
+					
+<p>
+Tx for your feedback :)
+</p>
+
+<p>
+Indeed a solution but I'm curious if you store the level name in the database; If you store 'manager' in the db the manager and the admin also needs access to that you won't have the 'drill down' functionality? (Or you should store all the levels in your table but that's much more effort for the administratior offcourse)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													samzzi											</span>
+					<span class="date_posted" title="8/13/10 4:06am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-873">
+				<div class="body" id="body-873">
+					
+<p>
+Yes, I believe that if you need to check something in the database and you are only dealing with auth levels that storing the number probably makes the most sense.
+</p>
+
+<p>
+In most situations where the access controls are dynamic per record I usually start down the route of having a table that handles associating permissions to users or groups, and user can be placed in groups. This allows you to do all of the checking in the database, while keeping the semantic information about what the numbers mean where the numbers are.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/18/10 12:43am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

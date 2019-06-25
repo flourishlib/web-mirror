@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>ORM Conventions and Oracle uppercase default &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">ORM Conventions and Oracle uppercase default</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aur&eacute;lien			</span>
+	<span class="date_posted" title="10/9/09 6:17am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi
+</p>
+
+<p>
+Do you know if i can use the Flourish lib ORM with Oracle knowing that all my table names, and column names, will be set uppercase by Oracle engine? I dont know if this is the default Oracle behavior, but that is how it is set up in my company :)
+</p>
+
+<p>
+Thanks for your help
+</p>
+
+<p>
+Aurlien
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-460">
+				<div class="body" id="body-460">
+					
+<p>
+Yes, when building support for Oracle in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, I made the decision to lowercase all table and columns names to allow for ORM support. This will be a little bit of an adjustment for people familiar with Oracle, but it will allow for the standard <code>underscore_notation</code> to <code>CamelCase</code> rules that are used in mapping database columns to methods.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/9/09 8:55am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-493">
+				<div class="body" id="body-493">
+					
+<p>
+Cool ! That will do the trick
+</p>
+
+<p>
+I started using mySQL but we will have to get the tables copied to Oracle soon
+</p>
+
+<p>
+Thanks for your quick support
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aur&eacute;lien											</span>
+					<span class="date_posted" title="10/19/09 10:14am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-494">
+				<div class="body" id="body-494">
+					
+<p>
+Cool ! That will do the trick
+</p>
+
+<p>
+I started using mySQL but we will have to get the tables copied to Oracle soon
+</p>
+
+<p>
+Thanks for your quick support
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aur&eacute;lien											</span>
+					<span class="date_posted" title="10/19/09 10:15am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1815">
+				<div class="body" id="body-1815">
+					<p>Aurlien</p>
+
+<p>Here is an ORM that works with Oracle
+https://www.kellermansoftware.com/p-47-net-data-access-layer.aspx</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/asavasamuel">							asavasamuel						</a> 					</span>
+					<span class="date_posted" title="3/6/13 9:26am">
+						6 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

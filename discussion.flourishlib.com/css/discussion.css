@@ -1,0 +1,288 @@
+body > section.main {
+	position: relative;
+}
+
+div.user_details {
+	position: absolute;
+	right: 0;
+	top: -20px;
+	line-height: 1.2;
+}
+	div.user_details img {
+		float: left;
+		margin-right: 10px;
+		display: block;
+	}
+	div.user_details .login {
+		float: left;
+		display: block;
+		margin-top: 3px;
+	}
+	div.user_details a {
+		display: block;
+		float: left;
+		font-size: 1.4em;
+		margin-left: 10px;
+		margin-top: 1px;
+		color: #888;
+	}
+		div.user_details a:hover {
+			color: #444;
+		}
+		div.user_details a.account {
+			font-size: 1em;
+		}
+		div.user_details a.settings {
+			margin-left: 20px;
+		}
+
+div.profile {
+
+}
+	div.profile img {
+		float: left;
+		display: block;
+		margin-right: 10px;
+	}
+	div.profile span.email {
+		display: block;
+	}
+
+label.subscribe_all {
+	display: block;
+	margin-top: 20px;
+}
+
+p.subscriptions_help {
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px dotted #ddd;
+}
+
+ul.subscriptions {
+	list-style-type: none;
+}
+	ul.subscriptions li {
+		margin-left: 0;
+	}
+
+table.discussion {
+	width: 100%;
+}
+	table.discussion td {
+		padding: 6px 0;
+		line-height: 1.2;
+		vertical-align: middle;
+		border-top: 1px solid #eee;
+	}
+		table.discussion td.subject {
+			max-width: 550px;
+		}
+		table.discussion td h2 {
+			font-size: 1.2em;
+			margin: 0;
+		}
+
+		table.discussion td span.author,
+		table.discussion td span.date_posted {
+			font-size: 0.85em;
+		}
+		table.discussion td span.date_posted {
+			padding-left: 5px;
+		}
+
+		table.discussion th.replies,
+		table.discussion td.replies {
+			text-align: center;
+		}
+		table.discussion td.last_reply a {
+			color: #777;
+		}
+
+		table.discussion td span.replier,
+		table.discussion td span.date_replied {
+			font-size: 0.85em;
+			display: block;
+		}
+
+div.paginator_list {
+	margin-top: 20px;
+	font-size: 1.1em;
+}
+	div.paginator_list ul {
+		list-style-type: none;
+	}
+		div.paginator_list ul li {
+			display: inline-block;
+			margin: 0 2px;
+			padding: 0;
+			border-radius: 3px;
+			-moz-border-radius: 3px;
+			-webkit-border-radius: 3px;
+		}
+			div.paginator_list ul li a {
+				padding: 4px 6px;
+				color: #666;
+			}
+
+			div.paginator_list ul li.prev,
+			div.paginator_list ul li.next {
+				background-color: #eee;
+			}
+
+			div.paginator_list ul li.prev {
+				margin-right: 5px;
+			}
+
+			div.paginator_list ul li.next {
+				margin-left: 5px;
+			}
+
+			div.paginator_list ul li.current {
+				background-color: #999;
+				font-weight: bold;
+			}
+				div.paginator_list ul li.current a {
+					color: #fff;
+				}
+
+div.topic_details {
+	margin-top: -18px;
+	margin-bottom: 20px;
+	font-size: 0.875em;
+}
+	div.topic_details form {
+		display: inline;
+	}
+	div.topic_details span.subscription {
+		padding-left: 30px;
+		opacity: 0.7;
+	}
+		div.topic_details span.subscription:hover {
+			opacity: 1.0;
+		}
+		div.topic_details span.subscription span {
+			cursor: help;
+		}
+
+div.topic.actions {
+	font-size: 0.875em;
+}
+
+div.topic.actions form {
+	display: inline;
+}
+
+div.children > div.message {
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px dotted #ddd;
+}
+
+div.children > div.message div.edit {
+	display: none;
+}
+
+div.children > div.message > div.body {
+	padding: 10px;
+	background-color: #f6f6f6;
+}
+	div.children > div.message > div.body p:last-child {
+		margin-bottom: 0;
+	}
+
+	div.children > div.message > div.message_details {
+		padding-left: 5px;
+		padding-top: 5px;
+		font-size: 0.875em;
+	}
+		div.children > div.message > div.message_details span.reply {
+			padding-left: 30px;
+		}
+		div.children > div.message > div.message_details form {
+			display: inline;
+		}
+
+div.children > div.message > div.children {
+	margin-left: 20px;
+}
+
+div.messages > div.children > div.message:first-child {
+	border-top: 1px solid #ccc;
+}
+
+div.reply {
+	display: none;
+	margin-top: 15px;
+	margin-left: 20px;
+}
+	div.reply span.in_reply_to {
+		font-size: 0.875em;
+		padding-left: 5px;
+	}
+
+span.delete {
+	padding-left: 10px;
+}
+span.edit {
+	padding-left: 10px;
+}
+
+label.inline.subscribe {
+	padding-left: 20px;
+	cursor: help;
+}
+
+div#edit {
+	display: none;
+}
+
+div#edit textarea,
+div.reply textarea,
+div.edit textarea,
+div.post textarea {
+	border: 1px solid #ccc;
+	margin: 0 0;
+	padding: 4px;
+	width: 100%;
+	max-height: 400px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+div#edit input[type="text"],
+div.post input[type="text"] {
+	border: 1px solid #ccc;
+	margin: 0 0 10px;
+	padding: 4px;
+	width: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+div.expandingText {
+	margin-bottom: 5px;
+}
+
+div.new_topic {
+	margin: 15px 0;
+	font-weight: bold;
+}
+	div.new_topic i {
+		color: #777;
+		opacity: 0.7;
+		padding: 0 1px
+	}
+		div.new_topic a:hover i {
+			opacity: 1.0;
+		}
+
+a.action {
+	color: #777;
+	opacity: 0.7;
+}
+	a.action:hover {
+		opacity: 1.0;
+	}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>It would be great to support Oracle DB &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">It would be great to support Oracle DB</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					chris jones			</span>
+	<span class="date_posted" title="1/26/09 7:51pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Have you thought about Oracle support?  You can get Oracle's free &quot;Express Edition&quot; version of the database from <a href="http://www.oracle.com/technology/products/database/xe/index.html">http://www.oracle.com/technology/products/database/xe/index.html</a>
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-20">
+				<div class="body" id="body-20">
+					
+<p>
+I had originally planned on adding support for Oracle and DB2 after Flourish became stable, however I've been thinking recently about getting some of the changes in before it is out of beta.
+</p>
+
+<p>
+I don't have much experience with Oracle, but I'm skimming over your free PDF book right now. From the looks of it there seem to be three ways to connect, via OCI8, PDO_OCI and ODBC, right?
+</p>
+
+<p>
+I'll have to do some research to see what exactly Oracle supports in relation to FlourishSql, however I'm guessing it supports pretty much everything I have there.
+</p>
+
+<p>
+Thanks for stopping by!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/26/09 8:46pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-21">
+				<div class="body" id="body-21">
+					
+<p>
+I'd start with supporting OCI8.  Ping me if you need help.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="1/26/09 9:07pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-33">
+				<div class="body" id="body-33">
+					
+<p>
+I agree with the previous post. I am in a big company that uses OCI8 as well. I dont know if it means something, but the fact that you have at least 2 user, which 1 is corporate, in the need for OCI8 support ;)
+</p>
+
+<p>
+Anyway, i browsed most of the website, this seems to be really really interesting. Keep focused on your quality level, this is indeed a really good approach. 
+</p>
+
+<p>
+Good job.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jimi											</span>
+					<span class="date_posted" title="2/12/09 2:47pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-34">
+				<div class="body" id="body-34">
+					
+<p>
+I am currently working on support for Oracle, however I have run into a few snags related to support for auto-incrementing primary keys. I'll try to keep everyone up to date at ticket #139 with any progress.
+</p>
+
+<p>
+Thanks for the kind words!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/12/09 2:51pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-47">
+				<div class="body" id="body-47">
+					
+<p>
+Hi there... i am back from holydays and... what! Oracle is not ready yet!!?
+</p>
+
+<p>
+Just kidding ;)
+</p>
+
+<p>
+This message just to ask you if you have this Oracle support as a priority, or if you are currently working on other features/fix ?
+</p>
+
+<p>
+In this case I will probably try to implement it myself in the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> along with Sybase support which i need as well. I could then submit these modifications back to you if you want, for reviewing and maybe adding them, if they are stable enough. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jimi											</span>
+					<span class="date_posted" title="2/27/09 11:51am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-48">
+				<div class="body" id="body-48">
+					
+<p>
+It is in development, although I had a few hiccups with my development process related to doing new production while handling bug fixes. I also had some hold-ups with getting Oracle running properly on one my boxes.
+</p>
+
+<p>
+That said, Oracle is about 75% done in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, with the real hold-up being auto-incrementing primary key values. I need to see if I can inspect the database and look at the triggers to detect such functionality.
+</p>
+
+<p>
+Beyond that, I need to learn a little bit more about Oracle and any idiosyncrasies with the other SQL dialects I support. If you visit the <a href="../flourishlib.com/docs/FlourishSql.html">Flourish SQL</a> page, you can see what I mean. 
+</p>
+
+<p>
+If you are fairly familiar with Oracle, you might be able to give me a rough idea of what on that page is, and is not supported. I know I've heard there is something about Oracle related to <code>NULL</code>s and blank strings.
+</p>
+
+<p>
+I would expect that initial support for Oracle will hopefully be complete in a week or two, however I'm sure it will be somewhat buggy at first. If you are interested in using it and have some time to file tickets as issues come up, I can make a point of giving those tickets priority while we work out support.
+</p>
+
+<p>
+Feel free to drop me a line at <a href="mailto:will@flourishlib.com">will@flourishlib.com</a>.
+</p>
+
+<p>
+Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/27/09 12:01pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-51">
+				<div class="body" id="body-51">
+					
+<p>
+I actually got a decent amount of time to work on this today and the progress is pretty good. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> has preliminary support for Oracle via the <code>oci8</code> and <code>odbc</code> drivers. I need to do some more testing of grabbing values from sequences on <code>INSERT</code> statements and I need to go through <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a> and add support for Oracle SQL.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="2/28/09 8:54pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-238">
+				<div class="body" id="body-238">
+					
+<p>
+@Chris
+</p>
+
+<p>
+I thought I'd just let you know that Oracle support was completed a few weeks ago. It is now possible to use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a>, <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and the <a href="../flourishlib.com/docs/ObjectRelationalMapping.html">ORM</a> with Oracle databases.
+</p>
+
+<p>
+Everything has been tested with 10g XE, however from reading information online it seems that pretty much all of the features should be supported by Oracle 8 and 9i too.
+</p>
+
+<p>
+I've implemented support for the OCI8, PDO_OCI, ODBC and PDO_ODBC drivers. It seems that unixODBC on Linux doesn't like some of the <code>ALTER SESSION</code> queries I run when setting up the connection, but the ODBC connections work fine on Windows.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/27/09 2:04pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

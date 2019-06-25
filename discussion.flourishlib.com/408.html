@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fActiveRecord Insert ID &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../2/39/132.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fActiveRecord Insert ID</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="4/21/11 8:31am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi there  In the class Node extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> I want to get the last insert id. How can I do that? Thanks! 
+</p>
+<pre class="block php"><code>	function save($node_id=null){
+                    
+			//insert the new node
+			$result = fRecordSet::buildFromSQL(
+					 __CLASS__,
+					&quot;INSERT INTO nodes
+							SET parent  =  $node_id&quot;
+			);
+			$result-&gt;insert_id;
+		}
+		return $result-&gt;insert_id;</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1260">
+				<div class="body" id="body-1260">
+					
+<p>
+Well, <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> only allows for selecting records so I doubt you will be able to use an <code>INSERT</code> statement and have it work.
+</p>
+
+<p>
+If you use <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to create a new record and save it, the auto-incrementing ID will automatically appear in the object.
+</p>
+<pre class="block php"><code>$node = new Node();
+$node-&gt;setParent($parent_id);
+$node-&gt;store();
+$node_id = $node-&gt;getId();</code></pre>
+
+<p>
+ The <code>-&gt;getId()</code> method is an example assuming your column is named <code>id</code>. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> does not care what the name of the column is, as long as the column is an auto-incrementing primary key, the generated value will appear in the record after a successful <code>-&gt;store()</code> operation.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/22/11 12:40pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>2 question &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">2 question</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="5/9/09 8:04am">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	<pre class="block php"><code>class News extends fActiveRecord {
+			public static function getPage() { 
+				$page_number = fRequest::get('page','integer');	
+			return fRecordSet::build(__CLASS__,array(),array('data' =&gt; 'desc'),PER_PAGE,$page_number);
+			}	
+		}
+
+    $news = new News();
+    $news-&gt;setText('$text');
+    $news-&gt;store();</code></pre>
+
+<p>
+ if i want to update only one atribute say sql look like : Update x from y where x = $var ,  could use anymore store() function or must do a simple query?
+</p>
+
+<p>
+ second question:
+</p>
+<pre class="block php"><code>class News extends fActiveRecord {
+			public static function getPage() { 
+				$page_number = fRequest::get('page','integer');	
+			return fRecordSet::build(__CLASS__,array('text='=&gt;'asd'),array('data' =&gt; 'desc'),PER_PAGE,$page_number);
+			}	
+		}</code></pre>
+
+<p>
+ what is the motive bceacuse i receive this:
+</p>
+<pre><code>MySQL error (Unknown column 'news.MEDIUMTEXT' in 'where clause') in SELECT news.* FROM news WHERE news.MEDIUMTEXT = 'asd'  ORDER BY LOWER(news.data) DESC LIMIT 5 OFFSET 15</code></pre>
+
+<p>
+ thank you
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-216">
+				<div class="body" id="body-216">
+					
+<p>
+Re question 1:
+</p>
+
+<p>
+An <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object will only update a single record in the database. If you want to update more than one record, the most efficient way is to use a regular SQL query.
+</p>
+
+<p>
+Re question 2:
+</p>
+
+<p>
+That looks like a bug in <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a>. I'll open a ticket for it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/14/09 10:48am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-220">
+				<div class="body" id="body-220">
+					
+<p>
+for, second question is ok, but i'm askin' what shoul i do if i want to update not entire row, only an atribute from that tow, say 'date' where a record acompish an where clause.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="5/14/09 12:14pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-227">
+				<div class="body" id="body-227">
+					
+<p>
+The <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class will let you just update a single column on a single record. Just set the new value and call <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/15/09 4:18pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+						<div class="message" id="message-237">
+				<div class="body" id="body-237">
+					
+<p>
+The text to mediumtext translation issue was fixed in r579 (ticket #205)
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/26/09 8:50am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Routing &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Routing</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					dragos			</span>
+	<span class="date_posted" title="6/3/10 1:59pm">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I read I a previous post that you recommended moor class for routing. I know it's not relating on flourish but please can you tell me in 2-3 lines how can use it with flourish. i want to use it like zend style to have a folder controller and class Users extends !MoorAbstractController. I set in bootstrap <code>Moor::route('/users/', 'list'); Moor::run();</code> and in url <code>Users/list</code> but i can get any results, it seems that
+</p>
+<pre class="block php"><code>if (!preg_match($route-&gt;url-&gt;pattern, self::$request_path, $matches)) {
+	return FALSE;
+}</code></pre>
+
+<p>
+ in <code>Moor::dispatch()</code> return false. Thanks.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-754">
+				<div class="body" id="body-754">
+					
+<p>
+Here's an example of Flourish + Moor. <a href="http://zares.name/uploads/fm.cc.zip">fm.cc</a> Warning: No stable!!!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													s.zares											</span>
+					<span class="date_posted" title="6/4/10 4:53am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-756">
+				<div class="body" id="body-756">
+					
+<p>
+Tanks.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="6/4/10 12:38pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-757">
+				<div class="body" id="body-757">
+					
+<p>
+I pasted the example on my windows server and it's not working. Must change some configuration?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													dragos											</span>
+					<span class="date_posted" title="6/4/10 1:03pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-755">
+				<div class="body" id="body-755">
+					
+<p>
+Hello, I'm the author of Moor.
+</p>
+
+<p>
+In the example, your route is going to look for a global function <code>list</code>. We can't use list as a function name because it's a reserved word in PHP. :-) So in the following examples, I am going to rename <code>list</code> to <code>browse</code>.
+</p>
+<pre class="block php"><code>// Link to a global function action
+
+Moor::route('/users', 'browse');
+
+function browse() {
+   echo 'Hello from browse!';
+}
+
+Moor::run();</code></pre>
+
+<p>
+ If you want to route to a method within a class that extends a <code>MoorActionController</code> class:
+</p>
+<pre class="block php"><code>// Link to Moor Controller method action
+
+Moor::route('/users', 'Users::browse');
+
+class Users extends MoorActionController {
+	public function browse() {
+		echo 'Hello from browse!';
+	}
+}
+
+Moor::run();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													jeffturcotte											</span>
+					<span class="date_posted" title="6/4/10 12:25pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-970">
+				<div class="body" id="body-970">
+					
+<p>
+Your can use the some example Flourish with Moor on Git <a href="http://github.com/zares/petalon">http://github.com/zares/petalon</a>
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													s.zares											</span>
+					<span class="date_posted" title="10/26/10 11:21am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

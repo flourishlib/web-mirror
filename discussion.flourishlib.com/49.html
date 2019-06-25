@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fORMDatabase::attach for established db-connection &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fORMDatabase::attach for established db-connection</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					pixel-boutique.de			</span>
+	<span class="date_posted" title="3/23/09 6:54pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+where flourishlib is perfect to mix into existing projects (in my case oscommerce), i would love to see possibilty to 
+</p>
+<pre class="block php"><code>fORMDatabase::attach(new fDatabase('mysql', $my_mysql_connection));</code></pre>
+
+<p>
+ I mean, I already was forced to open a mysql-connection, otherwise oscommerce needs a 100% rewrite - impossible... with the existing methods, I would open a second useless db-connection, just to enable flourish-orm to talk to it.
+</p>
+
+<p>
+I patched the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to use my existing mysql-connection, but its no clean solution. cheers+really great work!!!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-143">
+				<div class="body" id="body-143">
+					
+<p>
+There are a few potential issues with passing in a mysql connection, which is why I don't currently support it.
+</p>
+
+<p>
+First, all of Flourish uses UTF-8 everywhere, including in the database. When <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> connects to a MySQL database, it sets the connection to use UTF-8 encoding and sets the sql mode to make MySQL act more like other databases. This may screw up !OsCommerce.
+</p>
+
+<p>
+In addition, <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> detects the extensions you have installed, however you may have multiple extensions for MySQL and it can't detect the extension via the resource, so now you would have to pass the extension in, which would mess with the API.
+</p>
+
+<p>
+Finally, <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> keeps track of transactions to ensure that transactions aren't started when they are already in progress. Doing so would cause the whole transaction to fail.
+</p>
+
+<p>
+Since a connection to a local MySQL database is actually through a filesystem socket, I don't think you should be too concerned about the extra connection, unless of course this is an extremely high-traffic site.
+</p>
+
+<p>
+As the class is right now, the connection parameter is private, so the class can not be extended to add a method which allows setting the connection. I would be fine with making it protected so that extending classes can use/change it. If you think this would be useful, please open a ticket.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/24/09 12:18am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

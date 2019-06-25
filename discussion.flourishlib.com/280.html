@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSQLException when switching DB &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSQLException when switching DB</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ben			</span>
+	<span class="date_posted" title="8/16/10 5:01am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+code:
+</p>
+<pre class="block php"><code>$db1 =new fDatabase('mssql', 'admin', $config-&gt;mssql-&gt;user, $config-&gt;mssql-&gt;password, $config-&gt;mssql-&gt;host);
+$db2 =new fDatabase('mssql', 'account', $config-&gt;mssql-&gt;user, $config-&gt;mssql-&gt;password, $config-&gt;mssql-&gt;host);
+
+$result= $db1-&gt;query(&quot;SELECT * from admin_users where username='benstone'&quot;);
+$adminUserId= $result-&gt;fetchScalar();
+
+$result= $db2-&gt;query(&quot;SELECT user_no from USER_PROFILE where user_id='benstone'&quot;);
+$accountId = $result-&gt;fetchScalar();
+
+$result= $db1-&gt;query(&quot;SELECT * from admin_users where username='benstone'&quot;);
+$adminUserId= $result-&gt;fetchScalar();</code></pre>
+
+<p>
+ error message:
+</p>
+<pre><code>Uncaught fSQLException
+----------------------
+{doc_root}\\testmultidb.php(14): fDatabase-&gt;query('SELECT * from a...')
+{doc_root}\\include\\lib\\flourish\\fDatabase.php(2530): fDatabase-&gt;run('SELECT * from a...', 'fResult')
+{doc_root}\\include\\lib\\flourish\\fDatabase.php(2565): fDatabase-&gt;performQuery('SELECT * from a...', Object(fResult), Array)
+{doc_root}\\include\\lib\\flourish\\fDatabase.php(2195): fDatabase-&gt;checkForError(Object(fResult), NULL)
+{doc_root}\\include\\lib\\flourish\\fDatabase.php(403)
+MSSQL error ({null}) in SELECT * from admin_users where username='benstone'</code></pre>
+
+<p>
+ Notes:<br />
+
+</p>
+
+<ul>
+<li>When i'm trying to utilize $db1 only, it works fine.<br />
+</li>
+<li>When i'm trying to utilize $db1 then $db2, it works fine.<br />
+</li>
+<li>When i'm trying to utilize $db1, then $db2, then back to $db1, it always gives me an sql exception. this is also the case when i'm using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.<br />
+</li>
+</ul>
+
+<p>
+<br />
+
+</p>
+
+<p>
+Hope someone can help me. Thanks!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-865">
+				<div class="body" id="body-865">
+					
+<p>
+found the fix:<br />
+
+</p>
+
+<p>
+works with complete table name.
+</p>
+<pre class="block sql"><code>SELECT * from admin.dbo.admin_users where username='benstone'</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													autobox											</span>
+					<span class="date_posted" title="8/16/10 11:48am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-866">
+				<div class="body" id="body-866">
+					
+<p>
+It looks like there is some bug at work here. Can you tell me the output of the following command?
+</p>
+<pre class="block php"><code>fCore::expose($db1-&gt;getExtension());</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/16/10 8:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-867">
+				<div class="body" id="body-867">
+					
+<p>
+output is:
+</p>
+<pre><code>mssql</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="8/17/10 4:51am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-874">
+				<div class="body" id="body-874">
+					
+<p>
+Thanks for taking the time to report this. The bug was that the mssql extension was reusing the database connection since it was to the same server. I changed <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> in r890 to force a new connection, so you shouldn't have this problem anymore.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/18/10 12:47am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

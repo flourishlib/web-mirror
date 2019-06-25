@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Help retrieving related record &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Help retrieving related record</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					bret			</span>
+	<span class="date_posted" title="3/24/10 10:44am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have a database setup as follows:
+</p>
+<pre class="block sql"><code>CREATE TABLE `images`( 
+   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, 
+   `name` VARCHAR(20) NOT NULL, 
+   `description` VARCHAR(255), 
+   PRIMARY KEY (`id`)
+ )  ENGINE=INNODB COMMENT='' ROW_FORMAT=DEFAULT;
+
+
+CREATE TABLE `images_sizes` (
+   `image_id` INT(11) UNSIGNED NOT NULL,
+   `size` VARCHAR(7) NOT NULL,
+   PRIMARY KEY  (`image_id`,`size`),
+   CONSTRAINT `images_size_image_fk` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`)
+ )  ENGINE=INNODB COMMENT='' ROW_FORMAT=DEFAULT;
+
+CREATE TABLE `advertisers`( 
+   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, 
+   `name` VARCHAR(50) NOT NULL,
+   `website` VARCHAR(255),
+   `contact_name` VARCHAR(50) NOT NULL,
+   `contact_phone` VARCHAR(50) NOT NULL,
+   `contact_email` VARCHAR(50) NOT NULL, 
+   PRIMARY KEY (`id`)
+ )  ENGINE=INNODB COMMENT='' ROW_FORMAT=DEFAULT;
+
+CREATE TABLE `ad_blocks` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `image_id` int(11) unsigned default NULL,
+  `title` varchar(25) default NULL,
+  `text` varchar(70) NOT NULL,
+  `link_text` varchar(15) default NULL,
+  `link_href` varchar(100) NOT NULL,
+  `advertiser_id` int(11) unsigned NOT NULL,
+  `is_active` tinyint(1) default '0',
+  PRIMARY KEY  (`id`),
+  KEY `image_id` (`image_id`),
+  KEY `advertiser_id` (`advertiser_id`),
+  CONSTRAINT `ad_block_advertiser_fk` FOREIGN KEY (`advertiser_id`) REFERENCES `advertisers` (`id`),
+  CONSTRAINT `ad_block_image_fk` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+CREATE TABLE `ad_block_activities` (
+  `ad_block_id` int(11) unsigned NOT NULL,
+  `user_name` varchar(32) NOT NULL,
+  `action` varchar(32) NOT NULL,
+  `activity_ts` int(11) NOT NULL,
+  PRIMARY KEY  (`ad_block_id`,`activity_ts`),
+  CONSTRAINT `activity_ad_block_fk` FOREIGN KEY (`ad_block_id`) REFERENCES `ad_blocks` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</code></pre>
+
+<p>
+ When working with an AdBlock object how can I retrieve the associated Image?  The fActiveRecord::build method is returning an error (as it should in this case).  Do I need to change my design or is there a method I'm not seeing?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-663">
+				<div class="body" id="body-663">
+					
+<p>
+As of right now I've just added a getImage method to the AdBlock class.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/24/10 11:16am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-664">
+				<div class="body" id="body-664">
+					
+<p>
+Okay, apparently this is documented in the Related Record Operations section of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> <a href="../flourishlib.com/docs/fActiveRecord.html#RelatedRecordsOperations">http://flourishlib.com/docs/fActiveRecord#RelatedRecordsOperations</a>
+</p>
+
+<p>
+I need to do the following:
+</p>
+<pre class="block php"><code>$adblock = new AdBlock(1);
+$image = $adblock-&gt;createImage();</code></pre>
+
+<p>
+ I kept glancing over that section since the method is &quot;create&quot; which seems odd to me.  &quot;get&quot;, &quot;fetch&quot; or &quot;retrieve&quot; would make more sense since the object already exists in the database.  Anywho, just thought I'd clarify in case anyone else runs into the same issue.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													bret											</span>
+					<span class="date_posted" title="3/25/10 4:28pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-673">
+				<div class="body" id="body-673">
+					
+<p>
+The MethodNaming page has details about the conventions that are used in Flourish for the names of methods.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/29/10 1:09pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

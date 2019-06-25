@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Disabling fORMValidation &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Disabling fORMValidation</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					justbn			</span>
+	<span class="date_posted" title="5/15/09 2:55pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+When using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, is there any way to bypass the built-in validation features of <a href="../flourishlib.com/docs/fORMValidation.html">fORMValidation</a>?  I see you can add some special validation rules on top of the schema restrictions.  
+</p>
+
+<p>
+However, I'd like to do my own validation methods that aren't dependent on the schema restrictions.  For example, <a href="../flourishlib.com/docs/fORMValidation.html">fORMValidation</a> will fail on an empty string value if the field is defined with &quot;not null&quot;.  In many cases, I actually do want an empty string rather than null.  So, in these cases, it seems there is no way to do this while using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.  
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-224">
+				<div class="body" id="body-224">
+					
+<p>
+Actually, the problem with my string not working was because the value was ACTUALLY null.  Sorry about that.
+</p>
+
+<p>
+However, my question still exists.  Can we bypass the validation criteria when using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> or do we have to do a standard SQL query.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													justbn											</span>
+					<span class="date_posted" title="5/15/09 3:35pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-229">
+				<div class="body" id="body-229">
+					
+<p>
+There isn't a way to disable <a href="../flourishlib.com/docs/fORMValidation.html">fORMValidation</a> checking. It really only checks to ensure that the data you have will properly insert into the database. Without it, the error messages from the database would often be cryptic at best.
+</p>
+
+<p>
+The real issue you are running into is how <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> handles empty strings. When you call a set method, an empty string will be converted to <code>NULL</code>. This is because form inputs on the web will have an empty string when nothing is entered. To make <code>NOT NULL</code> restrictions really mean anything, empty string need to be converted to <code>NULL</code>.
+</p>
+
+<p>
+The solution to your problem is to set the column to <code>NOT NULL</code>, but then set a default value of an empty string. If a <code>NULL</code> value has been set on a column and the column has a default, <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> will store the default value in the database. Thus you can prevent <code>NULL</code> values from getting into your database, but the user doesn't need to enter a value.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="5/15/09 4:36pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

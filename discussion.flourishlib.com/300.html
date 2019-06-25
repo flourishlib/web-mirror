@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Problem updating records in many-to-many relations &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Problem updating records in many-to-many relations</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					aris			</span>
+	<span class="date_posted" title="10/2/10 7:42am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I have two tables, 'roles' and 'permissions' linked by a 'role_permissions' joining table, where each role can use a variable number of permissions.
+</p>
+<pre class="block sql"><code>CREATE TABLE roles (
+    id            serial PRIMARY KEY,
+    rname         varchar(64) NOT NULL,
+    description   text,
+    ...
+);
+
+CREATE TABLE permissions (
+    id            serial PRIMARY KEY,
+    pname         varchar(64) NOT NULL,
+    ...
+);
+
+CREATE TABLE role_permissions (
+    id_role       integer NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+    id_permission integer NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
+    PRIMARY KEY(id_role, id_permission)
+);</code></pre>
+
+<p>
+ I'm trying to update a permissions record changing at the same time (inserting, deleting) any required records in the joining table, so it looks similar to the users &amp; groups sample in the <a href="../flourishlib.com/docs/fActiveRecord.html">http://flourishlib.com/docs/fActiveRecord</a> page. 
+</p>
+
+<p>
+The form contains some fields from the Role record and a list of checkboxes for the available permissions (a build from the whole 'permissions' table). I pass to the form a recordset of all available permissions and an array containing the id of those currently associated to this role, so they can be checked. (I have not found a better way to do that.)
+</p>
+<pre><code>#!text/html
+
+&lt;form action=&quot;&lt;?php echo fURL::getWithQueryString() ?&gt;&quot; method=&quot;post&quot;&gt;
+    &lt;!-- The main role record --&gt;
+    &lt;label&gt;Role&lt;/label&gt;
+    &lt;input name=&quot;rname&quot; type=&quot;text&quot; value=&quot;&lt;?php echo $role-&gt;getRname() ?&gt;&quot; /&gt;
+
+    &lt;label&gt;Description&lt;/label&gt;
+    &lt;textarea name=&quot;description&quot;&gt;&lt;?php echo $role-&gt;getDescription() ?&gt;&lt;/textarea&gt;
+
+    &lt;!-- The related permissions --&gt;
+    &lt;?php foreach ($available_permissions as $ap): ?&gt;
+        &lt;label&gt;&lt;?php echo $ap-&gt;getPname() ?&gt;&lt;/label&gt;
+        &lt;input class=&quot;checkbox&quot; type=&quot;checkbox&quot; name=&quot;permissions::id[]&quot; value=&quot;t&quot; &lt;?php if (in_array($ap-&gt;getId(), $current_permissions)): ?&gt;checked=&quot;&quot; &lt;?php endif; ?&gt; /&gt;
+    &lt;?php endforeach; ?&gt;
+    ...
+&lt;/form&gt;</code></pre>
+
+<p>
+ The goal here would be to have all changes in the form reflected in both 'roles' and 'role_permissions' tables with just one operation. However, although the changes made in the main Role fields of the form are correctly stored in its table, the 'role_permissions' join table keeps empty time and again, even deleting some records previously inserted &quot;manually&quot; for testing.
+</p>
+
+<p>
+Here is the affected code:
+</p>
+<pre class="block php"><code>// If no role data in session, instantiate a new one
+if (fSession::get('role_form_object')) {
+    $role = fSession::get('role_form_object');
+} else {
+    $role = new Role ($id_role) ;
+    $current_permissions = RolePermission::getPermissionIdsArray( $id_role );
+}
+...
+try {
+    fRequest::validateCSRFToken(fRequest::get('request_token'));
+
+    $role-&gt;populate();
+    $role-&gt;linkPermissions();
+    $role-&gt;store();
+
+    fMessaging::create('affected', Role::makeURL(), $role-&gt;getId());
+    fURL::redirect(Role::makeURL());
+
+} catch (fExpectedException $e) {
+    ...// Error management here
+}
+... // Go to display form</code></pre>
+
+<p>
+ Here is the fCore::expose result:
+</p>
+<pre><code>Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; roles
+                    [column] =&gt; id
+                    [related_table] =&gt; permissions
+                    [related_column] =&gt; id
+                    [join_table] =&gt; role_permissions
+                    [join_column] =&gt; id_role
+                    [join_related_column] =&gt; id_permission
+                    [on_update] =&gt; no_action
+                    [on_delete] =&gt; cascade
+                )
+        
+        )
+  
+)
+
+Array
+(
+    [one-to-one] =&gt; Array
+        (
+        )
+  
+    [many-to-one] =&gt; Array
+        (
+        )
+  
+    [one-to-many] =&gt; Array
+        (
+        )
+  
+    [many-to-many] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [table] =&gt; permissions
+                    [column] =&gt; id
+                    [related_table] =&gt; roles
+                    [related_column] =&gt; id
+                    [join_table] =&gt; role_permissions
+                    [join_column] =&gt; id_permission
+                    [join_related_column] =&gt; id_role
+                    [on_update] =&gt; no_action
+                    [on_delete] =&gt; cascade
+                )
+        
+        )
+  
+)</code></pre>
+
+<p>
+ What am I missing here?
+</p>
+
+<p>
+Thanks in advance,
+</p>
+
+<p>
+A.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-935">
+				<div class="body" id="body-935">
+					
+<p>
+Hi, it's solved!
+</p>
+
+<p>
+I was using 't' as value for those checkboxes (a copy&amp;paste derelict from other forms :-( ). For this reason, the store() action was deleting any permissions previously stores for that role. Changing to value=&quot;&lt;?php echo $ap-&gt;getId() ?&gt;&quot; to use the id of each available permission, solved the issue.
+</p>
+
+<p>
+Anyway, despite of my mistake, I'm really surprised of the cleanliness of code I get even doing a so complex operation.
+</p>
+
+<p>
+Thanks again for such a powerful library!
+</p>
+
+<p>
+A.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													aris											</span>
+					<span class="date_posted" title="10/2/10 2:33pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

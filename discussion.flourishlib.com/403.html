@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>populate &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">populate</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="4/13/11 4:47am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+How can i do to use method populate but to not populate one field because i seted the value before.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1231">
+				<div class="body" id="body-1231">
+					
+<p>
+You can set the value after...
+</p>
+<pre class="block php"><code>$foo = new Foo();
+$foo-&gt;populate();
+$foo-&gt;setValue('value');
+$foo-&gt;store();</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/13/11 5:57am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1232">
+				<div class="body" id="body-1232">
+					
+<p>
+this is the problem i need to set before.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="4/13/11 6:05am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1234">
+				<div class="body" id="body-1234">
+					
+<p>
+If you seted the value before populate() but after POST, you can use fRequest::set('field', 'value') to modify this value.
+</p>
+
+<p>
+PD. BTW, I can't figure out why you don't set the value after populate and you has to set it before... Can you post some piece of code in order to clarify me?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/13/11 3:03pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1236">
+				<div class="body" id="body-1236">
+					
+<p>
+it takes the value from another field and made some changes for friendly url.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="4/14/11 3:22am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1237">
+				<div class="body" id="body-1237">
+					
+<p>
+tank you it's working that way.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="4/14/11 3:42am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1239">
+				<div class="body" id="body-1239">
+					
+<p>
+If you want to make sure the column is always a friendly URL, I would highly recommend adding that functionality to your <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class.
+</p>
+<pre class="block php"><code>class Foo
+{
+    public function setValue($value)
+    {
+        return $this-&gt;set('value', fURL::makeFriendly($value));
+    }
+}</code></pre>
+
+<p>
+ This custom <code>-&gt;setValue()</code> method will get called by <a href="../flourishlib.com/api/fActiveRecord.html#populate">fActiveRecord::populate()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/14/11 1:30pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1243">
+				<div class="body" id="body-1243">
+					
+<p>
+can u add a parameter fo chose the separator
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="4/15/11 1:26am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1248">
+				<div class="body" id="body-1248">
+					
+<p>
+I presume you are talking about <a href="../flourishlib.com/api/fURL.html#makeFriendly">fURL::makeFriendly()</a>?
+</p>
+
+<p>
+I've seen some chatter about it on the forum, but no one has submitted a ticket yet. I try to respond to forum posts, but there is no mechanism for me to keep track of what has and hasn't been addressed in the forum. If a ticket is submitted I can keep track of it pretty easily and make sure it either gets fixed, or a reason for it not being fixed is recorded.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/15/11 8:38am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1244">
+				<div class="body" id="body-1244">
+					
+<p>
+This sounds cool!
+</p>
+
+<p>
+Is this feature undocumented? Is there the same functionality for something like <code>getValue()</code>?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/xoan">							xoan						</a> 					</span>
+					<span class="date_posted" title="4/15/11 3:14am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1247">
+				<div class="body" id="body-1247">
+					
+<p>
+Yes, it is also possible for getting values. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> has protected methods <code>::get()</code> and <code>::set()</code> that accept a column name, and in the case of <code>::set()</code>, additionally a value.
+</p>
+
+<p>
+From glancing around the documentation it does not appear that it is specifically mentioned anywhere. If you don't mind opening a ticket for it, then I can make sure it gets added. Thanks!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/15/11 8:33am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>prebuild &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">prebuild</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					mungiu			</span>
+	<span class="date_posted" title="5/18/12 5:55pm">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I think a good improvement it is to make available a way to put condition and sort on related records on prebuild method.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1744">
+				<div class="body" id="body-1744">
+					
+<p>
+Just to understand. You are arguing this case:
+</p>
+<pre class="block php"><code>$posts-&gt;prebuildComments(); // if left out each call to buildComments() will go to the database
+
+foreach ($post as $post) {
+    $comments = $post-&gt;buildComments()-&gt;sort('date', 'desc'); // will not fire db lookup, sorting done in memory
+    foreach ($comments as $comment) {
+        echo $comment-&gt;getTitle();
+    }
+}</code></pre>
+
+<p>
+ vs. something like this (NOTE: this is pseudo code to illustrate my understanding of your request)):
+</p>
+<pre class="block php"><code>$posts-&gt;prebuildComments(array('sort' =&gt; array('date', 'desc')); // will fetch all comments and sort in database (not in memory)
+
+foreach ($post as $post) {
+    $comments = $post-&gt;buildComments(); // comments already fetched and sorted
+    foreach ($comments as $comment) {
+        echo $comment-&gt;getTitle();
+    }
+}</code></pre>
+
+<p>
+ .. and of course similar with filter?
+</p>
+
+<p>
+Second question. Is this really a suggestion to prebuilding or is it a general desire to have sort and filtering in relationships, that runs in the DB?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/20/12 6:38am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1745">
+				<div class="body" id="body-1745">
+					
+<p>
+For what i see is that when prebuildComment make one query over the database but when you build comments for every post makes multiple queries.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="5/21/12 5:18am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1746">
+				<div class="body" id="body-1746">
+					
+<p>
+if you invoke buildComments() without having invoked prebuildComments() it will do so for each post.
+</p>
+
+<p>
+But your post is about filtering and sorting, right? You want this done in the prebuild phase right? or is it because you simply want this done in the DB and not done in memory?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/21/12 5:49am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1747">
+				<div class="body" id="body-1747">
+					
+<p>
+My ideea is to make one query over the databse not another one for every row.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="5/21/12 7:07am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1748">
+				<div class="body" id="body-1748">
+					
+<p>
+That is what my first examples does. AFAIK.
+</p>
+
+<p>
+Isn't this working for you?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/21/12 7:12am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1749">
+				<div class="body" id="body-1749">
+					
+<p>
+but when you call $comments = $post-&gt;buildComments() in foreach isn't make a new query? or it is playing with object already populated with related, and after put it filter on work. I will play more tonight to see what is happend.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="5/21/12 8:43am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1750">
+				<div class="body" id="body-1750">
+					
+<p>
+No it will in fact give return the already fetched comments for the post in question.
+</p>
+
+<p>
+Yeah, just turn on db debugging the it will be clear.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mblarsen											</span>
+					<span class="date_posted" title="5/21/12 8:45am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

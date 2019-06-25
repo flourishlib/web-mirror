@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>sqlite n:m relationships (ORM) &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">sqlite n:m relationships (ORM)</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					doccie			</span>
+	<span class="date_posted" title="7/31/11 10:27am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hey Will,
+</p>
+
+<p>
+I'm trying to populate a related table using ORM, but it keeps telling me my tables aren't in a n-to-many relationship. 
+</p>
+
+<p>
+SQL:
+</p>
+<pre><code>CREATE TABLE &quot;edition_movies&quot;(
+  &quot;id&quot; INTEGER PRIMARY KEY NOT NULL,
+  &quot;edition_id&quot; INTEGER NOT NULL,
+  &quot;movie_id&quot; INTEGER NOT NULL,
+  CONSTRAINT &quot;fk_edition_movie_edition1&quot;
+    FOREIGN KEY(&quot;edition_id&quot;)
+    REFERENCES &quot;edition&quot;(&quot;id&quot;),
+  CONSTRAINT &quot;fk_edition_movie_movie1&quot;
+    FOREIGN KEY(&quot;movie_id&quot;)
+    REFERENCES &quot;movie&quot;(&quot;id&quot;)
+);
+CREATE TABLE &quot;editions&quot;(
+  &quot;id&quot; INTEGER PRIMARY KEY NOT NULL,
+  &quot;screen_date&quot; TIMESTAMP NOT NULL,
+  &quot;voting_start_date&quot; TIMESTAMP NOT NULL,
+  &quot;voting_end_date&quot; TIMESTAMP NOT NULL,
+  &quot;created_on&quot; TIMESTAMP NOT NULL
+);
+CREATE TABLE &quot;movies&quot;(
+  &quot;id&quot; INTEGER PRIMARY KEY NOT NULL,
+  &quot;title&quot; VARCHAR(255) NOT NULL,
+  &quot;description&quot; TEXT NOT NULL,
+  &quot;poster_path&quot; VARCHAR(255) NOT NULL,
+  &quot;trailer&quot; VARCHAR(255) NOT NULL DEFAULT 'youtube url',
+  &quot;cineart&quot; VARCHAR(255) DEFAULT 'cinart url',
+  &quot;imdb&quot; VARCHAR(255) DEFAULT 'imdb url',
+  &quot;created_on&quot; TIMESTAMP NOT NULL
+);</code></pre>
+
+<p>
+ Using the following (generated) HTML form:
+</p>
+<pre><code>	&lt;fieldset&gt;
+		&lt;p&gt; 
+			&lt;label&gt;Screen date&lt;/label&gt; 
+			&lt;input class=&quot;text-input medium-input datepicker&quot; type=&quot;text&quot; id=&quot;medium-input&quot; name=&quot;screen_date&quot; value=&quot;&quot; /&gt;
+		&lt;/p&gt;
+		&lt;p&gt; 
+		    
+			&lt;label&gt;Voting start date&lt;/label&gt; 
+			&lt;input class=&quot;text-input medium-input datepicker&quot; type=&quot;text&quot; id=&quot;medium-input&quot; name=&quot;voting_start_date&quot; value=&quot;&quot; /&gt;
+		&lt;/p&gt; 
+		&lt;p&gt; 
+			&lt;label&gt;Voting end date&lt;/label&gt; 
+			&lt;input class=&quot;text-input medium-input datepicker&quot; type=&quot;text&quot; id=&quot;medium-input&quot; name=&quot;voting_end_date&quot; value=&quot;&quot; /&gt;
+		&lt;/p&gt; 
+                &lt;p&gt;
+                        &lt;label&gt;First movie&lt;/label&gt; 
+			&lt;select name=&quot;editionmovies&quot;&gt;
+	&lt;option name=&quot;editionmovies::movie_id[0]&quot; value=&quot;1&quot;&gt;In A Better World&lt;/option&gt;
+	&lt;option name=&quot;editionmovies::movie_id[0]&quot; value=&quot;2&quot;&gt;Dancing Dreams - Sur les pas de Pina Bausch (Tanztrame)&lt;/option&gt;
+	&lt;option name=&quot;editionmovies::movie_id[0]&quot; value=&quot;3&quot;&gt;Une Sparation (A Separation)&lt;/option&gt;
+&lt;/select&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;editionmovies::id[0]&quot; value=&quot;&quot; /&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;editionmovies::edition_id[0]&quot; value=&quot;&quot; /&gt;
+                &lt;/p&gt;
+		&lt;p&gt;
+                        &lt;label&gt;Second movie&lt;/label&gt; 
+			&lt;select name=&quot;editionmovies&quot;&gt;
+	&lt;option name=&quot;editionmovies::movie_id[1]&quot; value=&quot;1&quot;&gt;In A Better World&lt;/option&gt;
+	&lt;option name=&quot;editionmovies::movie_id[1]&quot; value=&quot;2&quot;&gt;Dancing Dreams - Sur les pas de Pina Bausch (Tanztrame)&lt;/option&gt;
+	&lt;option name=&quot;editionmovies::movie_id[1]&quot; value=&quot;3&quot;&gt;Une Sparation (A Separation)&lt;/option&gt;
+&lt;/select&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;editionmovies::id[1]&quot; value=&quot;&quot; /&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;editionmovies::edition_id[1]&quot; value=&quot;&quot; /&gt;
+                &lt;/p&gt;
+		&lt;p&gt; 
+			&lt;input class=&quot;button&quot; type=&quot;submit&quot; value=&quot;Insert edition&quot; /&gt;&amp;nbsp;&lt;input class=&quot;button&quot; type=&quot;button&quot; value=&quot;Cancel&quot; onClick=&quot;window.location = '/admin/editions/manage';&quot; /&gt;
+		&lt;/p&gt;
+	&lt;/fieldset&gt; </code></pre>
+
+<p>
+ And this piece of PHP code:
+</p>
+<pre><code>$edition = new Edition();
+$edition-&gt;populate();
+$edition-&gt;populateEditionMovie();
+$edition-&gt;store();</code></pre>
+
+<p>
+ Both the EditionMovie and Edition classes are of course subclasses of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+</p>
+
+<p>
+This is the error being thrown:
+</p>
+<pre><code>{doc_root}/inc/controller/admin/editions.php(20): Edition::autoInsertEdition()
+{doc_root}/inc/dal/Edition.php(23): Edition-&gt;populateEditionMovie()
+{doc_root}/inc/dal/Edition.php(23): fActiveRecord-&gt;__call('populateEdition...', Array)
+{doc_root}/lib/flourish/fActiveRecord.php(1010): fActiveRecord::determineSubject('Edition', 'EditionMovie', NULL)
+{doc_root}/lib/flourish/fActiveRecord.php(624)
+The table editions is not in a *-to-manyrelationship with the table edition_movies</code></pre>
+
+<p>
+ Any idea what might be causing this error to be thrown?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1512">
+				<div class="body" id="body-1512">
+					
+<p>
+I believe that <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> is failing because you are explicitly naming your foreign key constraints like <code> CONSTRAINT &quot;fk_edition_movie_movie1&quot;</code>. For the short term you can try removing those.
+</p>
+
+<p>
+Please do open a ticket so I don't forget to fix this!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/5/11 8:33am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1516">
+				<div class="body" id="body-1516">
+					
+<p>
+Thanks for the reply! I've added the ticket and will see if that solves the issue. 
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													doccie											</span>
+					<span class="date_posted" title="8/5/11 9:37am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-1817">
+				<div class="body" id="body-1817">
+					<p>doccie</p>
+
+<p>Here is an ORM that works with Sqlite
+https://www.kellermansoftware.com/p-47-net-data-access-layer.aspx</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/asavasamuel">							asavasamuel						</a> 					</span>
+					<span class="date_posted" title="3/8/13 9:21am">
+						6 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

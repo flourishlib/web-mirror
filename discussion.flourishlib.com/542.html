@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>The noun specified could not be singularized with insert/update/delete from MySQL &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">The noun specified could not be singularized with insert/update/delete from MySQL</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					masterix21			</span>
+	<span class="date_posted" title="10/7/11 1:42pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, 
+</p>
+
+<p>
+using flourishlib i got this message after an operation of insert/update/delete with MySQL database:
+</p>
+<pre><code>The noun specified could not be singularized
+#0 /Users/masterix21/Sites/project/php/flourish/FORM.php(352): fGrammar::singularize('permessi_utilizzatore')
+#1 /Users/masterix21/Sites/project/php/flourish/fActiveRecord.php(1445): fORM::classize('permessi_utilizzatore')
+#2 /Users/masterix21/Sites/project/json/Gestore/Edit.php(16): fActiveRecord-&gt;delete(false)
+#3 /Users/masterix21/Sites/project/json.php(17): include('/Users/masterix...')
+#4 {main}</code></pre>
+
+<p>
+ this is my code:
+</p>
+<pre class="block php"><code>if (fRequest::get('id', 'integer', 0, true) &gt; 0)
+    $gestore = new Gestore((fRequest::get('id', 'integer', 0, true)));
+else
+    $gestore = new Gestore();
+
+if (isset($_GET['delete']) &amp;&amp; $_GET['delete']==&quot;Y&quot;)
+{
+        $gestore-&gt;delete(FALSE);
+      	
+		echo fJSON::encode(array(
+			&quot;result&quot; =&gt; true,
+			&quot;code&quot; =&gt; 0,
+			&quot;msg&quot; =&gt; &quot;Record eliminato!&quot;,
+			&quot;data&quot; =&gt; null,
+			&quot;count&quot; =&gt; 0
+		));
+    }
+    else
+    {
+        $gestore-&gt;populate();
+        $gestore-&gt;store(false);
+
+        echo fJSON::encode(array(
+			&quot;result&quot; =&gt; true,
+			&quot;code&quot; =&gt; 0,
+			&quot;msg&quot; =&gt; &quot;Salvataggio completato!&quot;,
+			&quot;data&quot; =&gt; null,
+			&quot;count&quot; =&gt; 0
+		));
+    }</code></pre>
+
+<p>
+ I'm trying to insert/update/delete from gestore table, but every time i got the upper message!
+</p>
+
+<p>
+This is gestore table:
+</p>
+<pre class="block sql"><code>CREATE  TABLE `gestore` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `attiva` ENUM('Y','N')  NOT NULL DEFAULT 'Y',
+  `logo` MEDIUMBLOB NULL ,
+  `ragione_sociale` VARCHAR(255) NOT NULL ,
+  `indirizzo` TINYTEXT NOT NULL ,
+  `cap` VARCHAR(5) NOT NULL ,
+  `citta` VARCHAR(70) NOT NULL ,
+  `provincia` CHAR(2) NOT NULL ,
+  `nazione` VARCHAR(60) NOT NULL ,
+  `email` VARCHAR(70) NULL ,
+  `telefono` VARCHAR(25) NOT NULL ,
+  `fax` VARCHAR(25) NULL ,
+  `partita_iva` VARCHAR(13) NULL ,
+  `codice_fiscale` VARCHAR(16) NULL ,
+  `referente` VARCHAR(90) NULL ,
+  `telefono_referente` VARCHAR(25) NULL ,
+  `email_referente` VARCHAR(70) NULL ,
+  `rappresentante` VARCHAR(90) NULL ,
+  `ruolo` VARCHAR(60) NULL ,
+  `banca_nome` TEXT NULL ,
+  `banca_abi` VARCHAR(5) NULL ,
+  `banca_cab` VARCHAR(5) NULL ,
+  `banca_cin` CHAR(1) NULL ,
+  `banca_cc` VARCHAR(12) NULL ,
+  `banca_bban` VARCHAR(23) NULL ,
+  `banca_iban` VARCHAR(34) NULL ,
+  `banca_bic` VARCHAR(11) NULL ,
+  `banca_sia` VARCHAR(5) NULL ,
+  `max_aziende` INT NOT NULL DEFAULT 0,
+  `max_punti_vendita` INT NOT NULL DEFAULT 0,
+  `max_card` INT NOT NULL DEFAULT 0,
+  `limite_punti` BIGINT(11)  NOT NULL DEFAULT 0 ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB</code></pre>
+
+<p>
+ and this is permessi_utilizzatore table:
+</p>
+<pre class="block sql"><code>CREATE  TABLE `permessi_utilizzatore` (
+  `permesso_id` INT NOT NULL ,
+  `gestore_id` INT NULL ,
+  `azienda_id` INT NULL ,
+  `punto_vendita_id` INT NULL ,
+  `utente_id` INT NULL ,
+  INDEX `fk_gestore_has_permesso_permesso1` (`permesso_id` ASC) ,
+  INDEX `fk_gestore_has_permesso_gestore1` (`gestore_id` ASC) ,
+  INDEX `fk_permessi_utilizzatore_punto_vendita1` (`punto_vendita_id` ASC) ,
+  INDEX `fk_permessi_utilizzatore_azienda1` (`azienda_id` ASC) ,
+  INDEX `fk_permessi_utilizzatore_utente1` (`utente_id` ASC) ,
+  CONSTRAINT `fk_gestore_has_permesso_gestore1`
+    FOREIGN KEY (`gestore_id` )
+    REFERENCES `gestore` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_gestore_has_permesso_permesso1`
+    FOREIGN KEY (`permesso_id` )
+    REFERENCES `permesso` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_permessi_utilizzatore_punto_vendita1`
+    FOREIGN KEY (`punto_vendita_id` )
+    REFERENCES `punto_vendita` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_permessi_utilizzatore_azienda1`
+    FOREIGN KEY (`azienda_id` )
+    REFERENCES `azienda` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_permessi_utilizzatore_utente1`
+    FOREIGN KEY (`utente_id` )
+    REFERENCES `utente` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB</code></pre>
+
+<p>
+ Thank you
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1582">
+				<div class="body" id="body-1582">
+					
+<p>
+The ORM for Flourish uses <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> to perform the singularization and pluralization of nouns for the purpose of mapping classes to tables. By default I ship an implementation that only handles English since I do not know any other languages, and there was an algorithm I was able to use as a base. It appears that the English singular &lt;-&gt; plural rules aren't working for your table names.
+</p>
+
+<p>
+The options to fix this are to use <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> if you just need the fix for this ORM action, or <a href="../flourishlib.com/api/fGrammar.html#addSingularPluralRule">fGrammar::addSingularPluralRule()</a> if you need a more general fix.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/11/11 10:08am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

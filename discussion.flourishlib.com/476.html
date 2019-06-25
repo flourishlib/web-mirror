@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Difference between fHTML::encode() and fHTML::prepare() &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Difference between fHTML::encode() and fHTML::prepare()</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					xdreamcoding			</span>
+	<span class="date_posted" title="7/6/11 7:46pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Anyone?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1449">
+				<div class="body" id="body-1449">
+					
+<p>
+<a href="../flourishlib.com/api/fHTML.html#encode">fHTML::encode()</a> always escapes <code>&amp;</code>, <code>&quot;</code>, <code>'</code>, <code>&lt;</code> and <code>&gt;</code> as HTML entities. <a href="../flourishlib.com/api/fHTML.html#prepare">fHTML::prepare()</a> takes semi-valid HTML and cleans up HTML tags and escapes the HTML special characters when they are not part of an HTML tag or entity.
+</p>
+
+<p>
+<a href="../flourishlib.com/api/fHTML.html#encode">fHTML::encode()</a> should be used by default. <a href="../flourishlib.com/api/fHTML.html#prepare">fHTML::prepare()</a> does <strong>not</strong> protect against cross-site scripting attacks and should only be used to &quot;fix up&quot; trusted content that contains HTML.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="7/6/11 11:22pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1451">
+				<div class="body" id="body-1451">
+					
+<p>
+Sorry but as non native english speaker and hobby coder i couldn't get much solution out of the documentation and you kinda just repeated the documentation...
+</p>
+
+<p>
+sooo i played around a bit with those two functions and at the end its quite simple :D<br />
+
+</p>
+<pre class="block php"><code>fHTML::encode('&lt;p&gt;la*;l&quot;a%&lt;/p&gt;')</code></pre>
+
+<p>
+ will return 
+</p>
+<pre><code>#!text/html
+&amp;lt;p&amp;gt;la*;l&amp;quot;a%&amp;lt;/p&amp;gt;</code></pre>
+
+<p>
+ and at your website it will look like this:
+</p>
+<pre><code>#!text/html
+&lt;p&gt;la*;l&quot;a%&lt;/p&gt;</code></pre>
+<pre class="block php"><code>fHTML::prepare('&lt;p&gt;la*;l&quot;a%&lt;/p&gt;')</code></pre>
+
+<p>
+ however will return
+</p>
+<pre><code>#!text/html
+&lt;p&gt;la*;l&amp;quot;a%&lt;/p&gt;</code></pre>
+
+<p>
+ you will see:
+</p>
+<pre><code>#!text/html
+la*;l&quot;a%</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													xdreamcoding											</span>
+					<span class="date_posted" title="7/7/11 12:31pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

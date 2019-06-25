@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Deleting a record with foreign key &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Deleting a record with foreign key</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+		 <a href="https://github.com/bense">			bense		</a> 	</span>
+	<span class="date_posted" title="1/24/12 3:48am">
+		7 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi all
+</p>
+
+<p>
+I'm trying to delete a record from a table, but it doesn't work: &quot;This Room can not be deleted because: A House references it&quot;.
+</p>
+
+<p>
+To describe it in a simple way: I have a table 'houses' and a table 'rooms'. 'rooms' has a foreign key to 'houses' with &quot;ON DELETE NO ACTION&quot;. I'm trying do delete a room, not a house. So the message above...i can't understand it. It should be possible to delete the room without the TRUE-flag of delete (), shouldn't it? The house doesn't reference the room, only the room references the house. 
+</p>
+
+<p>
+As far as I can see, the relationship is discovered as a one-to-one. But in my opinion, this is not really a one-to-one, because a house can have more than one room.
+</p>
+
+<p>
+I'm not sure if i don't understand how it works or if it is a bug. Can someone explain it to me?
+</p>
+
+<p>
+Thank you very much!
+</p>
+
+<p>
+Ben
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1662">
+				<div class="body" id="body-1662">
+					
+<p>
+i think one to one is when primary key for rooms are in the same time foreign key for houses.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="1/24/12 4:40am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1663">
+				<div class="body" id="body-1663">
+					
+<p>
+Yes, in my case, foreign key is the primary key for rooms. So i have to add an auto_increment primary key to rooms and it will work?
+</p>
+
+<p>
+I will try it as soon as possible.
+</p>
+
+<p>
+Thanks for your help
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/24/12 5:55am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1664">
+				<div class="body" id="body-1664">
+					
+<p>
+yes, that is call one-to-many
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="1/24/12 5:58am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1665">
+				<div class="body" id="body-1665">
+					
+<p>
+Hmmm, I added an auto increment id as a primary key (at the rooms table, of course), but i still get the same error. I now have the auto increment id and the foreign key (which still has an unique constraint). Is still something wrong with my table?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/25/12 4:32pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1666">
+				<div class="body" id="body-1666">
+					
+<p>
+give us your db schema from phpmyadmin.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="1/25/12 7:34pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1667">
+				<div class="body" id="body-1667">
+					
+<p>
+Sorry for the delay. Here is a part of my schema:
+</p>
+<pre class="block sql"><code>CREATE TABLE IF NOT EXISTS `houses` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `description` text,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `house_id` int(10) unsigned NOT NULL,
+  `content` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `house_id_unique` (`house_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+ALTER TABLE `rooms`
+  ADD CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+</code></pre>
+
+<p>
+ Any suggestions why it doesn't work?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/27/12 11:14am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1668">
+				<div class="body" id="body-1668">
+					
+<p>
+At the first look UNIQUE KEY <code>house_id_unique</code> (<code>house_id</code>) this is the problem if you want many rooms to a house how can be this unique?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													mungiu											</span>
+					<span class="date_posted" title="1/27/12 11:26am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1669">
+				<div class="body" id="body-1669">
+					
+<p>
+Yes ok, you are right. My example is not a one-to-many. I will try to delete the unique key.
+</p>
+
+<p>
+But another question. If I want a one-to-one relationship, let's say there may be only one door in one room. But the relationship isn't that strong, so it should be possible to delete the door without deleting the room. How can this be achieved?
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/27/12 11:38am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1671">
+				<div class="body" id="body-1671">
+					
+<p>
+If you want a one to one relationship you should add it to the parent, not the child.  One-to-one means there is only ever one door to a room, which may not be the case, so your example is bad.  But let's say hypothetical parent X only ever has one Y, then X should have y_id (unique, NULL allowed) which references y(id) and when creating the constraint you should have ON DELETE SET NULL.
+</p>
+
+<p>
+Assuming a room only ever did have one door, it would be like this -- this is pseudo postgres schema, but same logic applies.
+</p>
+<pre><code>rooms (
+   id serial primary key,
+   door_id int unique references doors(id) ON DELETE SET NULL ON UPDATE CASCADE
+   ...
+);
+
+door (
+   id serial primary key,
+   ... 
+);</code></pre>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/mattsah">							mattsah						</a> 					</span>
+					<span class="date_posted" title="1/27/12 9:37pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1673">
+				<div class="body" id="body-1673">
+					
+<p>
+I tried it and it works as you said.
+</p>
+
+<p>
+Thanks for your help!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/bense">							bense						</a> 					</span>
+					<span class="date_posted" title="1/31/12 3:37pm">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

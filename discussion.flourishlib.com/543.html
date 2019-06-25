@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Help with find record &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Help with find record</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					norman784			</span>
+	<span class="date_posted" title="10/10/11 2:39pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi im recently find this unframework, and love the way it works, but there are few things that i use with another ORM that I've not found here, things like
+</p>
+<pre class="block php"><code>$Model-&gt;find($options);</code></pre>
+
+<p>
+ I see some examples for find records but It was passing their unique indexes in their constructor
+</p>
+<pre class="block php"><code>$Model = new Model($id);
+$Model = new Model(array('email'=&gt;$email));</code></pre>
+
+<p>
+ But i need to find records just like above!
+</p>
+
+<p>
+Thanks for the help
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1581">
+				<div class="body" id="body-1581">
+					
+<p>
+So if you aren't searching via a primary or unique constraint, it is always a possibility that more than one record will match the conditions you have specified. Because of this, you need to use <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>. If you visit the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> page, there is quite a bit of documentation about how to do all different sorts of searches.
+</p>
+
+<p>
+Once you have an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, you can call the method <a href="../flourishlib.com/api/fRecordSet.html#getRecord">fRecordSet::getRecord()</a> to retrieve a single <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object, you just may end up triggering an <a href="../flourishlib.com/docs/fEmptySetException.html">fEmptySetException</a> if no records were found. You can always use <a href="../flourishlib.com/api/fRecordSet.html#count">fRecordSet::count()</a> to check the number of returned record before trying to use <code>::getRecord()</code>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/11/11 9:58am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

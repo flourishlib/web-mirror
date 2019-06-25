@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Design Patterns &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Design Patterns</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					anonymous			</span>
+	<span class="date_posted" title="4/11/11 12:42pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi! I've a question about Flourish, what <a href="http://en.wikipedia.org/wiki/Design_pattern_%%28computer_science%%29">design patterns</a> are applied in the code? I found a singleton in the database connection, but there's more applied?
+</p>
+
+<p>
+Thanks in advanced!
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1228">
+				<div class="body" id="body-1228">
+					
+<p>
+While it may seem like Flourish uses the singleton pattern for the ORM database connection, it actual uses the multiton pattern. This pattern is used in a few place throughout Flourish, such as <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a>, <a href="../flourishlib.com/docs/fORMSchema.html">fORMSchema</a> and <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a>.
+</p>
+
+<p>
+Flourish does use quite a number of design patterns. Here is a list of quite a number of them, however I'm sure there are less-common patterns I use that I don't even know the name for.
+</p>
+
+<ul>
+<li><a href="http://martinfowler.com/eaaCatalog/activeRecord.html">active record</a> - <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/identityMap.html">identity map</a> - <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/associationTableMapping.html">association table mapping</a> - <a href="../flourishlib.com/docs/fORMRelated.html">fORMRelated</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/recordSet.html">record set</a> - <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/embeddedValue.html">embedded value</a> - <a href="../flourishlib.com/docs/fORMMoney.html">fORMMoney</a>, <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/money.html">money</a> - <a href="../flourishlib.com/docs/fMoney.html">fMoney</a></li>
+<li><a href="http://martinfowler.com/eaaCatalog/valueObject.html">value object</a> - <a href="../flourishlib.com/docs/fNumber.html">fNumber</a>, <a href="../flourishlib.com/docs/fMoney.html">fMoney</a>, <a href="../flourishlib.com/docs/fDate.html">fDate</a>, <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>, <a href="../flourishlib.com/docs/fTime.html">fTime</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Multiton_pattern">multiton</a> - <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a>, <a href="../flourishlib.com/docs/fORMSchema.html">fORMSchema</a>, <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a></li>
+<li><a href="http://flask.pocoo.org/docs/patterns/flashing/">flash messaging</a> - <a href="../flourishlib.com/docs/fMessaging.html">fMessaging</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Iterator_pattern">iterator</a> - <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>, <a href="../flourishlib.com/docs/fResult.html">fResult</a>, <a href="../flourishlib.com/docs/fUnbufferedResult.html">fUnbufferedResult</a>, <a href="../flourishlib.com/docs/fFile.html">fFile</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Observer_pattern">observer</a> - <a href="../flourishlib.com/docs/fORM.html">fORM</a></li>
+</ul>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="4/12/11 11:07pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1233">
+				<div class="body" id="body-1233">
+					
+<p>
+Excellent Will! Flourish seems to be perfect for my college project :)
+</p>
+
+<p>
+Thanks you, best regards!
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="4/13/11 9:04am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

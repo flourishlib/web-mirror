@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>$user-&gt;exists() ?? &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../2/39/132.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">$user-&gt;exists() ??</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					appbeacon			</span>
+	<span class="date_posted" title="3/23/09 6:51pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+I'm wondering about how to properly use the exists() method in ActiveRecord.  Either I'm doing something wrong, or it's not a very useful method.  I'm sure the issue is mine.
+</p>
+
+<p>
+Scenario:
+</p>
+<pre class="block php"><code>public static function validateOrder($orders_id)
+{
+
+	try
+	{
+		$order = new Order($orders_id);
+		if($order-&gt;exists())
+		{
+			return true;
+		} else
+			{
+				return false;
+			}
+	}  catch( fException $e)
+		{
+			echo &quot;Exception in validateOrder : $e&quot;;
+			exit;
+		}
+}</code></pre>
+
+<p>
+ My understanding of the above code: <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> would create an object of the record in the orders table that has the primary key $orders_id.  If the orders_id actually exists, the function would return TRUE.  Otherwise, it would return false.  
+</p>
+
+<p>
+In my scenario, the orders_id is invalid. So, I was expecting a return of false.
+</p>
+
+<p>
+Instead I got an &quot;<a href="../flourishlib.com/docs/fNotFoundException.html">fNotFoundException</a>&quot;.  So, apparently <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> throws this exception when the provided info is not actually a valid primary key.
+</p>
+
+<p>
+I'm okay with that.  However, if that is the case, it makes $order-&gt;exists() pretty useless, doesn't it?  If the exists() method can only be used when the record actually exists, there really is no point in testing for it, right?
+</p>
+
+<p>
+I'd love a clarification on this subject.  Now, I've modified my code as follows to provide the info I need.  This works just fine:
+</p>
+<pre class="block php"><code>public static function validateOrder($orders_id)
+{
+
+	try
+	{
+		$order = new Order($orders_id);
+		return true;
+	}  catch( fNotFoundException $e)
+		{
+			return false;
+		} catch (fException $e)
+			{
+				//TODO : Deal with this exception
+				echo &quot;validateOrder exception : $e&quot;;
+				return FALSE;
+			}
+}</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-141">
+				<div class="body" id="body-141">
+					
+<p>
+<a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> is intended to use used to see if a record already exists in the database, or if it is a &quot;new&quot; record. You normally won't be using it in the context of creating a new active record object since you will already know if you are loading from the database or not. Usually it will be called inside of another method or in a location with a different scope than the constructor call. You can see some examples of its use in <a href="browser:fORMOrdering.php">fORMOrdering</a>.
+</p>
+
+<p>
+However, if you want to validate if a record exists in the database or not based on a primary key, you will want to try and load a record from the database, and then catch the <a href="../flourishlib.com/docs/fNotFoundException.html">fNotFoundException</a> like in your second code example.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="3/23/09 10:22pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>where clauses for fORMRelated::buildRecords &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">where clauses for fORMRelated::buildRecords</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					vena			</span>
+	<span class="date_posted" title="10/30/09 3:44pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Would it be useful/possible for <a href="../flourishlib.com/api/fORMRelated.html#buildRecords">fORMRelated::buildRecords()</a> (and <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>'s build related method by extension) to allow where clauses in its parameters?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-504">
+				<div class="body" id="body-504">
+					
+<p>
+The issue with this is that <code>buildRecords()</code> feeds off of the related records cache, which is also used for populating related records and storing relationships. Thus <code>buildRecords()</code> always returns all of the currently associated records, even if they haven't been saved in the database yet. Since only objects are available, certain SQL comparisons would not be possible.
+</p>
+
+<p>
+What you can do is <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> the records using method names, which conveniently offer much of the functionality of the where conditions in <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>:
+</p>
+<pre class="block php"><code>$active_groups = $user-&gt;buildGroups()-&gt;filter(array('getStatus=' =&gt; 'Active'));</code></pre>
+
+<p>
+ Alternatively, it wouldn't be that hard to write a plugin for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that would provide a different method that would always execute a SQL statement and would allow passing in conditions. <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a>, <a href="../flourishlib.com/docs/fORMColumn.html">fORMColumn</a>, <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a>, <a href="../flourishlib.com/docs/fORMOrdering.html">fORMOrdering</a>, <a href="../flourishlib.com/docs/fORMJSON.html">fORMJSON</a> and <a href="../flourishlib.com/docs/fORMMoney.html">fORMMoney</a> are all written as <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> plugins and might serve as a guide to making a plugin.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="10/30/09 4:11pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

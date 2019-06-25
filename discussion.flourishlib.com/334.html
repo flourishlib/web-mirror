@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fSchema to handle database structure writting.. &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fSchema to handle database structure writting..</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					ilo			</span>
+	<span class="date_posted" title="12/3/10 5:41am">
+		9 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+While I'm trying to convert NortShoreWebGeek demonstration example as an standalone application I come to the conclusion that supporting different databases through the ORM and Schema but being unable to create a single table or field is confusing. I guess <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> is the best fit to support schema changes, but this could be very extensive and require a big effort to get easily done. I'm committed to work on this if there is room in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> for these writting operations.
+</p>
+
+<p>
+Thoughs?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1036">
+				<div class="body" id="body-1036">
+					
+<p>
+It sounds like you are looking for a normalized way to create tables and columns across different databases? The sole purpose of <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> is to reflect the schema of the existing database, and it would not be appropriate to lump schema changes in with that.
+</p>
+
+<p>
+Currently through <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> it is possible to use FlourishSql to use a <code>CREATE TABLE</code> query that will work on all supported databases. I have not yet built a normalized form of <code>ALTER TABLE</code>, mostly because there is such a large variation in the different databases, and the simple fact that I have never needed it.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/4/10 8:25am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1041">
+				<div class="body" id="body-1041">
+					
+<p>
+yes, you are right, that is what I was trying to acomplish. Now I see that <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is the right way to go with this. However I have the feeling that I'm missing something in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>. I'll give a try to the table creation using <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> and drop some ideas about altering operations in the following days.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													ilo											</span>
+					<span class="date_posted" title="12/4/10 6:51pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

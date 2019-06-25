@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Lots of fSession files on remote server! &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">Lots of fSession files on remote server!</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					thegoldenbus			</span>
+	<span class="date_posted" title="9/22/11 3:51pm">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hello there,
+</p>
+
+<p>
+I don't know what I'm doing wrong, but the first time I reload my page it creates a bunch of <a href="../flourishlib.com/docs/fSession.html">fSession</a> files and for each reload one more. The strange thing is, that on my offline server (MAMP on OS X) it works just fine...!(?)
+</p>
+
+<p>
+I just call on every page the <a href="../flourishlib.com/api/fSession.html#open">fSession::open()</a> method and correctly set the session length to '1 day' and the session path to a writable directory. The same on my offline server works just fine, only the remote server (linux) creates lots of files! each different with different content! e.g: fSession::type|s:6:&quot;normal&quot;;fSession::expires|i:1316806650;
+</p>
+
+<p>
+Has anyone an idea what could be the problem?
+</p>
+
+<p>
+thanks TGB
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1802">
+				<div class="body" id="body-1802">
+					<p>I'm having this same problem.  I noticed that there is an alternative where you can <a href="615.html">save the session into the database using fCache</a>.  I noticed that multiple records were then being created on the db but I'm modifying the code to work right.</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/gabrielu">							gabrielu						</a> 					</span>
+					<span class="date_posted" title="9/29/12 10:43am">
+						7 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1818">
+				<div class="body" id="body-1818">
+					<p>I am having the exact same issue with multiple session records in my database. It's even worse because I am on AWS which polls my app every minute to make sure it's up, each poll creates one more record in the database. I logged an issue on github like 6 months ago but now one has come back. Seems like a pretty big bug yet it's being ignored.</p>
+
+<p>You said you were modifying the code? Did you manage to get it working correctly?</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/superphonic">							superphonic						</a> 					</span>
+					<span class="date_posted" title="4/8/13 5:43am">
+						6 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+						<div class="message" id="message-1819">
+				<div class="body" id="body-1819">
+					<p>I am having the exact same issue with multiple session records in my database. It's even worse because I am on AWS which polls my app every minute to make sure it's up, each poll creates one more record in the database. I logged an issue on github like 6 months ago but now one has come back. Seems like a pretty big bug yet it's being ignored.</p>
+
+<p>You said you were modifying the code? Did you manage to get it working correctly?</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/superphonic">							superphonic						</a> 					</span>
+					<span class="date_posted" title="4/8/13 5:44am">
+						6 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

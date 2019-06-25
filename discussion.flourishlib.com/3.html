@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>demo site installation &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">demo site installation</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					einars			</span>
+	<span class="date_posted" title="1/13/09 12:01pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+(this was intended to be an email)
+</p>
+
+<p>
+Hi,
+</p>
+
+<p>
+Here are some notes about installing flourish demo site, as I guess that's generally the best way to get an overview of the framework, to see in action, and annoyances in this process are, well, annoying. I'm using lighttpd+mod_fcgi, but that's not too important.
+</p>
+
+<p>
+ the main gripe is that it wants whole site. It can't be dropped into <a href="http://localhost/flourish,">http://localhost/flourish,</a> but demands tackling the webserver configuration as well as hosts file, to set up domain for what needs to be a quick thing. While the usage of DOCUMENT_ROOT in index/init is fast and easy to fix, global use of absolute urls are a pain not worth having.
+</p>
+
+<p>
+(In my projects I have defined <code>SITE_PATH</code>. All urls get built with <code>url($absolute_url)</code>, e.g <code>echo url('/')</code> would become &quot;/test-site/&quot;, &quot;/&quot; or &quot;/staging&quot;, depending on developer's configuration: all urls going through centralized place has turned out to be incredibly nice for a large project, allowing to customize and even rewrite the urls to off server depending on configuration)
+</p>
+
+<p>
+ Usage of <code>&lt;?</code> instead of <code>&lt;?php</code> : while flourish itself uses the long tags, the usage of <code>&lt;?</code> in demo site makes things needlessly painful if <code>short_open_tags=off</code>, and they are for example on Suse default installations.
+</p>
+
+<p>
+ inc/init.php
+</p>
+<pre class="block php"><code>fORMdatabase::attach(new fDatabase(..)); // would be great to be split in two lines,
+$database = new fDatabase(..);
+fORMDatabase::attach($database);</code></pre>
+
+<p>
+ As, if sqlite extension is not loaded, the oneliner crashes with 500 server error, when exception is thrown. Splitting it into two lines allows the exception to be gently reported.
+</p>
+
+<p>
+ the exception trace could have the exception text on the top, instead of boring dump of <code>$_SERVER</code> and whatnot :)
+</p>
+
+<p>
+My lighttpd-flourish.conf, if you have any need or interest for that,
+</p>
+<pre><code>$HTTP[&quot;host&quot;] == &quot;flourish&quot; {
+    server.document-root = &quot;/srv/www/flourish&quot;
+    url.rewrite-once += (
+        &quot;^/$&quot;                    =&gt; &quot;/index.php?type=html&quot;,
+        &quot;^/rss/?$&quot;               =&gt; &quot;/index.php?type=rss&quot;,
+        &quot;^/(log_in|log_out)$&quot;    =&gt; &quot;/login.php?action=$1&quot;,
+        &quot;^/manage/add$&quot;          =&gt; &quot;/manage.php?action=add&quot;,
+        &quot;^/manage/(\\d{4}-\\d{2}-\\d{2})/(edit|delete)$&quot;
+                                 =&gt; &quot;/manage.php?action=$2&amp;date=$1&quot;,
+        &quot;^/manage/?(?:\\?(.*))?$&quot; =&gt; &quot;/manage.php?$1&quot;,
+    )
+}</code></pre>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-4">
+				<div class="body" id="body-4">
+					
+<p>
+Thanks for the feedback! I'll see if I can fix some of that stuff so you can check out the site in lighttpd. Unfortunately I pretty much only use Apache, and I wasn't thinking too much of alternate architectures.
+</p>
+
+<p>
+Does the exception being thrown as a parameter really crash the server? I've never experienced that, but I'll be sure to check it out.
+</p>
+
+<p>
+Either way, I'll post here once I've fixed a few of the issues with the demo.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/13/09 12:26pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-5">
+				<div class="body" id="body-5">
+					
+<p>
+Don't sweat the lighttpd part, I guess everyone who uses it already knows that the rewriting stuff is different from apache there.
+</p>
+
+<p>
+As for the exception  it's something weird. My 5.2.7 crashes under lighttpd and apache, while working correctly from cli, and I've been unable to reproduce it on any other of my available php installations. I'll explore this  maybe it's just some weird and stupid misconfiguration.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													anonymous											</span>
+					<span class="date_posted" title="1/13/09 11:30pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-6">
+				<div class="body" id="body-6">
+					
+<p>
+I actually just finished updating the demo site code so that is is now possible to use under any path on a server and with short tags turned off. If it is alright with you, I'll add your lighttpd rewrites to the blog for others who wish to try it out.
+</p>
+
+<p>
+In terms of the error message, the context information is there since I find it useful when debugging issues, however the position is a shortcoming of the current technique. When displaying errors and exceptions to HTML I can't really tell what the last error on the page is going to be, so the context dump happens with the first error. If you use the email option for error and exception handling (which would be recommended on a production site), I pool all of the errors and exception up until the end of the page and then send the email. In that situation I do actually put the context dump at the bottom of the email.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="1/14/09 12:10am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

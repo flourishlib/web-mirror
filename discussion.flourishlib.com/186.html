@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>fRequest enhancements &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">fRequest enhancements</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					hazeim			</span>
+	<span class="date_posted" title="12/13/09 4:04pm">
+		10 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+Hi, <br />
+ I just knew about this wonderful library. When i started to use it, I found some useful methods missing from <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> class like isAjax() function which is used to determine if the request is made using AJAX request or not. The code for this function is simple:
+</p>
+<pre class="block php"><code>function isAjax(){
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) &amp;&amp; $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+}</code></pre>
+
+<p>
+ Also, it will be better to add functions like getFromPost(), getFromUrl(), get(), getFromPut(),...etc. to get parameters from requests as it may be confusing to use the get() function only.
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-545">
+				<div class="body" id="body-545">
+					
+<p>
+Yes, I am definitely planning on adding <code>isAjax()</code> to <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>, it is just a matter of how much time I have and my priorities. The simpler something is to accomplish, the lower priority it is for me since it can easily be done the manual way.
+</p>
+
+<p>
+My intention with <a href="../flourishlib.com/api/fRequest.html#get">fRequest::get()</a> is to provide a simple interface to safely get request data. If I provided four different methods I would be doing even less abstraction from the built-in superglobals and more just indirection. That, and it would be confusing for a developer to ever try to use the same field name for both a GET and POST parameter in the same request.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/17/09 10:58pm">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-550">
+				<div class="body" id="body-550">
+					
+<p>
+So, can I add isAjax() myself if you permit me. I mean add it to <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> and submit it??
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hazeim											</span>
+					<span class="date_posted" title="12/23/09 12:57am">
+						10 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-564">
+				<div class="body" id="body-564">
+					
+<p>
+Yes, I can accept patches, you just need to sign and email me a <a href="../flourishlib.com/docs/ContributorLicenseAgreements.html">contributor license agreement</a> first. It is a legal document that says you are willing to license your code to other under the MIT license. It also helps to absolve myself or users of Flourish if you submit code that you don't have the legal right to license.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/29/09 3:08pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-573">
+				<div class="body" id="body-573">
+					
+<p>
+This exact enhancement was submitted in a ticket about 2 months ago: http://flourishlib.com/ticket/338.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													alexleeds											</span>
+					<span class="date_posted" title="12/30/09 1:34pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-576">
+				<div class="body" id="body-576">
+					
+<p>
+Thanks for reminding me about that Alex.
+</p>
+
+<p>
+I definite have a bunch of little things I want to get done with Flourish, I've just been super busy with personal stuff and some freelance work. In addition, I reinstalled the server I was doing all of my development and testing on, so I need to get it all set up again so I can continue development. Hopefully I'll have all of the testing database servers set up today or tomorrow.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="12/31/09 9:43am">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+						<div class="message" id="message-574">
+				<div class="body" id="body-574">
+					
+<p>
+It is OK. I'd like to contribute in other parts of the project if I have sufficient time and experience.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													hazeim											</span>
+					<span class="date_posted" title="12/30/09 3:11pm">
+						9 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>

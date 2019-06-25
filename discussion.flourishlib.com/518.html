@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>The HTML of fCore::enableExceptionHandling(&#039;html&#039;); &ndash; Discussion &ndash; Flourish</title>
+		<link href='http://fonts.googleapis.com/css?family=Arimo:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/discussion.css" type="text/css" media="all">
+		<meta name="credits" content="Font Awesome - http://fortawesome.github.com/Font-Awesome">
+		<link rel="stylesheet" href="css/font-awesome.css" type="text/css">
+		<link rel="stylesheet" href="js/codemirror.css" type="text/css">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/codemirror.js"></script>
+		<script src="js/util/runmode.js"></script>
+		<script src="js/mode/xml/xml.js"></script>
+		<script src="js/mode/clike/clike.js"></script>
+		<script src="js/mode/javascript/javascript.js"></script>
+		<script src="js/mode/css/css.js"></script>
+		<script src="js/mode/php/php.js"></script>
+		<script src="js/mode/mysql/mysql.js"></script>
+		<script src="js/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/jquery.autosize.js"></script>
+<script type="text/javascript" src="js/topic.js"></script>
+	</head>
+	<body>
+		<header>
+			<section class="main group">
+				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<span class="tagline">PHP Unframework</span>
+				<nav class="group">
+					<a href="../flourishlib.com/docs.html">Documentation</a>
+					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
+					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
+					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="index.html">Discussion</a>
+					<a href="../flourishlib.com/blog.html">Blog</a>
+				</nav>
+			</section>
+		</header>
+		<section class="main">
+                        <div style="margin: 0 0 20px; background-color: #f4cf80; color: black; padding: 10px 15px; border-radius: 3px">This is an archived copy of the forum for reference purposes</div>
+<h1 id="original_post">The HTML of fCore::enableExceptionHandling(&#039;html&#039;);</h1>
+<div class="topic_details">
+	<span class="author">
+		posted by
+					gill			</span>
+	<span class="date_posted" title="8/7/11 5:48am">
+		8 years ago	</span>
+	</div>
+
+
+<div class="body topic">
+	
+<p>
+It' surely simple to solve but...
+</p>
+
+<p>
+When I have errors or exceptions from Flourish,  with fCore::enableErrorHandling('html') or fCore::enableExceptionHandling('html'), the printing doesn't use HTML code. I get this :
+</p>
+<pre><code>Context
+-------
+
+$_SERVER: &lt;pre class='xdebug-var-dump' dir='ltr'&gt;
+&lt;b&gt;array&lt;/b&gt;
+    'HTTP_HOST' &lt;font color='#888a85'&gt;=&amp;gt;&lt;/font&gt; &lt;small&gt;string&lt;/small&gt; &lt;font color='#cc0000'&gt;'localhost'&lt;/font&gt; &lt;i&gt;(length=9)&lt;/i&gt;
+(...)</code></pre>
+
+<p>
+ For exemple, with a bad include ( include '/../views/iindex.php'; )
+</p>
+
+<p>
+I know there is not yet the DOCTYPE at this moment (it'll be later, in the template header.php ) but how is it possible to see the real layer of errors ?
+</p>
+</div>
+
+
+<div class="topic actions">
+	</div>
+
+<div class="messages">
+		<div class="children">
+					<div class="message" id="message-1523">
+				<div class="body" id="body-1523">
+					
+<p>
+From what you posted, it looks like you are using xdebug. It looks as though xdebug messes with the output of var_dump(), which Flourish uses to grab info about variables.
+</p>
+
+<p>
+If you are referring to the context information that is printed with the error message and backtrace, that can be disabled by calling <a href="../flourishlib.com/api/fCore.html#disableContext">fCore::disableContext()</a>.
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+						 <a href="https://github.com/wbond">							wbond						</a> 					</span>
+					<span class="date_posted" title="8/16/11 8:47pm">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+					<div class="children">
+					<div class="message" id="message-1530">
+				<div class="body" id="body-1530">
+					
+<p>
+Thank you !
+</p>
+
+<p>
+Yes, WAMP Server 2.1 installed XDebug as a default. I'll have to learn this tool too...
+</p>
+				</div>
+				
+				<div class="message_details">
+					<span class="author">
+						posted by
+													gill											</span>
+					<span class="date_posted" title="8/18/11 5:57am">
+						8 years ago					</span>
+					<span class="actions">
+											</span>
+				</div>
+
+							</div>
+				</div>
+				</div>
+				</div>
+	</div>
+
+		</section>
+		<footer>
+			<section class="main group">
+				© 2012 Will Bond
+			</section>
+		</footer>
+	</body>
+</html>
