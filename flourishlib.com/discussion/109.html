@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,14 +54,14 @@
 <div class="body topic">
 	
 <p>
-Your library has been great so far, being very comprehensive and well documented. However, <a href="../flourishlib.com/docs/fSession.html">fSession</a> and <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> do not seem to work together for me. In the config file included by every page, when I set:
+Your library has been great so far, being very comprehensive and well documented. However, <a href="../docs/fSession.html">fSession</a> and <a href="../docs/fAuthorization.html">fAuthorization</a> do not seem to work together for me. In the config file included by every page, when I set:
 </p>
 <pre class="block php"><code>fSession::setPath('E:\\blah\\blah');
 fSession::setLength('2 days');
 fSession::ignoreSubdomain();</code></pre>
 
 <p>
- Then <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> stops working across pages.
+ Then <a href="../docs/fAuthorization.html">fAuthorization</a> stops working across pages.
 </p>
 
 <p>
@@ -81,11 +81,11 @@ blah, one of them blank and the other containing the authentication and session 
 				<div class="body" id="body-320">
 					
 <p>
-The symptoms you are describing do seem odd, almost as if you are calling <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> methods before configuring the session.
+The symptoms you are describing do seem odd, almost as if you are calling <a href="../docs/fAuthorization.html">fAuthorization</a> methods before configuring the session.
 </p>
 
 <p>
-Can you put the following code before your <a href="../flourishlib.com/docs/fSession.html">fSession</a> method calls? It should output the state of the <code>$_SESSION</code> superglobal. In your case it should show <code>{null}</code>. 
+Can you put the following code before your <a href="../docs/fSession.html">fSession</a> method calls? It should output the state of the <code>$_SESSION</code> superglobal. In your case it should show <code>{null}</code>. 
 </p>
 <pre class="block php"><code>fCore::expose($_SESSION);</code></pre>
 				</div>
@@ -109,7 +109,7 @@ Thanks for your reply. Using the expose() method and some debugging, I found whe
 </p>
 
 <p>
-The problem is that every time <a href="../flourishlib.com/api/fSession.html#get">fSession::get()</a> is called, a new, blank session file is being created in the session path. The method <a href="../flourishlib.com/api/fSession.html#set">fSession::set()</a> works just fine, but whatever I set with it can't be read by get() due to this issue.
+The problem is that every time <a href="../api/fSession.html#get">fSession::get()</a> is called, a new, blank session file is being created in the session path. The method <a href="../api/fSession.html#set">fSession::set()</a> works just fine, but whatever I set with it can't be read by get() due to this issue.
 </p>
 
 <p>
@@ -132,7 +132,7 @@ Any ideas?
 				<div class="body" id="body-324">
 					
 <p>
-Nevermind, I fixed the problem. I still do not know why Flourish kept creating those blank session files, but simply not setting <a href="../flourishlib.com/api/fSession.html#setPath">fSession::setPath()</a> worked for me. The reason things kept getting confusing was that when debugging using <a href="../flourishlib.com/api/fCore.html#expose">fCore::expose()</a>, I forgot that I needed to manually call session_start().
+Nevermind, I fixed the problem. I still do not know why Flourish kept creating those blank session files, but simply not setting <a href="../api/fSession.html#setPath">fSession::setPath()</a> worked for me. The reason things kept getting confusing was that when debugging using <a href="../api/fCore.html#expose">fCore::expose()</a>, I forgot that I needed to manually call session_start().
 </p>
 
 <p>
@@ -161,12 +161,12 @@ SC
 				<div class="body" id="body-326">
 					
 <p>
-Interesting about the <a href="../flourishlib.com/api/fSession.html#setPath">fSession::setPath()</a>. If you have a chance, can you try re-enabling that call and after you start the session run the following code:
+Interesting about the <a href="../api/fSession.html#setPath">fSession::setPath()</a>. If you have a chance, can you try re-enabling that call and after you start the session run the following code:
 </p>
 <pre class="block php"><code>fCore::expose(session_save_path());</code></pre>
 
 <p>
- This should output that directory that you set in <a href="../flourishlib.com/api/fSession.html#setPath">fSession::setPath()</a>.
+ This should output that directory that you set in <a href="../api/fSession.html#setPath">fSession::setPath()</a>.
 </p>
 				</div>
 				
@@ -189,7 +189,7 @@ I'm getting a blank session file as well. I have the same exact setup as sumsing
 </p>
 
 <p>
-Not sure how not setting <a href="../flourishlib.com/api/fSession.html#setPath">fSession::setPath()</a>; fixes it? I thought that was required? Mine is in my config file for every page. 
+Not sure how not setting <a href="../api/fSession.html#setPath">fSession::setPath()</a>; fixes it? I thought that was required? Mine is in my config file for every page. 
 </p>
 
 <p>
@@ -218,15 +218,15 @@ Strange... not sure if this is helpful, but I was running a few scenarios trying
 </p>
 
 <p>
-<strong>Edit</strong>: If I login after being redirected from a page with <a href="../flourishlib.com/api/fAuthorization.html#requireLoggedIn">fAuthorization::requireLoggedIn()</a>; There is no blank file at all, instead there is a session with some url redirection data. Perhaps the empty file has something to do with that?		
+<strong>Edit</strong>: If I login after being redirected from a page with <a href="../api/fAuthorization.html#requireLoggedIn">fAuthorization::requireLoggedIn()</a>; There is no blank file at all, instead there is a session with some url redirection data. Perhaps the empty file has something to do with that?		
 </p>
 
 <p>
-<strong>Scenario one</strong> If I login and then logout by only calling <a href="../flourishlib.com/api/fAuthorization.html#destroyUserInfo">fAuthorization::destroyUserInfo()</a>; The empty session file is created (on login) and hangs around after logout. This same file will hang around unmodified, a new one is only created if a manually delete the empty file.
+<strong>Scenario one</strong> If I login and then logout by only calling <a href="../api/fAuthorization.html#destroyUserInfo">fAuthorization::destroyUserInfo()</a>; The empty session file is created (on login) and hangs around after logout. This same file will hang around unmodified, a new one is only created if a manually delete the empty file.
 </p>
 
 <p>
-<strong>Scenario two</strong> If if I repeatedly login and logout with <a href="../flourishlib.com/api/fAuthorization.html#destroyUserInfo">fAuthorization::destroyUserInfo()</a>; and <a href="../flourishlib.com/api/fSession.html#destroy">fSession::destroy()</a>; a new empty session file is created each time. 
+<strong>Scenario two</strong> If if I repeatedly login and logout with <a href="../api/fAuthorization.html#destroyUserInfo">fAuthorization::destroyUserInfo()</a>; and <a href="../api/fSession.html#destroy">fSession::destroy()</a>; a new empty session file is created each time. 
 </p>
 				</div>
 				

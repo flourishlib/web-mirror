@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -76,13 +76,13 @@ Is there a plan to reduce the memory usage? Best practice? (unsetting the record
 				<div class="body" id="body-1208">
 					
 <p>
-Hmm, I can't argue with you on this one. Numerous <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> extension classes here and I get about 9.63 MB memory usage from (memory_get_usage() / 1024 / 1024) after generation of my relatively simple homepage. I'm not complaining (yet) since the server I'm on has 1048864k memory and generally speaking, I'm the only user on besides a few testers.
+Hmm, I can't argue with you on this one. Numerous <a href="../docs/fActiveRecord.html">fActiveRecord</a> extension classes here and I get about 9.63 MB memory usage from (memory_get_usage() / 1024 / 1024) after generation of my relatively simple homepage. I'm not complaining (yet) since the server I'm on has 1048864k memory and generally speaking, I'm the only user on besides a few testers.
 </p>
 <pre><code>Mem:   1048864k total,   616544k used,   432320k free,     3696k buffers
 Swap:   530140k total,   297752k used,   232388k free,    33240k cached</code></pre>
 
 <p>
- Have a copy of JIRA running too, and a PHP-written daemon doing Twitter requests (takes up about 5 MB, and yes it uses <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> therefore <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>).
+ Have a copy of JIRA running too, and a PHP-written daemon doing Twitter requests (takes up about 5 MB, and yes it uses <a href="../docs/fRecordSet.html">fRecordSet</a> therefore <a href="../docs/fActiveRecord.html">fActiveRecord</a>).
 </p>
 
 <p>
@@ -90,7 +90,7 @@ This server I'm using is for development only. The server we will end up on for 
 </p>
 
 <p>
-The documentation has some really good information about caching and performance in general. Wikipedia and Twitter both use memcache, I'd suggest looking into it. Servers I've used in the past have used APC or Memcache (they were all running Drupal installs). <a href="../flourishlib.com/docs/PerformanceTips.html">http://flourishlib.com/docs/PerformanceTips</a> I pretty much can't argue against any of these things mentioned here.
+The documentation has some really good information about caching and performance in general. Wikipedia and Twitter both use memcache, I'd suggest looking into it. Servers I've used in the past have used APC or Memcache (they were all running Drupal installs). <a href="../docs/PerformanceTips.html">http://flourishlib.com/docs/PerformanceTips</a> I pretty much can't argue against any of these things mentioned here.
 </p>
 
 <p>

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Is there anyway to reduce the amount of hand holding flourish does when used <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>?  When processing large datasets, the amount of checks flourish does for data consistency seriously slows a script down.
+Is there anyway to reduce the amount of hand holding flourish does when used <a href="../docs/fDatabase.html">fDatabase</a>?  When processing large datasets, the amount of checks flourish does for data consistency seriously slows a script down.
 </p>
 
 <p>
@@ -118,7 +118,7 @@ Here is an example of the query log :
 				<div class="body" id="body-317">
 					
 <p>
-I've sort of found the solution to this problem.  The answer is to use simple SQL instead of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.  Doing this on a very small dataset(18,000 records) reduced my script execution time from an average of 6 seconds down to an average of 3.2 seconds.  
+I've sort of found the solution to this problem.  The answer is to use simple SQL instead of <a href="../docs/fActiveRecord.html">fActiveRecord</a>.  Doing this on a very small dataset(18,000 records) reduced my script execution time from an average of 6 seconds down to an average of 3.2 seconds.  
 </p>
 
 <p>
@@ -126,7 +126,7 @@ I know that doesn't seem like a lot.  However, this was just a small subset of m
 </p>
 
 <p>
-I also think I can improve the speeds even more by getting rid of the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> usage as well.  
+I also think I can improve the speeds even more by getting rid of the <a href="../docs/fRecordSet.html">fRecordSet</a> usage as well.  
 </p>
 
 <p>
@@ -149,7 +149,7 @@ So, now I still get to use all the other flourish goodness, but I'll do the quer
 				<div class="body" id="body-318">
 					
 <p>
-From the SQL you posted, it seems to me you are using the ORM, not just <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. The ORM does automatic data escaping, unescaping, validation with nice messages and more, but obviously not without a cost.
+From the SQL you posted, it seems to me you are using the ORM, not just <a href="../docs/fDatabase.html">fDatabase</a>. The ORM does automatic data escaping, unescaping, validation with nice messages and more, but obviously not without a cost.
 </p>
 
 <p>
@@ -162,12 +162,12 @@ foreach ($records as $record) {
 fORMDatabase::retrieve()-&gt;query('COMMIT');</code></pre>
 
 <p>
- However, you are going to find that for massive data sets, pure <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> calls will be much more efficient:
+ However, you are going to find that for massive data sets, pure <a href="../docs/fDatabase.html">fDatabase</a> calls will be much more efficient:
 </p>
 <pre class="block php"><code>$db-&gt;query(&quot;INSERT INTO table(column, second_column) VALUES (%s, %i)&quot;, $column, $second_column);</code></pre>
 
 <p>
- One of the things on my todo list for <a href="../flourishlib.com/docs/fResult.html">fResult</a> is batch unescaping, so instead of calling escape for each column of each row, you will be able to escape a result set with one method call:
+ One of the things on my todo list for <a href="../docs/fResult.html">fResult</a> is batch unescaping, so instead of calling escape for each column of each row, you will be able to escape a result set with one method call:
 </p>
 <pre class="block php"><code>$res-&gt;unescape('column:datatype', 'second_column:datatype');
 foreach ($res as $row) {

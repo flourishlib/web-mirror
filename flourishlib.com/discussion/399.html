@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -90,7 +90,7 @@ CREATE INDEX bid_form_id ON form_states (bid, form_id);</code></pre>
 The following problems were found: Bid, Form ID: The values specified must be a unique combination, however the specified combination already exists</code></pre>
 
 <p>
- On a page where 6 forms with the same form_id (same form but different parameters), every other form has no build_id (2,4,6) and for each I get an <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception. I don't understand how this can happen when there's no real threading in PHP, I thought the <a href="../flourishlib.com/docs/fORM.html">fORM</a> was performing transactions and/or locking the table anyway, and I don't specify the build ID in creating the form state anywhere.
+ On a page where 6 forms with the same form_id (same form but different parameters), every other form has no build_id (2,4,6) and for each I get an <a href="../docs/fValidation.html">fValidation</a> exception. I don't understand how this can happen when there's no real threading in PHP, I thought the <a href="../docs/fORM.html">fORM</a> was performing transactions and/or locking the table anyway, and I don't specify the build ID in creating the form state anywhere.
 </p>
 
 <p>
@@ -112,7 +112,7 @@ For now I've decided on not having the UNIQUE INDEX. But this was working before
 				<div class="body" id="body-1220">
 					
 <p>
-On another note, let's write <a href="../flourishlib.com/docs/fMollom.html">fMollom</a> or something to stop this spam!
+On another note, let's write <a href="../docs/fMollom.html">fMollom</a> or something to stop this spam!
 </p>
 
 <p>
@@ -209,7 +209,7 @@ Part of a much larger class based on DOM that basically creates a big data struc
 &lt;input type=&quot;hidden&quot; name=&quot;name_given&quot; value=&quot;value_given&quot;&gt;</code></pre>
 
 <p>
- This backtrace is from me requesting /politics on my site. A list of polls that are forms will be listed. In #1, the object referenced is an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object. #0 stores the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> I mentioned before and has the code above. In this run, -&gt;storeState() is the ONLY place where the Base_FormState <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object will be stored with the code above.
+ This backtrace is from me requesting /politics on my site. A list of polls that are forms will be listed. In #1, the object referenced is an <a href="../docs/fActiveRecord.html">fActiveRecord</a> object. #0 stores the <a href="../docs/fActiveRecord.html">fActiveRecord</a> I mentioned before and has the code above. In this run, -&gt;storeState() is the ONLY place where the Base_FormState <a href="../docs/fActiveRecord.html">fActiveRecord</a> object will be stored with the code above.
 </p>
 <pre><code>#!text/html
 #0  Base_HtmlTag-&gt;storeState() called at [/var/www/s/Module/Poll/PollForm.php:58]
@@ -237,11 +237,11 @@ Part of a much larger class based on DOM that basically creates a big data struc
 				<div class="body" id="body-1227">
 					
 <p>
-The backtrace doesn't seem to be from <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+The backtrace doesn't seem to be from <a href="../docs/fActiveRecord.html">fActiveRecord</a>.
 </p>
 
 <p>
-You mention you are storing 6 records in a loop and every other one doesn't have an ID. It seems there is something going on with the database. If you execute the following before you start storing the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects you will get a kinda-noisy debug of all SQL statements being executed.
+You mention you are storing 6 records in a loop and every other one doesn't have an ID. It seems there is something going on with the database. If you execute the following before you start storing the <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects you will get a kinda-noisy debug of all SQL statements being executed.
 </p>
 <pre class="block php"><code>fORMDatabase::retrieve()-&gt;enableDebugging(TRUE);</code></pre>
 

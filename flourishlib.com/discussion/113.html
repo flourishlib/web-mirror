@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -96,11 +96,11 @@ PXL.
 				<div class="body" id="body-328">
 					
 <p>
-If you check out <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>#HashingandChecking, you'll see there is a method called <a href="../flourishlib.com/api/fCryptography.html#checkPasswordHash">fCryptography::checkPasswordHash()</a> that can check a password against a hash.
+If you check out <a href="../docs/fCryptography.html">fCryptography</a>#HashingandChecking, you'll see there is a method called <a href="../api/fCryptography.html#checkPasswordHash">fCryptography::checkPasswordHash()</a> that can check a password against a hash.
 </p>
 
 <p>
-The reason the hash is different each time is because a unique salt is used to help prevent rainbow table attacks. You can read some more about it at <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>#PasswordHashing.
+The reason the hash is different each time is because a unique salt is used to help prevent rainbow table attacks. You can read some more about it at <a href="../docs/fCryptography.html">fCryptography</a>#PasswordHashing.
 </p>
 				</div>
 				
@@ -267,7 +267,7 @@ fCryptography::checkPasswordHash($password,'fCryptography::password_hash#' . $sp
 				<div class="body" id="body-1097">
 					
 <p>
-Right, so in your first example you were breaking <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> because you were removing the fingerprint and the salt from the hash. <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> fingerprints hash for forwards compatibility. In the future I can add support for bcrypt and change the fingerprint and <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> will be able to accurately check the hashes.
+Right, so in your first example you were breaking <a href="../docs/fCryptography.html">fCryptography</a> because you were removing the fingerprint and the salt from the hash. <a href="../docs/fCryptography.html">fCryptography</a> fingerprints hash for forwards compatibility. In the future I can add support for bcrypt and change the fingerprint and <a href="../docs/fCryptography.html">fCryptography</a> will be able to accurately check the hashes.
 </p>
 
 <p>
@@ -287,7 +287,7 @@ What a salt does is lengthen short passwords to make rainbow table useless. Inst
 </p>
 
 <p>
-Complicating the fact is that many cryptographic hashes are intended to be fast, so that the performance of checking information is not too computationally expensive. Unfortunately this is a bad thing for password hashes. You want them to be as slow as possible, but not to slow that it affects the user when performing a login. There are specialized software packages out there that can generate millions to billions of md5() and sha1() hashes per second on GPU hardware. The simplest way to make this more expensive is to use many rounds of hashing. For instance, <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> uses sha1() since it is available on all PHP 5.1+ installs, but performs it 1000 times to make the hashing process slower. Inevitably this is not going to be enough and <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> will need to be &quot;upgraded&quot; to help prevent this.
+Complicating the fact is that many cryptographic hashes are intended to be fast, so that the performance of checking information is not too computationally expensive. Unfortunately this is a bad thing for password hashes. You want them to be as slow as possible, but not to slow that it affects the user when performing a login. There are specialized software packages out there that can generate millions to billions of md5() and sha1() hashes per second on GPU hardware. The simplest way to make this more expensive is to use many rounds of hashing. For instance, <a href="../docs/fCryptography.html">fCryptography</a> uses sha1() since it is available on all PHP 5.1+ installs, but performs it 1000 times to make the hashing process slower. Inevitably this is not going to be enough and <a href="../docs/fCryptography.html">fCryptography</a> will need to be &quot;upgraded&quot; to help prevent this.
 </p>
 
 <p>
@@ -295,7 +295,7 @@ The best way to hash a password is to use bcrypt. This algorithm uses a variable
 </p>
 
 <p>
-In the future I am planning on updating <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> to use bcrypt when available for hashing. This is where that fingerprint comes in nice and handy. :-)
+In the future I am planning on updating <a href="../docs/fCryptography.html">fCryptography</a> to use bcrypt when available for hashing. This is where that fingerprint comes in nice and handy. :-)
 </p>
 				</div>
 				

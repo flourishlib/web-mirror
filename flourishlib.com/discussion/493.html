@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -68,11 +68,11 @@ This is part support, part ticket, and part suggestion.  But it appears that $re
 				<div class="body" id="body-1460">
 					
 <p>
-The behavior you are seeing is intended. It is very often necessary to be able to detect that a record was just added to the database after the commit operation. If <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> returned <code>TRUE</code> in this situation, there would be no way to know when you've just inserted a record into the database for the first time.
+The behavior you are seeing is intended. It is very often necessary to be able to detect that a record was just added to the database after the commit operation. If <a href="../api/fActiveRecord.html#exists">fActiveRecord::exists()</a> returned <code>TRUE</code> in this situation, there would be no way to know when you've just inserted a record into the database for the first time.
 </p>
 
 <p>
-From an implementation perspective, <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> basically just returns <code>TRUE</code> when there are no <code>$old_values</code> entries for the primary key of the record, but there are primary key entries in the <code>$values</code> array. It is actually the very last step of <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a> to reset the <code>$old_values</code> array to a clean state, which causes <a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> to now return <code>TRUE</code>.
+From an implementation perspective, <a href="../api/fActiveRecord.html#exists">fActiveRecord::exists()</a> basically just returns <code>TRUE</code> when there are no <code>$old_values</code> entries for the primary key of the record, but there are primary key entries in the <code>$values</code> array. It is actually the very last step of <a href="../api/fActiveRecord.html#store">fActiveRecord::store()</a> to reset the <code>$old_values</code> array to a clean state, which causes <a href="../api/fActiveRecord.html#exists">fActiveRecord::exists()</a> to now return <code>TRUE</code>.
 </p>
 
 <p>

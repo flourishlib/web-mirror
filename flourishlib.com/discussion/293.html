@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I'm using <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> to send out some html email messages, it appears that somewhere in the makeQuotedPrintable function a wrapped line ended with a period character '.' and that character was subsequently removed from the email body.
+I'm using <a href="../docs/fEmail.html">fEmail</a> to send out some html email messages, it appears that somewhere in the makeQuotedPrintable function a wrapped line ended with a period character '.' and that character was subsequently removed from the email body.
 </p>
 
 <p>
@@ -88,7 +88,7 @@ The script also sends the same email out but with some extra information at the 
 				<div class="body" id="body-916">
 					
 <p>
-Do you have a copy of the content that failed? I checked out the linked HTML, but the <code>.</code> seemed to come through fine. I also tried to add a <code>.</code> at the end, but it <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> seemed to encode it in the same way that <a href="http://php.net/quoted_printable_encode">quoted_printable_encode()</a> does. Also, do you have the original message source of the message where the <code>.</code> is missing?
+Do you have a copy of the content that failed? I checked out the linked HTML, but the <code>.</code> seemed to come through fine. I also tried to add a <code>.</code> at the end, but it <a href="../docs/fEmail.html">fEmail</a> seemed to encode it in the same way that <a href="http://php.net/quoted_printable_encode">quoted_printable_encode()</a> does. Also, do you have the original message source of the message where the <code>.</code> is missing?
 </p>
 
 <p>
@@ -332,7 +332,7 @@ Signs are pointing towards an SMTP issue. I will try to do some independent test
 				<div class="body" id="body-920">
 					
 <p>
-Tonight I finally got some time to check out <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> and <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> and I found some bugs related to lines starting with a <code>.</code>. <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> had issues on all platforms when a line started with a <code>.</code> and <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> had an issue on Windows when the email started with a <code>.</code>.
+Tonight I finally got some time to check out <a href="../docs/fEmail.html">fEmail</a> and <a href="../docs/fSMTP.html">fSMTP</a> and I found some bugs related to lines starting with a <code>.</code>. <a href="../docs/fSMTP.html">fSMTP</a> had issues on all platforms when a line started with a <code>.</code> and <a href="../docs/fEmail.html">fEmail</a> had an issue on Windows when the email started with a <code>.</code>.
 </p>
 
 <p>

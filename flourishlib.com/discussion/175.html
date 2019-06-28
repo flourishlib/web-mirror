@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Hey,
 </p>
 
 <p>
-I'm can't find an simple option to check if a directory exists or not in the <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> class? Maybe I looked over it, ..or is it really missing? Because I do not want to catch exceptions first after creating a directory!?
+I'm can't find an simple option to check if a directory exists or not in the <a href="../docs/fDirectory.html">fDirectory</a> class? Maybe I looked over it, ..or is it really missing? Because I do not want to catch exceptions first after creating a directory!?
 </p>
 
 <p>
@@ -103,11 +103,11 @@ Gr Frank
 				<div class="body" id="body-521">
 					
 <p>
-Something like this into de <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> class? 
+Something like this into de <a href="../docs/fDirectory.html">fDirectory</a> class? 
 </p>
 
 <p>
-// The following constants allow for nice looking callbacks to static methods const create        = '<a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: create'; const makeCanonical = '<a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: makeCanonical'; const exists = '<a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: exists'; &lt;-- new entry
+// The following constants allow for nice looking callbacks to static methods const create        = '<a href="../docs/fDirectory.html">fDirectory</a> :: create'; const makeCanonical = '<a href="../docs/fDirectory.html">fDirectory</a> :: makeCanonical'; const exists = '<a href="../docs/fDirectory.html">fDirectory</a> :: exists'; &lt;-- new entry
 </p>
 
 <p>
@@ -130,7 +130,7 @@ Now you can do the following :
 </p>
 
 <p>
-if( ! <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: exists('somedir/'.$tempMemberId)) { 	$new_directory = <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> :: create('somedir/'.$tempMemberId); } else { 	$new_directory = new <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a>('somedir/'.$tempMemberId); }
+if( ! <a href="../docs/fDirectory.html">fDirectory</a> :: exists('somedir/'.$tempMemberId)) { 	$new_directory = <a href="../docs/fDirectory.html">fDirectory</a> :: create('somedir/'.$tempMemberId); } else { 	$new_directory = new <a href="../docs/fDirectory.html">fDirectory</a>('somedir/'.$tempMemberId); }
 </p>
 
 <p>
@@ -153,7 +153,7 @@ So if it doesn't exists you now have a dir called -&gt; somedir/&lt;memberid&gt;
 				<div class="body" id="body-534">
 					
 <p>
-Currently the file_exists() check is done when creating an <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> object. If the path passed is not an <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> then an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> will be thrown. It is also possible to pass a file path to <a href="../flourishlib.com/api/fFilesystem.html#createObject">fFilesystem::createObject()</a> and get back the appropriate kind of <a href="../flourishlib.com/docs/fFile.html">fFile</a>, <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> or <a href="../flourishlib.com/docs/fImage.html">fImage</a> object. This method will also throw an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> if the path can't be found or isn't readable.
+Currently the file_exists() check is done when creating an <a href="../docs/fDirectory.html">fDirectory</a> object. If the path passed is not an <a href="../docs/fDirectory.html">fDirectory</a> then an <a href="../docs/fValidationException.html">fValidationException</a> will be thrown. It is also possible to pass a file path to <a href="../api/fFilesystem.html#createObject">fFilesystem::createObject()</a> and get back the appropriate kind of <a href="../docs/fFile.html">fFile</a>, <a href="../docs/fDirectory.html">fDirectory</a> or <a href="../docs/fImage.html">fImage</a> object. This method will also throw an <a href="../docs/fValidationException.html">fValidationException</a> if the path can't be found or isn't readable.
 </p>
 				</div>
 				

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -98,11 +98,11 @@ if (fAuthorization::checkACL('users', 'edit')) {
 				<div class="body" id="body-598">
 					
 <p>
-Your code never calls <a href="../flourishlib.com/api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a>, <a href="../flourishlib.com/api/fAuthorization.html#requireAuthLevel">fAuthorization::requireAuthLevel()</a> or <a href="../flourishlib.com/api/fAuthorization.html#requireLoggedIn">fAuthorization::requireLoggedIn()</a>, so I don't believe <a href="../flourishlib.com/api/fAuthorization.html#getRequestedURL">fAuthorization::getRequestedURL()</a> will return anything.
+Your code never calls <a href="../api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a>, <a href="../api/fAuthorization.html#requireAuthLevel">fAuthorization::requireAuthLevel()</a> or <a href="../api/fAuthorization.html#requireLoggedIn">fAuthorization::requireLoggedIn()</a>, so I don't believe <a href="../api/fAuthorization.html#getRequestedURL">fAuthorization::getRequestedURL()</a> will return anything.
 </p>
 
 <p>
-The issue you are having is that <a href="../flourishlib.com/api/fURL.html#redirect">fURL::redirect()</a> isn't redirecting to the proper place, correct? If this isn't the case, can you include some more code so I can see how you are setting up your session.
+The issue you are having is that <a href="../api/fURL.html#redirect">fURL::redirect()</a> isn't redirecting to the proper place, correct? If this isn't the case, can you include some more code so I can see how you are setting up your session.
 </p>
 				</div>
 				
@@ -121,7 +121,7 @@ The issue you are having is that <a href="../flourishlib.com/api/fURL.html#redir
 				<div class="body" id="body-599">
 					
 <p>
-if i call <a href="../flourishlib.com/api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a>; i never can go to admin because the fCore::expose(<a href="../flourishlib.com/api/fAuthorization.html#getUserACLs">fAuthorization::getUserACLs()</a>) print {null} and i don't have right to see that page and redirect me back to fAuthorization::setLoginPage. my issue is that the session keep value on <a href="http://site.com">http://site.com</a>(index.php or somethingelse.php) but don't keep session include auth or ACl on <a href="http://site.com/admin/">http://site.com/admin/</a>{index.php or somethingelse.php}. redirecting on fURL::redirect(fAuthorization::getRequestedURL(TRUE, '<a href="http://localhost/turism/admin/'">http://localhost/turism/admin/'</a>)) work.  
+if i call <a href="../api/fAuthorization.html#requireACL">fAuthorization::requireACL()</a>; i never can go to admin because the fCore::expose(<a href="../api/fAuthorization.html#getUserACLs">fAuthorization::getUserACLs()</a>) print {null} and i don't have right to see that page and redirect me back to fAuthorization::setLoginPage. my issue is that the session keep value on <a href="http://site.com">http://site.com</a>(index.php or somethingelse.php) but don't keep session include auth or ACl on <a href="http://site.com/admin/">http://site.com/admin/</a>{index.php or somethingelse.php}. redirecting on fURL::redirect(fAuthorization::getRequestedURL(TRUE, '<a href="http://localhost/turism/admin/'">http://localhost/turism/admin/'</a>)) work.  
 </p>
 				</div>
 				

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -62,7 +62,7 @@ $array = $records-&gt;toArray();
 </p>
 
 <p>
-There are areas in my code where I use unbufferedQuery which returns records as an array and then in another controller I build records from <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and I need to treat the results the same way rather then writing code to check if it is an array type or instance of recordset. 
+There are areas in my code where I use unbufferedQuery which returns records as an array and then in another controller I build records from <a href="../docs/fActiveRecord.html">fActiveRecord</a> and I need to treat the results the same way rather then writing code to check if it is an array type or instance of recordset. 
 </p>
 
 <p>
@@ -80,7 +80,7 @@ This would be a great feature for this little framework.
 				<div class="body" id="body-1318">
 					
 <p>
-class TransparentRecords extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> {
+class TransparentRecords extends <a href="../docs/fActiveRecord.html">fActiveRecord</a> {
 </p>
 
 <p>
@@ -111,7 +111,7 @@ class TransparentRecords extends <a href="../flourishlib.com/docs/fActiveRecord.
 				<div class="body" id="body-1319">
 					
 <p>
-<a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> implements Iterator so it's accessible like an array (the keys are only numeric).
+<a href="../docs/fRecordSet.html">fRecordSet</a> implements Iterator so it's accessible like an array (the keys are only numeric).
 </p>
 <pre class="block php"><code>$record = fRecordSet::build('className');
 //$record[0] -&gt; fActiveRecord object

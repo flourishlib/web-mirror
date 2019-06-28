@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-is this not allowed?  <a href="../flourishlib.com/api/fMessaging.html#check">fMessaging::check()</a> causes a session_start error.
+is this not allowed?  <a href="../api/fMessaging.html#check">fMessaging::check()</a> causes a session_start error.
 </p>
 <pre><code>Warning: session_start() [function.session-start]: Cannot send session cache limiter - headers already sent (output started at xxxxx/views/screen/admin/header.php:5) in xxxxx/flourish/fSession.php on line 161</code></pre>
 </div>
@@ -73,11 +73,11 @@ No, it certainly is possible.
 </p>
 
 <p>
-<a href="../flourishlib.com/docs/fMessaging.html">fMessaging</a> uses <a href="../flourishlib.com/docs/fSession.html">fSession</a> to hold transient messages, which in turn is a simple wrapper around the PHP session functionality. The reason you are getting the warning is that <a href="../flourishlib.com/docs/fSession.html">fSession</a> will implicitly open the session when it is first called on a page. This causes issues when content has already been sent because a cookie used for the session and the headers have already been sent.
+<a href="../docs/fMessaging.html">fMessaging</a> uses <a href="../docs/fSession.html">fSession</a> to hold transient messages, which in turn is a simple wrapper around the PHP session functionality. The reason you are getting the warning is that <a href="../docs/fSession.html">fSession</a> will implicitly open the session when it is first called on a page. This causes issues when content has already been sent because a cookie used for the session and the headers have already been sent.
 </p>
 
 <p>
-The fix is to explicitly call <a href="../flourishlib.com/api/fSession.html#open">fSession::open()</a> before you call <a href="../flourishlib.com/api/fTemplating.html#place">fTemplating::place()</a>.
+The fix is to explicitly call <a href="../api/fSession.html#open">fSession::open()</a> before you call <a href="../api/fTemplating.html#place">fTemplating::place()</a>.
 </p>
 <pre class="block php"><code>&lt;?php
 $template = new fTemplating('/path/');

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -55,7 +55,7 @@
 	
 <p>
 Hi, <br />
- I just knew about this wonderful library. When i started to use it, I found some useful methods missing from <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> class like isAjax() function which is used to determine if the request is made using AJAX request or not. The code for this function is simple:
+ I just knew about this wonderful library. When i started to use it, I found some useful methods missing from <a href="../docs/fRequest.html">fRequest</a> class like isAjax() function which is used to determine if the request is made using AJAX request or not. The code for this function is simple:
 </p>
 <pre class="block php"><code>function isAjax(){
     return isset($_SERVER['HTTP_X_REQUESTED_WITH']) &amp;&amp; $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
@@ -76,11 +76,11 @@ Hi, <br />
 				<div class="body" id="body-545">
 					
 <p>
-Yes, I am definitely planning on adding <code>isAjax()</code> to <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>, it is just a matter of how much time I have and my priorities. The simpler something is to accomplish, the lower priority it is for me since it can easily be done the manual way.
+Yes, I am definitely planning on adding <code>isAjax()</code> to <a href="../docs/fRequest.html">fRequest</a>, it is just a matter of how much time I have and my priorities. The simpler something is to accomplish, the lower priority it is for me since it can easily be done the manual way.
 </p>
 
 <p>
-My intention with <a href="../flourishlib.com/api/fRequest.html#get">fRequest::get()</a> is to provide a simple interface to safely get request data. If I provided four different methods I would be doing even less abstraction from the built-in superglobals and more just indirection. That, and it would be confusing for a developer to ever try to use the same field name for both a GET and POST parameter in the same request.
+My intention with <a href="../api/fRequest.html#get">fRequest::get()</a> is to provide a simple interface to safely get request data. If I provided four different methods I would be doing even less abstraction from the built-in superglobals and more just indirection. That, and it would be confusing for a developer to ever try to use the same field name for both a GET and POST parameter in the same request.
 </p>
 				</div>
 				
@@ -99,7 +99,7 @@ My intention with <a href="../flourishlib.com/api/fRequest.html#get">fRequest::g
 				<div class="body" id="body-550">
 					
 <p>
-So, can I add isAjax() myself if you permit me. I mean add it to <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> and submit it??
+So, can I add isAjax() myself if you permit me. I mean add it to <a href="../docs/fRequest.html">fRequest</a> and submit it??
 </p>
 				</div>
 				
@@ -118,7 +118,7 @@ So, can I add isAjax() myself if you permit me. I mean add it to <a href="../flo
 				<div class="body" id="body-564">
 					
 <p>
-Yes, I can accept patches, you just need to sign and email me a <a href="../flourishlib.com/docs/ContributorLicenseAgreements.html">contributor license agreement</a> first. It is a legal document that says you are willing to license your code to other under the MIT license. It also helps to absolve myself or users of Flourish if you submit code that you don't have the legal right to license.
+Yes, I can accept patches, you just need to sign and email me a <a href="../docs/ContributorLicenseAgreements.html">contributor license agreement</a> first. It is a legal document that says you are willing to license your code to other under the MIT license. It also helps to absolve myself or users of Flourish if you submit code that you don't have the legal right to license.
 </p>
 				</div>
 				

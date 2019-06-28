@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -62,7 +62,7 @@ I have the following problem/question. I have a table 'images' and I have a tabl
 </p>
 
 <p>
-So the problem is, if the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> 'Product' is not present, i can not delete an entry from 'images'. An exception (&quot;The noun specified could not be singularized&quot;) is thrown. I think this message comes from a relation check?
+So the problem is, if the <a href="../docs/fActiveRecord.html">fActiveRecord</a> 'Product' is not present, i can not delete an entry from 'images'. An exception (&quot;The noun specified could not be singularized&quot;) is thrown. I think this message comes from a relation check?
 </p>
 
 <p>
@@ -92,15 +92,15 @@ So I can definitely tell you that it is trying to load the Product class to call
 </p>
 
 <p>
-The message &quot;The noun specified could not be singularized&quot; is not a normal occurrence, or are you mapping table names to class names? If so, perhaps try moving your <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> calls to your common init code.
+The message &quot;The noun specified could not be singularized&quot; is not a normal occurrence, or are you mapping table names to class names? If so, perhaps try moving your <a href="../api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> calls to your common init code.
 </p>
 
 <p>
-Right now there is no way to prevent calling <code>-&gt;delete()</code> on related <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects, precisely because you are (normally) going to want to execute delete hook callbacks if they exist. It is also entirely possible the related <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> <code>-&gt;delete()</code> method has been overridden and does more than the default.
+Right now there is no way to prevent calling <code>-&gt;delete()</code> on related <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects, precisely because you are (normally) going to want to execute delete hook callbacks if they exist. It is also entirely possible the related <a href="../docs/fActiveRecord.html">fActiveRecord</a> <code>-&gt;delete()</code> method has been overridden and does more than the default.
 </p>
 
 <p>
-Perhaps your core should include a skeleton of all <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes that can be loaded if they don't exist in a module? You could also use something like <a href="../flourishlib.com/api/fORM.html#defineActiveRecordClass">fORM::defineActiveRecordClass()</a>, but I wouldn't recommend it for production since it uses <code>eval()</code>. This technique seems like it could end up causing the wrong class/functionality to be loaded, but if you are careful to ensure a module is never disabled once database contents exist for it, it may work.
+Perhaps your core should include a skeleton of all <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes that can be loaded if they don't exist in a module? You could also use something like <a href="../api/fORM.html#defineActiveRecordClass">fORM::defineActiveRecordClass()</a>, but I wouldn't recommend it for production since it uses <code>eval()</code>. This technique seems like it could end up causing the wrong class/functionality to be loaded, but if you are careful to ensure a module is never disabled once database contents exist for it, it may work.
 </p>
 				</div>
 				
@@ -119,7 +119,7 @@ Perhaps your core should include a skeleton of all <a href="../flourishlib.com/d
 				<div class="body" id="body-1279">
 					
 <p>
-Thanks for your reply. Maybe I could include the skeletons in core, although in my opinion, this isn't the right way if trying to implement a clean modularization. The solution with <a href="../flourishlib.com/api/fORM.html#defineActiveRecordClass">fORM::defineActiveRecordClass()</a> seems a little bit cleaner to me, because it is more dynamic. Maybe I could try to override the delete-method, so i can prevent the records from being deleted. A simple exception if the image is referenced would be enough for me.
+Thanks for your reply. Maybe I could include the skeletons in core, although in my opinion, this isn't the right way if trying to implement a clean modularization. The solution with <a href="../api/fORM.html#defineActiveRecordClass">fORM::defineActiveRecordClass()</a> seems a little bit cleaner to me, because it is more dynamic. Maybe I could try to override the delete-method, so i can prevent the records from being deleted. A simple exception if the image is referenced would be enough for me.
 </p>
 
 <p>

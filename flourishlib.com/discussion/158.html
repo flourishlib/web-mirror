@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I think I found an interesting and rather bizarre issue in r719.  When <a href="../flourishlib.com/api/fTimestamp.html#setDefaultTimezone">fTimestamp::setDefaultTimezone()</a> is called, columns set with <a href="../flourishlib.com/api/fORMDate.html#configureDateCreatedColumn">fORMDate::configureDateCreatedColumn()</a> or <a href="../flourishlib.com/api/fORMDate.html#configureDateUpdatedColumn">fORMDate::configureDateUpdatedColumn()</a> no longer auto-set their values or return <a href="../flourishlib.com/docs/fDate.html">fDate</a> objects.
+I think I found an interesting and rather bizarre issue in r719.  When <a href="../api/fTimestamp.html#setDefaultTimezone">fTimestamp::setDefaultTimezone()</a> is called, columns set with <a href="../api/fORMDate.html#configureDateCreatedColumn">fORMDate::configureDateCreatedColumn()</a> or <a href="../api/fORMDate.html#configureDateUpdatedColumn">fORMDate::configureDateUpdatedColumn()</a> no longer auto-set their values or return <a href="../docs/fDate.html">fDate</a> objects.
 </p>
 
 <p>
@@ -182,7 +182,7 @@ I've tried this with multiple time zones, and with time zone columns set in the 
 				<div class="body" id="body-498">
 					
 <p>
-I wonder if this might be an issue with the timezone you specified? Perhaps try <code>'UTC'</code> instead of <code>'Etc/UTC'</code>? I know I'm running code with those <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a> configurations and <code>'America/New_York'</code> without any issues.
+I wonder if this might be an issue with the timezone you specified? Perhaps try <code>'UTC'</code> instead of <code>'Etc/UTC'</code>? I know I'm running code with those <a href="../docs/fORMDate.html">fORMDate</a> configurations and <code>'America/New_York'</code> without any issues.
 </p>
 				</div>
 				
@@ -201,7 +201,7 @@ I wonder if this might be an issue with the timezone you specified? Perhaps try 
 				<div class="body" id="body-499">
 					
 <p>
-Yup, I didn't even think of <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> missing the Etc branch in its valid timezone array.  Thanks!
+Yup, I didn't even think of <a href="../docs/fTimestamp.html">fTimestamp</a> missing the Etc branch in its valid timezone array.  Thanks!
 </p>
 				</div>
 				

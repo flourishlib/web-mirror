@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -80,7 +80,7 @@ The simplest solution would be to:
 <pre class="block php"><code>$data = fORMDatabase::retrieve()-&gt;query(&quot;SELECT * FROM categorii&quot;);</code></pre>
 
 <p>
- This code would also be faster. If you need it to go through all of the processing with <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, you could write a class like the following, and have your records extend it instead of fActiveRecord:
+ This code would also be faster. If you need it to go through all of the processing with <a href="../docs/fActiveRecord.html">fActiveRecord</a>, you could write a class like the following, and have your records extend it instead of fActiveRecord:
 </p>
 <pre class="block php"><code>class TransparentRecord extends fActiveRecord {
     function pullValues() {
@@ -136,11 +136,11 @@ Well, you don't need to load data from the database twice to encode it. With the
 $values = $record-&gt;pullData();</code></pre>
 
 <p>
- Then you can use <a href="../flourishlib.com/api/fHTML.html#encode">fHTML::encode()</a> on the values in <code>$values</code>.
+ Then you can use <a href="../api/fHTML.html#encode">fHTML::encode()</a> on the values in <code>$values</code>.
 </p>
 
 <p>
-You other option is to use the built-in <code>encode</code> verb for columns in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects. If you have a column named <code>first_name</code>, you can call <code>$record-&gt;encodeFirstName()</code> to encode the data.
+You other option is to use the built-in <code>encode</code> verb for columns in <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects. If you have a column named <code>first_name</code>, you can call <code>$record-&gt;encodeFirstName()</code> to encode the data.
 </p>
 				</div>
 				

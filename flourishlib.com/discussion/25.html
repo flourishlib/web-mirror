@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,15 +54,15 @@
 <div class="body topic">
 	
 <p>
-would it make sense to have an optional parameter in <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> for the destination file name?
+would it make sense to have an optional parameter in <a href="../api/fUpload.html#move">fUpload::move()</a> for the destination file name?
 </p>
 
 <p>
-i can see a use case that makes an obvious conflict - say your destination directory is full of images named with a number that corresponds to a database entry's index, and then someone wants to upload a file they might have named '2.jpg'.  if you implemented <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> as documented, the user is going to get an erroneous conflict error, or worse yet they're going to inadvertently overwrite an existing '2.jpg' if you set enableOverwrite().
+i can see a use case that makes an obvious conflict - say your destination directory is full of images named with a number that corresponds to a database entry's index, and then someone wants to upload a file they might have named '2.jpg'.  if you implemented <a href="../docs/fUpload.html">fUpload</a> as documented, the user is going to get an erroneous conflict error, or worse yet they're going to inadvertently overwrite an existing '2.jpg' if you set enableOverwrite().
 </p>
 
 <p>
-of course there are ways around this case, but it seems to me <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> is the simpler place to resolve it, no?
+of course there are ways around this case, but it seems to me <a href="../api/fUpload.html#move">fUpload::move()</a> is the simpler place to resolve it, no?
 </p>
 </div>
 
@@ -76,7 +76,7 @@ of course there are ways around this case, but it seems to me <a href="../flouri
 				<div class="body" id="body-72">
 					
 <p>
-you know, i should learn to read a bit more.  <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> renames the file on conflict, and i should be using <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> anyway!
+you know, i should learn to read a bit more.  <a href="../api/fUpload.html#move">fUpload::move()</a> renames the file on conflict, and i should be using <a href="../docs/fORMFile.html">fORMFile</a> anyway!
 </p>
 
 <p>
@@ -99,11 +99,11 @@ sorry about that :)
 				<div class="body" id="body-74">
 					
 <p>
-Not a problem. In case you do need to use <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> without the ORM, it does have an option you can set to <a href="../flourishlib.com/docs/fUpload.html#SettingOptionsSecurity">overwrite a file when being moved</a>.
+Not a problem. In case you do need to use <a href="../docs/fUpload.html">fUpload</a> without the ORM, it does have an option you can set to <a href="../docs/fUpload.html#SettingOptionsSecurity">overwrite a file when being moved</a>.
 </p>
 
 <p>
-In addition, you can manually rename a file after the move with code such as below. Since <a href="../flourishlib.com/api/fUpload.html#move">fUpload::move()</a> returns an <a href="../flourishlib.com/docs/fFile.html">fFile</a> (or <a href="../flourishlib.com/docs/fImage.html">fImage</a>) object, you can chain a method call from the return value.
+In addition, you can manually rename a file after the move with code such as below. Since <a href="../api/fUpload.html#move">fUpload::move()</a> returns an <a href="../docs/fFile.html">fFile</a> (or <a href="../docs/fImage.html">fImage</a>) object, you can chain a method call from the return value.
 </p>
 <pre class="block php"><code>// Ensure the file is always temp.jpg
 $upload   = new fUpload();
@@ -125,7 +125,7 @@ $temp_jpg = $upload-&gt;move($dir, 'file')-&gt;rename($dir . 'temp.jpg');</code>
 				<div class="body" id="body-161">
 					
 <p>
-Sorry to bump an old thread, but i'm wondering if you could tell me how one might make <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> use the primary key as the filename?
+Sorry to bump an old thread, but i'm wondering if you could tell me how one might make <a href="../docs/fORMFile.html">fORMFile</a> use the primary key as the filename?
 </p>
 
 <p>
@@ -148,7 +148,7 @@ thank you!
 				<div class="body" id="body-163">
 					
 <p>
-You will likely need to write a callback and register it with the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> hook <code>'post::store()'</code>. You can see the page <a href="../flourishlib.com/docs/fORM.html">fORM</a>#AddingFunctionalitytofActiveRecord for more info about adding functionality to <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+You will likely need to write a callback and register it with the <a href="../docs/fActiveRecord.html">fActiveRecord</a> hook <code>'post::store()'</code>. You can see the page <a href="../docs/fORM.html">fORM</a>#AddingFunctionalitytofActiveRecord for more info about adding functionality to <a href="../docs/fActiveRecord.html">fActiveRecord</a>.
 </p>
 
 <p>
@@ -177,7 +177,7 @@ Here is a quick little example that should work, however I have not tested it:
 }</code></pre>
 
 <p>
- On a side note, this example (and another post in the forums here) shows that it would be a little nicer if <a href="../flourishlib.com/api/fImage.html#rename">fImage::rename()</a> would allow just a filename rather than a whole file path. I'll open a ticket for that so that it gets done.
+ On a side note, this example (and another post in the forums here) shows that it would be a little nicer if <a href="../api/fImage.html#rename">fImage::rename()</a> would allow just a filename rather than a whole file path. I'll open a ticket for that so that it gets done.
 </p>
 				</div>
 				
@@ -196,7 +196,7 @@ Here is a quick little example that should work, however I have not tested it:
 				<div class="body" id="body-184">
 					
 <p>
-Hey Will, I tried your example (with a few tweaks, as you're using variables like $image and $user which were never created :) ), but it seems to only work for existing records.  If the record is just being created, an <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception is thrown saying that a record with the same primary key already exists.  It seems like there's some problem using store() in a post::store() callback...
+Hey Will, I tried your example (with a few tweaks, as you're using variables like $image and $user which were never created :) ), but it seems to only work for existing records.  If the record is just being created, an <a href="../docs/fValidation.html">fValidation</a> exception is thrown saying that a record with the same primary key already exists.  It seems like there's some problem using store() in a post::store() callback...
 </p>
 
 <p>

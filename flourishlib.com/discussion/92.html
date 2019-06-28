@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,11 +58,11 @@ Hello.
 </p>
 
 <p>
-I've been using the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class and I really like the functionality. However when I started looking at the memory usage of my script I noticed that the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object stands for a whooping 2 megabytes of memory (about half of the memory that my script uses).
+I've been using the <a href="../docs/fActiveRecord.html">fActiveRecord</a> class and I really like the functionality. However when I started looking at the memory usage of my script I noticed that the <a href="../docs/fActiveRecord.html">fActiveRecord</a> object stands for a whooping 2 megabytes of memory (about half of the memory that my script uses).
 </p>
 
 <p>
-Is this normal/expected? If one instance of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> pulls that much creating an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> could be potentially devastating memory wise.
+Is this normal/expected? If one instance of <a href="../docs/fActiveRecord.html">fActiveRecord</a> pulls that much creating an <a href="../docs/fRecordSet.html">fRecordSet</a> could be potentially devastating memory wise.
 </p>
 
 <p>
@@ -103,11 +103,11 @@ At my company we have not seen any memory issues, however that doesn't mean ther
 				<div class="body" id="body-269">
 					
 <p>
-There's 13 columns in the table. The database contains 20 tables so it's not that big (I think). Anyway the cost of about 2 megabytes of memory seems to be a constant one time cost, not something that increases as more <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects are instantiated. I put in some dummy data and made an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> of them and the memory usage for that was pretty much the same.
+There's 13 columns in the table. The database contains 20 tables so it's not that big (I think). Anyway the cost of about 2 megabytes of memory seems to be a constant one time cost, not something that increases as more <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects are instantiated. I put in some dummy data and made an <a href="../docs/fRecordSet.html">fRecordSet</a> of them and the memory usage for that was pretty much the same.
 </p>
 
 <p>
-What is the &quot;normal&quot; cost for an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> instantiation? Does it tend to end up in the megabyte class or are they usually smaller?
+What is the &quot;normal&quot; cost for an <a href="../docs/fActiveRecord.html">fActiveRecord</a> instantiation? Does it tend to end up in the megabyte class or are they usually smaller?
 </p>
 
 <p>
@@ -130,18 +130,18 @@ Kindly, Marcus.
 				<div class="body" id="body-271">
 					
 <p>
-Each instance of an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class holds the following data:
+Each instance of an <a href="../docs/fActiveRecord.html">fActiveRecord</a> class holds the following data:
 </p>
 
 <ul>
 <li>An array of values, in the form <code>column =&gt; value</code></li>
 <li>An array of array of old values, if they've changes. This is in the form <code>column =&gt; old_values_array</code>.</li>
-<li>An array of cached related records. This holds references to record sets of related records that have been built. If you have a <code>User</code> and call <code>$user-&gt;buildGroups()</code> it keeps a reference to that <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> so you can call it again without going to the database and re-fetching it. The nice thing is that by themselves <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> are pretty light weight since they are mostly holding references to <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects.</li>
+<li>An array of cached related records. This holds references to record sets of related records that have been built. If you have a <code>User</code> and call <code>$user-&gt;buildGroups()</code> it keeps a reference to that <a href="../docs/fRecordSet.html">fRecordSet</a> so you can call it again without going to the database and re-fetching it. The nice thing is that by themselves <a href="../docs/fRecordSet.html">fRecordSet</a> are pretty light weight since they are mostly holding references to <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects.</li>
 <li>A cache array, that is completely up to the end-developer to use</li>
 </ul>
 
 <p>
-For a typical <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that models a table not storing large text blocks or binary blobs, I would expect usage to be 1k or so. 1k is basically 1024 characters as long as you don't have a lot of multi-byte characters.
+For a typical <a href="../docs/fActiveRecord.html">fActiveRecord</a> that models a table not storing large text blocks or binary blobs, I would expect usage to be 1k or so. 1k is basically 1024 characters as long as you don't have a lot of multi-byte characters.
 </p>
 
 <p>

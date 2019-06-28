@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -96,11 +96,11 @@ Just want to be sure. Thanks.
 				<div class="body" id="body-1455">
 					
 <p>
-Yes, <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> escape all <em>values</em> before executing SQL. Anything passed to <code>-&gt;set()</code>, pulled in via <code>-&gt;populate()</code> and any values passed to the <code>$where_conditions</code> parameter of <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> are all automatically escaped to prevent SQL injection.
+Yes, <a href="../docs/fActiveRecord.html">fActiveRecord</a> and <a href="../docs/fRecordSet.html">fRecordSet</a> escape all <em>values</em> before executing SQL. Anything passed to <code>-&gt;set()</code>, pulled in via <code>-&gt;populate()</code> and any values passed to the <code>$where_conditions</code> parameter of <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> are all automatically escaped to prevent SQL injection.
 </p>
 
 <p>
-The only thing to note it that the the expression (they array keys) used in the <code>$order_bys</code> parameter of <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> is not escaped since it allows arbitrary SQL expressions and not just values. You aren't gonna want to let users specify arbitrary order bys anyway, so the best solution is to create an array of valid options if you let the user affect the order.
+The only thing to note it that the the expression (they array keys) used in the <code>$order_bys</code> parameter of <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> is not escaped since it allows arbitrary SQL expressions and not just values. You aren't gonna want to let users specify arbitrary order bys anyway, so the best solution is to create an array of valid options if you let the user affect the order.
 </p>
 				</div>
 				

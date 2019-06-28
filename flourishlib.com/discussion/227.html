@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -132,7 +132,7 @@ Using a double build such as:
 </p>
 
 <p>
-So, the SQL way looks as the route to follow. However, the <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> method seems to fail on getting the data of two tables, as well, as shown above. Actually, using a syntax such as:
+So, the SQL way looks as the route to follow. However, the <a href="../api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> method seems to fail on getting the data of two tables, as well, as shown above. Actually, using a syntax such as:
 </p>
 <pre class="block sql"><code>SELECT g.*, u.* FROM groups g, user_groups u WHERE u.id_group = g.id AND u.id_user = 1</code></pre>
 
@@ -141,7 +141,7 @@ So, the SQL way looks as the route to follow. However, the <a href="../flourishl
 </p>
 
 <p>
-Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>' with message 'The SQL statement specified, SELECT g.*, u.* FROM groups g, user_groups u WHERE u.id_group = g.id AND u.id_user = 1, does not appear to be in the form SELECT * FROM table'
+Fatal error: Uncaught exception '<a href="../docs/fProgrammerException.html">fProgrammerException</a>' with message 'The SQL statement specified, SELECT g.*, u.* FROM groups g, user_groups u WHERE u.id_group = g.id AND u.id_user = 1, does not appear to be in the form SELECT * FROM table'
 </p>
 
 <p>
@@ -176,7 +176,7 @@ A.
 				<div class="body" id="body-721">
 					
 <p>
-Well, I've seen that the documentation on <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> says &quot;the SQL statement should select all columns from a single table&quot;, so this route seems closed. Finally, this is the way I have got to get the data from the two tables:
+Well, I've seen that the documentation on <a href="../docs/fRecordSet.html">fRecordSet</a> says &quot;the SQL statement should select all columns from a single table&quot;, so this route seems closed. Finally, this is the way I have got to get the data from the two tables:
 </p>
 
 <p>
@@ -253,15 +253,15 @@ A.
 				<div class="body" id="body-722">
 					
 <p>
-An <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object models a single row in a single table in the database. The database schema is introspected and the class is configured based on the columns in a table. This introspection means that if you need to pull in data from multiple tables that multiple objects will need to be created.
+An <a href="../docs/fActiveRecord.html">fActiveRecord</a> object models a single row in a single table in the database. The database schema is introspected and the class is configured based on the columns in a table. This introspection means that if you need to pull in data from multiple tables that multiple objects will need to be created.
 </p>
 
 <p>
-In your first post, you are selecting data from two tables, <code>groups</code> and <code>user_groups</code>. When the Group class is looping over the column to unescape them it runs into a column that doesn't exist in the <code>groups</code> table and appropriately throws an exception. As a side note, for security purposes you are going to want to use <a href="../flourishlib.com/docs/fDatabase.html#EscapingDataSecurity">fDatabase placeholders</a> for placing user input into your SQL strings since raw embedding opens you up to SQL injection.
+In your first post, you are selecting data from two tables, <code>groups</code> and <code>user_groups</code>. When the Group class is looping over the column to unescape them it runs into a column that doesn't exist in the <code>groups</code> table and appropriately throws an exception. As a side note, for security purposes you are going to want to use <a href="../docs/fDatabase.html#EscapingDataSecurity">fDatabase placeholders</a> for placing user input into your SQL strings since raw embedding opens you up to SQL injection.
 </p>
 
 <p>
-In your third example, it appears to me that you've reached the correct algorithm to get the data you need. And yes, you can only <code>create</code> a record in a many-to-one or one-to-one relationship since there is a single record on the other end of the relationship. For many-to-many and one-to-many you need to perform a <code>build</code> since there can be multiple and you will get an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> back.
+In your third example, it appears to me that you've reached the correct algorithm to get the data you need. And yes, you can only <code>create</code> a record in a many-to-one or one-to-one relationship since there is a single record on the other end of the relationship. For many-to-many and one-to-many you need to perform a <code>build</code> since there can be multiple and you will get an <a href="../docs/fRecordSet.html">fRecordSet</a> back.
 </p>
 
 <p>

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,11 +54,11 @@
 <div class="body topic">
 	
 <p>
-Looking into multiple databases I was curious as to what <a href="../flourishlib.com/docs/fORMSchema.html">fORMSchema</a> would do with regards to retrieving the schema of particular databases and I noted that the documentation (as far as code examples go) is fairly limited, but the API does reference that you can pass a class, with which the schema will be &quot;used with.&quot;
+Looking into multiple databases I was curious as to what <a href="../docs/fORMSchema.html">fORMSchema</a> would do with regards to retrieving the schema of particular databases and I noted that the documentation (as far as code examples go) is fairly limited, but the API does reference that you can pass a class, with which the schema will be &quot;used with.&quot;
 </p>
 
 <p>
-My understanding of this is likely that it would look for a class to database mapping and retrieve the schema of that database, but since the schema object returned is on the database, wouldn't it make more sense to have the database name as set up with <a href="../flourishlib.com/api/fORMDatabase.html#attach">fORMDatabase::attach()</a> used instead of a class?
+My understanding of this is likely that it would look for a class to database mapping and retrieve the schema of that database, but since the schema object returned is on the database, wouldn't it make more sense to have the database name as set up with <a href="../api/fORMDatabase.html#attach">fORMDatabase::attach()</a> used instead of a class?
 </p>
 
 <p>
@@ -82,7 +82,7 @@ I guess this is partially a &quot;ticket&quot; of some sorts, but perhaps I'm mi
 				<div class="body" id="body-1079">
 					
 <p>
-The purpose of <a href="../flourishlib.com/api/fORMSchema.html#retrieve">fORMSchema::retrieve()</a> is to retrieve the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> for use with <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. Thus, instead of having to look up what database an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class is in and pass it to <a href="../flourishlib.com/api/fORMSchema.html#retrieve">fORMSchema::retrieve()</a>, you simply pass the class name. Since any related class must be in the same database, the schema object will give you access to all related classes/tables also.
+The purpose of <a href="../api/fORMSchema.html#retrieve">fORMSchema::retrieve()</a> is to retrieve the <a href="../docs/fSchema.html">fSchema</a> for use with <a href="../docs/fActiveRecord.html">fActiveRecord</a>. Thus, instead of having to look up what database an <a href="../docs/fActiveRecord.html">fActiveRecord</a> class is in and pass it to <a href="../api/fORMSchema.html#retrieve">fORMSchema::retrieve()</a>, you simply pass the class name. Since any related class must be in the same database, the schema object will give you access to all related classes/tables also.
 </p>
 				</div>
 				
@@ -105,15 +105,15 @@ If this is the case, is there any way to easily determine all tables across only
 </p>
 
 <p>
-This is kind of my point with regards to using the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class name... if I am just trying to get a list of tables across all attached databases I now have to pick a random <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> for each attached database which has been mapped to that database in order to get tables.
+This is kind of my point with regards to using the <a href="../docs/fActiveRecord.html">fActiveRecord</a> class name... if I am just trying to get a list of tables across all attached databases I now have to pick a random <a href="../docs/fActiveRecord.html">fActiveRecord</a> for each attached database which has been mapped to that database in order to get tables.
 </p>
 
 <p>
-This is similarly constrained with <a href="../flourishlib.com/api/fORMDatabase.html#retrieve">fORMDatabase::retrieve()</a>.
+This is similarly constrained with <a href="../api/fORMDatabase.html#retrieve">fORMDatabase::retrieve()</a>.
 </p>
 
 <p>
-In short, assuming I know my attached database names but perhaps don't have any class to database mappings yet, or perhaps not even any <a href="../flourishlib.com/docs/fActiveRecords.html">fActiveRecords</a> at all, but I just want a list of tables on each...any way to do this at all?
+In short, assuming I know my attached database names but perhaps don't have any class to database mappings yet, or perhaps not even any <a href="../docs/fActiveRecords.html">fActiveRecords</a> at all, but I just want a list of tables on each...any way to do this at all?
 </p>
 				</div>
 				
@@ -155,7 +155,7 @@ It sounds to me like you need a totally different mechanism for the management o
 				<div class="body" id="body-1083">
 					
 <p>
-I'm assuming you're talking about the attached names and not the actual database names.  I did notice the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> also has the getDatabases() method, but that appears to be all databases across the server:
+I'm assuming you're talking about the attached names and not the actual database names.  I did notice the <a href="../docs/fSchema.html">fSchema</a> also has the getDatabases() method, but that appears to be all databases across the server:
 </p>
 <pre><code>[/var/www/dotink.org/inkwell/includes]# print_r(fORMSchema::retrieve()-&gt;getDatabases());
 Array
@@ -170,7 +170,7 @@ Array
 )</code></pre>
 
 <p>
- It seems the only way I could likely do this is to keep independent track of the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> objects by their attached names, and then manually create <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> objects per those <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> objects.  Well, back to the drawing board there.  Much appreciated.
+ It seems the only way I could likely do this is to keep independent track of the <a href="../docs/fDatabase.html">fDatabase</a> objects by their attached names, and then manually create <a href="../docs/fSchema.html">fSchema</a> objects per those <a href="../docs/fDatabase.html">fDatabase</a> objects.  Well, back to the drawing board there.  Much appreciated.
 </p>
 				</div>
 				

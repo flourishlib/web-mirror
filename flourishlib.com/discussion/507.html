@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Hi Everyone, hope you're all doing well. I've been using the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class for a while, and decided I wanted to learn a bit more about the <a href="../flourishlib.com/docs/fORM.html">fORM</a> layer. I created a very basic site and a simple database, and everything seems correct, but the query won't execute. It seems Flourish is quoting the table name in SQL, which MySQL doesn't like. Pasting the generated SQL into a terminal also causes the error - but removing the quotes works fine!
+Hi Everyone, hope you're all doing well. I've been using the <a href="../docs/fDatabase.html">fDatabase</a> class for a while, and decided I wanted to learn a bit more about the <a href="../docs/fORM.html">fORM</a> layer. I created a very basic site and a simple database, and everything seems correct, but the query won't execute. It seems Flourish is quoting the table name in SQL, which MySQL doesn't like. Pasting the generated SQL into a terminal also causes the error - but removing the quotes works fine!
 </p>
 <pre class="block sql"><code>USE flourish_test;
 CREATE TABLE books (
@@ -118,7 +118,7 @@ So, to address the issue of quoting, Flourish uses the SQL standard for quoting,
 </p>
 
 <p>
-In <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, right after connecting to MySQL, the following queries are executed. Try executing these and then running the SQL statement:
+In <a href="../docs/fDatabase.html">fDatabase</a>, right after connecting to MySQL, the following queries are executed. Try executing these and then running the SQL statement:
 </p>
 <pre class="block sql"><code>SET SQL_MODE = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE';
 SET NAMES 'utf8';
@@ -195,7 +195,7 @@ So the issue isn't a SQL query being run. For some reason the ORM is having trou
 </p>
 
 <p>
-It seems like your backtrace is incomplete since it should include a line referring to <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>, however I am most familiar with the output of <a href="../flourishlib.com/docs/fCore.html">fCore</a> backtraces. Can you call <code>fCore::enableExceptionHandling('html');</code> right before you call <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a>?
+It seems like your backtrace is incomplete since it should include a line referring to <a href="../docs/fGrammar.html">fGrammar</a>, however I am most familiar with the output of <a href="../docs/fCore.html">fCore</a> backtraces. Can you call <code>fCore::enableExceptionHandling('html');</code> right before you call <a href="../api/fActiveRecord.html#store">fActiveRecord::store()</a>?
 </p>
 				</div>
 				
@@ -214,7 +214,7 @@ It seems like your backtrace is incomplete since it should include a line referr
 				<div class="body" id="body-1491">
 					
 <p>
-Great, I think right in the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> section would be perfect!
+Great, I think right in the <a href="../docs/fDatabase.html">fDatabase</a> section would be perfect!
 </p>
 
 <p>
@@ -355,7 +355,7 @@ The output looks like the output of <code>var_dump()</code>. It is possible you 
 				<div class="body" id="body-1499">
 					
 <p>
-Hmm, good thought but no - even searching all files in the directory only turns up 3 var_dump statements - all in Flourish lib itself (<a href="../flourishlib.com/docs/fCore.html">fCore</a> @ 558, <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> @ 2691 and <a href="../flourishlib.com/docs/fException.html">fException</a> @ 91).
+Hmm, good thought but no - even searching all files in the directory only turns up 3 var_dump statements - all in Flourish lib itself (<a href="../docs/fCore.html">fCore</a> @ 558, <a href="../docs/fDatabase.html">fDatabase</a> @ 2691 and <a href="../docs/fException.html">fException</a> @ 91).
 </p>
 
 <p>
@@ -415,11 +415,11 @@ fORM::mapClassToTable( 'Book', 'books' );
 				<div class="body" id="body-1546">
 					
 <p>
-Hey Will, any ideas on this? Could there be a setting I have that's causing it to log SQL interaction? I can use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, but I'd rather use the ORM class.
+Hey Will, any ideas on this? Could there be a setting I have that's causing it to log SQL interaction? I can use <a href="../docs/fDatabase.html">fDatabase</a>, but I'd rather use the ORM class.
 </p>
 
 <p>
-EDIT: I commented out the var_dump statement in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> (line 2691) and that stopped it. I was trying to avoid actually changing the source. Maybe it was because I grabbed the latest from GitHub. Sorry for the confusion!
+EDIT: I commented out the var_dump statement in <a href="../docs/fDatabase.html">fDatabase</a> (line 2691) and that stopped it. I was trying to avoid actually changing the source. Maybe it was because I grabbed the latest from GitHub. Sorry for the confusion!
 </p>
 				</div>
 				
@@ -438,7 +438,7 @@ EDIT: I commented out the var_dump statement in <a href="../flourishlib.com/docs
 				<div class="body" id="body-1548">
 					
 <p>
-<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> should not contain any calls to var_dump(), so that is probably your culprit.
+<a href="../docs/fDatabase.html">fDatabase</a> should not contain any calls to var_dump(), so that is probably your culprit.
 </p>
 				</div>
 				

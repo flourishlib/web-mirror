@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -285,7 +285,7 @@ foreach ($users_groups as $users_group) {
 }</code></pre>
 
 <p>
- So here <code>$users_groups</code> is an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object. There is also a <code>build</code> method for <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> that creates another <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> from a many-to-one relationship. Thus to get all of the groups a user is in, you can call:
+ So here <code>$users_groups</code> is an <a href="../docs/fRecordSet.html">fRecordSet</a> object. There is also a <code>build</code> method for <a href="../docs/fRecordSet.html">fRecordSet</a> that creates another <a href="../docs/fRecordSet.html">fRecordSet</a> from a many-to-one relationship. Thus to get all of the groups a user is in, you can call:
 </p>
 <pre class="block php"><code>$groups = $user-&gt;buildUsersGroups()-&gt;buildGroups();</code></pre>
 
@@ -462,7 +462,7 @@ $group-&gt;store();</code></pre>
 				<div class="body" id="body-706">
 					
 <p>
-I tested it and in previous revisions, if you pass with an array, but the original multi-column primary key, it does work. In r819 I changed it so you can also pass a single <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object.
+I tested it and in previous revisions, if you pass with an array, but the original multi-column primary key, it does work. In r819 I changed it so you can also pass a single <a href="../docs/fActiveRecord.html">fActiveRecord</a> object.
 </p>
 				</div>
 				
@@ -489,11 +489,11 @@ I'm actually going to be looking into the associate issue right now, I'll let yo
 </p>
 
 <p>
-In terms of the operations that are possible for column, you should check out <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#ColumnOperations. That describes the <code>prepare</code> and <code>encode</code> verbs for columns. The section <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations describes all of the operations that can be performed on an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> for manipulating related records.
+In terms of the operations that are possible for column, you should check out <a href="../docs/fActiveRecord.html">fActiveRecord</a>#ColumnOperations. That describes the <code>prepare</code> and <code>encode</code> verbs for columns. The section <a href="../docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations describes all of the operations that can be performed on an <a href="../docs/fActiveRecord.html">fActiveRecord</a> for manipulating related records.
 </p>
 
 <p>
-The <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> page has all of the documentation for the class, but the <code>build</code> action is described at <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>#FromRelatedRecords.
+The <a href="../docs/fRecordSet.html">fRecordSet</a> page has all of the documentation for the class, but the <code>build</code> action is described at <a href="../docs/fRecordSet.html">fRecordSet</a>#FromRelatedRecords.
 </p>
 
 <p>
@@ -518,7 +518,7 @@ If you want to learn about the action verbs used throughout Flourish, check out 
 				<div class="body" id="body-714">
 					<blockquote>
 <p>
- There is also a <code>build</code> method for <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> that creates another <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> from a many-to-one relationship. Thus to get all of the groups a user is in, you can call:    $groups = $user-&gt;buildUsersGroups()-&gt;buildGroups();
+ There is also a <code>build</code> method for <a href="../docs/fRecordSet.html">fRecordSet</a> that creates another <a href="../docs/fRecordSet.html">fRecordSet</a> from a many-to-one relationship. Thus to get all of the groups a user is in, you can call:    $groups = $user-&gt;buildUsersGroups()-&gt;buildGroups();
 </p>
 </blockquote>
 <p>
@@ -541,20 +541,20 @@ Yes, that 'build' works. However, it seems it lacks the pagination feature descr
 				<div class="body" id="body-716">
 					
 <p>
-Yes, the build methods on <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> will create the whole set of record since it used a cached version of the records when possible, and also uses those cached record when associating records.
+Yes, the build methods on <a href="../docs/fActiveRecord.html">fActiveRecord</a> will create the whole set of record since it used a cached version of the records when possible, and also uses those cached record when associating records.
 </p>
 
 <p>
-You have two choices for build record related to <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects:
+You have two choices for build record related to <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects:
 </p>
 
 <ol>
-<li>Call the full build and use <a href="../flourishlib.com/api/fRecordSet.html#slice">fRecordSet::slice()</a></li>
-<li>Perform an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> and specify the appropriate foreign key in the where conditions array</li>
+<li>Call the full build and use <a href="../api/fRecordSet.html#slice">fRecordSet::slice()</a></li>
+<li>Perform an <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> and specify the appropriate foreign key in the where conditions array</li>
 </ol>
 
 <p>
-In terms of doing pagination in <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, just use the SQL <code>LIMIT</code> and <code>OFFSET</code> clauses. For <a href="../flourishlib.com/api/fRecordSet.html#buildFromArray">fRecordSet::buildFromArray()</a>, use array slice before passing the array in.
+In terms of doing pagination in <a href="../api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, just use the SQL <code>LIMIT</code> and <code>OFFSET</code> clauses. For <a href="../api/fRecordSet.html#buildFromArray">fRecordSet::buildFromArray()</a>, use array slice before passing the array in.
 </p>
 				</div>
 				

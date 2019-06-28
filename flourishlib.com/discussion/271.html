@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I have no idea if this is possible with the way things are built or how much time it would take, but allowing overloading of the buildRelationship() functions would be really awesome. This would essentially mean that you could send in the same arguments as in <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> minus the class since that's already set.
+I have no idea if this is possible with the way things are built or how much time it would take, but allowing overloading of the buildRelationship() functions would be really awesome. This would essentially mean that you could send in the same arguments as in <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> minus the class since that's already set.
 </p>
 </div>
 
@@ -116,7 +116,7 @@ $b-&gt;buildRoads();
 				<div class="body" id="body-841">
 					
 <p>
-I was primarily thinking of being able to restrict and sort the data you get back from it in the same way that you can when you do a normal <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>.
+I was primarily thinking of being able to restrict and sort the data you get back from it in the same way that you can when you do a normal <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>.
 </p>
 
 <p>
@@ -125,7 +125,7 @@ As the class name is already given that can be excluded but being able to do for
 <pre class="block php"><code>$b-&gt;buildRoads(array(&quot;road_length&gt;&quot; =&gt; 5), array(&quot;road_length&quot; =&gt; &quot;asc&quot;));</code></pre>
 
 <p>
- Assuming of course that there is a road_length column and it's an INT. Right now if you want the data returned by the relationship getter to be sorted you have to do that through <a href="../flourishlib.com/api/fORMRelated.html#setOrderBys">fORMRelated::setOrderBys()</a> which of course works but there's no way to put in a WHERE clause or limiting the number of returned records.
+ Assuming of course that there is a road_length column and it's an INT. Right now if you want the data returned by the relationship getter to be sorted you have to do that through <a href="../api/fORMRelated.html#setOrderBys">fORMRelated::setOrderBys()</a> which of course works but there's no way to put in a WHERE clause or limiting the number of returned records.
 </p>
 				</div>
 				
@@ -144,11 +144,11 @@ As the class name is already given that can be excluded but being able to do for
 				<div class="body" id="body-845">
 					
 <p>
-The reason such functionality does not exist is for the sake of clarity. When calling a <code>build{RelatedRecords}()</code> method on an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, it will return all related records for the related class. Now, due to things like <code>populate{RelatedRecords}()</code>, the related records may or may not be coming from the database. In addition, if the related records have been retrieved from the database already, they are cached to prevent excess database calls. Because of this, there is no way to allow for the exact same functionality as <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>.
+The reason such functionality does not exist is for the sake of clarity. When calling a <code>build{RelatedRecords}()</code> method on an <a href="../docs/fActiveRecord.html">fActiveRecord</a>, it will return all related records for the related class. Now, due to things like <code>populate{RelatedRecords}()</code>, the related records may or may not be coming from the database. In addition, if the related records have been retrieved from the database already, they are cached to prevent excess database calls. Because of this, there is no way to allow for the exact same functionality as <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>.
 </p>
 
 <p>
-You can use <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> on the returned record set, however that may be inefficient if you have many related records and may not provide all of the same functionality as the SQL-based build.
+You can use <a href="../api/fRecordSet.html#filter">fRecordSet::filter()</a> on the returned record set, however that may be inefficient if you have many related records and may not provide all of the same functionality as the SQL-based build.
 </p>
 
 <p>
@@ -156,7 +156,7 @@ I've considered changing the API so that if an array of conditions and order bys
 </p>
 
 <p>
-I have to be honest, I also haven't spent too much time trying to work this all out due to what I view the benefits of an ORM being. I think one of main benefits of an ORM isn't so much writing less SQL, but encapsulating all of the business rules and making conditionals cleaner. By that, I mean that writing methods to handle slight variations in where clauses ends up creating messy looking concatenation of SQL strings. <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> removes that by encapsulating all of the SQL string concatenation without really abstracting away much of the syntax. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> provides a nice container to wrap all of the business logic up into. Thus, when I want to do this sort of thing, I wrap all of the conditionals and <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> operations up into methods on my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes. Here is an example:
+I have to be honest, I also haven't spent too much time trying to work this all out due to what I view the benefits of an ORM being. I think one of main benefits of an ORM isn't so much writing less SQL, but encapsulating all of the business rules and making conditionals cleaner. By that, I mean that writing methods to handle slight variations in where clauses ends up creating messy looking concatenation of SQL strings. <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> removes that by encapsulating all of the SQL string concatenation without really abstracting away much of the syntax. <a href="../docs/fActiveRecord.html">fActiveRecord</a> provides a nice container to wrap all of the business logic up into. Thus, when I want to do this sort of thing, I wrap all of the conditionals and <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> operations up into methods on my <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes. Here is an example:
 </p>
 <pre class="block php"><code>class User extends fActiveRecord
 {
@@ -191,7 +191,7 @@ I have to be honest, I also haven't spent too much time trying to work this all 
 </p>
 
 <p>
-Should I create a prefix other than <code>build</code> for always querying the database, instead of possibly hitting the cache? Should I try to find a way to translate <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> where conditions into <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> conditions, and use <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> internally when a record set has already been cached?
+Should I create a prefix other than <code>build</code> for always querying the database, instead of possibly hitting the cache? Should I try to find a way to translate <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> where conditions into <a href="../api/fRecordSet.html#filter">fRecordSet::filter()</a> conditions, and use <a href="../api/fRecordSet.html#filter">fRecordSet::filter()</a> internally when a record set has already been cached?
 </p>
 
 <p>

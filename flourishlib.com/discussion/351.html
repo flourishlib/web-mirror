@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I want to use <a href="../flourishlib.com/docs/fORM.html">fORM</a>, but I'm curious as to how fast it is when you map a table to a class... every time the site loads, it has to describe the table, and generate the class again?  How does this work?  Where do you actually map the table to class, am I missing something?
+I want to use <a href="../docs/fORM.html">fORM</a>, but I'm curious as to how fast it is when you map a table to a class... every time the site loads, it has to describe the table, and generate the class again?  How does this work?  Where do you actually map the table to class, am I missing something?
 </p>
 </div>
 
@@ -72,7 +72,7 @@ Hi - it is a good question. There always some cost of this kind of abstraction.
 </p>
 
 <p>
-First of all the class are not really generated, however you can choose to do so (see <a href="../flourishlib.com/docs/fORM.html#DynamicfActiveRecordClasses">http://flourishlib.com/docs/fORM#DynamicfActiveRecordClasses</a>). But you make your classes inherit from <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+First of all the class are not really generated, however you can choose to do so (see <a href="../docs/fORM.html#DynamicfActiveRecordClasses">http://flourishlib.com/docs/fORM#DynamicfActiveRecordClasses</a>). But you make your classes inherit from <a href="../docs/fActiveRecord.html">fActiveRecord</a>.
 </p>
 
 <p>
@@ -81,7 +81,7 @@ Flourish will read the database schema upon each request. I honestly don't know 
 <pre class="block php"><code>fORM::enableSchemaCaching(new fCache('file', '/file/path/to/cache/file'));</code></pre>
 
 <p>
- (see <a href="../flourishlib.com/docs/fORM.html#SchemaCaching">http://flourishlib.com/docs/fORM#SchemaCaching</a>)
+ (see <a href="../docs/fORM.html#SchemaCaching">http://flourishlib.com/docs/fORM#SchemaCaching</a>)
 </p>
 
 <p>
@@ -126,11 +126,11 @@ foreach ($authors as $author) {
 				<div class="body" id="body-1089">
 					
 <p>
-If you don't use <a href="../flourishlib.com/api/fORM.html#enableSchemaCaching">fORM::enableSchemaCaching()</a>, there will usually end up being around <em>2n</em> queries executed to introspect the database, where <em>n</em> is the number of tables in the database. I know on MySQL, PostgreSQL and SQLite, these queries tend to take on the order of 1/10000 of a second each. During development I usually leave <a href="../flourishlib.com/api/fORM.html#enableSchemaCaching">fORM::enableSchemaCaching()</a> off so that the code recognizes changes in the database structure without any work on my part. Once the site launches, I set up the caching to improve performance.
+If you don't use <a href="../api/fORM.html#enableSchemaCaching">fORM::enableSchemaCaching()</a>, there will usually end up being around <em>2n</em> queries executed to introspect the database, where <em>n</em> is the number of tables in the database. I know on MySQL, PostgreSQL and SQLite, these queries tend to take on the order of 1/10000 of a second each. During development I usually leave <a href="../api/fORM.html#enableSchemaCaching">fORM::enableSchemaCaching()</a> off so that the code recognizes changes in the database structure without any work on my part. Once the site launches, I set up the caching to improve performance.
 </p>
 
 <p>
-The way that all of the automatic ORM functionality works is through the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> class. This class inspects the database and returns information about tables, column and relationships. This database information is then used by <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to automatically respond to unrecognized method calls. Much of the functionality is done via the PHP 5 <code>__call</code> magic method, which allows intercepting method calls to undefined methods. So wile the class is not regenerated on every page load, the database structure does drive the functionality. This type of dynamic programming in PHP is slower than explicitly defined methods.
+The way that all of the automatic ORM functionality works is through the <a href="../docs/fSchema.html">fSchema</a> class. This class inspects the database and returns information about tables, column and relationships. This database information is then used by <a href="../docs/fActiveRecord.html">fActiveRecord</a> to automatically respond to unrecognized method calls. Much of the functionality is done via the PHP 5 <code>__call</code> magic method, which allows intercepting method calls to undefined methods. So wile the class is not regenerated on every page load, the database structure does drive the functionality. This type of dynamic programming in PHP is slower than explicitly defined methods.
 </p>
 
 <p>
@@ -138,7 +138,7 @@ You definitely can see that the ORM performs more slowly than regular SQL statem
 </p>
 
 <p>
-Even having written the entire ORM I still drop back to SQL, and especially prepared statements when I need the utmost in database performance. When updating or inserting a bunch of simple records that don't have a lot of business logic in PHP, I will often user SQL queries. When I am interacting with just a few records, I find the benefits of the ORM outweigh the cost. Being able to write plugins and override methods is extremely powerful and allows saving quite a bit of development time and monotony. However, even when I use plain SQL, I always include the functionality inside of my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects to keep all interaction with the database together.
+Even having written the entire ORM I still drop back to SQL, and especially prepared statements when I need the utmost in database performance. When updating or inserting a bunch of simple records that don't have a lot of business logic in PHP, I will often user SQL queries. When I am interacting with just a few records, I find the benefits of the ORM outweigh the cost. Being able to write plugins and override methods is extremely powerful and allows saving quite a bit of development time and monotony. However, even when I use plain SQL, I always include the functionality inside of my <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects to keep all interaction with the database together.
 </p>
 
 <p>

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I've been playing with flourish for many months now.  I love it.  Unfortunately, I never could figure out how to work with recordsets properly.  Sometimes I could get them to work. Other times they wouldn't.  In frustration, I gave up and just did everything with raw SQL and <a href="../flourishlib.com/docs/fResult.html">fResult</a>.
+I've been playing with flourish for many months now.  I love it.  Unfortunately, I never could figure out how to work with recordsets properly.  Sometimes I could get them to work. Other times they wouldn't.  In frustration, I gave up and just did everything with raw SQL and <a href="../docs/fResult.html">fResult</a>.
 </p>
 
 <p>
@@ -236,7 +236,7 @@ Any suggestions?
 				<div class="body" id="body-381">
 					
 <p>
-It appears your timing was just right to run across a bug in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that I introduced last week. If you get r694 or newer, you should be able to get !PegInfo to work properly.
+It appears your timing was just right to run across a bug in <a href="../docs/fActiveRecord.html">fActiveRecord</a> that I introduced last week. If you get r694 or newer, you should be able to get !PegInfo to work properly.
 </p>
 				</div>
 				
@@ -255,7 +255,7 @@ It appears your timing was just right to run across a bug in <a href="../flouris
 				<div class="body" id="body-382">
 					
 <p>
-Updating to r694 did the trick.  However, I don't understand why I needed the addCustomClassTableMapping in the first place.  Why would <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> think the table should be named peg_info vs. peg_infos?
+Updating to r694 did the trick.  However, I don't understand why I needed the addCustomClassTableMapping in the first place.  Why would <a href="../docs/fActiveRecord.html">fActiveRecord</a> think the table should be named peg_info vs. peg_infos?
 </p>
 				</div>
 				
@@ -282,11 +282,11 @@ First, a common pattern in database design is to have a table name be the plural
 </p>
 
 <p>
-Second, the word info is an abbreviation of information. Information is a word that is the same in both the singular and plural form. Thus, <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> was looking for the plural underscore notation version of PegInfo, which just so happens to be peg_info. In your case, you pluralized info with an s, which the code wasn't expecting.
+Second, the word info is an abbreviation of information. Information is a word that is the same in both the singular and plural form. Thus, <a href="../docs/fActiveRecord.html">fActiveRecord</a> was looking for the plural underscore notation version of PegInfo, which just so happens to be peg_info. In your case, you pluralized info with an s, which the code wasn't expecting.
 </p>
 
 <p>
-<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> is pretty smart about getting the proper form of common irregularly pluralized nouns. For instance it knows the plural of person is people, etc.
+<a href="../docs/fGrammar.html">fGrammar</a> is pretty smart about getting the proper form of common irregularly pluralized nouns. For instance it knows the plural of person is people, etc.
 </p>
 				</div>
 				
@@ -305,7 +305,7 @@ Second, the word info is an abbreviation of information. Information is a word t
 				<div class="body" id="body-384">
 					
 <p>
-Thanks for the clarification.  I'm used to the need for pluralized table names.  Unfortunately, I've become so used to it that I put an &quot;s&quot; et the end of every table name now.  I didn't realize <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a> was actually capable of determining proper pluralization.
+Thanks for the clarification.  I'm used to the need for pluralized table names.  Unfortunately, I've become so used to it that I put an &quot;s&quot; et the end of every table name now.  I didn't realize <a href="../docs/fGrammar.html">fGrammar</a> was actually capable of determining proper pluralization.
 </p>
 				</div>
 				

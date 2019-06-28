@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-What is the best way/where is the best place according to flourish standards to place code to detect database connection init failures as early as possible in the life of a page request? If I initialize a &quot;global&quot; <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object ($db = new <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>(..)) in my bootstrap, I obviously don't want to continue doing business as usual if for some reason the connection fails.
+What is the best way/where is the best place according to flourish standards to place code to detect database connection init failures as early as possible in the life of a page request? If I initialize a &quot;global&quot; <a href="../docs/fDatabase.html">fDatabase</a> object ($db = new <a href="../docs/fDatabase.html">fDatabase</a>(..)) in my bootstrap, I obviously don't want to continue doing business as usual if for some reason the connection fails.
 </p>
 
 <p>
@@ -92,7 +92,7 @@ catch (Exception $e)
 				<div class="body" id="body-1263">
 					
 <p>
-That is probably the best solution for now. I will be releasing some updates to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> in the near future that will allow for explicitly requesting the connection be made. I am also hoping to improve the exceptions that are thrown when <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> can't connect.
+That is probably the best solution for now. I will be releasing some updates to <a href="../docs/fDatabase.html">fDatabase</a> in the near future that will allow for explicitly requesting the connection be made. I am also hoping to improve the exceptions that are thrown when <a href="../docs/fDatabase.html">fDatabase</a> can't connect.
 </p>
 				</div>
 				

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -68,11 +68,11 @@ why, if i input in the database a text with some script, and i output with flowr
 				<div class="body" id="body-514">
 					
 <p>
-You are probably running into issues because of mixing character sets. You mentioned the MySQL database is using a Romanian encoding, and you are calling <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a> for the Flourish stuff?
+You are probably running into issues because of mixing character sets. You mentioned the MySQL database is using a Romanian encoding, and you are calling <a href="../api/fHTML.html#sendHeader">fHTML::sendHeader()</a> for the Flourish stuff?
 </p>
 
 <p>
-<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> automatically sets the connection between the MySQL database and Flourish to use UTF-8 encoding, and MySQL should be able to properly convert the encoding from Romanian to UTF-8. My guess is that the admin interface that you built with something else is not really putting Romanian-encoded text into the database, but something else.
+<a href="../docs/fDatabase.html">fDatabase</a> automatically sets the connection between the MySQL database and Flourish to use UTF-8 encoding, and MySQL should be able to properly convert the encoding from Romanian to UTF-8. My guess is that the admin interface that you built with something else is not really putting Romanian-encoded text into the database, but something else.
 </p>
 
 <p>

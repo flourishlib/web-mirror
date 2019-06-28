@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-When using the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> class to send e-mails, certain from and to e-mail address combinations produce an error. It seems to have something to do with the $headers variable in the mail() function. When I remove this variable in line 1467, the error is gone.
+When using the <a href="../docs/fEmail.html">fEmail</a> class to send e-mails, certain from and to e-mail address combinations produce an error. It seems to have something to do with the $headers variable in the mail() function. When I remove this variable in line 1467, the error is gone.
 </p>
 
 <p>
@@ -107,12 +107,12 @@ Sorry for my slow repy.
 </p>
 
 <p>
-This is the error: Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>' with message 'An error occured while trying to send the email entitled TEST' in /test_bless/flourish/<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php:1478 Stack trace:
+This is the error: Fatal error: Uncaught exception '<a href="../docs/fConnectivityException.html">fConnectivityException</a>' with message 'An error occured while trying to send the email entitled TEST' in /test_bless/flourish/<a href="../docs/fEmail.html">fEmail</a>.php:1478 Stack trace:
 </p>
 
 <ol>
-<li>0 /www/test_bless/test.php(16): <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>-&gt;send()</li>
-<li>1 {main} thrown in /test_bless/flourish/<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php on line 1478</li>
+<li>0 /www/test_bless/test.php(16): <a href="../docs/fEmail.html">fEmail</a>-&gt;send()</li>
+<li>1 {main} thrown in /test_bless/flourish/<a href="../docs/fEmail.html">fEmail</a>.php on line 1478</li>
 </ol>
 
 <p>
@@ -126,7 +126,7 @@ $email-&gt;setBody('TEST');
 $email-&gt;send();</code></pre>
 
 <p>
- As I said: the error occurs with a combination of a to- and from e-mail address that both share our own domain (hoverkraft.nl), and a combination of hoverkraft.nl and gmail.com. Other addresses do work. It seems to have something to do with the $headers variable in the mail() function. When I remove this variable in line 1467 in <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php, the error is gone.
+ As I said: the error occurs with a combination of a to- and from e-mail address that both share our own domain (hoverkraft.nl), and a combination of hoverkraft.nl and gmail.com. Other addresses do work. It seems to have something to do with the $headers variable in the mail() function. When I remove this variable in line 1467 in <a href="../docs/fEmail.html">fEmail</a>.php, the error is gone.
 </p>
 				</div>
 				
@@ -164,7 +164,7 @@ $email-&gt;send();</code></pre>
 				<div class="body" id="body-1771">
 					
 <p>
-No, no strange characters, just replace the xxx with lutsen. But as I said, if I remove the $headers variable in the mail() in line 1467 of the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> class, it does work. So I guess it has something to do with the headers...
+No, no strange characters, just replace the xxx with lutsen. But as I said, if I remove the $headers variable in the mail() in line 1467 of the <a href="../docs/fEmail.html">fEmail</a> class, it does work. So I guess it has something to do with the headers...
 </p>
 				</div>
 				

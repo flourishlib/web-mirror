@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -65,7 +65,7 @@ header('Content-type: '.$header_type);
 readfile('http://path/to/uploaded/files/'.$file);</code></pre>
 
 <p>
- My first point - is that I don't actually know if this is the correct way to download files - Sure, it works but I don't know how secure this method is (read: <a href="../flourishlib.com/docs/Security.html">http://flourishlib.com/docs/Security</a>  - &quot;Path Traversal&quot;). 
+ My first point - is that I don't actually know if this is the correct way to download files - Sure, it works but I don't know how secure this method is (read: <a href="../docs/Security.html">http://flourishlib.com/docs/Security</a>  - &quot;Path Traversal&quot;). 
 </p>
 
 <p>
@@ -87,7 +87,7 @@ Any advice would be greatly appreciated!
 				<div class="body" id="body-313">
 					
 <p>
-The <a href="../flourishlib.com/docs/fFile.html">fFile</a> and <a href="../flourishlib.com/docs/fDirectory.html">fDirectory</a> objects will actually convert any path into the real file path, translating upwards directory traversals such as <code>../</code> and other things like symlinks. A good way to ensure that a file is in a directory would be something like this:
+The <a href="../docs/fFile.html">fFile</a> and <a href="../docs/fDirectory.html">fDirectory</a> objects will actually convert any path into the real file path, translating upwards directory traversals such as <code>../</code> and other things like symlinks. A good way to ensure that a file is in a directory would be something like this:
 </p>
 <pre class="block php"><code>try {
     $dir  = new fDirectory('/path/to/uploaded/files');

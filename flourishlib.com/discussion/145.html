@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Hi Library looks very inviting to use so I've downloaded your demo site and I'm 
 </p>
 
 <p>
-however it keeps falling over because the MAMP server uses port 8888 and for some reason <a href="../flourishlib.com/api/fURL.html#getdomain">fURL::getdomain()</a> is not capturing this?  I'm using a etc/hosts file to map the chosen domain name to localhost and I've setup an apache virtual host to give the project it's own DOCUMENT_ROOT
+however it keeps falling over because the MAMP server uses port 8888 and for some reason <a href="../api/fURL.html#getdomain">fURL::getdomain()</a> is not capturing this?  I'm using a etc/hosts file to map the chosen domain name to localhost and I've setup an apache virtual host to give the project it's own DOCUMENT_ROOT
 </p>
 
 <p>
@@ -76,7 +76,7 @@ I can partially fix the problem by changing
 <pre><code>&lt;base href=&quot;&lt;?php echo fURL::getDomain() . ':8888'.URL_ROOT ?&gt;&quot; /&gt;</code></pre>
 
 <p>
- but then that doesn't fix the submit button link on the login form.  I expect it will break all links in forms used by <a href="../flourishlib.com/docs/fURL.html">fURL</a> but I didn;t think it worthwhile pursuing in case I'm missing something obvious.
+ but then that doesn't fix the submit button link on the login form.  I expect it will break all links in forms used by <a href="../docs/fURL.html">fURL</a> but I didn;t think it worthwhile pursuing in case I'm missing something obvious.
 </p>
 
 <p>
@@ -92,7 +92,7 @@ This showed
     [SERVER_PORT] =&gt; 80</code></pre>
 
 <p>
- looking at this I can guess that <a href="../flourishlib.com/api/fURL.html#getdomain">fURL::getdomain()</a> is using the SERVER_PORT variable whereas the port apache is actually using (or is it?) is defined in the HTTP_HOST
+ looking at this I can guess that <a href="../api/fURL.html#getdomain">fURL::getdomain()</a> is using the SERVER_PORT variable whereas the port apache is actually using (or is it?) is defined in the HTTP_HOST
 </p>
 
 <p>

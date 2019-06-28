@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -139,16 +139,16 @@ shakeel,
 </p>
 
 <p>
-Flourish automatically determines the best database extension to use, so if your $db is an <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object, you should not be directly calling other methods which belong to lower level mysql classes, or related functions.  Using <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>'s query() method allows you to create placeholders in the SQL and then insert the values as separate parameters and it will automatically determine the best method of escaping them.  Example:
+Flourish automatically determines the best database extension to use, so if your $db is an <a href="../docs/fDatabase.html">fDatabase</a> object, you should not be directly calling other methods which belong to lower level mysql classes, or related functions.  Using <a href="../docs/fDatabase.html">fDatabase</a>'s query() method allows you to create placeholders in the SQL and then insert the values as separate parameters and it will automatically determine the best method of escaping them.  Example:
 </p>
 <pre class="block php"><code>$db-&gt;query(&quot;SELECT count(ebook_id) FROM download_master WHERE ebook_category_name = %s&quot;, $_GET['name']);</code></pre>
 
 <p>
- The %s above indicates that the value is of type string and should be escaped as a string.  It is somewhat similar to sprintf() concept.  For more information regarding the placeholders see: <a href="../flourishlib.com/api/fDatabase.html#escape">http://flourishlib.com/api/fDatabase#escape</a>
+ The %s above indicates that the value is of type string and should be escaped as a string.  It is somewhat similar to sprintf() concept.  For more information regarding the placeholders see: <a href="../api/fDatabase.html#escape">http://flourishlib.com/api/fDatabase#escape</a>
 </p>
 
 <p>
-You could alternatively use escape directly, although the above method is much cleaner in my opinion rather than cat-ing strings together.  The returned object from a database query is an <a href="../flourishlib.com/docs/fResult.html">fResult</a> object, with methods documented here:  <a href="../flourishlib.com/api/fResult.html">http://flourishlib.com/api/fResult</a>
+You could alternatively use escape directly, although the above method is much cleaner in my opinion rather than cat-ing strings together.  The returned object from a database query is an <a href="../docs/fResult.html">fResult</a> object, with methods documented here:  <a href="../api/fResult.html">http://flourishlib.com/api/fResult</a>
 </p>
 
 <p>

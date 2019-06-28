@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -78,7 +78,7 @@ WHERE user_groups.id_user= 3 ;</code></pre>
 (3 rows)</code></pre>
 
 <p>
- However, this same SQL query doesn't run within a <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> call, resulting in the error message 'The SQL statement specified ... does not appear to be in the form SELECT * FROM table'.
+ However, this same SQL query doesn't run within a <a href="../api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> call, resulting in the error message 'The SQL statement specified ... does not appear to be in the form SELECT * FROM table'.
 </p>
 
 <p>
@@ -108,11 +108,11 @@ A.
 				<div class="body" id="body-939">
 					
 <p>
-An <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> object is a collection of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> represents exactly one row from a table in the database. You have to select every column in a table for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to work properly. You can't select any extra, or exclude any.
+An <a href="../docs/fRecordSet.html">fRecordSet</a> object is a collection of <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects. <a href="../docs/fActiveRecord.html">fActiveRecord</a> represents exactly one row from a table in the database. You have to select every column in a table for <a href="../docs/fActiveRecord.html">fActiveRecord</a> to work properly. You can't select any extra, or exclude any.
 </p>
 
 <p>
-In your situation you a either going to need to use <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> to get the data back, or use the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> API to create the parent object and get the name. You can make getting the parent object more efficient by requesting them in batch:
+In your situation you a either going to need to use <a href="../api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> to get the data back, or use the <a href="../docs/fActiveRecord.html">fActiveRecord</a> API to create the parent object and get the name. You can make getting the parent object more efficient by requesting them in batch:
 </p>
 <pre class="block php"><code>// I don't know your DB schema, so the where conditions may need to be adjusted
 $groups = fRecordSet::build('Group', array('users.id_user=' =&gt; 3));
@@ -210,17 +210,17 @@ A.
 				<div class="body" id="body-943">
 					
 <p>
-Since the parent <code>group</code> is two associations away from the <code>user_groups</code> tables, you won't be able to precreate it. Flourish does use an identity map though, which means a record will only be loaded out of the database once per request, except when the record is loaded via <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> (since all records are loaded in a single request). If you can't get the appropriate performance out of the ORM, it might be necessary to ditch it for plain SQL queries for this one situation.
+Since the parent <code>group</code> is two associations away from the <code>user_groups</code> tables, you won't be able to precreate it. Flourish does use an identity map though, which means a record will only be loaded out of the database once per request, except when the record is loaded via <a href="../docs/fRecordSet.html">fRecordSet</a> (since all records are loaded in a single request). If you can't get the appropriate performance out of the ORM, it might be necessary to ditch it for plain SQL queries for this one situation.
 </p>
 
 <p>
-In terms of the ordering, you can order via tables up to two associations away using the once-removed syntax (<code>related_table=&gt;once_removed_table.column</code>) that is shown on the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> API page. Here is an example:
+In terms of the ordering, you can order via tables up to two associations away using the once-removed syntax (<code>related_table=&gt;once_removed_table.column</code>) that is shown on the <a href="../docs/fRecordSet.html">fRecordSet</a> API page. Here is an example:
 </p>
 <pre><code>// This should order by the parent group name
 array('groups=&gt;groups.name' =&gt; 'asc')</code></pre>
 
 <p>
-In terms of referencing it with <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a>, I would use something like <code>parent_group_name</code> and translate that to <code>groups=&gt;groups.name</code> in your database model(s).
+In terms of referencing it with <a href="../docs/fCRUD.html">fCRUD</a>, I would use something like <code>parent_group_name</code> and translate that to <code>groups=&gt;groups.name</code> in your database model(s).
 </p>
 				</div>
 				
@@ -239,11 +239,11 @@ In terms of referencing it with <a href="../flourishlib.com/docs/fCRUD.html">fCR
 				<div class="body" id="body-950">
 					<blockquote>
 <p>
- In terms of referencing it with <a href="../flourishlib.com/docs/fCRUD.html">fCRUD</a>, I would use something like <code>parent_group_name</code> and translate that to <code>groups=&gt;groups.name</code> in your database model(s).
+ In terms of referencing it with <a href="../docs/fCRUD.html">fCRUD</a>, I would use something like <code>parent_group_name</code> and translate that to <code>groups=&gt;groups.name</code> in your database model(s).
 </p>
 </blockquote>
 <p>
-Great! I assume that translation should be done in the configuration method of the model. However, I have not found what precise class/method to use to do that. <a href="../flourishlib.com/docs/fORMColumn.html">fORMColumn</a> seems to be restricted to a few configureXxx methods and I don't see any examples in neither <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> or <a href="../flourishlib.com/docs/fORM.html">fORM</a> for that matter.
+Great! I assume that translation should be done in the configuration method of the model. However, I have not found what precise class/method to use to do that. <a href="../docs/fORMColumn.html">fORMColumn</a> seems to be restricted to a few configureXxx methods and I don't see any examples in neither <a href="../docs/fActiveRecord.html">fActiveRecord</a> or <a href="../docs/fORM.html">fORM</a> for that matter.
 </p>
 
 <p>
@@ -266,11 +266,11 @@ A.
 				<div class="body" id="body-954">
 					
 <p>
-Well, in this case you are using a full call to <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, so it accepts the <code>$order_bys</code> array so there isn't a configuration directive to override it. If you we using the built in <code>fActiveRecord-&gt;build{RelatedRecords}()</code> method, then you can set the order by with <a href="../flourishlib.com/api/fORMRelated.html#setOrderBys">fORMRelated::setOrderBys()</a>.
+Well, in this case you are using a full call to <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>, so it accepts the <code>$order_bys</code> array so there isn't a configuration directive to override it. If you we using the built in <code>fActiveRecord-&gt;build{RelatedRecords}()</code> method, then you can set the order by with <a href="../api/fORMRelated.html#setOrderBys">fORMRelated::setOrderBys()</a>.
 </p>
 
 <p>
-In my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes, I add static methods to handle building related records that require special conditions and/or order bys.
+In my <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes, I add static methods to handle building related records that require special conditions and/or order bys.
 </p>
 <pre class="block php"><code>class User extends fActiveRecord
 {

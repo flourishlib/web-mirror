@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I've written a mass mailer using the <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> and <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> classes and am getting acceptable performance (around 500 emails / minute).  The problem that I'm running into is that even though the emails are being generated quickly enough people aren't receiving them until hours later.
+I've written a mass mailer using the <a href="../docs/fSMTP.html">fSMTP</a> and <a href="../docs/fEmail.html">fEmail</a> classes and am getting acceptable performance (around 500 emails / minute).  The problem that I'm running into is that even though the emails are being generated quickly enough people aren't receiving them until hours later.
 </p>
 
 <p>
@@ -80,11 +80,11 @@ From my experience when we use to run some mass mailing stuff on some of our ser
 </p>
 
 <p>
-The only performance part that would be affected by the PHP side is how fast the emails get sent to the SMTP server. I have not profiled the performance of <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> at all, so there may be ways to improve it. I did, however, implement the SMTP <a href="http://tools.ietf.org/html/rfc2920">PIPELINING extension</a>, which allows sending a bunch of info without waiting for confirmation for each before continuing.
+The only performance part that would be affected by the PHP side is how fast the emails get sent to the SMTP server. I have not profiled the performance of <a href="../docs/fSMTP.html">fSMTP</a> at all, so there may be ways to improve it. I did, however, implement the SMTP <a href="http://tools.ietf.org/html/rfc2920">PIPELINING extension</a>, which allows sending a bunch of info without waiting for confirmation for each before continuing.
 </p>
 
 <p>
-Right now <a href="../flourishlib.com/docs/fEmail.html">fEmail</a> and <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> do not try to send emails with the <a href="http://en.wikipedia.org/wiki/Extended_SMTP#8BITMIME">8BITMIME extension</a> in the interest of compatibility. Theoretically messages sent via 8BITMIME would be faster since the size of the messages would be smaller due to a more efficient encoding.
+Right now <a href="../docs/fEmail.html">fEmail</a> and <a href="../docs/fSMTP.html">fSMTP</a> do not try to send emails with the <a href="http://en.wikipedia.org/wiki/Extended_SMTP#8BITMIME">8BITMIME extension</a> in the interest of compatibility. Theoretically messages sent via 8BITMIME would be faster since the size of the messages would be smaller due to a more efficient encoding.
 </p>
 				</div>
 				

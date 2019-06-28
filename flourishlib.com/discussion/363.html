@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Per <a href="http://markmail.org/thread/ft7d6bn7swnw2dls">http://markmail.org/th
 </p>
 
 <p>
-Although the interface might change, it would be an interesting concept to support this interface early.  I'm not sure how keen everyone is on interfaces, but a check could be done using interface_exists(), and if not found, could add the interface.  From there <a href="../flourishlib.com/api/fJSON.html#encode">fJSON::encode()</a> could check to see if an object passed implements the interface, and if so, encode the return value of it's jsonSerialize() method instead.
+Although the interface might change, it would be an interesting concept to support this interface early.  I'm not sure how keen everyone is on interfaces, but a check could be done using interface_exists(), and if not found, could add the interface.  From there <a href="../api/fJSON.html#encode">fJSON::encode()</a> could check to see if an object passed implements the interface, and if so, encode the return value of it's jsonSerialize() method instead.
 </p>
 
 <p>
@@ -103,7 +103,7 @@ For me personally this is enough simply because the rest of my framework can tak
 				<div class="body" id="body-1373">
 					
 <p>
-One of the things I had overlooked when I initially implemented this is that <a href="../flourishlib.com/docs/fJSON.html">fJSON</a> will simply look for json_encode, and if it's available use that.  I have added a new parameter $force to <a href="../flourishlib.com/api/fJSON.html#encode">fJSON::encode()</a> and <a href="../flourishlib.com/api/fJSON.html#decode">fJSON::decode()</a> in the .inK (dotink) fork on github.  This parameter forces <a href="../flourishlib.com/docs/fJSON.html">fJSON</a> to use the manual flourish encoding and provides a good bridge for systems which have json_encode/json_decode but don't yet have the interface.
+One of the things I had overlooked when I initially implemented this is that <a href="../docs/fJSON.html">fJSON</a> will simply look for json_encode, and if it's available use that.  I have added a new parameter $force to <a href="../api/fJSON.html#encode">fJSON::encode()</a> and <a href="../api/fJSON.html#decode">fJSON::decode()</a> in the .inK (dotink) fork on github.  This parameter forces <a href="../docs/fJSON.html">fJSON</a> to use the manual flourish encoding and provides a good bridge for systems which have json_encode/json_decode but don't yet have the interface.
 </p>
 
 <p>

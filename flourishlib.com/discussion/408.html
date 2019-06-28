@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="../2/39/132.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Hi there  In the class Node extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> I want to get the last insert id. How can I do that? Thanks! 
+Hi there  In the class Node extends <a href="../docs/fActiveRecord.html">fActiveRecord</a> I want to get the last insert id. How can I do that? Thanks! 
 </p>
 <pre class="block php"><code>	function save($node_id=null){
                     
@@ -79,11 +79,11 @@ Hi there  In the class Node extends <a href="../flourishlib.com/docs/fActiveReco
 				<div class="body" id="body-1260">
 					
 <p>
-Well, <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> only allows for selecting records so I doubt you will be able to use an <code>INSERT</code> statement and have it work.
+Well, <a href="../docs/fRecordSet.html">fRecordSet</a> only allows for selecting records so I doubt you will be able to use an <code>INSERT</code> statement and have it work.
 </p>
 
 <p>
-If you use <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to create a new record and save it, the auto-incrementing ID will automatically appear in the object.
+If you use <a href="../docs/fActiveRecord.html">fActiveRecord</a> to create a new record and save it, the auto-incrementing ID will automatically appear in the object.
 </p>
 <pre class="block php"><code>$node = new Node();
 $node-&gt;setParent($parent_id);
@@ -91,7 +91,7 @@ $node-&gt;store();
 $node_id = $node-&gt;getId();</code></pre>
 
 <p>
- The <code>-&gt;getId()</code> method is an example assuming your column is named <code>id</code>. <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> does not care what the name of the column is, as long as the column is an auto-incrementing primary key, the generated value will appear in the record after a successful <code>-&gt;store()</code> operation.
+ The <code>-&gt;getId()</code> method is an example assuming your column is named <code>id</code>. <a href="../docs/fActiveRecord.html">fActiveRecord</a> does not care what the name of the column is, as long as the column is an auto-incrementing primary key, the generated value will appear in the record after a successful <code>-&gt;store()</code> operation.
 </p>
 				</div>
 				

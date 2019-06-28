@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -73,7 +73,7 @@ I'd like an easy way to retrieve SQL debugging information, such as the syntax o
 				<div class="body" id="body-789">
 					
 <p>
-You are going to want to use <a href="../flourishlib.com/api/fCore.html#registerDebugCallback">fCore::registerDebugCallback()</a>, which you can see in action at <a href="../flourishlib.com/docs/fCore.html">fCore</a>#Debugging.
+You are going to want to use <a href="../api/fCore.html#registerDebugCallback">fCore::registerDebugCallback()</a>, which you can see in action at <a href="../docs/fCore.html">fCore</a>#Debugging.
 </p>
 				</div>
 				
@@ -130,7 +130,7 @@ Is there no way to retrieve database query debugging info as an array or so? I'd
 				<div class="body" id="body-792">
 					
 <p>
-No, there currently is not such a method. If you only want database messages I would recommend extending <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and adding your special logging needs to an overridden method.
+No, there currently is not such a method. If you only want database messages I would recommend extending <a href="../docs/fDatabase.html">fDatabase</a> and adding your special logging needs to an overridden method.
 </p>
 				</div>
 				
@@ -149,7 +149,7 @@ No, there currently is not such a method. If you only want database messages I w
 				<div class="body" id="body-797">
 					
 <p>
-Extending the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> class won't be sufficient for what I'm trying to accomplish. I got used to ZFW's DB profiler because I am able to use the debugging info in any way I like while flourishlib just passes the messages which I can only log or display on the web page in an ugly way, and if I display it on the web page with a custom callback function then debugging messages from destructors aren't displayed.
+Extending the <a href="../docs/fDatabase.html">fDatabase</a> class won't be sufficient for what I'm trying to accomplish. I got used to ZFW's DB profiler because I am able to use the debugging info in any way I like while flourishlib just passes the messages which I can only log or display on the web page in an ugly way, and if I display it on the web page with a custom callback function then debugging messages from destructors aren't displayed.
 </p>
 
 <p>
@@ -172,7 +172,7 @@ Any chance of having those features for flourish any time in the near future?
 				<div class="body" id="body-798">
 					
 <p>
-The only further plans I have is to add a hook or two to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to allow for modifying a SQL query before it is run. I suppose it would also be possible to add one after it is run that includes the sql and the time it took to run. I don't have a set date when I will get to it, it really depends on what other work I have on my plate.
+The only further plans I have is to add a hook or two to <a href="../docs/fDatabase.html">fDatabase</a> to allow for modifying a SQL query before it is run. I suppose it would also be possible to add one after it is run that includes the sql and the time it took to run. I don't have a set date when I will get to it, it really depends on what other work I have on my plate.
 </p>
 				</div>
 				
@@ -222,7 +222,7 @@ I'll just use the DB module from ZFW then because it's the only thing that I'm m
 				<div class="body" id="body-858">
 					
 <p>
-As of r885, there is now a nice clean hook available with <a href="../flourishlib.com/api/fDatabase.html#registerHookCallback">fDatabase::registerHookCallback()</a> that should allow for whatever logging you want to do for queries. In your case you probably want to use the <code>'run'</code> hook and access the second and third parameters.
+As of r885, there is now a nice clean hook available with <a href="../api/fDatabase.html#registerHookCallback">fDatabase::registerHookCallback()</a> that should allow for whatever logging you want to do for queries. In your case you probably want to use the <code>'run'</code> hook and access the second and third parameters.
 </p>
 <pre class="block php"><code>function log_sql($db, $statement, $query_time, $result) {
     // This handles prepared statements since the statement and values are separate
@@ -236,11 +236,11 @@ As of r885, there is now a nice clean hook available with <a href="../flourishli
 $db-&gt;registerHookCallback('run', 'log_sql');</code></pre>
 
 <p>
- I opted for this route because some other requests have come through looking to do similar things, but a lot of the internals of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is kind of messy due to all of the supported database extensions.
+ I opted for this route because some other requests have come through looking to do similar things, but a lot of the internals of <a href="../docs/fDatabase.html">fDatabase</a> is kind of messy due to all of the supported database extensions.
 </p>
 
 <p>
-I'll be adding some more in-depth documentation about this soon on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> page.
+I'll be adding some more in-depth documentation about this soon on the <a href="../docs/fDatabase.html">fDatabase</a> page.
 </p>
 				</div>
 				

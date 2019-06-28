@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,11 +54,11 @@
 <div class="body topic">
 	
 <p>
-I have a recordset with some data and timestamp. Default displayed date format is 'Y-m-d H:i:s', how can I globally format that, so, doing some localization, thus, display a date in this format 'd-m-Y H:i:s' without doing it in a loop manually calling <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>-&gt;format() for every record.
+I have a recordset with some data and timestamp. Default displayed date format is 'Y-m-d H:i:s', how can I globally format that, so, doing some localization, thus, display a date in this format 'd-m-Y H:i:s' without doing it in a loop manually calling <a href="../docs/fTimestamp.html">fTimestamp</a>-&gt;format() for every record.
 </p>
 
 <p>
-I have tried using <a href="../flourishlib.com/api/fTimestamp.html#registerFormatCallback">fTimestamp::registerFormatCallback()</a> and <a href="../flourishlib.com/api/fTimestamp.html#registerUnformatCallback">fTimestamp::registerUnformatCallback()</a> without success since if I do date formatting in <a href="../flourishlib.com/api/fTimestamp.html#registerFormatCallback">fTimestamp::registerFormatCallback()</a>, <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, where I do some date comparison, then does not yield any records.
+I have tried using <a href="../api/fTimestamp.html#registerFormatCallback">fTimestamp::registerFormatCallback()</a> and <a href="../api/fTimestamp.html#registerUnformatCallback">fTimestamp::registerUnformatCallback()</a> without success since if I do date formatting in <a href="../api/fTimestamp.html#registerFormatCallback">fTimestamp::registerFormatCallback()</a>, <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>, where I do some date comparison, then does not yield any records.
 </p>
 <pre class="block php"><code>$rhr = fRecordSet::build(
 		__CLASS__,
@@ -88,11 +88,11 @@ I have tried using <a href="../flourishlib.com/api/fTimestamp.html#registerForma
 				<div class="body" id="body-1762">
 					
 <p>
-The <code>Y-m-d H:i:s</code> format is used in the toString() method of <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>, and as you've found, quite a bit of Flourish relies on that functioning properly.
+The <code>Y-m-d H:i:s</code> format is used in the toString() method of <a href="../docs/fTimestamp.html">fTimestamp</a>, and as you've found, quite a bit of Flourish relies on that functioning properly.
 </p>
 
 <p>
-You aren't going to be able to get away with not calling format() if you want a different format from the ISO-8601 style. You can, however, define a standard format to use throughout your app - <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>#DefiningFormats. This gives you the ability to control the format from a single place instead of having to update code in lots of different places if you want to tweak your default format.
+You aren't going to be able to get away with not calling format() if you want a different format from the ISO-8601 style. You can, however, define a standard format to use throughout your app - <a href="../docs/fTimestamp.html">fTimestamp</a>#DefiningFormats. This gives you the ability to control the format from a single place instead of having to update code in lots of different places if you want to tweak your default format.
 </p>
 				</div>
 				

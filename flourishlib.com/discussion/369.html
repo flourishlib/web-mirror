@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -105,7 +105,7 @@ now its giving one error
 </p>
 
 <p>
-Fatal error: Call to undefined function mysqli_set_charset() in /hsphere/local/home/newhind/testing.newhind.com/newdesign/inc/flourish/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php on line 583 
+Fatal error: Call to undefined function mysqli_set_charset() in /hsphere/local/home/newhind/testing.newhind.com/newdesign/inc/flourish/<a href="../docs/fDatabase.html">fDatabase</a>.php on line 583 
 </p>
 				</div>
 				
@@ -174,7 +174,7 @@ Ok, from further investigation, not only do you need to have a specific version 
 </p>
 
 <p>
-I'll update <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to only call that function if it exists.
+I'll update <a href="../docs/fDatabase.html">fDatabase</a> to only call that function if it exists.
 </p>
 				</div>
 				
@@ -216,7 +216,7 @@ I made a changes in fdatabase class --- please check is it right ...
 </p>
 
 <p>
-if ($this-&gt;connection &amp;&amp; !mysqli_set_charset($this-&gt;connection, 'utf8')) {                 throw new <a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>(                     'There was an error setting the database connection to use UTF-8'                 );             } should be if ($this-&gt;connection &amp;&amp; function_exists('mysqli_set_charset') &amp;&amp; !mysqli_set_charset($this-&gt;connection, 'utf8')) {                 throw new <a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>(                     'There was an error setting the database connection to use UTF-8'                 );             }
+if ($this-&gt;connection &amp;&amp; !mysqli_set_charset($this-&gt;connection, 'utf8')) {                 throw new <a href="../docs/fConnectivityException.html">fConnectivityException</a>(                     'There was an error setting the database connection to use UTF-8'                 );             } should be if ($this-&gt;connection &amp;&amp; function_exists('mysqli_set_charset') &amp;&amp; !mysqli_set_charset($this-&gt;connection, 'utf8')) {                 throw new <a href="../docs/fConnectivityException.html">fConnectivityException</a>(                     'There was an error setting the database connection to use UTF-8'                 );             }
 </p>
 				</div>
 				

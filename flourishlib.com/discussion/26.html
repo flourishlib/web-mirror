@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-now that i've realised i should be using <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> to associate uploaded files with records, i'm a bit confused as to how i specify retrieval of record rows from the db that do or do not have a photo associated with them.  i'm not seeing in the documentation exactly what is written to the column set as an <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a> column, so when doing an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, what should i be looking for in the where clause if i want to get an <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> of records that do not yet have files?
+now that i've realised i should be using <a href="../docs/fORMFile.html">fORMFile</a> to associate uploaded files with records, i'm a bit confused as to how i specify retrieval of record rows from the db that do or do not have a photo associated with them.  i'm not seeing in the documentation exactly what is written to the column set as an <a href="../docs/fORMFile.html">fORMFile</a> column, so when doing an <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>, what should i be looking for in the where clause if i want to get an <a href="../docs/fRecordSet.html">fRecordSet</a> of records that do not yet have files?
 </p>
 
 <p>
@@ -76,7 +76,7 @@ When you configure a column as a file upload column, you have to specify the fol
 </p>
 
 <p>
-Here is a quick example of an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class with an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> call to returns all records with a file.
+Here is a quick example of an <a href="../docs/fActiveRecord.html">fActiveRecord</a> class with an <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> call to returns all records with a file.
 </p>
 <pre class="block php"><code>class User extends fActiveRecord
 {

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -79,7 +79,7 @@ spl_autoload_register('flourish_autoload');
 </p>
 
 <p>
-Fatal error: Call to undefined method <a href="../flourishlib.com/api/fAuthorization.html#checkLoggedIn">fAuthorization::checkLoggedIn()</a> in /home/xxx/public_html/login.php on line 4 and Fatal error: Interface 'Iterator' not found in /home/xxx/public_html/lib/<a href="../flourishlib.com/docs/fResult.html">fResult</a>.php on line 22
+Fatal error: Call to undefined method <a href="../api/fAuthorization.html#checkLoggedIn">fAuthorization::checkLoggedIn()</a> in /home/xxx/public_html/login.php on line 4 and Fatal error: Interface 'Iterator' not found in /home/xxx/public_html/lib/<a href="../docs/fResult.html">fResult</a>.php on line 22
 </p>
 
 <p>
@@ -101,7 +101,7 @@ It sounds like there might be some problems with the CentOS server since it can'
 </p>
 
 <p>
-In terms of <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> being loaded, are you sure that there is no <code>__autoload()</code> function defined? <code>__autoload()</code> and <code>spl_autoload_regsiter()</code> do not work together. It appears that <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> is just not being loaded. Perhaps try including <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> manually to see if it is a problem with your autoload functions.
+In terms of <a href="../docs/fAuthorization.html">fAuthorization</a> being loaded, are you sure that there is no <code>__autoload()</code> function defined? <code>__autoload()</code> and <code>spl_autoload_regsiter()</code> do not work together. It appears that <a href="../docs/fAuthorization.html">fAuthorization</a> is just not being loaded. Perhaps try including <a href="../docs/fAuthorization.html">fAuthorization</a> manually to see if it is a problem with your autoload functions.
 </p>
 				</div>
 				
@@ -128,11 +128,11 @@ Im not using extra <span class="underline">autoload Only spl_autoload... </span>
 </p>
 
 <p>
-<span class="underline"> ( ! ) Fatal error: Interface 'Iterator' not found in /var/www/lib/<a href="../flourishlib.com/docs/fResult.html">fResult</a>.php on line 22 Call Stack
+<span class="underline"> ( ! ) Fatal error: Interface 'Iterator' not found in /var/www/lib/<a href="../docs/fResult.html">fResult</a>.php on line 22 Call Stack
 <ol>
 <li>Time	Memory	Function	Location</li>
 </ol>
- 1	0,0007	60040	{main}( )	../cache.php:0 2	0,0517	293040	Models::cache_Categories( )	../cache.php:6 3	0,0518	293428	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query( )	../Models.php:573 4	0,0519	294112	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;prepareSQL( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:2196 5	0,0519	294316	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;connectToDatabase( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:2051 6	0,0631	295892	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:530 7	0,0640	297624	<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;runQuery( )	../<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php:2200 8	0,0643	298540	flourish_autoload( )	../config.php:0 9	0,0652	311820	require_once( '/var/www/lib/<a href="../flourishlib.com/docs/fResult.html">fResult</a>.php' )	../config.php:9</span>
+ 1	0,0007	60040	{main}( )	../cache.php:0 2	0,0517	293040	Models::cache_Categories( )	../cache.php:6 3	0,0518	293428	<a href="../docs/fDatabase.html">fDatabase</a>-&gt;query( )	../Models.php:573 4	0,0519	294112	<a href="../docs/fDatabase.html">fDatabase</a>-&gt;prepareSQL( )	../<a href="../docs/fDatabase.html">fDatabase</a>.php:2196 5	0,0519	294316	<a href="../docs/fDatabase.html">fDatabase</a>-&gt;connectToDatabase( )	../<a href="../docs/fDatabase.html">fDatabase</a>.php:2051 6	0,0631	295892	<a href="../docs/fDatabase.html">fDatabase</a>-&gt;query( )	../<a href="../docs/fDatabase.html">fDatabase</a>.php:530 7	0,0640	297624	<a href="../docs/fDatabase.html">fDatabase</a>-&gt;runQuery( )	../<a href="../docs/fDatabase.html">fDatabase</a>.php:2200 8	0,0643	298540	flourish_autoload( )	../config.php:0 9	0,0652	311820	require_once( '/var/www/lib/<a href="../docs/fResult.html">fResult</a>.php' )	../config.php:9</span>
 </p>
 				</div>
 				
@@ -231,7 +231,7 @@ The issues you are having sound like problems I have heard of with some PHP opco
 </p>
 
 <p>
-I'm fairly certain it is not a loading issue since <a href="../flourishlib.com/api/fResult.html#handleAutoIncrementedValue">fResult::handleAutoIncrementedValue()</a> is called in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> <strong>after</strong> other <a href="../flourishlib.com/docs/fResult.html">fResult</a> methods.
+I'm fairly certain it is not a loading issue since <a href="../api/fResult.html#handleAutoIncrementedValue">fResult::handleAutoIncrementedValue()</a> is called in <a href="../docs/fDatabase.html">fDatabase</a> <strong>after</strong> other <a href="../docs/fResult.html">fResult</a> methods.
 </p>
 
 <p>

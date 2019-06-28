@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Hi!
 </p>
 
 <p>
-I'm trying to write a function that'll tell me if the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> instance I'm using is still connected (so I can reconnect if that's not the case), and this is what I have so far:
+I'm trying to write a function that'll tell me if the <a href="../docs/fDatabase.html">fDatabase</a> instance I'm using is still connected (so I can reconnect if that's not the case), and this is what I have so far:
 </p>
 <pre class="block php"><code>function IsConnectedToDb(&amp;$db){
   $strDbName=&quot;my_db&quot;;
@@ -100,11 +100,11 @@ Per.
 				<div class="body" id="body-1025">
 					
 <p>
-To my knowledge there isn't anything built in that will accomplish this. Depending on what extension is being used, <a href="../flourishlib.com/api/fDatabase.html#getConnection">fDatabase::getConnection()</a> will return the connection resource or object. You might be able to use this, but I am not sure how every database extension handles disconnection. <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> would probably need to be enhanced to detect how each extension presents this information.
+To my knowledge there isn't anything built in that will accomplish this. Depending on what extension is being used, <a href="../api/fDatabase.html#getConnection">fDatabase::getConnection()</a> will return the connection resource or object. You might be able to use this, but I am not sure how every database extension handles disconnection. <a href="../docs/fDatabase.html">fDatabase</a> would probably need to be enhanced to detect how each extension presents this information.
 </p>
 
 <p>
-<a href="../flourishlib.com/api/fDatabase.html#getDatabase">fDatabase::getDatabase()</a> will just return the name of the database, so that will definitely not help.
+<a href="../api/fDatabase.html#getDatabase">fDatabase::getDatabase()</a> will just return the name of the database, so that will definitely not help.
 </p>
 
 <p>

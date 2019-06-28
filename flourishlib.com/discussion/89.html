@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -96,7 +96,7 @@ I think I would need to know a little bit more about your database schema to giv
 </p>
 
 <p>
-I am guessing you want to know how to do with with the ORM? Your current code should work just fine using a plain <a href="../flourishlib.com/api/fDatabase.html#query">fDatabase::query()</a> call.
+I am guessing you want to know how to do with with the ORM? Your current code should work just fine using a plain <a href="../api/fDatabase.html#query">fDatabase::query()</a> call.
 </p>
 				</div>
 				
@@ -197,7 +197,7 @@ tank yo for this, i don't know php perfectly and for this  $value  = $detail-&gt
 				<div class="body" id="body-276">
 					
 <p>
-<a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> follows the MethodNaming conventions of Flourish, with the <code>show</code> part meaning that it will conditionally print something. It also returns a boolean indicating if it printed or not. My recommendation would be to write your own method if you just want to see if a value is equal or in an array instead of also printing <code> checked=&quot;checked&quot;</code>.
+<a href="../api/fHTML.html#showChecked">fHTML::showChecked()</a> follows the MethodNaming conventions of Flourish, with the <code>show</code> part meaning that it will conditionally print something. It also returns a boolean indicating if it printed or not. My recommendation would be to write your own method if you just want to see if a value is equal or in an array instead of also printing <code> checked=&quot;checked&quot;</code>.
 </p>
 				</div>
 				
@@ -235,7 +235,7 @@ but why before this method work for me and now isn't? i have column 'activ' with
 				<div class="body" id="body-280">
 					
 <p>
-<a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> (which used to be <a href="../flourishlib.com/api/fCRUD.html#showChecked">fCRUD::showChecked()</a>) has always printed something and returned a boolean.  The only changes that have been made recently are at <a href="http://flourishlib.com/changeset/588/fHTML.php">http://flourishlib.com/changeset/588/fHTML.php</a>. This change requires that comparing to a <code>NULL</code> value requires a strict equality (i.e. both must be <code>NULL</code>) where the old code equated <code>0</code> and <code>NULL</code>. This change was made because databases tend to allow for <code>NULL</code>, <code>FALSE</code> and <code>TRUE</code> values in boolean columns and I wanted to reflect this distinction.
+<a href="../api/fHTML.html#showChecked">fHTML::showChecked()</a> (which used to be <a href="../api/fCRUD.html#showChecked">fCRUD::showChecked()</a>) has always printed something and returned a boolean.  The only changes that have been made recently are at <a href="http://flourishlib.com/changeset/588/fHTML.php">http://flourishlib.com/changeset/588/fHTML.php</a>. This change requires that comparing to a <code>NULL</code> value requires a strict equality (i.e. both must be <code>NULL</code>) where the old code equated <code>0</code> and <code>NULL</code>. This change was made because databases tend to allow for <code>NULL</code>, <code>FALSE</code> and <code>TRUE</code> values in boolean columns and I wanted to reflect this distinction.
 </p>
 				</div>
 				
@@ -273,7 +273,7 @@ ok, i think i find where is the problem , i use prepareActiv method, 'activ' bee
 				<div class="body" id="body-294">
 					
 <p>
-I haven't changed the prepare method in quite a while. You can see what happened at each revision by browsing around at http://flourishlib.com/changeset/598. Like I said, I don't see how that code would ever have worked correctly since <a href="../flourishlib.com/api/fHTML.html#showChecked">fHTML::showChecked()</a> has always printed <code> checked=&quot;checked&quot;</code>.
+I haven't changed the prepare method in quite a while. You can see what happened at each revision by browsing around at http://flourishlib.com/changeset/598. Like I said, I don't see how that code would ever have worked correctly since <a href="../api/fHTML.html#showChecked">fHTML::showChecked()</a> has always printed <code> checked=&quot;checked&quot;</code>.
 </p>
 				</div>
 				

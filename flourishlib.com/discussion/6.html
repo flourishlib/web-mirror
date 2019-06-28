@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Not a problem with Flourish per se, but something I'm sure a lot of people are g
 </p>
 
 <p>
-I stumbled upon this when I created a User class that extended <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, and a users table with the following structure:
+I stumbled upon this when I created a User class that extended <a href="../docs/fActiveRecord.html">fActiveRecord</a>, and a users table with the following structure:
 </p>
 <pre class="block sql"><code>CREATE TABLE `users` (
   `user_id` int(11) NOT NULL auto_increment,
@@ -133,7 +133,7 @@ Well, the behaviour you describe is correct <em>if</em> you actually have the se
 </p>
 
 <p>
-Now, this would only be the case if there are defaults. I created the first table definition on my server and when I tried to store a new User object I got an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> listing the columns that needed values.
+Now, this would only be the case if there are defaults. I created the first table definition on my server and when I tried to store a new User object I got an <a href="../docs/fValidationException.html">fValidationException</a> listing the columns that needed values.
 </p>
 
 <p>
@@ -160,7 +160,7 @@ Hi Will,
 </p>
 
 <p>
-I recreated the first table definition and did not get an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a>. I then performed the command SHOW CREATE TABLE users which gave me the following:
+I recreated the first table definition and did not get an <a href="../docs/fValidationException.html">fValidationException</a>. I then performed the command SHOW CREATE TABLE users which gave me the following:
 </p>
 <pre class="block sql"><code>CREATE TABLE `users` (
   `user_id` int(11) NOT NULL auto_increment,
@@ -253,11 +253,11 @@ As a work-around for your issue, you can run the following code to override the 
 );</code></pre>
 
 <p>
- This will cause <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to require a non-empty value for those columns before the record can be saved.
+ This will cause <a href="../docs/fActiveRecord.html">fActiveRecord</a> to require a non-empty value for those columns before the record can be saved.
 </p>
 
 <p>
-For the above code to execute properly, please be sure to be running the latest revision of Flourish, r487. You can get it on the <a href="../flourishlib.com/docs/Download">download page</a>.
+For the above code to execute properly, please be sure to be running the latest revision of Flourish, r487. You can get it on the <a href="../docs/Download">download page</a>.
 </p>
 				</div>
 				

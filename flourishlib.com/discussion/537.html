@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -62,15 +62,15 @@ I dont know what I am doing wrong.
 </p>
 
 <p>
-I first used <a href="../flourishlib.com/docs/fSession.html">fSession</a> in a very basic way, but i had the PHP session locking issue : while opening a long-loading page in which the session is open, a fast-loading page is blocked. Some consider it is a PHP bug, but PHP devs do not.
+I first used <a href="../docs/fSession.html">fSession</a> in a very basic way, but i had the PHP session locking issue : while opening a long-loading page in which the session is open, a fast-loading page is blocked. Some consider it is a PHP bug, but PHP devs do not.
 </p>
 
 <p>
-Anyway, this is a problem to me, and this is a production server with no cache library installed. I then tried <a href="../flourishlib.com/docs/fCache.html">fCache</a> directory backend to <a href="../flourishlib.com/docs/fSession.html">fSession</a> as an alternative to PHP Sessions. Worked fine : almost same mecanism, without the locks ! Perfect.
+Anyway, this is a problem to me, and this is a production server with no cache library installed. I then tried <a href="../docs/fCache.html">fCache</a> directory backend to <a href="../docs/fSession.html">fSession</a> as an alternative to PHP Sessions. Worked fine : almost same mecanism, without the locks ! Perfect.
 </p>
 
 <p>
-Unfortunately, i just realized <a href="../flourishlib.com/docs/fSession.html">fSession</a> is creating 10K session files EACH DAY in the cache directory :(
+Unfortunately, i just realized <a href="../docs/fSession.html">fSession</a> is creating 10K session files EACH DAY in the cache directory :(
 </p>
 
 <p>
@@ -139,7 +139,7 @@ Ok, it appears many sessions are actually &quot;false&quot; sessions from the CL
 </p>
 
 <p>
-However, I noticed that all my web sessions cache files have a TTL at 0, even though I set the lenght at '7 days' using <a href="../flourishlib.com/api/fSession.html#setLength">fSession::setLength()</a>
+However, I noticed that all my web sessions cache files have a TTL at 0, even though I set the lenght at '7 days' using <a href="../api/fSession.html#setLength">fSession::setLength()</a>
 </p>
 
 <p>
@@ -155,7 +155,7 @@ So, correct me if i am wrong :
 </ul>
 
 <p>
-Is this the right way of handling <a href="../flourishlib.com/docs/fCache.html">fCache</a> directory backend Sessions ?
+Is this the right way of handling <a href="../docs/fCache.html">fCache</a> directory backend Sessions ?
 </p>
 
 <p>
@@ -178,7 +178,7 @@ Thanks
 				<div class="body" id="body-1573">
 					
 <p>
-No, I believe you found a bug in using <a href="../flourishlib.com/docs/fCache.html">fCache</a> with <a href="../flourishlib.com/docs/fSession.html">fSession</a>. I have a feeling I am not properly setting a TTL when calling <a href="../flourishlib.com/api/fCache.html#set">fCache::set()</a>. If you can just open a ticket for this it will ensure I don't forget to fix it. Hopefully I can get to this tonight.
+No, I believe you found a bug in using <a href="../docs/fCache.html">fCache</a> with <a href="../docs/fSession.html">fSession</a>. I have a feeling I am not properly setting a TTL when calling <a href="../api/fCache.html#set">fCache::set()</a>. If you can just open a ticket for this it will ensure I don't forget to fix it. Hopefully I can get to this tonight.
 </p>
 				</div>
 				

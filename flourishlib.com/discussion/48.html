@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="../2/39/132.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -81,7 +81,7 @@ Scenario:
 }</code></pre>
 
 <p>
- My understanding of the above code: <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> would create an object of the record in the orders table that has the primary key $orders_id.  If the orders_id actually exists, the function would return TRUE.  Otherwise, it would return false.  
+ My understanding of the above code: <a href="../docs/fActiveRecord.html">fActiveRecord</a> would create an object of the record in the orders table that has the primary key $orders_id.  If the orders_id actually exists, the function would return TRUE.  Otherwise, it would return false.  
 </p>
 
 <p>
@@ -89,7 +89,7 @@ In my scenario, the orders_id is invalid. So, I was expecting a return of false.
 </p>
 
 <p>
-Instead I got an &quot;<a href="../flourishlib.com/docs/fNotFoundException.html">fNotFoundException</a>&quot;.  So, apparently <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> throws this exception when the provided info is not actually a valid primary key.
+Instead I got an &quot;<a href="../docs/fNotFoundException.html">fNotFoundException</a>&quot;.  So, apparently <a href="../docs/fActiveRecord.html">fActiveRecord</a> throws this exception when the provided info is not actually a valid primary key.
 </p>
 
 <p>
@@ -128,11 +128,11 @@ I'd love a clarification on this subject.  Now, I've modified my code as follows
 				<div class="body" id="body-141">
 					
 <p>
-<a href="../flourishlib.com/api/fActiveRecord.html#exists">fActiveRecord::exists()</a> is intended to use used to see if a record already exists in the database, or if it is a &quot;new&quot; record. You normally won't be using it in the context of creating a new active record object since you will already know if you are loading from the database or not. Usually it will be called inside of another method or in a location with a different scope than the constructor call. You can see some examples of its use in <a href="browser:fORMOrdering.php">fORMOrdering</a>.
+<a href="../api/fActiveRecord.html#exists">fActiveRecord::exists()</a> is intended to use used to see if a record already exists in the database, or if it is a &quot;new&quot; record. You normally won't be using it in the context of creating a new active record object since you will already know if you are loading from the database or not. Usually it will be called inside of another method or in a location with a different scope than the constructor call. You can see some examples of its use in <a href="browser:fORMOrdering.php">fORMOrdering</a>.
 </p>
 
 <p>
-However, if you want to validate if a record exists in the database or not based on a primary key, you will want to try and load a record from the database, and then catch the <a href="../flourishlib.com/docs/fNotFoundException.html">fNotFoundException</a> like in your second code example.
+However, if you want to validate if a record exists in the database or not based on a primary key, you will want to try and load a record from the database, and then catch the <a href="../docs/fNotFoundException.html">fNotFoundException</a> like in your second code example.
 </p>
 				</div>
 				

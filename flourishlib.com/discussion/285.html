@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ In a previous suggestion I talked about a widget system that I'm working with (t
 </p>
 
 <p>
-As this system has gotten some more real world use it has become necessary, for my project, to have a way to place an element at the beginning of an <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> array.
+As this system has gotten some more real world use it has become necessary, for my project, to have a way to place an element at the beginning of an <a href="../docs/fTemplating.html">fTemplating</a> array.
 </p>
 
 <p>
@@ -92,7 +92,7 @@ $template-&gt;prepend('widgets', 'special-widget');
 $template-&gt;place('widget-panel');</code></pre>
 
 <p>
- To acheive this I added a method to the <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> class following the same code style as the rest of the class. 
+ To acheive this I added a method to the <a href="../docs/fTemplating.html">fTemplating</a> class following the same code style as the rest of the class. 
 </p>
 <pre class="block php"><code>	/**
 	 * Adds a value to the beginning of an array element
@@ -136,7 +136,7 @@ This was useful for my use-case but may not be generally useful.  I submit this 
 				<div class="body" id="body-882">
 					
 <p>
-How about a third optional parameter for <a href="../flourishlib.com/api/fTemplating.html#add">fTemplating::add()</a> that would allow adding at the beginning? This would reduce the amount of code and would prevent having to create <code>append</code> for symmetry sake.
+How about a third optional parameter for <a href="../api/fTemplating.html#add">fTemplating::add()</a> that would allow adding at the beginning? This would reduce the amount of code and would prevent having to create <code>append</code> for symmetry sake.
 </p>
 				</div>
 				
@@ -208,11 +208,11 @@ In r904 I added the boolean parameter to add things at the beginning. I decided 
 </p>
 
 <p>
-Just to let you know, I did break backwards compatibility with that release. The method you had requested added, <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> was renamed to <a href="../flourishlib.com/api/fTemplating.html#filter">fTemplating::filter()</a> since that was a more accurate name. In addition, a new <a href="../flourishlib.com/api/fTemplating.html#remove">fTemplating::remove()</a> was added that is the opposite of <a href="../flourishlib.com/api/fTemplating.html#add">fTemplating::add()</a>. It will remove an element from the end of an array and return it. It accepts an optional boolean parameter to remove the value from the beginning instead of the end.
+Just to let you know, I did break backwards compatibility with that release. The method you had requested added, <a href="../api/fTemplating.html#remove">fTemplating::remove()</a> was renamed to <a href="../api/fTemplating.html#filter">fTemplating::filter()</a> since that was a more accurate name. In addition, a new <a href="../api/fTemplating.html#remove">fTemplating::remove()</a> was added that is the opposite of <a href="../api/fTemplating.html#add">fTemplating::add()</a>. It will remove an element from the end of an array and return it. It accepts an optional boolean parameter to remove the value from the beginning instead of the end.
 </p>
 
 <p>
-It is also now possible to use array dereference syntax in element names with <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> to access or set those values:
+It is also now possible to use array dereference syntax in element names with <a href="../docs/fTemplating.html">fTemplating</a> to access or set those values:
 </p>
 <pre class="block php"><code>$template-&gt;set('user', array(
     'first_name' =&gt; 'John',

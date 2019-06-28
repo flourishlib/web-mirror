@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -523,7 +523,7 @@ Array
 				<div class="body" id="body-68">
 					
 <p>
-What version of <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> do you have?
+What version of <a href="../docs/fSchema.html">fSchema</a> do you have?
 </p>
 
 <p>
@@ -546,7 +546,7 @@ Also, is the CREATE TABLE statement you provided above the output of <code>SHOW 
 				<div class="body" id="body-69">
 					
 <p>
-<a href="../flourishlib.com/docs/fSchema.html">fSchema</a> Info:
+<a href="../docs/fSchema.html">fSchema</a> Info:
 </p>
 <pre class="block php"><code>/**
  * Gets schema information for the selected database
@@ -606,7 +606,7 @@ tcell_itue_issues  CREATE TABLE `tcell_itue_issues` (
 				<div class="body" id="body-70">
 					
 <p>
-Ok, this should hopefully get all the info I need. Can you paste the follow code on line 575 of <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and send me the output?
+Ok, this should hopefully get all the info I need. Can you paste the follow code on line 575 of <a href="../docs/fSchema.html">fSchema</a> and send me the output?
 </p>
 <pre class="block php"><code>fCore::expose($create_sql);
 fCore::expose($matches);</code></pre>
@@ -853,7 +853,7 @@ From a little bit of searching, it seems as though some how the NO_FIELD_OPTIONS
 </p>
 
 <p>
-Can you execute the following SQL from your command line client and then from <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>?
+Can you execute the following SQL from your command line client and then from <a href="../docs/fDatabase.html">fDatabase</a>?
 </p>
 <pre class="block sql"><code>SELECT VERSION(), USER(), DATABASE();
 SELECT @@GLOBAL.sql_mode;
@@ -935,7 +935,7 @@ foreach ($results as $result) {
 }</code></pre>
 
 <p>
- Primarily I'm interested in the sql modes. The default session one from <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> should be <code>REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ANSI</code>, however I have a feeling somehow yours is getting <code>NO_FIELD_OPTIONS</code> too.
+ Primarily I'm interested in the sql modes. The default session one from <a href="../docs/fDatabase.html">fDatabase</a> should be <code>REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ANSI</code>, however I have a feeling somehow yours is getting <code>NO_FIELD_OPTIONS</code> too.
 </p>
 				</div>
 				
@@ -997,12 +997,12 @@ Unfortunately it looks like it is a bug in your version of MySQL. I am setting A
 </p>
 
 <p>
-You can see if we can work around the bug by changing line 443 of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to:
+You can see if we can work around the bug by changing line 443 of <a href="../docs/fDatabase.html">fDatabase</a> to:
 </p>
 <pre class="block php"><code>			$this-&gt;query(&quot;SET SQL_MODE = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE'&quot;);</code></pre>
 
 <p>
- Let me know if that works. If so, I'll roll it into the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> changes I've been working on.
+ Let me know if that works. If so, I'll roll it into the <a href="../docs/fDatabase.html">fDatabase</a> changes I've been working on.
 </p>
 
 <p>
@@ -1025,7 +1025,7 @@ Thanks!
 				<div class="body" id="body-191">
 					
 <p>
-Did this end up working for you? If so, I'd like to include this in the upcoming <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> enhancements.
+Did this end up working for you? If so, I'd like to include this in the upcoming <a href="../docs/fDatabase.html">fDatabase</a> enhancements.
 </p>
 				</div>
 				

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -78,7 +78,7 @@ FYI : <a href="http://josephkeeler.com/2009/05/php-security-sql-injection-in-ord
 </p>
 
 <p>
-Also, I am using raw SQL queries.  I can imagine that <a href="../flourishlib.com/docs/fORM.html">fORM</a> could prevent this as it knows what all columns are actually in the db.  However, I've got some pretty complex queries that are easiest to do directly with SQL.
+Also, I am using raw SQL queries.  I can imagine that <a href="../docs/fORM.html">fORM</a> could prevent this as it knows what all columns are actually in the db.  However, I've got some pretty complex queries that are easiest to do directly with SQL.
 </p>
 </div>
 
@@ -150,7 +150,7 @@ function modifyQueryForGrid($sql)
 				<div class="body" id="body-1109">
 					
 <p>
-You can use the identifier <code>%r</code> placeholder with <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to escape table and column names.
+You can use the identifier <code>%r</code> placeholder with <a href="../docs/fDatabase.html">fDatabase</a> to escape table and column names.
 </p>
 <pre class="block php"><code>$column    = fRequest::get('column');
 $direction = fRequest::getValid('direction', array('asc', 'desc'));
@@ -158,7 +158,7 @@ $direction = fRequest::getValid('direction', array('asc', 'desc'));
 $result = $db-&gt;query(&quot;SELECT * FROM users ORDER BY %r &quot; . $direction, $column);</code></pre>
 
 <p>
- The downside to this type of approach, versus white-listing, is that you can easily get an <a href="../flourishlib.com/docs/fSQLException.html">fSQLException</a> if a user enters a column that does not exist. You could always use <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to get a list of columns to create a white-list.
+ The downside to this type of approach, versus white-listing, is that you can easily get an <a href="../docs/fSQLException.html">fSQLException</a> if a user enters a column that does not exist. You could always use <a href="../docs/fSchema.html">fSchema</a> to get a list of columns to create a white-list.
 </p>
 				</div>
 				

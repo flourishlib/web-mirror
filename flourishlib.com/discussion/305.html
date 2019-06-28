@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -70,7 +70,7 @@ class Shop extends \\fActiveRecord {}</code></pre>
 </p>
 
 <p>
-So I tried changing the <a href="../flourishlib.com/api/fORM.html#tablize">fORM::tablize()</a> method instead, like this (uses only the last part of the class name):
+So I tried changing the <a href="../api/fORM.html#tablize">fORM::tablize()</a> method instead, like this (uses only the last part of the class name):
 </p>
 <pre class="block php"><code>	static public function tablize($class)
 	{
@@ -231,7 +231,7 @@ You do this by assuming that all related models are of the same namespace. If th
 $subject = $reflector-&gt;getNamespaceName() . '\\\\' . $subject;</code></pre>
 
 <p>
- What would the input to <a href="../flourishlib.com/api/fORM.html#mapClassToNamespace">fORM::mapClassToNamespace()</a>'s $class value look like? Or more importantly where would this be called. If you call it out of a specific class context, you would not solve the problem of several models by the same name. But if you put it in configure() it may work.
+ What would the input to <a href="../api/fORM.html#mapClassToNamespace">fORM::mapClassToNamespace()</a>'s $class value look like? Or more importantly where would this be called. If you call it out of a specific class context, you would not solve the problem of several models by the same name. But if you put it in configure() it may work.
 </p>
 
 <p>
@@ -258,7 +258,7 @@ Just a follow up for anyone reading this thread:
 </p>
 
 <p>
-In r928 (ticket #524), support for namespaced <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes was added. By default the namespaced <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes will ignore their namespace when automatically mapping to a database table. This can obviously be overridden with <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>.
+In r928 (ticket #524), support for namespaced <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes was added. By default the namespaced <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes will ignore their namespace when automatically mapping to a database table. This can obviously be overridden with <a href="../api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>.
 </p>
 <pre class="block php"><code>// This will work with the table &quot;users&quot; and not &quot;models_users&quot; or &quot;models.users&quot;
 namespace Models;
@@ -266,7 +266,7 @@ namespace Models;
 class User extends \\fActiveRecord { }</code></pre>
 
 <p>
- All methods that accept a related class name as part of the method name will automatically prepend the namespace of the current class to the related class. This means all related <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes should be in the same namespace.
+ All methods that accept a related class name as part of the method name will automatically prepend the namespace of the current class to the related class. This means all related <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes should be in the same namespace.
 </p>
 <pre class="block php"><code>namespace Models;
 

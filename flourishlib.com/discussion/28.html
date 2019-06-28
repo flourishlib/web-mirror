@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -82,13 +82,13 @@ how must look the code to alert the user inputed a file bigger than limit set by
 				<div class="body" id="body-84">
 					
 <p>
-actually is coing to error_reporting like: Uncaught exception '<a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a>' with message 'Please upload a file' in C:<br />
+actually is coing to error_reporting like: Uncaught exception '<a href="../docs/fValidationException.html">fValidationException</a>' with message 'Please upload a file' in C:<br />
 wamp<br />
 www<br />
 admin<br />
 inc<br />
 flourish<br />
-<a href="../flourishlib.com/docs/fUpload.html">fUpload</a>.php:286 Stack trace:
+<a href="../docs/fUpload.html">fUpload</a>.php:286 Stack trace:
 </p>
 				</div>
 				
@@ -111,11 +111,11 @@ I think what is most likely happening is that the file uploaded is larger than e
 </p>
 
 <p>
-It looks like you can detect such an error by checking to see if the <code>$_POST</code> and <code>$_FILES</code> superglobals are empty. I can probably enhance <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> to detect such a situation, however the user would also loose any non-file upload data. Because of this, it might be good to set your <code>post_max_size</code> ini setting fairly high.
+It looks like you can detect such an error by checking to see if the <code>$_POST</code> and <code>$_FILES</code> superglobals are empty. I can probably enhance <a href="../docs/fUpload.html">fUpload</a> to detect such a situation, however the user would also loose any non-file upload data. Because of this, it might be good to set your <code>post_max_size</code> ini setting fairly high.
 </p>
 
 <p>
-If you don't mind, open a ticket for <a href="../flourishlib.com/docs/fUpload.html">fUpload</a> detecting if the maximum post size was exceeded. I can probably add that functionality in the next day or two.
+If you don't mind, open a ticket for <a href="../docs/fUpload.html">fUpload</a> detecting if the maximum post size was exceeded. I can probably add that functionality in the next day or two.
 </p>
 				</div>
 				
@@ -134,7 +134,7 @@ If you don't mind, open a ticket for <a href="../flourishlib.com/docs/fUpload.ht
 				<div class="body" id="body-86">
 					
 <p>
-waw, fast reply, tank you. i want to mentioned the fact that i don't have more than one year experience in programming so if if i get wrong to put the problem i apologize. 2 days ago i find this library and i start to work whit. return to my post, ok i check if the FILES is empty and i retun a message to the user, but your class verify if the file types is wrong or the file upload is larger than my setMaxFileSize('x'); .But i want to alert user for his mistake, no to pass to the <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a>. So if you can do something like this please...  it's hurry.
+waw, fast reply, tank you. i want to mentioned the fact that i don't have more than one year experience in programming so if if i get wrong to put the problem i apologize. 2 days ago i find this library and i start to work whit. return to my post, ok i check if the FILES is empty and i retun a message to the user, but your class verify if the file types is wrong or the file upload is larger than my setMaxFileSize('x'); .But i want to alert user for his mistake, no to pass to the <a href="../docs/fValidationException.html">fValidationException</a>. So if you can do something like this please...  it's hurry.
 </p>
 				</div>
 				

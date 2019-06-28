@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Hello.
 </p>
 
 <p>
-I've been wondering for a couple of days if it's possible (and desirable) to build an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that's not just one row from one table but a result from a JOIN in MySQL or whatever.
+I've been wondering for a couple of days if it's possible (and desirable) to build an <a href="../docs/fActiveRecord.html">fActiveRecord</a> that's not just one row from one table but a result from a JOIN in MySQL or whatever.
 </p>
 
 <p>
@@ -66,7 +66,7 @@ The reason I'm wondering about this is because I have a bunch of tables where on
 </p>
 
 <p>
-Some sort of compromise to this could perhaps be to create an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class that always instantiates an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> from the other table and puts it in a public property in the class. Maybe that's the best solution if I want to do something like this?
+Some sort of compromise to this could perhaps be to create an <a href="../docs/fActiveRecord.html">fActiveRecord</a> class that always instantiates an <a href="../docs/fActiveRecord.html">fActiveRecord</a> from the other table and puts it in a public property in the class. Maybe that's the best solution if I want to do something like this?
 </p>
 
 <p>
@@ -88,11 +88,11 @@ Kindly, Marcus
 				<div class="body" id="body-285">
 					
 <p>
-I think the best way to accomplish the composite <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> functionality you desire is through a database view, however I have not tested MySQL views with <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>, so I'm not positive that they will work.
+I think the best way to accomplish the composite <a href="../docs/fActiveRecord.html">fActiveRecord</a> functionality you desire is through a database view, however I have not tested MySQL views with <a href="../docs/fSchema.html">fSchema</a>, so I'm not positive that they will work.
 </p>
 
 <p>
-If you want to fake foreign keys with MyISAM, that can be done via <a href="../flourishlib.com/api/fSchema.html#setKeysOverride">fSchema::setKeysOverride()</a>. You will need to create an associative array containing the appropriate relationship information and then the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes will behave as though the foreign keys exist. The only danger in this is that, just like any operations on MyISAM tables, transactions will pretend to work, even though they don't do anything. The ORM uses transactions to rollback database operations if a related filesystem operation fails or if a related record is set to be associated via <a href="../flourishlib.com/api/fActiveRecord.html#store">fActiveRecord::store()</a>, but the query fails. Honestly, I haven't really ever had an operation fail after <a href="../flourishlib.com/api/fActiveRecord.html#validate">fActiveRecord::validate()</a> has successfully been executed, but it isn't impossible. Like I said, this is a risk whenever you run MyISAM tables though, and isn't specific to Flourish.
+If you want to fake foreign keys with MyISAM, that can be done via <a href="../api/fSchema.html#setKeysOverride">fSchema::setKeysOverride()</a>. You will need to create an associative array containing the appropriate relationship information and then the <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes will behave as though the foreign keys exist. The only danger in this is that, just like any operations on MyISAM tables, transactions will pretend to work, even though they don't do anything. The ORM uses transactions to rollback database operations if a related filesystem operation fails or if a related record is set to be associated via <a href="../api/fActiveRecord.html#store">fActiveRecord::store()</a>, but the query fails. Honestly, I haven't really ever had an operation fail after <a href="../api/fActiveRecord.html#validate">fActiveRecord::validate()</a> has successfully been executed, but it isn't impossible. Like I said, this is a risk whenever you run MyISAM tables though, and isn't specific to Flourish.
 </p>
 				</div>
 				
@@ -115,7 +115,7 @@ I've actually had to remove my views to use the ORM because of user privileges r
 </p>
 
 <p>
-I was wondering if I can hook in a build of a related table automatically when the class is constructed? I just realised I can put a constructor in the class that inherits <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, run parent::__construct(); and then build the related class, would that work as long I pass along any variables that get sent in through the constructor?
+I was wondering if I can hook in a build of a related table automatically when the class is constructed? I just realised I can put a constructor in the class that inherits <a href="../docs/fActiveRecord.html">fActiveRecord</a>, run parent::__construct(); and then build the related class, would that work as long I pass along any variables that get sent in through the constructor?
 </p>
 
 <p>
@@ -165,7 +165,7 @@ Ok I have been trying to set up a keyoverride like you suggested but it's failin
 </p>
 
 <p>
-Making them foreign keys in the database is no problem so I'm guessing it's a problem with the <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> class, is this correct?
+Making them foreign keys in the database is no problem so I'm guessing it's a problem with the <a href="../docs/fSchema.html">fSchema</a> class, is this correct?
 </p>
 
 <p>
@@ -192,7 +192,7 @@ Kindly, Marcus.
 				<div class="body" id="body-289">
 					
 <p>
-Ok after some digging I found the method fetchMySQLKeys in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.
+Ok after some digging I found the method fetchMySQLKeys in <a href="../docs/fSchema.html">fSchema</a>.
 </p>
 
 <p>
@@ -210,7 +210,7 @@ $keys[$table]['index'][] = explode('&quot;,&quot;', $match[2]);
 <pre class="block php"><code>$keys[$table]['index']  = array();</code></pre>
 
 <p>
- I get the right keys back when I do an <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>-&gt;getKeys() dump.
+ I get the right keys back when I do an <a href="../docs/fSchema.html">fSchema</a>-&gt;getKeys() dump.
 </p>
 
 <p>
@@ -279,7 +279,7 @@ Lets say you have a <code>group_id</code> column in your <code>users</code> tabl
 				<div class="body" id="body-292">
 					
 <p>
-While I have considered making a simpler way to define relationships, it really only matters for MySQL MyISAM tables, and those don't support transactions anyway, which are a huge deal. I have made it possible to fake some of the foreign key functionality through <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>, but I don't think I am going to be trying to fully implement foreign key functionality in PHP due to things like cascading deletes and transactions.
+While I have considered making a simpler way to define relationships, it really only matters for MySQL MyISAM tables, and those don't support transactions anyway, which are a huge deal. I have made it possible to fake some of the foreign key functionality through <a href="../docs/fSchema.html">fSchema</a>, but I don't think I am going to be trying to fully implement foreign key functionality in PHP due to things like cascading deletes and transactions.
 </p>
 				</div>
 				

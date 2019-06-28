@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -315,7 +315,7 @@ So this seems to be somewhat of an issue with the mysqli extension. When grabbin
 </p>
 
 <p>
-In r895 I've committed a fix that will cause it to only allocate what is needed to the fit the content for normal <code>query()</code> calls, but then <code>unbufferedQuery()</code> will continue to use the current non-stored functionality. Another option is to explicitly call <a href="../flourishlib.com/api/fStatement.html#__destruct">fStatement::__destruct()</a>. This will free the memory.
+In r895 I've committed a fix that will cause it to only allocate what is needed to the fit the content for normal <code>query()</code> calls, but then <code>unbufferedQuery()</code> will continue to use the current non-stored functionality. Another option is to explicitly call <a href="../api/fStatement.html#__destruct">fStatement::__destruct()</a>. This will free the memory.
 </p>
 				</div>
 				
@@ -411,7 +411,7 @@ As I mentioned in my previous content, you don't need to do anything as of r895.
 </p>
 
 <p>
-<code>unset()</code> removes a variable reference to a value, but <code>__destruct()</code> will only be called when all references have been destroyed. It seems that PHP thinks there is still some references to your <a href="../flourishlib.com/docs/fStatement.html">fStatement</a> object.
+<code>unset()</code> removes a variable reference to a value, but <code>__destruct()</code> will only be called when all references have been destroyed. It seems that PHP thinks there is still some references to your <a href="../docs/fStatement.html">fStatement</a> object.
 </p>
 				</div>
 				

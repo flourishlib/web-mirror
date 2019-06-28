@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -70,11 +70,11 @@ A short description of what each class intends to do or help with:
 </p>
 
 <p>
-<em>sCache</em> - extension of <a href="../flourishlib.com/docs/fCache.html">fCache</a> but makes each key unique so cache keys (like those of APC) do not collide
+<em>sCache</em> - extension of <a href="../docs/fCache.html">fCache</a> but makes each key unique so cache keys (like those of APC) do not collide
 </p>
 
 <p>
-<em>sGrammar</em> - extension of <a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>; has a method dashize() that does the same as underscorize() but with dashes; it uses <a href="../flourishlib.com/api/fURL.html#makeFriendly">fURL::makeFriendly()</a> but also supports camelCase notation
+<em>sGrammar</em> - extension of <a href="../docs/fGrammar.html">fGrammar</a>; has a method dashize() that does the same as underscorize() but with dashes; it uses <a href="../api/fURL.html#makeFriendly">fURL::makeFriendly()</a> but also supports camelCase notation
 </p>
 
 <p>
@@ -82,11 +82,11 @@ A short description of what each class intends to do or help with:
 </p>
 
 <p>
-<em>sImage</em> - a questionable extension to <a href="../flourishlib.com/docs/fImage.html">fImage</a>; this was mainly made because <a href="../flourishlib.com/api/fImage.html#rotate">fImage::rotate()</a> does not take into account IFD* exif data that contains the orientation information; has a flip() method for flipping pixels vertically or horizontally or both (this is required by some orientations)
+<em>sImage</em> - a questionable extension to <a href="../docs/fImage.html">fImage</a>; this was mainly made because <a href="../api/fImage.html#rotate">fImage::rotate()</a> does not take into account IFD* exif data that contains the orientation information; has a flip() method for flipping pixels vertically or horizontally or both (this is required by some orientations)
 </p>
 
 <p>
-<em>sJSONP</em> - like <a href="../flourishlib.com/docs/fJSON.html">fJSON</a>, but for sending JSONP responses
+<em>sJSONP</em> - like <a href="../docs/fJSON.html">fJSON</a>, but for sending JSONP responses
 </p>
 
 <p>
@@ -94,7 +94,7 @@ A short description of what each class intends to do or help with:
 </p>
 
 <p>
-<em>sRequest</em> - Generally, when I handle a POST request, I redirect the user after. This means that if the user hits the back button, first they are not bothered by that annoying message that is meaningless to 99% of users, but also it means that the data from the form is not put back by the browser (which means less usability). sRequest::savePostValues('some_id') can save the POST values into session for later retrieval. You can delete the values when the form is submitted successfully by calling sRequest::deletePostValues(). You can restore the POST values (calls <a href="../flourishlib.com/api/fRequest.html#set">fRequest::set()</a>) when re-rendering the form after a validation error by calling sRequest::setPostValues(). This class also has a non-throwing method to check a CSRF token string, useful with <a href="../flourishlib.com/api/fValidation.html#addCallbackRule">fValidation::addCallbackRule()</a>.
+<em>sRequest</em> - Generally, when I handle a POST request, I redirect the user after. This means that if the user hits the back button, first they are not bothered by that annoying message that is meaningless to 99% of users, but also it means that the data from the form is not put back by the browser (which means less usability). sRequest::savePostValues('some_id') can save the POST values into session for later retrieval. You can delete the values when the form is submitted successfully by calling sRequest::deletePostValues(). You can restore the POST values (calls <a href="../api/fRequest.html#set">fRequest::set()</a>) when re-rendering the form after a validation error by calling sRequest::setPostValues(). This class also has a non-throwing method to check a CSRF token string, useful with <a href="../api/fValidation.html#addCallbackRule">fValidation::addCallbackRule()</a>.
 </p>
 
 <p>
@@ -102,11 +102,11 @@ A short description of what each class intends to do or help with:
 </p>
 
 <p>
-<em>sTemplate</em> - This is an alternative to <a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> which is similar to PHPTemplate. If you have used Drupal in the past, consider sTemplate::buffer() to be equivalent to Drupal's theme() function and the .tpl.php files will not be unusual to you. Features CSS minification optionally using CssMin and CDN support. See the documentation and tutorial for more details.
+<em>sTemplate</em> - This is an alternative to <a href="../docs/fTemplating.html">fTemplating</a> which is similar to PHPTemplate. If you have used Drupal in the past, consider sTemplate::buffer() to be equivalent to Drupal's theme() function and the .tpl.php files will not be unusual to you. Features CSS minification optionally using CssMin and CDN support. See the documentation and tutorial for more details.
 </p>
 
 <p>
-<em>sTimestamp</em> - This is an extension <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> that can receive a RFC3339 timestamp as well as whatever can be parsed by <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a>.
+<em>sTimestamp</em> - This is an extension <a href="../docs/fTimestamp.html">fTimestamp</a> that can receive a RFC3339 timestamp as well as whatever can be parsed by <a href="../docs/fTimestamp.html">fTimestamp</a>.
 </p>
 
 <p>
@@ -152,7 +152,7 @@ My only suggestion would have been to do this as a fork to Flourish and either c
 </p>
 
 <p>
-I plan to be adding a <a href="../flourishlib.com/api/fJSON.html#encodeWithPadding">fJSON::encodeWithPadding()</a> method for JSONP to my fork tonight -- timing is rather coincidential.
+I plan to be adding a <a href="../api/fJSON.html#encodeWithPadding">fJSON::encodeWithPadding()</a> method for JSONP to my fork tonight -- timing is rather coincidential.
 </p>
 
 <p>
@@ -175,7 +175,7 @@ A few of the newer classes seem interesting, but what were your reasons for not 
 				<div class="body" id="body-1723">
 					
 <p>
-I am actually waiting for Flourish to officially be on Github before I do any serious forking because then Will will be able to accept pull requests and it will be a lot easier to collaborate. I really do not even want my <em>sImage</em> class because I want Flourish to have the 2 methods it has properly done with the operations queue that <a href="../flourishlib.com/docs/fImage.html">fImage</a> uses. (1.3 is likely to not have the <em>sImage</em> class as I hope Flourish will have the methods and ideas merged in, unless <a href="../flourishlib.com/docs/fImage.html">fImage</a> fully becomes easily extendable.)
+I am actually waiting for Flourish to officially be on Github before I do any serious forking because then Will will be able to accept pull requests and it will be a lot easier to collaborate. I really do not even want my <em>sImage</em> class because I want Flourish to have the 2 methods it has properly done with the operations queue that <a href="../docs/fImage.html">fImage</a> uses. (1.3 is likely to not have the <em>sImage</em> class as I hope Flourish will have the methods and ideas merged in, unless <a href="../docs/fImage.html">fImage</a> fully becomes easily extendable.)
 </p>
 
 <p>
@@ -185,7 +185,7 @@ Maybe someday there will be no Sutra project and it will simply be a fork of Flo
 <p>
 Otherwise, the structure is relatively the same I thought? I'm just using the letter <em>s</em> instead of <em>f</em>. Like Flourish, I have a <em>classes</em> directory and a <em>tests</em> directory (although the <em>tests</em> directory is not the same because I do not have the same requirements as Flourish for testing). I think this naming style is a neat alternative to PHP namespaces (whether using <em>_</em> to emulate or actual namespaces with the <em>namespace</em> and <em>using</em> keywords). I have actually got into arguments about this with those writing standards (like PSR-0) as they are very pro <em>Vendor<br />
 Namespace<br />
-Style</em> class names and completely against global namespaces. It's a new road of PHP I do not feel like going down at all, especially in my personal projects (this being one of them). This makes PHP far too complicated and even more Java-like (I prefer the term <em>corporate-style</em>), and I am strictly not a fan. They are also encouraging the use of auto-loading when it has been made quite clear again and again that APC and others are better off with code loading with static includes (which is what <a href="../flourishlib.com/docs/fLoader.html">fLoader</a> does, and my <em>sLoader</em> class).
+Style</em> class names and completely against global namespaces. It's a new road of PHP I do not feel like going down at all, especially in my personal projects (this being one of them). This makes PHP far too complicated and even more Java-like (I prefer the term <em>corporate-style</em>), and I am strictly not a fan. They are also encouraging the use of auto-loading when it has been made quite clear again and again that APC and others are better off with code loading with static includes (which is what <a href="../docs/fLoader.html">fLoader</a> does, and my <em>sLoader</em> class).
 </p>
 
 <p>
@@ -220,7 +220,7 @@ This all being said, my general point was just more about forking, which you ans
 </p>
 
 <p>
-For me, part of the balance overall is what should be in the general purpose library vs. what should be in more of a traditional framework.  I don't think a general purpose library should say much at all about loading, static or auto, as such, I stay away from <a href="../flourishlib.com/docs/fLoader.html">fLoader</a> and the like.
+For me, part of the balance overall is what should be in the general purpose library vs. what should be in more of a traditional framework.  I don't think a general purpose library should say much at all about loading, static or auto, as such, I stay away from <a href="../docs/fLoader.html">fLoader</a> and the like.
 </p>
 
 <p>
@@ -281,7 +281,7 @@ I was originally intending for Sutra to not be a generic set of code. It was goi
 </p>
 
 <p>
-Rather, I am giving the programmer the option on the way to route, how to manage databases (you really don't have to use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> if you don't want to), and responses. sCore is merely a suggestion and is how I am doing sites. I extend from sCore and write those methods as well anything else that the specific site might need in general (methods like isProductionMode() and similar things).
+Rather, I am giving the programmer the option on the way to route, how to manage databases (you really don't have to use <a href="../docs/fDatabase.html">fDatabase</a> if you don't want to), and responses. sCore is merely a suggestion and is how I am doing sites. I extend from sCore and write those methods as well anything else that the specific site might need in general (methods like isProductionMode() and similar things).
 </p>
 
 <p>
@@ -344,7 +344,7 @@ Exceptions and a class BadValueException (prior to real namespaces: VendorName_N
 </p>
 
 <p>
-Furthermore, on all the projects I have done with Flourish so far, it satisfies all my needs except for what I write as library code of course, be it in Sutra or in the project's private ('proprietary') code. One website I worked on has classes that begin with <em>p</em> and they may extend from Flourish/Sutra and another I am working on has <em>h</em> as the prefix. <em>hYouTube</em> for example is a static class that deals with the YouTube API (it even uses <a href="../flourishlib.com/docs/fXML.html">fXML</a> to parse responses).
+Furthermore, on all the projects I have done with Flourish so far, it satisfies all my needs except for what I write as library code of course, be it in Sutra or in the project's private ('proprietary') code. One website I worked on has classes that begin with <em>p</em> and they may extend from Flourish/Sutra and another I am working on has <em>h</em> as the prefix. <em>hYouTube</em> for example is a static class that deals with the YouTube API (it even uses <a href="../docs/fXML.html">fXML</a> to parse responses).
 </p>
 
 <p>
@@ -379,7 +379,7 @@ hLoader::best();</code></pre>
 <p>
 I'm happy to stick with my personal projects staying far far away from real namespaces in PHP, even with all the fanfare. There is no need for this level of complication. And also, having to type '<br />
 strlen' to get the global strlen() in a namespaced section of code is stupid. I actually tried using Flourish with namespaces and got so fed up with typing '<br />
-<a href="../flourishlib.com/docs/fRequest.html">fRequest</a>; and similar that I finally figured out to be like Flourish and adopt a single letter as a prefix for my general utility classes (such as those in Sutra).
+<a href="../docs/fRequest.html">fRequest</a>; and similar that I finally figured out to be like Flourish and adopt a single letter as a prefix for my general utility classes (such as those in Sutra).
 </p>
 				</div>
 				

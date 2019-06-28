@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,11 +58,11 @@ So this is an idea from Silverstripe which also has a ORM system.
 </p>
 
 <p>
-Let's say I have a User class which extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> with the proper table set up in the database. Then if I wanted different kinds of users I would set up classes that extend User that in turn have tables set up with a one-to-one relationship to the users table via the primary key.
+Let's say I have a User class which extends <a href="../docs/fActiveRecord.html">fActiveRecord</a> with the proper table set up in the database. Then if I wanted different kinds of users I would set up classes that extend User that in turn have tables set up with a one-to-one relationship to the users table via the primary key.
 </p>
 
 <p>
-For example, let's say I have the tables users, company_users and private_users then I would create the classes User-&gt;<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, CompanyUser-&gt;User, PrivateUser-&gt;User. Ideally Flourish would handle the joins behind the scenes and even though the two child classes consist of two tables it could be treated as one through the get/set methods.
+For example, let's say I have the tables users, company_users and private_users then I would create the classes User-&gt;<a href="../docs/fActiveRecord.html">fActiveRecord</a>, CompanyUser-&gt;User, PrivateUser-&gt;User. Ideally Flourish would handle the joins behind the scenes and even though the two child classes consist of two tables it could be treated as one through the get/set methods.
 </p>
 
 <p>
@@ -84,7 +84,7 @@ I've actually managed to get a very basic version of this set up with Flourish t
 				<div class="body" id="body-623">
 					
 <p>
-It should be possible to implement such functionality using the plugin architecture, in the same way as <a href="../flourishlib.com/docs/fORMCOlumn.html">fORMCOlumn</a>, <a href="../flourishlib.com/docs/fORMMoney.html">fORMMoney</a>, <a href="../flourishlib.com/docs/fORMOrdering.html">fORMOrdering</a>, etc. You would basically need to reflect the parent object to get all of the applicable column-based method names, and proxy them. Then you'd have to implement custom load(), store(), validate(), etc that would call those methods on both objects.
+It should be possible to implement such functionality using the plugin architecture, in the same way as <a href="../docs/fORMCOlumn.html">fORMCOlumn</a>, <a href="../docs/fORMMoney.html">fORMMoney</a>, <a href="../docs/fORMOrdering.html">fORMOrdering</a>, etc. You would basically need to reflect the parent object to get all of the applicable column-based method names, and proxy them. Then you'd have to implement custom load(), store(), validate(), etc that would call those methods on both objects.
 </p>
 
 <p>
@@ -111,7 +111,7 @@ Ok so I have been trying out the plugin architecture with my current implementat
 </p>
 
 <p>
-However when I read the code in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> I realized that the <span class="underline">call method matches the callback to the raw $method_name and not the $action. Would it be possible to check for both or would that slow things down too much?</span>
+However when I read the code in <a href="../docs/fActiveRecord.html">fActiveRecord</a> I realized that the <span class="underline">call method matches the callback to the raw $method_name and not the $action. Would it be possible to check for both or would that slow things down too much?</span>
 </p>
 
 <p>
@@ -166,7 +166,7 @@ Ok so I'm pretty much finished with my rather weird implementation and overall e
 );</code></pre>
 
 <p>
- It would give me a chance to modify the returned object. Right now the object that's returned is &quot;bare bones&quot; so to speak so if I've added my own properties to my <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> classes they won't get returned when loadFromIdentityMap() is used. With this callback I would get the chance to make those modifications. I've tried adding it and it works.
+ It would give me a chance to modify the returned object. Right now the object that's returned is &quot;bare bones&quot; so to speak so if I've added my own properties to my <a href="../docs/fActiveRecord.html">fActiveRecord</a> classes they won't get returned when loadFromIdentityMap() is used. With this callback I would get the chance to make those modifications. I've tried adding it and it works.
 </p>
 				</div>
 				

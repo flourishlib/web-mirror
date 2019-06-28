@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Would it be useful/possible for <a href="../flourishlib.com/api/fORMRelated.html#buildRecords">fORMRelated::buildRecords()</a> (and <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>'s build related method by extension) to allow where clauses in its parameters?
+Would it be useful/possible for <a href="../api/fORMRelated.html#buildRecords">fORMRelated::buildRecords()</a> (and <a href="../docs/fActiveRecord.html">fActiveRecord</a>'s build related method by extension) to allow where clauses in its parameters?
 </p>
 </div>
 
@@ -72,12 +72,12 @@ The issue with this is that <code>buildRecords()</code> feeds off of the related
 </p>
 
 <p>
-What you can do is <a href="../flourishlib.com/api/fRecordSet.html#filter">fRecordSet::filter()</a> the records using method names, which conveniently offer much of the functionality of the where conditions in <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>:
+What you can do is <a href="../api/fRecordSet.html#filter">fRecordSet::filter()</a> the records using method names, which conveniently offer much of the functionality of the where conditions in <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>:
 </p>
 <pre class="block php"><code>$active_groups = $user-&gt;buildGroups()-&gt;filter(array('getStatus=' =&gt; 'Active'));</code></pre>
 
 <p>
- Alternatively, it wouldn't be that hard to write a plugin for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> that would provide a different method that would always execute a SQL statement and would allow passing in conditions. <a href="../flourishlib.com/docs/fORMDate.html">fORMDate</a>, <a href="../flourishlib.com/docs/fORMColumn.html">fORMColumn</a>, <a href="../flourishlib.com/docs/fORMFile.html">fORMFile</a>, <a href="../flourishlib.com/docs/fORMOrdering.html">fORMOrdering</a>, <a href="../flourishlib.com/docs/fORMJSON.html">fORMJSON</a> and <a href="../flourishlib.com/docs/fORMMoney.html">fORMMoney</a> are all written as <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> plugins and might serve as a guide to making a plugin.
+ Alternatively, it wouldn't be that hard to write a plugin for <a href="../docs/fActiveRecord.html">fActiveRecord</a> that would provide a different method that would always execute a SQL statement and would allow passing in conditions. <a href="../docs/fORMDate.html">fORMDate</a>, <a href="../docs/fORMColumn.html">fORMColumn</a>, <a href="../docs/fORMFile.html">fORMFile</a>, <a href="../docs/fORMOrdering.html">fORMOrdering</a>, <a href="../docs/fORMJSON.html">fORMJSON</a> and <a href="../docs/fORMMoney.html">fORMMoney</a> are all written as <a href="../docs/fActiveRecord.html">fActiveRecord</a> plugins and might serve as a guide to making a plugin.
 </p>
 				</div>
 				

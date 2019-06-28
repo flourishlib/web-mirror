@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I don't understand why I'm getting this error.  It seems flourish is not building the SQL query correctly in <a href="../flourishlib.com/docs/fRecordset.html">fRecordset</a>.  Issue exists in r545(I think it was that. I just overwrote it!) and also r572.  Why does the SQL statement have &quot;ORDER BY&quot; with no parameter?  In fact, why is it including &quot;ORDER BY&quot; at all?
+I don't understand why I'm getting this error.  It seems flourish is not building the SQL query correctly in <a href="../docs/fRecordset.html">fRecordset</a>.  Issue exists in r545(I think it was that. I just overwrote it!) and also r572.  Why does the SQL statement have &quot;ORDER BY&quot; with no parameter?  In fact, why is it including &quot;ORDER BY&quot; at all?
 </p>
 
 <p>
@@ -137,7 +137,7 @@ It seems the problem is with the lack of a unique index in the table &quot;lerg1
 </p>
 
 <p>
-However,  will this always be the case?  Unfortunately, in some cases I can't modify the tables.  In those case, will I be forced to use the regular SQL instead of <a href="../flourishlib.com/docs/fRecordset.html">fRecordset</a>?
+However,  will this always be the case?  Unfortunately, in some cases I can't modify the tables.  In those case, will I be forced to use the regular SQL instead of <a href="../docs/fRecordset.html">fRecordset</a>?
 </p>
 				</div>
 				
@@ -160,7 +160,7 @@ Yes, the ORM does require that all tables have primary keys. I add a mention of 
 </p>
 
 <p>
-When no <code>$order_bys</code> are specified with <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a>, the record will be ordered by the primary key. Since you don't have a primary key, that is why it was breaking. I'll check the documentation on that method too.
+When no <code>$order_bys</code> are specified with <a href="../api/fRecordSet.html#build">fRecordSet::build()</a>, the record will be ordered by the primary key. Since you don't have a primary key, that is why it was breaking. I'll check the documentation on that method too.
 </p>
 				</div>
 				

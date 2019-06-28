@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -70,7 +70,7 @@ For example : when doing a $user = new MyUser(); $user-&gt;store(); it would fai
 </p>
 
 <p>
-Workaround was to do a &quot;foreach $model_class: $activate = new $model_class;&quot; : instanctiating the classes updates <a href="../flourishlib.com/docs/fORM.html">fORM</a> with the class to table map.
+Workaround was to do a &quot;foreach $model_class: $activate = new $model_class;&quot; : instanctiating the classes updates <a href="../docs/fORM.html">fORM</a> with the class to table map.
 </p>
 </div>
 
@@ -136,14 +136,14 @@ $job-&gt;store();</code></pre>
 </p>
 
 <p>
-Mon Feb 15 11:57:35 2010 error 141.33.102.211 PHP Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fProgrammerException.html">fProgrammerException</a>' with message 'The noun specified could not be singularized' in /opt/apache/***/<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>.php:517<br />
+Mon Feb 15 11:57:35 2010 error 141.33.102.211 PHP Fatal error: Uncaught exception '<a href="../docs/fProgrammerException.html">fProgrammerException</a>' with message 'The noun specified could not be singularized' in /opt/apache/***/<a href="../docs/fGrammar.html">fGrammar</a>.php:517<br />
 nStack trace:<br />
-n#0 /opt/apache/***/<a href="../flourishlib.com/docs/fORM.html">fORM</a>.php(337): fGrammar::singularize('company_proj_files_...')<br />
-n#1 /opt/apache/***/<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.php(2668): fORM::classize('company_proj_files_...')<br />
-n#2 /opt/apache/+++/ajax.php(196): <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>-&gt;store()<br />
+n#0 /opt/apache/***/<a href="../docs/fORM.html">fORM</a>.php(337): fGrammar::singularize('company_proj_files_...')<br />
+n#1 /opt/apache/***/<a href="../docs/fActiveRecord.html">fActiveRecord</a>.php(2668): fORM::classize('company_proj_files_...')<br />
+n#2 /opt/apache/+++/ajax.php(196): <a href="../docs/fActiveRecord.html">fActiveRecord</a>-&gt;store()<br />
 n#3 /opt/apache/+++/index.php(18): include('/opt/apache/...')<br />
 n#4 {main}<br />
-n thrown in /opt/apache/***/<a href="../flourishlib.com/docs/fGrammar.html">fGrammar</a>.php on line 517, referer: xxx
+n thrown in /opt/apache/***/<a href="../docs/fGrammar.html">fGrammar</a>.php on line 517, referer: xxx
 </p>
 
 <p>
@@ -151,7 +151,7 @@ Reason : in the method fORM::classize, it does not find the related table in the
 </p>
 
 <p>
-When calling $activate = new FilesRef(); previously, it loads the table to class reference into <a href="../flourishlib.com/docs/fORM.html">fORM</a> and classize works.
+When calling $activate = new FilesRef(); previously, it loads the table to class reference into <a href="../docs/fORM.html">fORM</a> and classize works.
 </p>
 
 <p>
@@ -178,11 +178,11 @@ But I don't think anything is wrong actually :
 </p>
 
 <p>
-If the class is not instantiated, the configure() method is not called, hence <a href="../flourishlib.com/docs/fORM.html">fORM</a> table to class map not beeing updated.
+If the class is not instantiated, the configure() method is not called, hence <a href="../docs/fORM.html">fORM</a> table to class map not beeing updated.
 </p>
 
 <p>
-The solution may be to add a convention about <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> : do not use it in configure() but in the init.php file or whatever file is called first. (in that case, it might be better suited to have a method like mapClassNameToTable instead)
+The solution may be to add a convention about <a href="../api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> : do not use it in configure() but in the init.php file or whatever file is called first. (in that case, it might be better suited to have a method like mapClassNameToTable instead)
 </p>
 				</div>
 				
@@ -228,7 +228,7 @@ I will be looking into the issue with configure() not being called yet at this p
 </p>
 
 <p>
-Please note that you can pass a class name as the first parameter to <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>. I might also just need to change the recommendation to have <a href="../flourishlib.com/api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> be called in the init script instead of in ::configure(). I'll update here with what I find.
+Please note that you can pass a class name as the first parameter to <a href="../api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a>. I might also just need to change the recommendation to have <a href="../api/fORM.html#mapClassToTable">fORM::mapClassToTable()</a> be called in the init script instead of in ::configure(). I'll update here with what I find.
 </p>
 				</div>
 				

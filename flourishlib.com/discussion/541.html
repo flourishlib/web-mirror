@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -62,11 +62,11 @@ I am doing an oracle sql query where it returns around 180k rows which i then fe
 </p>
 
 <p>
-However <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> dumps on me before that with...
+However <a href="../docs/fDatabase.html">fDatabase</a> dumps on me before that with...
 </p>
 
 <p>
-Fatal error: Allowed memory size of 947912704 bytes exhausted (tried to allocate 11 bytes) in /path/flourish/<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.php on line 2485
+Fatal error: Allowed memory size of 947912704 bytes exhausted (tried to allocate 11 bytes) in /path/flourish/<a href="../docs/fDatabase.html">fDatabase</a>.php on line 2485
 </p>
 
 <p>
@@ -100,7 +100,7 @@ If you are dumping to a CSV you probably don't want the query to be buffered, wh
 </p>
 
 <p>
-<a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>#UnbufferedQueries talks about how to run an unbuffered query, which should use significantly less memory.
+<a href="../docs/fDatabase.html">fDatabase</a>#UnbufferedQueries talks about how to run an unbuffered query, which should use significantly less memory.
 </p>
 				</div>
 				
@@ -127,7 +127,7 @@ No joy either...
 </p>
 
 <p>
-Fatal error: Allowed memory size of 444596224 bytes exhausted (tried to allocate 49 bytes) in /path/flourish/<a href="../flourishlib.com/docs/fUnbufferedResult.html">fUnbufferedResult</a>.php on line 345
+Fatal error: Allowed memory size of 444596224 bytes exhausted (tried to allocate 49 bytes) in /path/flourish/<a href="../docs/fUnbufferedResult.html">fUnbufferedResult</a>.php on line 345
 </p>
 
 <p>
@@ -166,7 +166,7 @@ Thanks
 				<div class="body" id="body-1578">
 					
 <p>
-Hmm, that implies to be that the oracle DB extension must not support unbuffered queries, and Flourish is emulating them, or there is a bug in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>.
+Hmm, that implies to be that the oracle DB extension must not support unbuffered queries, and Flourish is emulating them, or there is a bug in <a href="../docs/fDatabase.html">fDatabase</a>.
 </p>
 
 <p>

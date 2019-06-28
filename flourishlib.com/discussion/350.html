@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I'm using APC cache as the cache of <a href="../flourishlib.com/docs/fCache.html">fCache</a>. I have enabled ORM caching using this cache.
+I'm using APC cache as the cache of <a href="../docs/fCache.html">fCache</a>. I have enabled ORM caching using this cache.
 </p>
 
 <p>
@@ -294,7 +294,7 @@ As refresh the page every time at least two 'inserts' occur. And many of these m
 </p>
 
 <p>
-<a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> are using apc_store and not apc_add is there a reason for this. Also the ttl of cache values appears to be all set to zero.
+<a href="../docs/fSchema.html">fSchema</a> and <a href="../docs/fDatabase.html">fDatabase</a> are using apc_store and not apc_add is there a reason for this. Also the ttl of cache values appears to be all set to zero.
 </p>
 
 <p>
@@ -321,7 +321,7 @@ I'll have to do some debugging to see why exactly multiple calls are being made.
 </p>
 
 <p>
-Looking at the code, it appears that when column info is requested from <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>, the database it inspected just for the table requested. Then any overrides are laid over the real schema, and the result is saved to the merged column info, which is stored in APC. So theoretically <a href="../flourishlib.com/api/fCache.html#set">fCache::set()</a> would be called once for every table that has any customization. It seems I made <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to not load the merged column info from the database if overridden table schemas exist, however I should probably add the same check before bothering with storing it in the cache.
+Looking at the code, it appears that when column info is requested from <a href="../docs/fSchema.html">fSchema</a>, the database it inspected just for the table requested. Then any overrides are laid over the real schema, and the result is saved to the merged column info, which is stored in APC. So theoretically <a href="../api/fCache.html#set">fCache::set()</a> would be called once for every table that has any customization. It seems I made <a href="../docs/fSchema.html">fSchema</a> to not load the merged column info from the database if overridden table schemas exist, however I should probably add the same check before bothering with storing it in the cache.
 </p>
 
 <p>

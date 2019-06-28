@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -76,7 +76,7 @@ if( (100 - $delta) &lt; $total &amp;&amp; $total &lt; (100 + $delta) ) {
 </code></pre>
 
 <p>
- Does <a href="../flourishlib.com/docs/fNumber.html">fNumber</a> support anything like this?  Is this necessary in PHP?  I know it's normally frowned upon to write code like &quot;if(32.5 + 67.5 == 100) {&quot; because IEEE floating point representation isn't exact and it might add up to 99.999999999765746857999 or something crazy like that.
+ Does <a href="../docs/fNumber.html">fNumber</a> support anything like this?  Is this necessary in PHP?  I know it's normally frowned upon to write code like &quot;if(32.5 + 67.5 == 100) {&quot; because IEEE floating point representation isn't exact and it might add up to 99.999999999765746857999 or something crazy like that.
 </p>
 
 <p>
@@ -94,7 +94,7 @@ Thanks for any help.
 				<div class="body" id="body-853">
 					
 <p>
-There isn't anything in <a href="../flourishlib.com/docs/fNumber.html">fNumber</a> to do what you described, but I would probably just use <a href="../flourishlib.com/api/fNumber.html#add">fNumber::add()</a>, <a href="../flourishlib.com/api/fNumber.html#lt">fNumber::lt()</a>, <a href="../flourishlib.com/api/fNumber.html#gt">fNumber::gt()</a>, etc if you are concerned about floating point rounding issues.
+There isn't anything in <a href="../docs/fNumber.html">fNumber</a> to do what you described, but I would probably just use <a href="../api/fNumber.html#add">fNumber::add()</a>, <a href="../api/fNumber.html#lt">fNumber::lt()</a>, <a href="../api/fNumber.html#gt">fNumber::gt()</a>, etc if you are concerned about floating point rounding issues.
 </p>
 
 <p>

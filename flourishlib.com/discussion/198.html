@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-In the documentation for <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, you describe <a href="../flourishlib.com/docs/fActiveRecord.html#Associating">how to craft input field names</a> so that related records are populated automagically by <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>'s link methods.  My question is, how might this work for deep relations?
+In the documentation for <a href="../docs/fActiveRecord.html">fActiveRecord</a>, you describe <a href="../docs/fActiveRecord.html#Associating">how to craft input field names</a> so that related records are populated automagically by <a href="../docs/fActiveRecord.html">fActiveRecord</a>'s link methods.  My question is, how might this work for deep relations?
 </p>
 
 <p>
@@ -95,7 +95,7 @@ please tell me  if you succed to use populate related field because i try and i 
 				<div class="body" id="body-591">
 					
 <p>
-This works for deep relations by using nested foreach loops and <a href="../flourishlib.com/api/fRequest.html#filter">fRequest::filter()</a>. Here is a rough outline of what you would need to do.
+This works for deep relations by using nested foreach loops and <a href="../api/fRequest.html#filter">fRequest::filter()</a>. Here is a rough outline of what you would need to do.
 </p>
 
 <p>
@@ -113,7 +113,7 @@ groups::fields::dependents::field_id[$key][$key_2][$key_3]
 groups::fields::dependents::column[$key][$key_2][$key_3]</code></pre>
 
 <p>
- <a href="../flourishlib.com/api/fRequest.html#filter">fRequest::filter()</a> is an internal function so you'll need to click the &quot;Show Protected/Internal&quot; link on the API docs page to see it. It takes a prefix and a key and replaces $_GET and $_POST with only the key/value pairs that start with $prefix and that match the $key specified. Once the request is filtered, you can then use a normal <a href="../flourishlib.com/api/fActiveRecord.html#populate">fActiveRecord::populate()</a>.
+ <a href="../api/fRequest.html#filter">fRequest::filter()</a> is an internal function so you'll need to click the &quot;Show Protected/Internal&quot; link on the API docs page to see it. It takes a prefix and a key and replaces $_GET and $_POST with only the key/value pairs that start with $prefix and that match the $key specified. Once the request is filtered, you can then use a normal <a href="../api/fActiveRecord.html#populate">fActiveRecord::populate()</a>.
 </p>
 
 <p>
@@ -195,7 +195,7 @@ ah, thank you!  brilliant as always.
 				<div class="body" id="body-594">
 					
 <p>
-No problem. I wouldn't be opposed to implementing some sort of functionality that could handle this in <a href="../flourishlib.com/docs/fORMRelated.html">fORMRelated</a>, I'm just not sure how the API would look. If anyone has any ideas about how this could work, I'd be open to hearing them.
+No problem. I wouldn't be opposed to implementing some sort of functionality that could handle this in <a href="../docs/fORMRelated.html">fORMRelated</a>, I'm just not sure how the API would look. If anyone has any ideas about how this could work, I'd be open to hearing them.
 </p>
 				</div>
 				

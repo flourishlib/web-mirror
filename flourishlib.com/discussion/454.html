@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,10 +58,10 @@ For anyone who is interested in the MVC Framework based on Flourish (discussed h
 </p>
 
 <ul>
-<li>Sitewide onRender() View Caching using <a href="../flourishlib.com/docs/fCache.html">fCache</a></li>
-<li>Configuration caching using <a href="../flourishlib.com/docs/fCache.html">fCache</a></li>
+<li>Sitewide onRender() View Caching using <a href="../docs/fCache.html">fCache</a></li>
+<li>Configuration caching using <a href="../docs/fCache.html">fCache</a></li>
 <li>Finalization of CMS Extension and Scaffolding Templates</li>
-<li>Increased i18n support using <a href="../flourishlib.com/docs/fText.html">fText</a></li>
+<li>Increased i18n support using <a href="../docs/fText.html">fText</a></li>
 </ul>
 
 <p>
@@ -129,7 +129,7 @@ What changes to Flourish are in your fork? I'd be interested to see if they made
 				<div class="body" id="body-1420">
 					
 <p>
-Will, most of them were mentioned or suggested here at one point or another.  One is early support for the JSON Serializable interface, which, if added on an object will call $object-&gt;jsonSerialize() via <a href="../flourishlib.com/api/fJSON.html#encode">fJSON::encode()</a>, this also required the addition of a parameter to <a href="../flourishlib.com/api/fJSON.html#encode">fJSON::encode()</a> and <a href="../flourishlib.com/api/fJSON.html#decode">fJSON::decode()</a> to force operation through flourish.  Right now there are three types of hypothetical environments:
+Will, most of them were mentioned or suggested here at one point or another.  One is early support for the JSON Serializable interface, which, if added on an object will call $object-&gt;jsonSerialize() via <a href="../api/fJSON.html#encode">fJSON::encode()</a>, this also required the addition of a parameter to <a href="../api/fJSON.html#encode">fJSON::encode()</a> and <a href="../api/fJSON.html#decode">fJSON::decode()</a> to force operation through flourish.  Right now there are three types of hypothetical environments:
 </p>
 
 <p>
@@ -137,7 +137,7 @@ Will, most of them were mentioned or suggested here at one point or another.  On
 </p>
 
 <p>
-inKWell adds the JSONSerializable interface to the ActiveRecord class which extends <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>, and by default simply makes all columns public properties on the returned object.  Since the class exists in inKWell, but is not native to stable versions of PHP yet, I also make use of the force parameter to force encoding via flourish.  The addition of the interface and the logic to determine if it is native or not is built into inKWell.  My guess is without json_encode() then JSONSerializable likely won't be on a PHP system, so it's sort of a moot point once support is there.
+inKWell adds the JSONSerializable interface to the ActiveRecord class which extends <a href="../docs/fActiveRecord.html">fActiveRecord</a>, and by default simply makes all columns public properties on the returned object.  Since the class exists in inKWell, but is not native to stable versions of PHP yet, I also make use of the force parameter to force encoding via flourish.  The addition of the interface and the logic to determine if it is native or not is built into inKWell.  My guess is without json_encode() then JSONSerializable likely won't be on a PHP system, so it's sort of a moot point once support is there.
 </p>
 
 <p>
@@ -153,7 +153,7 @@ I have also, I think, mentioned the concept of ob_start() and including JS/CSS i
 </p>
 
 <p>
-I think the remainder have actually been either &quot;fixed&quot; or included in Flourish, the fURL::makeFriendly $delimeter parameter being the most recent.  But another was the addition of throwing an <a href="../flourishlib.com/docs/fEnvironmentException.html">fEnvironmentException</a> for failed imagemagick command: <a href="https://github.com/dotink/flourish/commit/6a9f733356b0a2811b3fdf2e0f56834d3e3c3cd6">https://github.com/dotink/flourish/commit/6a9f733356b0a2811b3fdf2e0f56834d3e3c3cd6</a> -- I *think* you added more graceful handling of this at some point.
+I think the remainder have actually been either &quot;fixed&quot; or included in Flourish, the fURL::makeFriendly $delimeter parameter being the most recent.  But another was the addition of throwing an <a href="../docs/fEnvironmentException.html">fEnvironmentException</a> for failed imagemagick command: <a href="https://github.com/dotink/flourish/commit/6a9f733356b0a2811b3fdf2e0f56834d3e3c3cd6">https://github.com/dotink/flourish/commit/6a9f733356b0a2811b3fdf2e0f56834d3e3c3cd6</a> -- I *think* you added more graceful handling of this at some point.
 </p>
 
 <p>
@@ -182,7 +182,7 @@ Any other questions, let me know.
 				<div class="body" id="body-1424">
 					
 <p>
-For inKWell you might be interested in the new <a href="../flourishlib.com/docs/fCache.html">fCache</a> backends added in r1015. It now supports using databases, directories and redis to store values.
+For inKWell you might be interested in the new <a href="../docs/fCache.html">fCache</a> backends added in r1015. It now supports using databases, directories and redis to store values.
 </p>
 				</div>
 				
@@ -209,7 +209,7 @@ With that said, I may only do a subset of what is supported to begin with to mai
 </p>
 
 <p>
-If people want to work with the configured <a href="../flourishlib.com/docs/fCache.html">fCache</a> object for additional caching there will be a method such as iw::getCache() to return it.  I want to keep caching as simple as possible.
+If people want to work with the configured <a href="../docs/fCache.html">fCache</a> object for additional caching there will be a method such as iw::getCache() to return it.  I want to keep caching as simple as possible.
 </p>
 
 <p>

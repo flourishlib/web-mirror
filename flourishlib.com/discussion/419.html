@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -138,15 +138,15 @@ In terms of the autoincrementing primary key, you need to do <code>integer autoi
 </p>
 
 <p>
-For <code>CREATE TABLE</code> statements, <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a> does currently set the table to use <code>ENGINE=InnoDB</code>. If you aren't seeing that, then perhaps there is some issue with it translating properly.
+For <code>CREATE TABLE</code> statements, <a href="../docs/fSQLTranslation.html">fSQLTranslation</a> does currently set the table to use <code>ENGINE=InnoDB</code>. If you aren't seeing that, then perhaps there is some issue with it translating properly.
 </p>
 
 <p>
-Are you running all of your <code>CREATE TABLE</code> statements through <a href="../flourishlib.com/api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> or <a href="../flourishlib.com/api/fDatabase.html#translatedExecute">fDatabase::translatedExecute()</a>? If not, this would explain a number of the issues you are seeing.
+Are you running all of your <code>CREATE TABLE</code> statements through <a href="../api/fDatabase.html#translatedQuery">fDatabase::translatedQuery()</a> or <a href="../api/fDatabase.html#translatedExecute">fDatabase::translatedExecute()</a>? If not, this would explain a number of the issues you are seeing.
 </p>
 
 <p>
-I have been working on some great enhancements to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>, <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> and <a href="../flourishlib.com/docs/fSQLTranslation.html">fSQLTranslation</a>. If things go well, they should be pushed live today or tomorrow. One of the fixes in there is the addition of specifying the character set for MySQL tables. In addition, it will be possible to pass SQL into a method on <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and have it spit out the translated SQL, without actually running it.
+I have been working on some great enhancements to <a href="../docs/fDatabase.html">fDatabase</a>, <a href="../docs/fSchema.html">fSchema</a> and <a href="../docs/fSQLTranslation.html">fSQLTranslation</a>. If things go well, they should be pushed live today or tomorrow. One of the fixes in there is the addition of specifying the character set for MySQL tables. In addition, it will be possible to pass SQL into a method on <a href="../docs/fDatabase.html">fDatabase</a> and have it spit out the translated SQL, without actually running it.
 </p>
 				</div>
 				
@@ -175,7 +175,7 @@ I have fixed the SQL and this works so far on MySQL and SQLite without issue. Th
 </p>
 
 <p>
-Perhaps sometime I'll create a readline or something similar that will use <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and translatedQuery() as an alternative to running CLI MySQL. (Mode of development just for speed purposes has been to write the create table syntax, make the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> class file, add it to my relationships list, and paste the SQL into CLI MySQL where it expects nothing but MySQL syntax).
+Perhaps sometime I'll create a readline or something similar that will use <a href="../docs/fDatabase.html">fDatabase</a> and translatedQuery() as an alternative to running CLI MySQL. (Mode of development just for speed purposes has been to write the create table syntax, make the <a href="../docs/fActiveRecord.html">fActiveRecord</a> class file, add it to my relationships list, and paste the SQL into CLI MySQL where it expects nothing but MySQL syntax).
 </p>
 				</div>
 				

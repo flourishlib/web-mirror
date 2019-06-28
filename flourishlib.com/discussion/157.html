@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,11 +58,11 @@ Hi,
 </p>
 
 <p>
-I'm giving some values from POST like ', , ' etc.. This values modified from <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> and converted to ?
+I'm giving some values from POST like ', , ' etc.. This values modified from <a href="../docs/fRequest.html">fRequest</a> and converted to ?
 </p>
 
 <p>
-Probably <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>.php Line 247 makes this issue. edit : problem not in Line 247
+Probably <a href="../docs/fRequest.html">fRequest</a>.php Line 247 makes this issue. edit : problem not in Line 247
 </p>
 
 <p>
@@ -84,11 +84,11 @@ $name = fRequest::get('name', 'string');
 				<div class="body" id="body-474">
 					
 <p>
-Every part of Flourish is set to use UTF-8 for character encoding. Part of <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> is to clean UTF-8 data to prevent invalidly encoded data from getting into your app. During this process if the character data is not recognized, it is converted to a <code>?</code>.
+Every part of Flourish is set to use UTF-8 for character encoding. Part of <a href="../docs/fRequest.html">fRequest</a> is to clean UTF-8 data to prevent invalidly encoded data from getting into your app. During this process if the character data is not recognized, it is converted to a <code>?</code>.
 </p>
 
 <p>
-The proper fix is to send HTML headers specifying UTF-8 as the encoing. This will cause browsers to send all data back as UTF-8 also. This can be done by calling <a href="../flourishlib.com/api/fHTML.html#sendHeader">fHTML::sendHeader()</a> before outputting any HTML. If you want to see how it is done, check out fHTML.php.
+The proper fix is to send HTML headers specifying UTF-8 as the encoing. This will cause browsers to send all data back as UTF-8 also. This can be done by calling <a href="../api/fHTML.html#sendHeader">fHTML::sendHeader()</a> before outputting any HTML. If you want to see how it is done, check out fHTML.php.
 </p>
 				</div>
 				
@@ -107,7 +107,7 @@ The proper fix is to send HTML headers specifying UTF-8 as the encoing. This wil
 				<div class="body" id="body-475">
 					
 <p>
-Im also using <a href="../flourishlib.com/api/fHtml.html#sendHeader">fHtml::sendHeader()</a>; in config.php. But same problem is continued. I'd edited characters from db. Everything is ok. But when i submit this form, this problem occurs again.
+Im also using <a href="../api/fHtml.html#sendHeader">fHtml::sendHeader()</a>; in config.php. But same problem is continued. I'd edited characters from db. Everything is ok. But when i submit this form, this problem occurs again.
 </p>
 
 <p>
@@ -153,7 +153,7 @@ Can you give an example URL so I can check the headers?
 				<div class="body" id="body-477">
 					
 <p>
-I'd uploaded to server all files. Error tell me ; Fatal error: Class '<a href="../flourishlib.com/docs/fHtml.html">fHtml</a>' not found in /home/XXX/public_html/lib/config.php on line 41 But file in FTP ?
+I'd uploaded to server all files. Error tell me ; Fatal error: Class '<a href="../docs/fHtml.html">fHtml</a>' not found in /home/XXX/public_html/lib/config.php on line 41 But file in FTP ?
 </p>
 				</div>
 				
@@ -176,7 +176,7 @@ Im posting the data to profile.php?action=update and not working correctly under
 </p>
 
 <p>
-Problem ; <a href="../flourishlib.com/docs/fHtml.html">fHtml</a> cant load with config.php, it tells me &quot;Class '<a href="../flourishlib.com/docs/fHtml.html">fHtml</a>' not found in /config.php on line 41&quot; 
+Problem ; <a href="../docs/fHtml.html">fHtml</a> cant load with config.php, it tells me &quot;Class '<a href="../docs/fHtml.html">fHtml</a>' not found in /config.php on line 41&quot; 
 </p>
 				</div>
 				

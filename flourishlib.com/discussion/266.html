@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ I get the reasoning behind asking that SQL statements passed to buildFromSQL loo
 </p>
 
 <p>
-For instance, what if I needed to use a control flow statement to decide between selecting a column or using a sub-query to get that value elsewhere if the column is null (a simple IF() in MySQL)?  As far as I can see, that would mean I'd have to give up all the benefits of <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>/<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> because it'd mean straying from SELECT * FROM (I tried it, Flourish throws an exception complaining about SELECT * FROM).
+For instance, what if I needed to use a control flow statement to decide between selecting a column or using a sub-query to get that value elsewhere if the column is null (a simple IF() in MySQL)?  As far as I can see, that would mean I'd have to give up all the benefits of <a href="../docs/fRecordSet.html">fRecordSet</a>/<a href="../docs/fActiveRecord.html">fActiveRecord</a> because it'd mean straying from SELECT * FROM (I tried it, Flourish throws an exception complaining about SELECT * FROM).
 </p>
 
 <p>
@@ -76,7 +76,7 @@ Once again, maybe I'm just not seeing the bigger picture :)  Seems like a small 
 				<div class="body" id="body-827">
 					
 <p>
-Well, all of the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> functionality is designed around the active record pattern, that is, an object that represents a row/record in a database table. In such situations there isn't a need for anything other than <code>SELECT * FROM</code>.
+Well, all of the <a href="../docs/fActiveRecord.html">fActiveRecord</a> functionality is designed around the active record pattern, that is, an object that represents a row/record in a database table. In such situations there isn't a need for anything other than <code>SELECT * FROM</code>.
 </p>
 
 <p>
@@ -140,7 +140,7 @@ Ah interesting, that should do the trick.  Thanks once again!
 				<div class="body" id="body-829">
 					
 <p>
-yeah you know, this is just pure laziness on my part.  this all came from my wanting to pass data to views with that convenient get/prepare/encode method prefix structure <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> provides.  i really should get off my butt and just write a simple data container class that provides that, huh?  save the overhead and the possibility someone else does something silly like manipulate the database from the view or something.
+yeah you know, this is just pure laziness on my part.  this all came from my wanting to pass data to views with that convenient get/prepare/encode method prefix structure <a href="../docs/fActiveRecord.html">fActiveRecord</a> provides.  i really should get off my butt and just write a simple data container class that provides that, huh?  save the overhead and the possibility someone else does something silly like manipulate the database from the view or something.
 </p>
 
 <p>

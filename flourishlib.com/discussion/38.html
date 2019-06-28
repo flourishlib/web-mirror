@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Hi, first of all - great work, found already some classes very very helpful, tha
 </p>
 
 <p>
-No I run in a litle problem. I am trying to integrate flourish-ORM in an oscommerce. I have already an existing class called <code>customers</code>, so for trying it out, I wanted to bring a !<a href="../flourishlib.com/docs/fCustomer.html">fCustomer</a> class to live with
+No I run in a litle problem. I am trying to integrate flourish-ORM in an oscommerce. I have already an existing class called <code>customers</code>, so for trying it out, I wanted to bring a !<a href="../docs/fCustomer.html">fCustomer</a> class to live with
 </p>
 <pre class="block php"><code>  fORMDatabase::attach(new fDatabase('mysql',DB_DATABASE,$db_link,DB_SERVER_USERNAME,DB_SERVER_PASSWORD,DB_SERVER));
   class fCustomer extends fActiveRecord
@@ -105,11 +105,11 @@ Big thanks for any help, yours Christoph
 				<div class="body" id="body-117">
 					
 <p>
-What version of Flourish are you running? There was a change in r499 that renamed <code>fORM::addCustomTableClassMapping()</code> to <a href="../flourishlib.com/api/fORM.html#addCustomClassTableMapping">fORM::addCustomClassTableMapping()</a>. Try updating your code to use the new method name and see if that works.
+What version of Flourish are you running? There was a change in r499 that renamed <code>fORM::addCustomTableClassMapping()</code> to <a href="../api/fORM.html#addCustomClassTableMapping">fORM::addCustomClassTableMapping()</a>. Try updating your code to use the new method name and see if that works.
 </p>
 
 <p>
-The <code>configure()</code> method is called automatically the first time an !<a href="../flourishlib.com/docs/fCustomer.html">fCustomer</a> is created, or the first time you execute an <a href="../flourishlib.com/api/fRecordSet.html#build">fRecordSet::build()</a> for the !<a href="../flourishlib.com/docs/fCustomer.html">fCustomer</a> class.
+The <code>configure()</code> method is called automatically the first time an !<a href="../docs/fCustomer.html">fCustomer</a> is created, or the first time you execute an <a href="../api/fRecordSet.html#build">fRecordSet::build()</a> for the !<a href="../docs/fCustomer.html">fCustomer</a> class.
 </p>
 
 <p>
@@ -172,7 +172,7 @@ Stack trace:
 				<div class="body" id="body-119">
 					
 <p>
-pls let me note, that on different database tables (where there is no need to derive a unique class) the <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> works without any problems on a table, without using the
+pls let me note, that on different database tables (where there is no need to derive a unique class) the <a href="../docs/fActiveRecord.html">fActiveRecord</a> works without any problems on a table, without using the
 </p>
 <pre class="block php"><code>fORM::addCustomClassTableMapping('my_own_table',$this);</code></pre>
 				</div>

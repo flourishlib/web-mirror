@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -90,7 +90,7 @@ MSSQL error ({null}) in SELECT * from admin_users where username='benstone'</cod
 </li>
 <li>When i'm trying to utilize $db1 then $db2, it works fine.<br />
 </li>
-<li>When i'm trying to utilize $db1, then $db2, then back to $db1, it always gives me an sql exception. this is also the case when i'm using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.<br />
+<li>When i'm trying to utilize $db1, then $db2, then back to $db1, it always gives me an sql exception. this is also the case when i'm using <a href="../docs/fActiveRecord.html">fActiveRecord</a>.<br />
 </li>
 </ul>
 
@@ -181,7 +181,7 @@ output is:
 				<div class="body" id="body-874">
 					
 <p>
-Thanks for taking the time to report this. The bug was that the mssql extension was reusing the database connection since it was to the same server. I changed <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> in r890 to force a new connection, so you shouldn't have this problem anymore.
+Thanks for taking the time to report this. The bug was that the mssql extension was reusing the database connection since it was to the same server. I changed <a href="../docs/fDatabase.html">fDatabase</a> in r890 to force a new connection, so you shouldn't have this problem anymore.
 </p>
 				</div>
 				

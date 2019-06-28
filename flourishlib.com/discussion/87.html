@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,12 +54,12 @@
 <div class="body topic">
 	
 <p>
-i typically develop on a *nix box without a hitch but every now and then i work on a win32 box and in working with <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>, PHP tells me:
+i typically develop on a *nix box without a hitch but every now and then i work on a win32 box and in working with <a href="../docs/fCryptography.html">fCryptography</a>, PHP tells me:
 </p>
 <pre><code>Fatal error: Uncaught exception 'com_exception' with message 'Failed to create COM object `CAPICOM.Utilities.1': Invalid syntax ' in O:\\myproject\\lib\\flourish\\fCryptography.php:399 Stack trace: #0 O:\\myproject\\lib\\flourish\\fCryptography.php(399): com-&gt;com('CAPICOM.Utiliti...') #1 O:\\myproject\\lib\\flourish\\fCryptography.php(317): fCryptography::seedRandom() #2 O:\\myproject\\lib\\flourish\\fCryptography.php(370): fCryptography::random(0, 61) #3 O:\\myproject\\lib\\flourish\\fCryptography.php(133): fCryptography::randomString(10) #4 O:\\myproject\\html\\register.php(39): fCryptography::hashPassword('mysupersecretpassword') #5 {main} thrown in O:\\myproject\\lib\\flourish\\fCryptography.php on line 399</code></pre>
 
 <p>
- i installed the capicom_dc_sdk.msi from microsoft's website thinking i was missing a dependency but i still get the same error. what are the dependencies/conf for using <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a> on win32?
+ i installed the capicom_dc_sdk.msi from microsoft's website thinking i was missing a dependency but i still get the same error. what are the dependencies/conf for using <a href="../docs/fCryptography.html">fCryptography</a> on win32?
 </p>
 
 <p>
@@ -225,7 +225,7 @@ thanks for the quick replies. so far in my little test drive of flourish, i'm li
 				<div class="body" id="body-261">
 					
 <p>
-For a temporary fix, you can comment out lines 398-401 of <a href="../flourishlib.com/docs/fCryptography.html">fCryptography</a>. I'll fix the class to handling the exception and fall back to the <code>else</code> option.
+For a temporary fix, you can comment out lines 398-401 of <a href="../docs/fCryptography.html">fCryptography</a>. I'll fix the class to handling the exception and fall back to the <code>else</code> option.
 </p>
 				</div>
 				

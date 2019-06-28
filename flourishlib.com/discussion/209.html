@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I'm having some trouble figuring out how to make these foreign key relationships work with <a href="../flourishlib.com/docs/fORM.html">fORM</a>. Here is what I want to accomplish. I've got a users table with some basic columns, an item1price column, and an item2price column. I have tables called item1prices and item2prices. I want each user to be assigned to one of the price levels I've defined in the item1price, item2price, etc... tables. (These prices levels will be shared amongst the users, so I can't use a one-to-one relationship since the price ID in the users table won't be unique). How do I access the pricing for say item1 on a user? I can't seem to figure it out. Everything I've tried has resulted in an error telling me the relationship isn't one-to-one.
+I'm having some trouble figuring out how to make these foreign key relationships work with <a href="../docs/fORM.html">fORM</a>. Here is what I want to accomplish. I've got a users table with some basic columns, an item1price column, and an item2price column. I have tables called item1prices and item2prices. I want each user to be assigned to one of the price levels I've defined in the item1price, item2price, etc... tables. (These prices levels will be shared amongst the users, so I can't use a one-to-one relationship since the price ID in the users table won't be unique). How do I access the pricing for say item1 on a user? I can't seem to figure it out. Everything I've tried has resulted in an error telling me the relationship isn't one-to-one.
 </p>
 <pre class="block sql"><code>CREATE  TABLE IF NOT EXISTS `users` (
   `user_id` VARCHAR(50) NOT NULL ,
@@ -106,7 +106,7 @@ Ok, so I changed it so that the tables that hold the pricing contain a user_id c
 				<div class="body" id="body-621">
 					
 <p>
-I would recommend reading <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations. That section will teach you all of the related record functionality available when using <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> to model a row in a table.
+I would recommend reading <a href="../docs/fActiveRecord.html">fActiveRecord</a>#RelatedRecordsOperations. That section will teach you all of the related record functionality available when using <a href="../docs/fActiveRecord.html">fActiveRecord</a> to model a row in a table.
 </p>
 				</div>
 				

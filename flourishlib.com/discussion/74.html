@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -58,7 +58,7 @@ Hello.
 </p>
 
 <p>
-I have been trying out the <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a> class today and I am loving it so far.
+I have been trying out the <a href="../docs/fAuthorization.html">fAuthorization</a> class today and I am loving it so far.
 </p>
 
 <p>
@@ -84,7 +84,7 @@ Also, I was wondering what the difference is between requireAuthLevel() and isLo
 				<div class="body" id="body-235">
 					
 <p>
-Normally when dealing with displaying messages related to <a href="../flourishlib.com/docs/fAuthorization.html">fAuthorization</a>, I use <a href="../flourishlib.com/api/fAuthorization.html#getRequestedURL">fAuthorization::getRequestedURL()</a>. It accepts a boolean to indicate if the requested URL should be cleared when it is retrieved.
+Normally when dealing with displaying messages related to <a href="../docs/fAuthorization.html">fAuthorization</a>, I use <a href="../api/fAuthorization.html#getRequestedURL">fAuthorization::getRequestedURL()</a>. It accepts a boolean to indicate if the requested URL should be cleared when it is retrieved.
 </p>
 
 <p>
@@ -101,7 +101,7 @@ Thus to display a message I would do something like:
 fURL::redirect(fAuthorization::getRequestedURL(TRUE, '/'));</code></pre>
 
 <p>
- <a href="../flourishlib.com/api/fAuthorization.html#requireAuthLevel">fAuthorization::requireAuthLevel()</a> will force a user to have the specified auth level or else they will be redirected to the login page. <a href="../flourishlib.com/api/fAuthorization.html#isLoggedIn">fAuthorization::isLoggedIn()</a> simply returns a boolean and works with auth levels, ACLs and simple user tokens. If any of those three are set, then a user is determined to be &quot;logged in.&quot; This is used for display logic to only show certain elements, sch as log out links, to logged-in users.
+ <a href="../api/fAuthorization.html#requireAuthLevel">fAuthorization::requireAuthLevel()</a> will force a user to have the specified auth level or else they will be redirected to the login page. <a href="../api/fAuthorization.html#isLoggedIn">fAuthorization::isLoggedIn()</a> simply returns a boolean and works with auth levels, ACLs and simple user tokens. If any of those three are set, then a user is determined to be &quot;logged in.&quot; This is used for display logic to only show certain elements, sch as log out links, to logged-in users.
 </p>
 				</div>
 				

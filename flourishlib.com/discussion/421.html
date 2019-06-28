@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -99,7 +99,7 @@ There is ticket #568 in which Matt laid out some ideas for an object document ma
 				<div class="body" id="body-1311">
 					
 <p>
-After this week fixing all my CREATE TABLE SQL files to be Flourish SQL and in EXACT order (meaning INT DEFAULT 0 NOT NULL not INT NOT NULL DEFAULT 0 (latter seems to translate incorrectly)), I used translatedExecute() with all of the SQL creating tables with a SQLite database instead of MySQL. Then finally (with a hack for lighttpd's bad url rewriting where it lacks checking for file existence), I got my site to run with lighttpd + PHP 5.2 (luckily I backported all my code to not use namespaces; main development machine is PHP 5.3) + SQLite 3.x on my iPhone (jailbroken of course). It's much slower than my 3.4 GHz machine but it does work quite nicely and the best thing is that I know whatever I make for MySQL now works on SQLite without question (generally speaking). Besides a few DELETE statements and a few SELECTs with JOIN, most of my code uses <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>/<a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> to do CRUD operations.
+After this week fixing all my CREATE TABLE SQL files to be Flourish SQL and in EXACT order (meaning INT DEFAULT 0 NOT NULL not INT NOT NULL DEFAULT 0 (latter seems to translate incorrectly)), I used translatedExecute() with all of the SQL creating tables with a SQLite database instead of MySQL. Then finally (with a hack for lighttpd's bad url rewriting where it lacks checking for file existence), I got my site to run with lighttpd + PHP 5.2 (luckily I backported all my code to not use namespaces; main development machine is PHP 5.3) + SQLite 3.x on my iPhone (jailbroken of course). It's much slower than my 3.4 GHz machine but it does work quite nicely and the best thing is that I know whatever I make for MySQL now works on SQLite without question (generally speaking). Besides a few DELETE statements and a few SELECTs with JOIN, most of my code uses <a href="../docs/fActiveRecord.html">fActiveRecord</a>/<a href="../docs/fRecordSet.html">fRecordSet</a> to do CRUD operations.
 </p>
 
 <p>
@@ -107,7 +107,7 @@ So the reason I mention NoSQL (and really any other type of database) is because
 </p>
 
 <p>
-Lastly, does <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> cause growth in memory usage with time? It seems that doing large limits and page offsets with tables that have a very large amount of rows (1000 as limit, 100000+ records), multiple tables, etc etc causes this sort of issue and then PHP just quits because it's out of memory. I have my CLI limit set to 1 GB and I can create 100,000 users in my basic users table with random data (<a href="../flourishlib.com/api/fCryptography.html#random">fCryptography::random()</a> and <a href="../flourishlib.com/api/fCryptography.html#randomString">fCryptography::randomString()</a>) before PHP kills itself. Surprisingly, the <code>php</code> process uses the CPU and memory, not MySQL. I can show some code I'm dealing with that is purely for testing but does show a memory increase with time in many different cases.
+Lastly, does <a href="../docs/fRecordSet.html">fRecordSet</a> cause growth in memory usage with time? It seems that doing large limits and page offsets with tables that have a very large amount of rows (1000 as limit, 100000+ records), multiple tables, etc etc causes this sort of issue and then PHP just quits because it's out of memory. I have my CLI limit set to 1 GB and I can create 100,000 users in my basic users table with random data (<a href="../api/fCryptography.html#random">fCryptography::random()</a> and <a href="../api/fCryptography.html#randomString">fCryptography::randomString()</a>) before PHP kills itself. Surprisingly, the <code>php</code> process uses the CPU and memory, not MySQL. I can show some code I'm dealing with that is purely for testing but does show a memory increase with time in many different cases.
 </p>
 				</div>
 				
@@ -130,19 +130,19 @@ Right, so it sounds like you want something simpler to deploy/manipulate for you
 </p>
 
 <p>
-In terms of <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> performance/memory usage, you are not seeing anything unexpected. Taking all of the different databases and making PHP extensions return consistent data and providing hooks for ORM plugins does take its toll on performance.
+In terms of <a href="../docs/fRecordSet.html">fRecordSet</a> performance/memory usage, you are not seeing anything unexpected. Taking all of the different databases and making PHP extensions return consistent data and providing hooks for ORM plugins does take its toll on performance.
 </p>
 
 <p>
-<a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> uses a few different arrays for each record to allow for advanced functionality and to provide caching. Unfortunately PHP uses a lot of memory for storing variables in array (68 bytes per entry minimum, plus the size of the value), so memory use can jump very quickly when loading lots of records. I've tried creating a 3000x3000 multi-dimensional array before and caused PHP to exhaust 128MB of ram. So loading 100,000 records into memory is definitely going to use a whole ton of ram.
+<a href="../docs/fActiveRecord.html">fActiveRecord</a> uses a few different arrays for each record to allow for advanced functionality and to provide caching. Unfortunately PHP uses a lot of memory for storing variables in array (68 bytes per entry minimum, plus the size of the value), so memory use can jump very quickly when loading lots of records. I've tried creating a 3000x3000 multi-dimensional array before and caused PHP to exhaust 128MB of ram. So loading 100,000 records into memory is definitely going to use a whole ton of ram.
 </p>
 
 <p>
-If you are just using one record at a time and then discarding it, you may also be running into the &quot;feature&quot; of the identity map in <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. This stores references to all records in a central place to ensure that two different copies of a record are not loaded into different scopes. In the big code drop I am doing soon there is going to be a way to clear the identity map, which should help with situations likes yours.
+If you are just using one record at a time and then discarding it, you may also be running into the &quot;feature&quot; of the identity map in <a href="../docs/fActiveRecord.html">fActiveRecord</a>. This stores references to all records in a central place to ensure that two different copies of a record are not loaded into different scopes. In the big code drop I am doing soon there is going to be a way to clear the identity map, which should help with situations likes yours.
 </p>
 
 <p>
-I don't know what you code looks like, or what problem you are trying to solve, but loading 1000+ active records into memory sounds like a lot. When I need to load a lot of records, I usually fall back to raw database queries as opposed to relying on all of the convenience of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>. It often requires a little extra code, but it ends up being much more efficient.
+I don't know what you code looks like, or what problem you are trying to solve, but loading 1000+ active records into memory sounds like a lot. When I need to load a lot of records, I usually fall back to raw database queries as opposed to relying on all of the convenience of <a href="../docs/fActiveRecord.html">fActiveRecord</a>. It often requires a little extra code, but it ends up being much more efficient.
 </p>
 
 <p>

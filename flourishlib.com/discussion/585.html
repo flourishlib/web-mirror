@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -80,11 +80,11 @@ php &gt; </code></pre>
 </p>
 
 <ul>
-<li>Allow attributes with dashes in <a href="../flourishlib.com/api/fHTML.html#prepare">fHTML::prepare()</a> (think HTML 5 data-* attributes) http://flourishlib.com/ticket/723<br />
+<li>Allow attributes with dashes in <a href="../api/fHTML.html#prepare">fHTML::prepare()</a> (think HTML 5 data-* attributes) http://flourishlib.com/ticket/723<br />
 </li>
-<li>Ignore warning about array changing in place (using @) in <a href="../flourishlib.com/api/fRecordSet.html#sortByCallback">fRecordSet::sortByCallback()</a> <br />
+<li>Ignore warning about array changing in place (using @) in <a href="../api/fRecordSet.html#sortByCallback">fRecordSet::sortByCallback()</a> <br />
 </li>
-<li>Make <a href="../flourishlib.com/api/fImage.html#determineProcessor">fImage::determineProcessor()</a> protected so that it can be used in extension classes http://flourishlib.com/ticket/715</li>
+<li>Make <a href="../api/fImage.html#determineProcessor">fImage::determineProcessor()</a> protected so that it can be used in extension classes http://flourishlib.com/ticket/715</li>
 </ul>
 </div>
 
@@ -133,7 +133,7 @@ I tend to find command line much easier than having to require a browser (which 
 </p>
 
 <p>
-One of the most important scripts is fsql.php which takes a file name for an argument, and runs the Flourish SQL contained in the file with <a href="../flourishlib.com/api/fDatabase.html#translatedExecute">fDatabase::translatedExecute()</a>. This is for installing new schemas.
+One of the most important scripts is fsql.php which takes a file name for an argument, and runs the Flourish SQL contained in the file with <a href="../api/fDatabase.html#translatedExecute">fDatabase::translatedExecute()</a>. This is for installing new schemas.
 </p>
 
 <p>
@@ -253,7 +253,7 @@ The .inK fork of Moor is a bit more robust.  It provides a new MoorBaseControlle
 </p>
 
 <p>
-<span class="underline"> Also want to be able to return <a href="../flourishlib.com/docs/fFiles.html">fFiles</a>, for images and similar.</span>
+<span class="underline"> Also want to be able to return <a href="../docs/fFiles.html">fFiles</a>, for images and similar.</span>
 </p>
 				</div>
 				
@@ -304,7 +304,7 @@ Moor in its current form won't allow for this as it exits immediately after the 
 </p>
 
 <p>
-The sPostRequest::handle() method (called from sCore::main()) expects Moor::run() to return when complete so that the 301 redirect if necessary (if not AJAX really) can be completed. Old values are stored in session and can be optionally restored in the next page request if an <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> is caught by sPostRequest. For a GET request, no return is necessary (so it exits) as all routers handle the data printed back to the client, which can be anything from HTML to JSON, CSS, etc.
+The sPostRequest::handle() method (called from sCore::main()) expects Moor::run() to return when complete so that the 301 redirect if necessary (if not AJAX really) can be completed. Old values are stored in session and can be optionally restored in the next page request if an <a href="../docs/fValidationException.html">fValidationException</a> is caught by sPostRequest. For a GET request, no return is necessary (so it exits) as all routers handle the data printed back to the client, which can be anything from HTML to JSON, CSS, etc.
 </p>
 				</div>
 				

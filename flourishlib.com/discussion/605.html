@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I have the following code and I'm trying to figure out how to get calendar.name to be in the <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> so I can display it.
+I have the following code and I'm trying to figure out how to get calendar.name to be in the <a href="../docs/fRecordSet.html">fRecordSet</a> so I can display it.
 </p>
 
 <p>
@@ -92,11 +92,11 @@ Any help would be great.
 				<div class="body" id="body-1713">
 					
 <p>
-An <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a> is a collection of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects and an <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object represents all columns from a single row of a single table. Thus, you can't.
+An <a href="../docs/fRecordSet.html">fRecordSet</a> is a collection of <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects and an <a href="../docs/fActiveRecord.html">fActiveRecord</a> object represents all columns from a single row of a single table. Thus, you can't.
 </p>
 
 <p>
-To get data from multiple tables in a single database query you need to use <a href="../flourishlib.com/api/fDatabase.html#query">fDatabase::query()</a>. If you don't mind possibly doing multiple queries, you can call <code>$calendar_event-&gt;createCalendar()-&gt;getName()</code>. If the calendar has been loaded into memory before, it will not invoke an extra DB query.
+To get data from multiple tables in a single database query you need to use <a href="../api/fDatabase.html#query">fDatabase::query()</a>. If you don't mind possibly doing multiple queries, you can call <code>$calendar_event-&gt;createCalendar()-&gt;getName()</code>. If the calendar has been loaded into memory before, it will not invoke an extra DB query.
 </p>
 				</div>
 				
@@ -163,7 +163,7 @@ Fatal error: Using $this when not in object context in /Users/uwmanager/Sites/te
 				<div class="body" id="body-1715">
 					
 <p>
-The query method of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> is not static, the :: is just used by this wiki for auto-linking. See the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> page for examples. You'll also need to use <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a> to retrieve the database instance used by the ORM.
+The query method of <a href="../docs/fDatabase.html">fDatabase</a> is not static, the :: is just used by this wiki for auto-linking. See the <a href="../docs/fDatabase.html">fDatabase</a> page for examples. You'll also need to use <a href="../docs/fORMDatabase.html">fORMDatabase</a> to retrieve the database instance used by the ORM.
 </p>
 				</div>
 				
@@ -182,7 +182,7 @@ The query method of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</
 				<div class="body" id="body-1716">
 					
 <p>
-I gave it a try as <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>-&gt;query and get the following error.
+I gave it a try as <a href="../docs/fDatabase.html">fDatabase</a>-&gt;query and get the following error.
 </p>
 <pre><code>#!text/html
 Parse error: syntax error, unexpected T_OBJECT_OPERATOR in /Users/uwmanager/Sites/testsite.com/protected/lib/classes/Calendar.php on line 33</code></pre>
@@ -207,7 +207,7 @@ Parse error: syntax error, unexpected T_OBJECT_OPERATOR in /Users/uwmanager/Site
 				<div class="body" id="body-1717">
 					
 <p>
-You need to have an instance of <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. Look at the examples on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> page.
+You need to have an instance of <a href="../docs/fDatabase.html">fDatabase</a>. Look at the examples on the <a href="../docs/fDatabase.html">fDatabase</a> page.
 </p>
 				</div>
 				

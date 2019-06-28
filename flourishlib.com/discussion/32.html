@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Could you please explain how to escape user provided data when using <a href="../flourishlib.com/docs/fRecordSet.html">fRecordSet</a>?
+Could you please explain how to escape user provided data when using <a href="../docs/fRecordSet.html">fRecordSet</a>?
 </p>
 
 <p>
@@ -130,7 +130,7 @@ class Stp extends fActiveRecord
 				<div class="body" id="body-107">
 					
 <p>
-Database escaping happens automatically based on the schema of the table you are creating a record set of. Simply pass raw PHP values in with the where clauses array and <a href="../flourishlib.com/docs/fORMDatabase.html">fORMDatabase</a> goes through and escapes them all for you automatically.
+Database escaping happens automatically based on the schema of the table you are creating a record set of. Simply pass raw PHP values in with the where clauses array and <a href="../docs/fORMDatabase.html">fORMDatabase</a> goes through and escapes them all for you automatically.
 </p>
 				</div>
 				
@@ -153,7 +153,7 @@ Great that's a nice feature.
 </p>
 
 <p>
-Unfortunately, I THINK there is a problem with that.  When using <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> for complex joins, things go haywire.  <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> tries to escape and unescape the data and generally falls flat.  It also seems to not understand the mysql &quot;using ()&quot; construct.  
+Unfortunately, I THINK there is a problem with that.  When using <a href="../api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> for complex joins, things go haywire.  <a href="../docs/fActiveRecord.html">fActiveRecord</a> tries to escape and unescape the data and generally falls flat.  It also seems to not understand the mysql &quot;using ()&quot; construct.  
 </p>
 
 <p>
@@ -185,11 +185,11 @@ If you need an example of all this, please let me know.  I can try to email you 
 				<div class="body" id="body-111">
 					
 <p>
-Actually, <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> does not escape anything, it simply accepts a SQL statement and creates a record set from it. The SQL statement should return all columns in a single table and will create <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects out of it. If you want to query only a few columns out of a table, a standard query would be the only way to go.
+Actually, <a href="../api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a> does not escape anything, it simply accepts a SQL statement and creates a record set from it. The SQL statement should return all columns in a single table and will create <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects out of it. If you want to query only a few columns out of a table, a standard query would be the only way to go.
 </p>
 
 <p>
-That said, to escape a query to put into <a href="../flourishlib.com/api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, use code such as the following:
+That said, to escape a query to put into <a href="../api/fRecordSet.html#buildFromSQL">fRecordSet::buildFromSQL()</a>, use code such as the following:
 </p>
 <pre class="block php"><code>$db      = fORMDatabase::retrieve();
 $sql     = $db-&gt;escape(&quot;SELECT * FROM users WHERE first_name LIKE %s&quot;, 'john%');

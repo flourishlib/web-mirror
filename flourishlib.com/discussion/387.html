@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Hi, am a non english devpopper , and I don't speak english well ; so: I use <a href="../flourishlib.com/docs/fTemplate.html">fTemplate</a>? class, and whene am enabling minification I have some issue with js, css files, I get allways the path in the output, not the url, like <code>&lt;script type=&quot;text/javascript src=&quot;c:/www/wamp/myfolder/&quot;&gt;&lt;/script&gt;; the path is not translated to a valid URL. I've tryed all the ways that I found in Documentation Now I give-up. so please give me the solution thanks 
+Hi, am a non english devpopper , and I don't speak english well ; so: I use <a href="../docs/fTemplate.html">fTemplate</a>? class, and whene am enabling minification I have some issue with js, css files, I get allways the path in the output, not the url, like <code>&lt;script type=&quot;text/javascript src=&quot;c:/www/wamp/myfolder/&quot;&gt;&lt;/script&gt;; the path is not translated to a valid URL. I've tryed all the ways that I found in Documentation Now I give-up. so please give me the solution thanks 
 </code>
 </p>
 </div>
@@ -69,7 +69,7 @@ Hi, am a non english devpopper , and I don't speak english well ; so: I use <a h
 				<div class="body" id="body-1188">
 					
 <p>
-<a href="../flourishlib.com/docs/fTemplating.html">fTemplating</a> uses <a href="../flourishlib.com/docs/fFilesystem.html">fFilesystem</a> to remove the document root from file path to create the URL. See <a href="../flourishlib.com/docs/fFilesystem.html#Translation">fFilesystem - Translation</a> for details.
+<a href="../docs/fTemplating.html">fTemplating</a> uses <a href="../docs/fFilesystem.html">fFilesystem</a> to remove the document root from file path to create the URL. See <a href="../docs/fFilesystem.html#Translation">fFilesystem - Translation</a> for details.
 </p>
 				</div>
 				
@@ -92,7 +92,7 @@ thanks for your help, I've tried this One but nothing happend;
 </p>
 
 <p>
-but I solved the problem using the <a href="../flourishlib.com/docs/fBuffer.html">fBuffer</a> class:  replacing all ROOT_PATH with ROOT_URL at the bottom of my script
+but I solved the problem using the <a href="../docs/fBuffer.html">fBuffer</a> class:  replacing all ROOT_PATH with ROOT_URL at the bottom of my script
 </p>
 <pre class="block php"><code>//after flourish lib init we use the fBuffer  class
 fBuffer::start();

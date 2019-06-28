@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -98,11 +98,11 @@ In the code below, I've setup several exception handling mechanisms.  None of th
 The class Operato could not be loaded</code></pre>
 
 <p>
- Why is this an Uncaught Exception?  I tried to catch <a href="../flourishlib.com/docs/fUnexpectedException.html">fUnexpectedException</a> &amp; <a href="../flourishlib.com/docs/fException.html">fException</a>.  Does <a href="../flourishlib.com/docs/fException.html">fException</a> not capture all lesser exceptions?
+ Why is this an Uncaught Exception?  I tried to catch <a href="../docs/fUnexpectedException.html">fUnexpectedException</a> &amp; <a href="../docs/fException.html">fException</a>.  Does <a href="../docs/fException.html">fException</a> not capture all lesser exceptions?
 </p>
 
 <p>
-If I change the code to use the standard Exception, it catches the problem correctly.  Unfortunately, since it's not using <a href="../flourishlib.com/docs/fException.html">fException</a>, I get none of the trace of the problem.
+If I change the code to use the standard Exception, it catches the problem correctly.  Unfortunately, since it's not using <a href="../docs/fException.html">fException</a>, I get none of the trace of the problem.
 </p>
 <pre class="block php"><code>	public static function getOperators()
 	{
@@ -131,7 +131,7 @@ If I change the code to use the standard Exception, it catches the problem corre
 </p>
 
 <p>
- Does anyone know how I can use <a href="../flourishlib.com/docs/fException.html">fException</a> properly in this instance?
+ Does anyone know how I can use <a href="../docs/fException.html">fException</a> properly in this instance?
 </p>
 </div>
 
@@ -149,11 +149,11 @@ An uncaught exception is an exception that was never handled by a <code>catch</c
 </p>
 
 <p>
-The example <code>__autoload()</code> function I provide with Flourish uses an <code>Exception</code> for when a class can't be loaded. This is because the Flourish exception classes, which are all descendants of <a href="../flourishlib.com/docs/fException.html">fException</a>, may be the class that couldn't be loaded, and thus there could be a recursive loading loop.
+The example <code>__autoload()</code> function I provide with Flourish uses an <code>Exception</code> for when a class can't be loaded. This is because the Flourish exception classes, which are all descendants of <a href="../docs/fException.html">fException</a>, may be the class that couldn't be loaded, and thus there could be a recursive loading loop.
 </p>
 
 <p>
-Every thing in actual Flourish class use child classes of <a href="../flourishlib.com/docs/fException.html">fException</a> because of the added features and the ability to assign callbacks for when they are thrown.
+Every thing in actual Flourish class use child classes of <a href="../docs/fException.html">fException</a> because of the added features and the ability to assign callbacks for when they are thrown.
 </p>
 				</div>
 				

@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -66,7 +66,7 @@ I am inserting a new object in an Oracle Database.
 </p>
 
 <p>
-It fails on an <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> exception because the &quot;user_id&quot; column &quot;cannot be null&quot; (among other columns). Indeed. But I do not give the user_id on purpose, because it is automatically filled by a trigger + sequence, like mysql autoincrement feature.
+It fails on an <a href="../docs/fValidation.html">fValidation</a> exception because the &quot;user_id&quot; column &quot;cannot be null&quot; (among other columns). Indeed. But I do not give the user_id on purpose, because it is automatically filled by a trigger + sequence, like mysql autoincrement feature.
 </p>
 
 <p>
@@ -78,7 +78,7 @@ I am using the last version of flourishlib.
 </p>
 
 <p>
-BTW, other colums, which HAVE a default value, are also reported as requesting a value by <a href="../flourishlib.com/docs/fValidation.html">fValidation</a>.
+BTW, other colums, which HAVE a default value, are also reported as requesting a value by <a href="../docs/fValidation.html">fValidation</a>.
 </p>
 
 <p>
@@ -136,7 +136,7 @@ Can you paste the output of the following?
 <pre class="block php"><code>fCore::expose(fORMSchema::retrieve()-&gt;getColumnInfo('users'));</code></pre>
 
 <p>
- There is code in <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> that should detect <code>USER_ID</code> as being an &quot;auto-incrementing&quot; primary key since there is a trigger with the right structure.
+ There is code in <a href="../docs/fSchema.html">fSchema</a> that should detect <code>USER_ID</code> as being an &quot;auto-incrementing&quot; primary key since there is a trigger with the right structure.
 </p>
 
 <p>
@@ -154,7 +154,7 @@ WHERE
 	OWNER = 'ITPNET'</code></pre>
 
 <p>
- This is the SQL query that <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> uses to detect the triggers.
+ This is the SQL query that <a href="../docs/fSchema.html">fSchema</a> uses to detect the triggers.
 </p>
 				</div>
 				
@@ -351,7 +351,7 @@ Thanks for the info, that should help me to get this fixed.
 </p>
 
 <p>
-In terms of the string, the stripping of the quotes is correct, since <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> treats the default value as a constant. It does appear that I am going to have to find a way to handle dynamic values such as <code>SYSDATE</code>. Similar constructs exist for other databases too, so it is something I should be handling anyway. Perhaps I can provide either a native PHP datatype, or a callback. That way for <code>SYSDATE</code> I can provide a PHP callback for <code>time()</code>, or something like that.
+In terms of the string, the stripping of the quotes is correct, since <a href="../docs/fSchema.html">fSchema</a> treats the default value as a constant. It does appear that I am going to have to find a way to handle dynamic values such as <code>SYSDATE</code>. Similar constructs exist for other databases too, so it is something I should be handling anyway. Perhaps I can provide either a native PHP datatype, or a callback. That way for <code>SYSDATE</code> I can provide a PHP callback for <code>time()</code>, or something like that.
 </p>
 
 <p>
@@ -374,11 +374,11 @@ I will also need to change that SQL statement to look for both <code>INSERT</cod
 				<div class="body" id="body-1043">
 					
 <p>
-Both of these issues should be fixed in r946. The triggers should be detected properly, both in <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> and <a href="../flourishlib.com/docs/fSchema.html">fSchema</a>.
+Both of these issues should be fixed in r946. The triggers should be detected properly, both in <a href="../docs/fDatabase.html">fDatabase</a> and <a href="../docs/fSchema.html">fSchema</a>.
 </p>
 
 <p>
-For <code>SYSDATE</code> support, I remembered that <a href="../flourishlib.com/docs/fDate.html">fDate</a>, <a href="../flourishlib.com/docs/fTime.html">fTime</a> and <a href="../flourishlib.com/docs/fTimestamp.html">fTimestamp</a> support the <code>CURRENT_DATE</code>, <code>CURRENT_TIME</code> and <code>CURRENT_TIMESTAMP</code> constants as aliases for <code>time()</code>. I just tweaked <a href="../flourishlib.com/docs/fSchema.html">fSchema</a> to convert <code>SYSDATE</code> to <code>CURRENT_DATE</code>, and it look like you should be all set!
+For <code>SYSDATE</code> support, I remembered that <a href="../docs/fDate.html">fDate</a>, <a href="../docs/fTime.html">fTime</a> and <a href="../docs/fTimestamp.html">fTimestamp</a> support the <code>CURRENT_DATE</code>, <code>CURRENT_TIME</code> and <code>CURRENT_TIMESTAMP</code> constants as aliases for <code>time()</code>. I just tweaked <a href="../docs/fSchema.html">fSchema</a> to convert <code>SYSDATE</code> to <code>CURRENT_DATE</code>, and it look like you should be all set!
 </p>
 				</div>
 				

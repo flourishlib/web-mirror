@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I have successfully implemented the flourish <a href="../flourishlib.com/docs/fMailbox.html">fMailbox</a> and can read emails from an imap server. And having not much luck with implementing the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>. I get this error message after hitting the $email-&gt;send():
+I have successfully implemented the flourish <a href="../docs/fMailbox.html">fMailbox</a> and can read emails from an imap server. And having not much luck with implementing the <a href="../docs/fEmail.html">fEmail</a>. I get this error message after hitting the $email-&gt;send():
 </p>
 <pre class="block php"><code>Fatal error: Class 'fCryptography' not found in flourish/fEmail.php on line 501</code></pre>
 
@@ -84,11 +84,11 @@ $fEmail-&gt;send();</code></pre>
 				<div class="body" id="body-1519">
 					
 <p>
-I am back ! And within couple minutes I found out I need to autoload('<a href="../flourishlib.com/docs/fEmail.html">fEmail</a>')
+I am back ! And within couple minutes I found out I need to autoload('<a href="../docs/fEmail.html">fEmail</a>')
 </p>
 
 <p>
- instead of working with the <a href="../flourishlib.com/docs/fEmail.html">fEmail</a>.php directly.
+ instead of working with the <a href="../docs/fEmail.html">fEmail</a>.php directly.
 </p>
 <pre class="block php"><code>require_once 'init_roots/init_introemail.php'; //My init settings
 __autoload('fEmail');

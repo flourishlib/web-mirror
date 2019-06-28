@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -83,7 +83,7 @@ I have a
 				<div class="body" id="body-536">
 					
 <p>
-Well, <a href="../flourishlib.com/api/fSession.html#setPath">fSession::setPath()</a> sets the directory in which to save session files. Are you calling this method on the page/script before any session access happens or before the session is opened? My guess is that the captcha code is starting the session before you set the session path, or something along those lines.
+Well, <a href="../api/fSession.html#setPath">fSession::setPath()</a> sets the directory in which to save session files. Are you calling this method on the page/script before any session access happens or before the session is opened? My guess is that the captcha code is starting the session before you set the session path, or something along those lines.
 </p>
 				</div>
 				
@@ -156,7 +156,7 @@ if(md5($_POST['cod']) != $_SESSION['key']) {
 				<div class="body" id="body-539">
 					
 <p>
-<a href="../flourishlib.com/docs/fSession.html">fSession</a> v1.0.0b6 and before had a default prefix that was applied to all calls to <a href="../flourishlib.com/api/fSession.html#set">fSession::set()</a> and <a href="../flourishlib.com/api/fSession.html#get">fSession::get()</a>. If you are using one of those versions, you'll need to set the third parameter to <code>''</code> to remove the prefix.
+<a href="../docs/fSession.html">fSession</a> v1.0.0b6 and before had a default prefix that was applied to all calls to <a href="../api/fSession.html#set">fSession::set()</a> and <a href="../api/fSession.html#get">fSession::get()</a>. If you are using one of those versions, you'll need to set the third parameter to <code>''</code> to remove the prefix.
 </p>
 				</div>
 				

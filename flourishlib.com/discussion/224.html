@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -62,11 +62,11 @@ For my project I've replaced session handling by a custom class that writes the 
 </p>
 
 <p>
-I'm using <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> for the database connection.
+I'm using <a href="../docs/fDatabase.html">fDatabase</a> for the database connection.
 </p>
 
 <p>
-The system calls session write after <code>__destruct()</code> has been evoked on the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object, thus connection is lost.
+The system calls session write after <code>__destruct()</code> has been evoked on the <a href="../docs/fDatabase.html">fDatabase</a> object, thus connection is lost.
 </p>
 
 <p>
@@ -74,7 +74,7 @@ Do you have any suggestions for resolving this issue?
 </p>
 
 <p>
-I added a method to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> to set a flag to (not) automatically close the connection in <code>__destruct()</code>. Consequently I have to close the connection myself using the &quot;private&quot; <code>__destruct()</code> method when the system invokes close on the session.
+I added a method to <a href="../docs/fDatabase.html">fDatabase</a> to set a flag to (not) automatically close the connection in <code>__destruct()</code>. Consequently I have to close the connection myself using the &quot;private&quot; <code>__destruct()</code> method when the system invokes close on the session.
 </p>
 </div>
 
@@ -88,7 +88,7 @@ I added a method to <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</
 				<div class="body" id="body-691">
 					
 <p>
-So it seems like the session is being closed after the objects have been destroyed. What about passing <a href="../flourishlib.com/api/fSession.html#close">fSession::close()</a> to <a href="http://php.net/register_shutdown_function"><code>register_shutdown_function()</code></a>? I think this will force the session to close before the objects are destroyed.
+So it seems like the session is being closed after the objects have been destroyed. What about passing <a href="../api/fSession.html#close">fSession::close()</a> to <a href="http://php.net/register_shutdown_function"><code>register_shutdown_function()</code></a>? I think this will force the session to close before the objects are destroyed.
 </p>
 <pre class="block php"><code>register_shutdown_function(array('fSession', 'close'));</code></pre>
 				</div>
@@ -202,7 +202,7 @@ You can actually control the order of when the <code>__destruct()</code> methods
 </p>
 
 <p>
-So, the first object you should construct is <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a>. After creating that, I would create your !SessionManager object. Then after that, create all of your other objects. This should cause your other objects to be destructed first, then the !SessionManager, which should write the session data to the database, and then <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> should close the connection.
+So, the first object you should construct is <a href="../docs/fDatabase.html">fDatabase</a>. After creating that, I would create your !SessionManager object. Then after that, create all of your other objects. This should cause your other objects to be destructed first, then the !SessionManager, which should write the session data to the database, and then <a href="../docs/fDatabase.html">fDatabase</a> should close the connection.
 </p>
 				</div>
 				
@@ -256,7 +256,7 @@ For these objects I could register a shutdown function as well. This would most 
 				<div class="body" id="body-703">
 					
 <p>
-I guess that since you cannot control / determine the order of <code>__destruct()</code> invokes it would not make sence to implement a hook in <a href="../flourishlib.com/api/fDatabase.html#close">fDatabase::close()</a>.
+I guess that since you cannot control / determine the order of <code>__destruct()</code> invokes it would not make sence to implement a hook in <a href="../api/fDatabase.html#close">fDatabase::close()</a>.
 </p>
 
 <p>
@@ -265,7 +265,7 @@ Any suggestions? or think I will vote for something like:
 <pre class="block php"><code>fDatabase::disableAutoClose();</code></pre>
 
 <p>
- And the corresponding small change to <a href="../flourishlib.com/api/fDatabase.html#__destruct">fDatabase::__destruct()</a>
+ And the corresponding small change to <a href="../api/fDatabase.html#__destruct">fDatabase::__destruct()</a>
 </p>
 <pre class="block php"><code>	public function __destruct()
 	{
@@ -273,7 +273,7 @@ Any suggestions? or think I will vote for something like:
 		if ($this-&gt;auto_close !== TRUE) { return; }</code></pre>
 
 <p>
- From the SessionManager::close() I would invoke a <a href="../flourishlib.com/api/fDatabase.html#close">fDatabase::close()</a> method.
+ From the SessionManager::close() I would invoke a <a href="../api/fDatabase.html#close">fDatabase::close()</a> method.
 </p>
 
 <p>
@@ -467,7 +467,7 @@ fSession::open();
 				<div class="body" id="body-801">
 					
 <p>
-Hey Will - would something like this be possible to work into <a href="../flourishlib.com/docs/fSession.html">fSession</a> directly?
+Hey Will - would something like this be possible to work into <a href="../docs/fSession.html">fSession</a> directly?
 </p>
 				</div>
 				

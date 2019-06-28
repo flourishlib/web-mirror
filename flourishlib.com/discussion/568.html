@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-I've ran into two instances where <a href="../flourishlib.com/docs/fURL.html">fURL</a> adds www to the current domain when returned. I'm working with a subdomain test.domain.com and <a href="../flourishlib.com/docs/fURL.html">fURL</a> returns <a href="http://www.test.domain.com">www.test.domain.com</a> 
+I've ran into two instances where <a href="../docs/fURL.html">fURL</a> adds www to the current domain when returned. I'm working with a subdomain test.domain.com and <a href="../docs/fURL.html">fURL</a> returns <a href="http://www.test.domain.com">www.test.domain.com</a> 
 </p>
 
 <p>
@@ -98,7 +98,7 @@ http://sl.localhost</code></pre>
 				<div class="body" id="body-1629">
 					
 <p>
-<a href="../flourishlib.com/docs/fURL.html">fURL</a> uses <code>$_SERVER['SERVER_NAME']</code> to get the domain name. I would imagine that your web server is somehow improperly populating the value. You could always try hard-coding it early in your init process:
+<a href="../docs/fURL.html">fURL</a> uses <code>$_SERVER['SERVER_NAME']</code> to get the domain name. I would imagine that your web server is somehow improperly populating the value. You could always try hard-coding it early in your init process:
 </p>
 <pre class="block php"><code>$_SERVER['SERVER_NAME'] = 'mydomain.com';</code></pre>
 				</div>

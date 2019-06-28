@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -133,7 +133,7 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</code></pre>
 
 <p>
- I have looked through <a href="../flourishlib.com/docs/fActiveRecord.html#RelatedRecordsOperations">http://flourishlib.com/docs/fActiveRecord#RelatedRecordsOperations</a> and the other ORM pages, but haven't found anything that could help me. These pages seems to have a bias on retrieving records.
+ I have looked through <a href="../docs/fActiveRecord.html#RelatedRecordsOperations">http://flourishlib.com/docs/fActiveRecord#RelatedRecordsOperations</a> and the other ORM pages, but haven't found anything that could help me. These pages seems to have a bias on retrieving records.
 </p>
 
 <p>
@@ -348,7 +348,7 @@ I'll open a ticket so that I make sure to look into associate to see what would 
 				<div class="body" id="body-705">
 					
 <p>
-The method commented out now works in r819. The issue was that a single <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> object was being passed instead of an array of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects. I changed the method to accept a single record.
+The method commented out now works in r819. The issue was that a single <a href="../docs/fActiveRecord.html">fActiveRecord</a> object was being passed instead of an array of <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects. I changed the method to accept a single record.
 </p>
 				</div>
 				
@@ -453,7 +453,7 @@ My &quot;ORM-background&quot; comes from Apple's WebObjects in which you opperat
 </p>
 
 <p>
-I guess it would be similar to implemnting the store() method on <a href="../flourishlib.com/docs/fORM.html">fORM</a> (if it had instances) instead of on <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a>.
+I guess it would be similar to implemnting the store() method on <a href="../docs/fORM.html">fORM</a> (if it had instances) instead of on <a href="../docs/fActiveRecord.html">fActiveRecord</a>.
 </p>
 
 <p>
@@ -480,15 +480,15 @@ I will look into the code and validation issues. Maybe I could help out.
 				<div class="body" id="body-715">
 					
 <p>
-I can definitely see the usefulness of grouping a number of <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> objects into a single transaction, but also aggregating the validation message and performing delayed association.
+I can definitely see the usefulness of grouping a number of <a href="../docs/fActiveRecord.html">fActiveRecord</a> objects into a single transaction, but also aggregating the validation message and performing delayed association.
 </p>
 
 <p>
-I think a new class would be in order, something such as !<a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a>. This could perform logic such as association, group all of the changes into a single database transaction, but also aggregating validation messages with prefixed field names with object names when there were duplicate field names.
+I think a new class would be in order, something such as !<a href="../docs/fUnitOfWork.html">fUnitOfWork</a>. This could perform logic such as association, group all of the changes into a single database transaction, but also aggregating validation messages with prefixed field names with object names when there were duplicate field names.
 </p>
 
 <p>
-Right now I'm putting some more time into a side project, but it is something that sounds very useful. If you are interested in working on such a class, I would be very appreciative, I just want to let you know that I do require a <a href="../flourishlib.com/docs/ContributorLicenseAgreements.html">contributor license agreement</a> for code submitted to Flourish.
+Right now I'm putting some more time into a side project, but it is something that sounds very useful. If you are interested in working on such a class, I would be very appreciative, I just want to let you know that I do require a <a href="../docs/ContributorLicenseAgreements.html">contributor license agreement</a> for code submitted to Flourish.
 </p>
 
 <p>
@@ -554,11 +554,11 @@ $unitOfWork-&gt;add($myRecord);
 $unitOfWork-&gt;store();</code></pre>
 
 <p>
- Of couse there are variations on this. Like always passing a <a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> object to the constructor of a <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> and the the fRecord::build methods.
+ Of couse there are variations on this. Like always passing a <a href="../docs/fUnitOfWork.html">fUnitOfWork</a> object to the constructor of a <a href="../docs/fActiveRecord.html">fActiveRecord</a> and the the fRecord::build methods.
 </p>
 
 <p>
-Do you see the <a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> as an option or would it be a central change to the framework?
+Do you see the <a href="../docs/fUnitOfWork.html">fUnitOfWork</a> as an option or would it be a central change to the framework?
 </p>
 
 <p>
@@ -641,11 +641,11 @@ Sorry that is has taken so long to get back to this topic. As always, there is w
 </p>
 
 <p>
-My vision of an !<a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> class would be an optional class that could even be named something like !<a href="../flourishlib.com/docs/fTransaction.html">fTransaction</a>. You would create the UOW object and then add records to it, however you could continue using the existing <a href="../flourishlib.com/docs/fActiveRecord.html">fActiveRecord</a> methods for situations that don't require the extra complexity. Upon further consideration, I would think it should also handle object deletion.
+My vision of an !<a href="../docs/fUnitOfWork.html">fUnitOfWork</a> class would be an optional class that could even be named something like !<a href="../docs/fTransaction.html">fTransaction</a>. You would create the UOW object and then add records to it, however you could continue using the existing <a href="../docs/fActiveRecord.html">fActiveRecord</a> methods for situations that don't require the extra complexity. Upon further consideration, I would think it should also handle object deletion.
 </p>
 
 <p>
-Here is an initial idea for the public API of an !<a href="../flourishlib.com/docs/fUnitOfWork.html">fUnitOfWork</a> class.
+Here is an initial idea for the public API of an !<a href="../docs/fUnitOfWork.html">fUnitOfWork</a> class.
 </p>
 <pre class="block php"><code>class fUnitOfWork
 {

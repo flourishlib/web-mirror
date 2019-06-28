@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,21 +54,21 @@
 <div class="body topic">
 	
 <p>
-I'm using <a href="../flourishlib.com/docs/fRequest.html">fRequest</a> 'accept' methods as a lighter replacement for the language detection routines I was using (<a href="http://techpatterns.com/downloads/php_language_detection.php">http://techpatterns.com/downloads/php_language_detection.php</a>). However, I have noted some odd behaviour in detected languages (with PHP 5.3.2).
+I'm using <a href="../docs/fRequest.html">fRequest</a> 'accept' methods as a lighter replacement for the language detection routines I was using (<a href="http://techpatterns.com/downloads/php_language_detection.php">http://techpatterns.com/downloads/php_language_detection.php</a>). However, I have noted some odd behaviour in detected languages (with PHP 5.3.2).
 </p>
 
 <p>
-For example, var_dump(<a href="../flourishlib.com/api/fRequest.html#getAcceptLanguages">fRequest::getAcceptLanguages()</a>) returns the correct languages as defined in my Mac Firefox 3.6.3, that is:
+For example, var_dump(<a href="../api/fRequest.html#getAcceptLanguages">fRequest::getAcceptLanguages()</a>) returns the correct languages as defined in my Mac Firefox 3.6.3, that is:
 </p>
 <pre class="block php"><code>array(8) { [&quot;es-es&quot;]=&gt;  float(1) [&quot;es&quot;]=&gt;  float(0.9) [&quot;en-gb&quot;]=&gt;  float(0.8) [&quot;en-us&quot;]=&gt;  float(0.6) [&quot;en&quot;]=&gt;  float(0.5) [&quot;fr-fr&quot;]=&gt;  float(0.4) [&quot;fr-be&quot;]=&gt;  float(0.3) [&quot;it&quot;]=&gt;  float(0.1) }</code></pre>
 
 <p>
- But var_dump(<a href="../flourishlib.com/api/fRequest.html#getBestAcceptLanguage">fRequest::getBestAcceptLanguage()</a>) doesn't return string(5) &quot;es-es&quot;, as would be expected, but: 
+ But var_dump(<a href="../api/fRequest.html#getBestAcceptLanguage">fRequest::getBestAcceptLanguage()</a>) doesn't return string(5) &quot;es-es&quot;, as would be expected, but: 
 </p>
 <pre class="block php"><code>string(2) &quot;es&quot; </code></pre>
 
 <p>
- Changing the order of both calls doesn't make any difference. Looking at the code in <a href="../flourishlib.com/docs/fRequest.html">fRequest</a>, it seems that, in absence of any filters defined in the call, it should just return the first key in the languages array:
+ Changing the order of both calls doesn't make any difference. Looking at the code in <a href="../docs/fRequest.html">fRequest</a>, it seems that, in absence of any filters defined in the call, it should just return the first key in the languages array:
 </p>
 <pre class="block php"><code>if (!$options) {
         return key($items);

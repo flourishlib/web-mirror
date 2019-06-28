@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-Hi! When I'm trying to send an email using the <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> class I got this error and I don't know what it mean:
+Hi! When I'm trying to send an email using the <a href="../docs/fSMTP.html">fSMTP</a> class I got this error and I don't know what it mean:
 </p>
 <pre class="block php"><code>Fatal error: Uncaught exception 'fConnectivityException' with message 'Unknown SMTP welcome message, 554 server.com, from server smtp.server.com on port 25' in fSMTP.php:235 Stack trace: 
 
@@ -164,7 +164,7 @@ At the very least make the change I indicated in that ticket.  If you don't it i
 </p>
 
 <p>
-Can you telnet into your SMTP server and paste the initial output from the server?  When I was debugging I also modified the read() and write() methods on <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> to echo what was being read/written -- this helped gratefully in seeing the dialogue that was occurring between Flourish and the SMTP server, so it could likely help you.
+Can you telnet into your SMTP server and paste the initial output from the server?  When I was debugging I also modified the read() and write() methods on <a href="../docs/fSMTP.html">fSMTP</a> to echo what was being read/written -- this helped gratefully in seeing the dialogue that was occurring between Flourish and the SMTP server, so it could likely help you.
 </p>
 
 <p>
@@ -187,7 +187,7 @@ The welcome message should look pretty similar to the above.  Out of curiosity a
 				<div class="body" id="body-1119">
 					
 <p>
-Also note that there is <a href="../flourishlib.com/api/fSMTP.html#enableDebugging">fSMTP::enableDebugging()</a> which will print all data to and from the SMTP server.
+Also note that there is <a href="../api/fSMTP.html#enableDebugging">fSMTP::enableDebugging()</a> which will print all data to and from the SMTP server.
 </p>
 				</div>
 				
@@ -210,9 +210,9 @@ The fix doesn't work for me. I dont have access because it's a production enviro
 </p>
 
 <p>
-Fatal error: Uncaught exception '<a href="../flourishlib.com/docs/fConnectivityException.html">fConnectivityException</a>' with message 'Unknown SMTP welcome message, 554 cinmlip01.e2k.ad.xxx.com, from server smtp.ar.server.xxx.com on port 25' in <br />
+Fatal error: Uncaught exception '<a href="../docs/fConnectivityException.html">fConnectivityException</a>' with message 'Unknown SMTP welcome message, 554 cinmlip01.e2k.ad.xxx.com, from server smtp.ar.server.xxx.com on port 25' in <br />
 lib<br />
-<a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a>.php:235 Stack trace: #0 
+<a href="../docs/fSMTP.html">fSMTP</a>.php:235 Stack trace: #0 
 </p>
 
 <p>
@@ -235,7 +235,7 @@ Should I use another library to send emails?
 				<div class="body" id="body-1160">
 					
 <p>
-I would recommend calling <a href="../flourishlib.com/api/fSMTP.html#enableDebugging">fSMTP::enableDebugging()</a> with the parameter <code>TRUE</code> on your <a href="../flourishlib.com/docs/fSMTP.html">fSMTP</a> instance and see what messages are being sent back and forth between your site and the server. If you can paste the output of that, I should be able to help.
+I would recommend calling <a href="../api/fSMTP.html#enableDebugging">fSMTP::enableDebugging()</a> with the parameter <code>TRUE</code> on your <a href="../docs/fSMTP.html">fSMTP</a> instance and see what messages are being sent back and forth between your site and the server. If you can paste the output of that, I should be able to help.
 </p>
 <pre class="block php"><code>$smtp = new fSMTP('server');
 $smtp-&gt;enableDebugging(TRUE);

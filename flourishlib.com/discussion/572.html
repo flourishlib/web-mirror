@@ -26,16 +26,16 @@
 	<body>
 		<header>
 			<section class="main group">
-				<a href="../flourishlib.com/index.html"><img src="img/logo.png" alt="Flourish" /></a>
+				<a href="../index.html"><img src="img/logo.png" alt="Flourish" /></a>
 				<span class="tagline">PHP Unframework</span>
 				<nav class="group">
-					<a href="../flourishlib.com/docs.html">Documentation</a>
-					<a href="../flourishlib.com/download/index.html">Download</a>
+					<a href="../docs.html">Documentation</a>
+					<a href="../download/index.html">Download</a>
 					<a href="https://github.com/flourishlib/flourish-classes">Code</a>
 					<a href="https://github.com/flourishlib/flourish-classes/issues">Issues</a>
-					<a href="../flourishlib.com/docs/Tests.html">Tests</a>
+					<a href="../docs/Tests.html">Tests</a>
 					<a href="index.html">Discussion</a>
-					<a href="../flourishlib.com/blog.html">Blog</a>
+					<a href="../blog.html">Blog</a>
 				</nav>
 			</section>
 		</header>
@@ -54,7 +54,7 @@
 <div class="body topic">
 	
 <p>
-<a href="../flourishlib.com/docs/fValidate.html">fValidate</a> and other similar systems (like exceptions from ORM) currently all use English phrases like &quot;The value specified must be unique, however it already exists&quot;. This is great for rough and dirty error messages, but from a UX standpoint it's a terrible option. For example, on a theoretical membership system, if a user is trying to register an account with an email that already exists, the application should provide a helpful link to the &quot;forgot password&quot; page, instead.
+<a href="../docs/fValidate.html">fValidate</a> and other similar systems (like exceptions from ORM) currently all use English phrases like &quot;The value specified must be unique, however it already exists&quot;. This is great for rough and dirty error messages, but from a UX standpoint it's a terrible option. For example, on a theoretical membership system, if a user is trying to register an account with an email that already exists, the application should provide a helpful link to the &quot;forgot password&quot; page, instead.
 </p>
 
 <p>
@@ -66,7 +66,7 @@ I propose providing an option to output validation errors using codes (such as &
 </p>
 
 <p>
-Ideally, <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> should have a method to output an associative array of fields and error codes. This provides maximal flexibility in displaying and managing errors. The previous, pre-formatted English version should stay, as the simplicity of using the humanized version is one of Flourish's big benefits. There should also be methods to modify this internal exception array; if a particular field is handled manually by the programmer, it shouldn't be displayed afterwards.
+Ideally, <a href="../docs/fValidationException.html">fValidationException</a> should have a method to output an associative array of fields and error codes. This provides maximal flexibility in displaying and managing errors. The previous, pre-formatted English version should stay, as the simplicity of using the humanized version is one of Flourish's big benefits. There should also be methods to modify this internal exception array; if a particular field is handled manually by the programmer, it shouldn't be displayed afterwards.
 </p>
 
 <p>
@@ -150,7 +150,7 @@ $array (
 				<div class="body" id="body-1636">
 					
 <p>
-Ideally, there would be an &quot;<a href="../flourishlib.com/docs/fFieldValidationException.html">fFieldValidationException</a>&quot; class that contains the specific details of each exception. So you could do...
+Ideally, there would be an &quot;<a href="../docs/fFieldValidationException.html">fFieldValidationException</a>&quot; class that contains the specific details of each exception. So you could do...
 </p>
 <pre class="block php"><code>try{
    $user-&gt;store();
@@ -274,7 +274,7 @@ protected function submit()
 				<div class="body" id="body-1638">
 					
 <p>
-I'd like to able to release more of that functionality towards the ORM automatic validation mechanism. I often find using a manual <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> object to be overkill; more often than not, I can simply toss the data straight into the ORM functionality, and it will reject the data if the database finds it invalid. There is, however, no easy way to intercept this validation information from ORM - it comes pre-packaged into the English strings, which is what I'm search of an alternative for.
+I'd like to able to release more of that functionality towards the ORM automatic validation mechanism. I often find using a manual <a href="../docs/fValidation.html">fValidation</a> object to be overkill; more often than not, I can simply toss the data straight into the ORM functionality, and it will reject the data if the database finds it invalid. There is, however, no easy way to intercept this validation information from ORM - it comes pre-packaged into the English strings, which is what I'm search of an alternative for.
 </p>
 
 <p>
@@ -344,11 +344,11 @@ I'm considering five different options (I also appreciate wbond's input on which
 </ol>
 
 <ol>
-<li>You could also use the fORMValidation::addStringReplacement function to manually change errors for each kind of <a href="../flourishlib.com/docs/fORM.html">fORM</a> class we're dealing with. Advantage: Very accurate and specific, if you only need to do this to a select few classes/fields. Disadvantage: Gets complicated and it's inefficient for large applications.</li>
+<li>You could also use the fORMValidation::addStringReplacement function to manually change errors for each kind of <a href="../docs/fORM.html">fORM</a> class we're dealing with. Advantage: Very accurate and specific, if you only need to do this to a select few classes/fields. Disadvantage: Gets complicated and it's inefficient for large applications.</li>
 </ol>
 
 <ol>
-<li>The one I'm currently using is to use fActiveRecord::validate(TRUE,TRUE), which tosses validation errors into an array where the keys are the fields, and the value is the error message. Then I use an array to translate the error messages into error codes (or you can also just detect them by directly comparing strings). This works well, but you'll need to modify all code so it attempts to ::validate() instead of ::store(). It also works for <a href="../flourishlib.com/docs/fValidation.html">fValidation</a> objects. <strong>Probably the best option right now</strong>; you can easily just use the default error message when desirable, but you can also easily detect simple field-to-error conditions without convoluted string manipulation.</li>
+<li>The one I'm currently using is to use fActiveRecord::validate(TRUE,TRUE), which tosses validation errors into an array where the keys are the fields, and the value is the error message. Then I use an array to translate the error messages into error codes (or you can also just detect them by directly comparing strings). This works well, but you'll need to modify all code so it attempts to ::validate() instead of ::store(). It also works for <a href="../docs/fValidation.html">fValidation</a> objects. <strong>Probably the best option right now</strong>; you can easily just use the default error message when desirable, but you can also easily detect simple field-to-error conditions without convoluted string manipulation.</li>
 </ol>
 
 <ol>
@@ -356,7 +356,7 @@ I'm considering five different options (I also appreciate wbond's input on which
 </ol>
 
 <ol>
-<li>Submit changes to Flourish itself, so the <a href="../flourishlib.com/docs/fValidationException.html">fValidationException</a> object also stores a {field: error} array, much like that used in option 3. Advantage: cleanest, fastest implementation. Drawback: need to go through every single file and find where they use <a href="../flourishlib.com/docs/fValidationExceptions.html">fValidationExceptions</a>, and figure out how to reverse engineer their data. Also not sure how Will Bond handles this sort of thing.</li>
+<li>Submit changes to Flourish itself, so the <a href="../docs/fValidationException.html">fValidationException</a> object also stores a {field: error} array, much like that used in option 3. Advantage: cleanest, fastest implementation. Drawback: need to go through every single file and find where they use <a href="../docs/fValidationExceptions.html">fValidationExceptions</a>, and figure out how to reverse engineer their data. Also not sure how Will Bond handles this sort of thing.</li>
 </ol>
 
 <p>
@@ -379,7 +379,7 @@ While I do wish we had proper error messages that would make extracting the erro
 				<div class="body" id="body-1681">
 					
 <p>
-I used a registerHookCallback, according to this : <a href="../flourishlib.com/docs/fORM.html#CustomValidationUsingaHook">http://flourishlib.com/docs/fORM#CustomValidationUsingaHook</a>
+I used a registerHookCallback, according to this : <a href="../docs/fORM.html#CustomValidationUsingaHook">http://flourishlib.com/docs/fORM#CustomValidationUsingaHook</a>
 </p>
 <pre class="block php"><code>&lt;?php
 /** Controller: Registering page*/
