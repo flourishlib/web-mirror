@@ -129,7 +129,7 @@ fORMDatabase::attach($real_db);</code></pre>
 					
 <p>
 Thanx for your fast answer.<br />
- The problem still remains because the <a href="http://discussion.flourishlib.com/company_name">company_name</a> determines wich record to fetch.<br />
+ The problem still remains because the company_name determines wich record to fetch.<br />
  But this value isn't available untill the user is logging in :<br />
 <br />
  And untill this point no database action is needed. In the config.php I well set the login page :<br />
@@ -140,14 +140,14 @@ Thanx for your fast answer.<br />
 </p>
 
 <p>
-company: <a href="http://discussion.flourishlib.com/company_name">company_name</a><br />
+company: company_name<br />
  username: Frank	<br />
  password: something<br />
 
 </p>
 
 <p>
-So i wanted to use the value <a href="http://discussion.flourishlib.com/company_name">company_name</a> of the login form to attach the final production database for this company. Else it won't be a generic approach to the license database and i will still have to hardcode the <a href="http://discussion.flourishlib.com/company_name">company_name</a> value in the init!?.<br />
+So i wanted to use the value company_name of the login form to attach the final production database for this company. Else it won't be a generic approach to the license database and i will still have to hardcode the company_name value in the init!?.<br />
 <br />
  	 Is this even possible? To make the a ORM attachment of the <a href="../flourishlib.com/docs/fDatabase.html">fDatabase</a> object after i know the login values?<br />
 <br />

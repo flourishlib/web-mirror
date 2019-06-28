@@ -144,7 +144,7 @@ The pseudo-random number generator (PRNG) built into PHP includes a fairly secur
 </p>
 
 <p>
-The <a href="fCryptography.html">fCryptography</a> class provides functionality where the OS random number generator (<code>/dev/urandom</code> on BSD/Linux and the CAPICOM object on Windows) is used to seed the PRNG. If neither of those sources is available, a combination of a number of other attributes about the current server and install are used to create a seed value. Because of this functionality, the static method <a href="http://flourishlib.com/api/fCrytography#random">fCrytography::random()</a> should always be used for random numbers and the static method <a href="../api/fCryptography.html#randomString">fCryptography::randomString()</a> should always be used for random strings.
+The <a href="fCryptography.html">fCryptography</a> class provides functionality where the OS random number generator (<code>/dev/urandom</code> on BSD/Linux and the CAPICOM object on Windows) is used to seed the PRNG. If neither of those sources is available, a combination of a number of other attributes about the current server and install are used to create a seed value. Because of this functionality, the static method <a href="../api/fCryptography.html#random">fCryptography::random()</a> should always be used for random numbers and the static method <a href="../api/fCryptography.html#randomString">fCryptography::randomString()</a> should always be used for random strings.
 </p>
 
 <p>

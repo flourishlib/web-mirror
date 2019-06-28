@@ -184,7 +184,7 @@ When the <code>integer</code> or <code>int</code> type is specified, all values 
 <h4 id="Strings">Strings</h4>
 
 <p>
-All strings that are passed through the <code>get()</code> method are expected to be UTF-8 and any invalid UTF-8 characters are removed by passing the data through <a href="http://flourishlib.com/api/fUTF#clean">fUTF::clean()</a>. In addition to invalid UTF-8 byte sequences, all low byte non-printable characters are removed. This is true even if a value is not explicitly cast to a string, or if the string is contained inside of an array. <em>If you need raw data, use the <a href="fRequest.html#Binary">binary</a> type.</em>
+All strings that are passed through the <code>get()</code> method are expected to be UTF-8 and any invalid UTF-8 characters are removed by passing the data through <a href="../api/fUTF8.html#clean">fUTF8::clean()</a>. In addition to invalid UTF-8 byte sequences, all low byte non-printable characters are removed. This is true even if a value is not explicitly cast to a string, or if the string is contained inside of an array. <em>If you need raw data, use the <a href="fRequest.html#Binary">binary</a> type.</em>
 </p>
 
 <h3 id="AllowingNull">Allowing Null</h3>

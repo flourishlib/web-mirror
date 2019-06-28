@@ -103,7 +103,7 @@ With these changes, <a href="../docs/Tests.html">over 60,000 tests</a> are run w
 Throwing around numbers is great and all, but I'd like to touch on the setup a little bit. Flourish uses <a href="http://phpunit.de">PHPUnit</a> for unit and integration tests. And yes, many of the test aren't true unit tests. Since portability and compatibility are key, I want all of the code to actually run. If I were to have written pure unit tests, I would have mocked all sorts of dependencies and missed quite a number of bugs in PHP and bizarre edge cases.
 </p>
 <div style="text-align: center; float: left; margin-right: 1.5em; font-size: 0.8em; margin-top: 1.1em; margin-bottom: 1.5em;">
-    <a href="http://flourishlib.com/blog/img/tests_example-large.png"><img src="http://flourishlib.com/blog/img/tests_example.png" alt="tests.php example output" style="border: 6px solid #b7b7b7;" /></a><br /><tt>tests.php</tt> example output
+    <a href="../img/tests_example-large.png"><img src="../img/tests_example.png" alt="tests.php example output" style="border: 6px solid #b7b7b7;" /></a><br /><tt>tests.php</tt> example output
 </div>
 <p>
  PHPUnit contains an awesome amount of functionality, however when I started with it, it did not allow for running tests with different PHP configuration. I wouldn't be surprised if <a href="http://twitter.com/s_bergmann">Sebastian</a> has added the functionality in 3.4 or 3.5, but I started this whole process back with
@@ -121,7 +121,7 @@ parses class config files and runs the tests once for each different configurati
 <code>tests.php</code> includes some other functionality, including a column-based, color-coded shell output for interactive testing and JSON output for automated testing. It allows for configuration values to be passed at run time (through a nasty PHP ini hack) so that passwords don't need to be hard coded in the tests and inadvertantly leaked through a source code repositories. In addition, you can included or exclude specific classes and filter the configurations to be run.
 </p>
 <div style="float: right; text-align: center; font-size: 0.8em; margin-left: 1.5em; margin-top: 1.1em; margin-bottom: 1.5em;">
-    <a href="http://flourishlib.com/blog/img/remote_tests_example-large.png"><img src="http://flourishlib.com/blog/img/remote_tests_example.png" alt="remote_tests.sh example output" style="border: 6px solid #b7b7b7;" /></a><br /><tt>remote_tests.sh</tt> example output
+    <a href="../img/remote_tests_example-large.png"><img src="../img/remote_tests_example.png" alt="remote_tests.sh example output" style="border: 6px solid #b7b7b7;" /></a><br /><tt>remote_tests.sh</tt> example output
 </div>
 <p>
  Once the local test runner once was written, I went to work setting up a bunch of virtual machines. There are a total of 12 VMs running on two different physical machines, an Intel i7 quad-core with 8GB of ram and a dual-core iMac with 3GB ram. One of the virtual machines runs DB2, MySQL, Oracle and PostgreSQL, while another runs SQL Server 2005 and 2008. Every machine, including Windows, is running OpenSSH, allowing for key-based authentication and distribution of the tests. I leave the stock OS configuration alone as much as possible, but install PHP, various extensions, PHPUnit, some command line database programs and configure the various local sendmail implementations to route through an SMTP relay. Where possible I use the OS-supplied PHP packages in an effort to find bugs related to common environments.

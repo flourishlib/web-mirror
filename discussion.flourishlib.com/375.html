@@ -58,7 +58,7 @@ I'm having a very strange issue with <a href="../flourishlib.com/docs/fActiveRec
 </p>
 
 <p>
-I have a User class that has a static method getGroupId. This method checks to see if $_SERVER<a href="http://discussion.flourishlib.com/'REMOTE_USER'">'REMOTE_USER'</a> contains a value. If it does, it tries to find a user in the database with that username. Here's the relevant functions within my User class that extends fActiveRecord:
+I have a User class that has a static method getGroupId. This method checks to see if $_SERVER['REMOTE_USER'] contains a value. If it does, it tries to find a user in the database with that username. Here's the relevant functions within my User class that extends fActiveRecord:
 </p>
 <pre class="block php"><code>	public static function getUsername()
 	{

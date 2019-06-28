@@ -262,24 +262,24 @@ ok, i understand xss <sub> i will try to be more specific about my issue: i don'
 </p>
 
 <p>
-<sub><code> 	$xtpl-&gt;assign('ID', $row<a href="http://discussion.flourishlib.com/&quot;ID_CATEGORIE&quot;">&amp;quot;ID_CATEGORIE&amp;quot;</a>);</code></sub>
+<sub><code> 	$xtpl-&gt;assign('ID', $row[&amp;quot;ID_CATEGORIE&amp;quot;]);</code></sub>
 </p>
 
 <p>
-<sub><code> 	//CITESTE NUMELE CATEGORIEI PARINTE 	$r_parent = $db-&gt;select(&quot;SELECT CATEGORIE FROM  &quot;.$tabela.&quot; WHERE ID_CATEGORIE = &quot;.$row<a href="http://discussion.flourishlib.com/&quot;PARENT_ID&quot;">&amp;quot;PARENT_ID&amp;quot;</a>);	 	if ($row_parent=$db-&gt;get_row($r_parent, 'MYSQL_ASSOC')) { 		$xtpl-&gt;assign('PARENT_CAT', $row_parent<a href="http://discussion.flourishlib.com/&quot;CATEGORIE&quot;">&amp;quot;CATEGORIE&amp;quot;</a>); 	} else { 		$xtpl-&gt;assign('PARENT_CAT', &quot;Top&quot;); 	} 	 	$xtpl-&gt;assign('PARENT_ID', $row<a href="http://discussion.flourishlib.com/&quot;PARENT_ID&quot;">&amp;quot;PARENT_ID&amp;quot;</a>);</code></sub>
+<sub><code> 	//CITESTE NUMELE CATEGORIEI PARINTE 	$r_parent = $db-&gt;select(&quot;SELECT CATEGORIE FROM  &quot;.$tabela.&quot; WHERE ID_CATEGORIE = &quot;.$row[&amp;quot;PARENT_ID&amp;quot;]);	 	if ($row_parent=$db-&gt;get_row($r_parent, 'MYSQL_ASSOC')) { 		$xtpl-&gt;assign('PARENT_CAT', $row_parent[&amp;quot;CATEGORIE&amp;quot;]); 	} else { 		$xtpl-&gt;assign('PARENT_CAT', &quot;Top&quot;); 	} 	 	$xtpl-&gt;assign('PARENT_ID', $row[&amp;quot;PARENT_ID&amp;quot;]);</code></sub>
 </p>
 
 <p>
-<sub><code> 		 	 	$xtpl-&gt;assign('CATEGORIA', $row<a href="http://discussion.flourishlib.com/&quot;CATEGORIE&quot;">&amp;quot;CATEGORIE&amp;quot;</a>); 	$xtpl-&gt;assign('TEXT_CAT', eregi_replace(&quot;<br />
-n&quot;,&quot;&lt;br /&gt;&quot;,$row<a href="http://discussion.flourishlib.com/&quot;TEXT&quot;">&amp;quot;TEXT&amp;quot;</a>) . &quot;&amp;nbsp;&quot;); 	$xtpl-&gt;assign('VALUE', (($row<a href="http://discussion.flourishlib.com/'ACTIV'">'ACTIV'</a>==1)?1:0)); 	$xtpl-&gt;assign('ACTIV', (($row<a href="http://discussion.flourishlib.com/'ACTIV'">'ACTIV'</a>==1)?0:1)); 	$xtpl-&gt;assign('CHECKED', (($row<a href="http://discussion.flourishlib.com/'ACTIV'">'ACTIV'</a>==1)?'checked':<em>)); 	$xtpl-&gt;assign('CESTERG', &quot;&quot;); 	$xtpl-&gt;assign('CLASS', (($i%2==1)?</em>:'class=&quot;odd&quot;'));</code></sub>
+<sub><code> 		 	 	$xtpl-&gt;assign('CATEGORIA', $row[&amp;quot;CATEGORIE&amp;quot;]); 	$xtpl-&gt;assign('TEXT_CAT', eregi_replace(&quot;<br />
+n&quot;,&quot;&lt;br /&gt;&quot;,$row[&amp;quot;TEXT&amp;quot;]) . &quot;&amp;nbsp;&quot;); 	$xtpl-&gt;assign('VALUE', (($row['ACTIV']==1)?1:0)); 	$xtpl-&gt;assign('ACTIV', (($row['ACTIV']==1)?0:1)); 	$xtpl-&gt;assign('CHECKED', (($row['ACTIV']==1)?'checked':<em>)); 	$xtpl-&gt;assign('CESTERG', &quot;&quot;); 	$xtpl-&gt;assign('CLASS', (($i%2==1)?</em>:'class=&quot;odd&quot;'));</code></sub>
 </p>
 
 <p>
-<sub><code> 	$count = $db-&gt;select(&quot;SELECT COUNT(*) as count FROM &quot;.$tabela.&quot; WHERE PARENT_ID = &quot;.$row<a href="http://discussion.flourishlib.com/&quot;ID_CATEGORIE&quot;">&amp;quot;ID_CATEGORIE&amp;quot;</a>.&quot; GROUP BY  PARENT_ID&quot;);	 	$row_count=$db-&gt;get_row($count, 'MYSQL_ASSOC');</code></sub>
+<sub><code> 	$count = $db-&gt;select(&quot;SELECT COUNT(*) as count FROM &quot;.$tabela.&quot; WHERE PARENT_ID = &quot;.$row[&amp;quot;ID_CATEGORIE&amp;quot;].&quot; GROUP BY  PARENT_ID&quot;);	 	$row_count=$db-&gt;get_row($count, 'MYSQL_ASSOC');</code></sub>
 </p>
 
 <p>
-<sub><code> 	if ($row_count<a href="http://discussion.flourishlib.com/&quot;count&quot;">&amp;quot;count&amp;quot;</a> == 0 ) 		$xtpl-&gt;parse('main.row.del');</code></sub>
+<sub><code> 	if ($row_count[&amp;quot;count&amp;quot;] == 0 ) 		$xtpl-&gt;parse('main.row.del');</code></sub>
 </p>
 
 <p>

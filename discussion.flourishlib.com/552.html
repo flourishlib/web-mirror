@@ -74,7 +74,7 @@ $user-&gt;populate(fRequest::get('user', 'array'));
 </p>
 
 <p>
-Would allow for form inputs with name=&quot;user<a href="http://discussion.flourishlib.com/first_name">first_name</a>&quot; for example...  This is a nice simple way to override convention easily.
+Would allow for form inputs with name=&quot;user[first_name]&quot; for example...  This is a nice simple way to override convention easily.
 </p>
 </div>
 
@@ -130,7 +130,7 @@ I agree that it should be added. I think it is on the todo list. In the meantime
 </p>
 
 <p>
-For a short time inKWell used an alternative form which had the convention being name=&quot;table<a href="http://discussion.flourishlib.com/column'">column'</a>.  Depending on how your snippet works, the issue I ran into was that file uploads and images were pretty dependent on the original convention, so they would break.
+For a short time inKWell used an alternative form which had the convention being name=&quot;table['column'].  Depending on how your snippet works, the issue I ran into was that file uploads and images were pretty dependent on the original convention, so they would break.
 </p>
 
 <p>
