@@ -50078,7 +50078,7 @@ To solve these problems, <a href="flourish_v0.9.0.html#fSQLSchemaTranslation">fS
 </p>
 
 <p>
-PostgreSQL, SQLite and MSSQL all fully support transactions for DDL statements, which makes this easy. For DB2, most DDL statements run within a transaction, and the one that doesn't (<code>REORG TABLE</code>) is only executed once the primary statement succeeds. For Oracle, all of these statement correspond to a single SQL statement, so the statement will either succeed or fail. MySQL requires storing rollback statements for all database operations, and such statements are run if a statement fails. The <a class="ext-link" href="../docs/Tests.html"><span class="icon">tests</span></a> for Flourish include a bunch of tests to ensure that statements are run atomically.
+PostgreSQL, SQLite and MSSQL all fully support transactions for DDL statements, which makes this easy. For DB2, most DDL statements run within a transaction, and the one that doesn't (<code>REORG TABLE</code>) is only executed once the primary statement succeeds. For Oracle, all of these statement correspond to a single SQL statement, so the statement will either succeed or fail. MySQL requires storing rollback statements for all database operations, and such statements are run if a statement fails. The <a class="ext-link" href="../Tests.html"><span class="icon">tests</span></a> for Flourish include a bunch of tests to ensure that statements are run atomically.
 </p>
 
 <p>
